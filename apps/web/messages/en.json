@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "Niti Bharat",
+    "description": "An open-source, self-hosted toolkit for complying with India's DPDP law."
+  },
+  "home": {
+    "heading": "DPDP compliance, in one place",
+    "tagline": "Know what the law asks, do the work, and keep the proof."
+  },
+  "language": {
+    "label": "Language",
+    "names": {
+      "en": "English",
+      "hi": "हिन्दी"
+    }
+  },
+  "errors": {
+    "INTERNAL": "Something went wrong. Please try again.",
+    "VALIDATION_FAILED": "Some of the information you entered is not valid.",
+    "UNAUTHENTICATED": "Please sign in to continue.",
+    "FORBIDDEN": "You do not have permission to do this.",
+    "NOT_FOUND": "We could not find that.",
+    "CONFLICT": "That already exists or is in use somewhere else.",
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
+  }
+}

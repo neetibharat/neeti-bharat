@@ -1,0 +1,22 @@
+/**
+ * Stable machine-readable error codes. The API never sends user-facing prose;
+ * the web app translates each code through its `errors.<code>` message.
+ */
+export const ERROR_CODES = [
+  'INTERNAL',
+  'VALIDATION_FAILED',
+  'UNAUTHENTICATED',
+  'FORBIDDEN',
+  'NOT_FOUND',
+  'CONFLICT',
+  'RATE_LIMITED',
+] as const;
+
+export type ErrorCode = (typeof ERROR_CODES)[number];
+
+export interface ApiErrorBody {
+  statusCode: number;
+  code: ErrorCode;
+  /** Values the translated message may interpolate. */
+  params?: Record<string, string | number>;
+}
