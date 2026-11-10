@@ -1,0 +1,12 @@
+// Rules: one small migration at a time, only models agreed in review.
+// Every DateTime is @db.Timestamptz(3).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
