@@ -13,6 +13,10 @@ export class DisabledFileStorage extends FileStorage {
     return this.refuse();
   }
 
+  read(): Promise<Buffer> {
+    return this.refuse();
+  }
+
   signedDownloadUrl(): Promise<string> {
     return this.refuse();
   }

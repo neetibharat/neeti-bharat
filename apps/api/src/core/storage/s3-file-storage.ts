@@ -55,6 +55,14 @@ export class S3FileStorage extends FileStorage {
     );
   }
 
+  async read(key: string): Promise<Buffer> {
+    const object = await this.client.send(
+      new GetObjectCommand({ Bucket: this.settings.bucket, Key: key }),
+    );
+    if (!object.Body) throw new Error(`Object ${key} has no body`);
+    return Buffer.from(await object.Body.transformToByteArray());
+  }
+
   signedDownloadUrl(key: string, options: DownloadOptions): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.settings.bucket,

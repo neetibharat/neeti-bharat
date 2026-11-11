@@ -67,5 +67,6 @@ import { ProofService } from './services/proof.service';
     FrameworkRepository,
     FrameworkSeedRepository,
   ],
+  exports: [FrameworksService],
 })
 export class FrameworksModule {}

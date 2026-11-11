@@ -2,6 +2,8 @@ import {
   ACCESS_LEVELS,
   APP_ROLES,
   ACTIVITY_ACTIONS,
+  EXPORT_DATASETS,
+  WEBSITE_CHECK_IDS,
   CONTROL_STATUSES,
   DPDP_RULES,
   POLICY_STATUSES,
@@ -11,6 +13,7 @@ import {
   PROFILE_FIELDS,
   PROFILE_GROUPS,
 } from '@dpdp-kit/shared';
+import { WEBSITE_MESSAGE_KEYS } from '../lib/website-check';
 import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';
 
@@ -47,6 +50,23 @@ describe('message catalogs', () => {
     const { actions, actionNames } = catalogs.en.activity as { actions: Tree; actionNames: Tree };
     expect(Object.keys(actions).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
     expect(Object.keys(actionNames).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
+  });
+
+  it('words every download on the exports page', () => {
+    const { datasets } = catalogs.en.exports as { datasets: Tree };
+    expect(Object.keys(datasets).sort()).toEqual([...EXPORT_DATASETS].sort());
+    for (const key of EXPORT_DATASETS) {
+      expect(Object.keys(datasets[key] as Tree).sort()).toEqual(['about', 'name']);
+    }
+  });
+
+  it('words every website check, with the sentences its results can use', () => {
+    const { checks } = catalogs.en.websiteCheck as { checks: Tree };
+    expect(Object.keys(checks).sort()).toEqual([...WEBSITE_CHECK_IDS].sort());
+    for (const id of WEBSITE_CHECK_IDS) {
+      const words = Object.keys(checks[id] as Tree).sort();
+      expect(words).toEqual(['name', ...WEBSITE_MESSAGE_KEYS[id]].sort());
+    }
   });
 
   it('words every company profile answer and group', () => {

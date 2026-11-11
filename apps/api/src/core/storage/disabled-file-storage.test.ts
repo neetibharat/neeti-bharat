@@ -9,7 +9,7 @@ describe('DisabledFileStorage', () => {
   });
 
   it('refuses every call with STORAGE_NOT_CONFIGURED and a 503', async () => {
-    const calls = [storage.put(), storage.signedDownloadUrl(), storage.remove()];
+    const calls = [storage.put(), storage.read(), storage.signedDownloadUrl(), storage.remove()];
     for (const call of calls) {
       await expect(call).rejects.toMatchObject({ code: 'STORAGE_NOT_CONFIGURED', status: 503 });
     }

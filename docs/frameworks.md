@@ -116,7 +116,7 @@ Status is calculated rather than chosen so it cannot be ticked without the work 
 
 ## Dashboard and My work
 
-The **Dashboard** (`/`) shows, above everything else, a red notice listing every open [breach](breaches.md) with its time left or how late it is, for every role. Below it sits where the company stands: a readiness gauge across all frameworks with the policies approved and proof in, what needs attention (open breaches first, then late proof, reviews and [requests](requests.md), policies waiting on a decision, requests due within a week, reviews coming up), each framework's progress, and the first few things waiting on the signed-in person. Admins also see who carries the most open work and the latest changes from the activity log.
+The **Dashboard** (`/`) shows where the company stands: a readiness gauge across all frameworks with the policies approved and proof in, what needs attention (open breaches first, then late proof, reviews and [requests](requests.md), policies waiting on a decision, requests due within a week, reviews coming up), each framework's progress, and the first few things waiting on the signed-in person. Admins also see who carries the most open work and the latest changes from the activity log.
 
 **My work** (`/my-work`) lists everything waiting on one person, most urgent first, in sections: overdue, due in the next 7 days, due later, and waiting with no date. Six figures sit on top, and tabs split it by kind. It is worked out from who they are in People and roles, so nobody has to assign "tasks" separately. Admins can choose another person to see how work is split (`GET /v1/my-work/of/:personId`).
 

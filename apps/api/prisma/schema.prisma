@@ -587,3 +587,22 @@ model DataRequestTask {
   @@index([requestId])
   @@map("data_request_tasks")
 }
+
+// One run of the website check: what was looked at, and what was found. Kept so earlier runs can be compared.
+model WebsiteCheck {
+  id            String   @id @default(uuid(7))
+  /// The address that was checked, as it was entered.
+  url           String
+  checkedAt     DateTime @default(now()) @db.Timestamptz(3)
+  /// The name is copied here, so the run stays attributed after the person leaves.
+  checkedByName String
+  /// The list of results, in the shape of WebsiteCheckResult in packages/shared.
+  results       Json
+  /// How many results passed, warned and failed, kept so the list needs no results.
+  passed        Int
+  warned        Int
+  failed        Int
+
+  @@index([checkedAt])
+  @@map("website_checks")
+}

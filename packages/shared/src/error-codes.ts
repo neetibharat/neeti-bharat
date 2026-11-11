@@ -24,6 +24,7 @@ export const ERROR_CODES = [
   'FILE_TOO_LARGE',
   'FILE_TYPE_NOT_ALLOWED',
   'STORAGE_NOT_CONFIGURED',
+  'URL_NOT_ALLOWED',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

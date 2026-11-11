@@ -41,7 +41,9 @@
       "secrets": "Secrets",
       "activityLog": "Activity log",
       "aiHelp": "AI help",
-      "myWork": "My work"
+      "myWork": "My work",
+      "exports": "Exports",
+      "websiteCheck": "Website check"
     }
   },
   "roles": {
@@ -95,7 +97,8 @@
     "FILE_REQUIRED": "Choose a file that is not empty.",
     "FILE_TOO_LARGE": "That file is larger than the allowed size.",
     "FILE_TYPE_NOT_ALLOWED": "That type of file is not accepted, or its contents do not match its type.",
-    "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up."
+    "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up.",
+    "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed."
   },
   "comingSoon": {
     "title": "On its way",
@@ -224,7 +227,9 @@
       "REQUEST_TASK_UPDATED": "Request task changed",
       "REQUEST_TASK_REMOVED": "Request task removed",
       "REQUEST_CLOSED": "Request closed",
-      "INVITATION_RESENT": "Invitation sent again"
+      "INVITATION_RESENT": "Invitation sent again",
+      "DATA_EXPORTED": "Data downloaded",
+      "WEBSITE_CHECKED": "Website checked"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -277,7 +282,9 @@
       "REQUEST_TASK_UPDATED": "Changed a task on the request from {name} ({type})",
       "REQUEST_TASK_REMOVED": "Removed a task from the request from {name} ({type})",
       "REQUEST_CLOSED": "Closed the request from {name} ({type})",
-      "INVITATION_RESENT": "Sent the invitation to {email} again"
+      "INVITATION_RESENT": "Sent the invitation to {email} again",
+      "DATA_EXPORTED": "Downloaded {what}",
+      "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed"
     },
     "emptyValue": "empty",
     "values": {
@@ -1311,11 +1318,6 @@
       "save": "Save",
       "cancel": "Cancel",
       "submit": "Report breach"
-    },
-    "alert": {
-      "title": "{count, plural, one {1 open breach} other {# open breaches}}",
-      "more": "{count, plural, one {1 more open breach} other {# more open breaches}} on the Breaches page.",
-      "all": "All breaches"
     }
   },
   "requests": {
@@ -1494,6 +1496,180 @@
       "save": "Save",
       "cancel": "Cancel",
       "submit": "Log request"
+    }
+  },
+  "exports": {
+    "title": "Exports",
+    "description": "Take the records out of the app: everything in one zip for an auditor, or one list at a time as a spreadsheet. Every download is written to the activity log.",
+    "pack": {
+      "title": "Audit pack",
+      "description": "One zip with every list below, the newest approved text of each policy, every file uploaded as proof, and the result of the activity log's integrity check.",
+      "download": "Download audit pack"
+    },
+    "lists": {
+      "title": "Lists",
+      "description": "The whole list, not just the page you are looking at. They open in Excel.",
+      "download": "Download CSV"
+    },
+    "datasets": {
+      "checklist": {
+        "name": "Checklist",
+        "about": "Every control with its status, owner, policies and proof."
+      },
+      "proof_requirements": {
+        "name": "Proof requirements",
+        "about": "What each control must prove, how often, who collects it and when it was last given."
+      },
+      "evidence": {
+        "name": "Proof",
+        "about": "Every file, link and note attached as proof, with who added it and when."
+      },
+      "policies": {
+        "name": "Policies",
+        "about": "Each policy with its status, approver and approved version."
+      },
+      "breaches": {
+        "name": "Breaches",
+        "about": "Every breach with the date of each step, from found to closed."
+      },
+      "requests": {
+        "name": "Requests",
+        "about": "Every request with its due date, identity check, systems handled and outcome."
+      },
+      "people": {
+        "name": "People and roles",
+        "about": "Everyone on record, the jobs they hold and their access."
+      },
+      "activity": {
+        "name": "Activity log",
+        "about": "Every change, oldest first, with the fingerprints that link them."
+      }
+    }
+  },
+  "websiteCheck": {
+    "title": "Website check",
+    "description": "Visit your public website the way a visitor does and check what DPDP expects to see. It reads the page the server sends, so a cookie banner or tracker added by a script is not seen.",
+    "form": {
+      "title": "Check a website",
+      "description": "Enter the address of your public website or app. The check takes about ten seconds.",
+      "label": "Website address",
+      "placeholder": "www.example.in",
+      "submit": "Check now",
+      "running": "Checking",
+      "wait": "Visiting the site and its privacy notice. This can take about ten seconds."
+    },
+    "empty": {
+      "title": "No checks yet",
+      "canRun": "Enter your website address above and run the first check.",
+      "readOnly": "Nobody has run a check yet."
+    },
+    "results": {
+      "passed": "Passed",
+      "warned": "Warnings",
+      "failed": "Failed",
+      "checked": "Checked {when} by {name}"
+    },
+    "status": {
+      "pass": "Passed",
+      "warn": "Warning",
+      "fail": "Failed"
+    },
+    "history": {
+      "title": "Earlier checks",
+      "address": "Address",
+      "checked": "Checked",
+      "by": "By",
+      "result": "Result",
+      "view": "View",
+      "passed": "{count} passed",
+      "warned": "{count, plural, one {# warning} other {# warnings}}",
+      "failed": "{count} failed"
+    },
+    "checks": {
+      "reachable": {
+        "name": "The site answers",
+        "pass": "The site answers (status {status}).",
+        "fail": "The site answered with an error (status {status}).",
+        "failReason": "The site could not be reached because {reason, select, dns {the address does not exist} refused {the server refused the connection} timeout {it took too long to answer} certificate {its security certificate is not trusted} too_many_redirects {it redirects in a loop} not_allowed {the address is not a public website} other {of an unknown problem}}."
+      },
+      "https": {
+        "name": "Served over HTTPS",
+        "pass": "The site is served over HTTPS.",
+        "fail": "The site is served over plain HTTP, so what visitors send to it can be read on the way."
+      },
+      "http_redirect": {
+        "name": "Plain HTTP leads to HTTPS",
+        "pass": "The plain HTTP address either redirects to HTTPS or is closed.",
+        "warn": "Could not tell what the plain HTTP address does.",
+        "fail": "The plain HTTP address serves the site without sending visitors to HTTPS."
+      },
+      "certificate": {
+        "name": "Security certificate",
+        "pass": "The certificate is valid for {days, plural, one {# more day} other {# more days}}, over {protocol}.",
+        "passNoDate": "The certificate is valid, over {protocol}.",
+        "warn": "The certificate runs out in {days, plural, one {# day} other {# days}}. Renew it soon.",
+        "fail": "The site has no certificate, because it is not served over HTTPS.",
+        "failProtocol": "The site still allows {protocol}, which is out of date. Allow TLS 1.2 or newer only."
+      },
+      "hsts": {
+        "name": "HTTPS-only instruction (HSTS)",
+        "pass": "The site tells browsers to use HTTPS only, for {days, plural, one {# day} other {# days}}.",
+        "warn": "The HTTPS-only instruction lasts only {days, plural, one {# day} other {# days}}. Six months or more is recommended.",
+        "fail": "The site does not tell browsers to use HTTPS only."
+      },
+      "csp": {
+        "name": "Content security policy",
+        "pass": "A content security policy limits what the page can load.",
+        "warn": "No content security policy is enforced."
+      },
+      "content_type_options": {
+        "name": "Content type protection",
+        "pass": "Browsers are told not to guess file types.",
+        "warn": "The X-Content-Type-Options header is not set to nosniff."
+      },
+      "referrer_policy": {
+        "name": "Referrer policy",
+        "pass": "A referrer policy limits what other sites learn about where visitors came from.",
+        "warn": "No referrer policy is set."
+      },
+      "frame_options": {
+        "name": "Protection from framing",
+        "pass": "Other sites cannot show this site inside a frame.",
+        "warn": "Other sites can show this site inside a frame."
+      },
+      "privacy_notice": {
+        "name": "Privacy notice",
+        "pass": "A privacy notice is linked from the home page and loads: {url}",
+        "fail": "No link to a privacy notice was found on the home page.",
+        "failBroken": "The privacy notice link {url} did not load ({why})."
+      },
+      "grievance_contact": {
+        "name": "Grievance contact",
+        "pass": "The grievance email {email} from your company profile is on the site.",
+        "warn": "The site shows {email}, but your company profile has no grievance email. Add it in Company profile.",
+        "fail": "No grievance contact was found on the site. Add an email address to your notice or footer.",
+        "failMissing": "Your company profile gives {email} as the grievance email, but it is not on the site."
+      },
+      "cookies": {
+        "name": "Cookies before consent",
+        "pass": "No cookies are set when the home page loads.",
+        "warn": "{count, plural, one {# cookie is} other {# cookies are}} set before anyone agrees: {names}. Only cookies the site needs to work are allowed without consent."
+      }
+    },
+    "groups": {
+      "needsWork": "{count, plural, one {# to fix} other {# to fix}}",
+      "privacy": {
+        "title": "What DPDP expects to see",
+        "about": "A privacy notice, a way to complain, and no cookies before consent."
+      },
+      "connection": {
+        "title": "Secure connection",
+        "about": "Whether visitors reach the site safely."
+      },
+      "browser": {
+        "title": "Browser protections",
+        "about": "Headers that stop other sites from misusing yours."
+      }
     }
   }
 }

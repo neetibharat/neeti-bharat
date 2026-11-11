@@ -5,6 +5,7 @@ import {
   IconBuilding,
   IconChecklist,
   IconDatabase,
+  IconDownload,
   IconFileCheck,
   IconFileText,
   IconHistory,
@@ -19,6 +20,7 @@ import {
   IconShieldLock,
   IconSparkles,
   IconUsers,
+  IconWorldSearch,
   type Icon,
 } from '@tabler/icons-react';
 
@@ -41,8 +43,10 @@ export type NavItemId =
   | 'frameworks'
   | 'policies'
   | 'proof'
+  | 'exports'
   | 'dataMap'
   | 'connections'
+  | 'websiteCheck'
   | 'noticeAndConsent'
   | 'requests'
   | 'breaches'
@@ -88,6 +92,7 @@ export const NAV_AREAS: NavArea[] = [
           { id: 'frameworks', href: '/frameworks', icon: IconScale, status: 'live' },
           { id: 'policies', href: '/policies', icon: IconFileText, status: 'live' },
           { id: 'proof', href: '/proof', icon: IconShieldCheck, status: 'live' },
+          { id: 'exports', href: '/exports', icon: IconDownload, status: 'live' },
         ],
       },
     ],
@@ -100,6 +105,7 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'soon' },
+          { id: 'websiteCheck', href: '/website-check', icon: IconWorldSearch, status: 'live' },
         ],
       },
     ],
