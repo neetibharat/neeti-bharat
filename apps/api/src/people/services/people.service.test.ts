@@ -26,10 +26,11 @@ function build({ emailTaken = false, inviteFails = false } = {}) {
   } as unknown as PeopleRepository;
   const users = { findByEmails: vi.fn().mockResolvedValue([]) } as unknown as UserService;
   const invitationService = {
-    findOpenByEmails: vi.fn().mockResolvedValue([]),
+    findPendingByEmails: vi.fn().mockResolvedValue([]),
     create: inviteFails
       ? vi.fn().mockRejectedValue(new Error('invite failed'))
       : vi.fn().mockResolvedValue({}),
+    resend: vi.fn().mockResolvedValue({}),
   } as unknown as InvitationService;
   const activity = { record: vi.fn().mockResolvedValue(undefined) } as unknown as ActivityService;
   const service = new PeopleService(people, users, invitationService, activity);
@@ -37,14 +38,17 @@ function build({ emailTaken = false, inviteFails = false } = {}) {
 }
 
 describe('PeopleService.add', () => {
-  it('adds someone with no login, without sending any invitation', async () => {
+  it('adds someone and invites them to sign in', async () => {
     const { service, invitationService, activity } = build();
-    await service.add({ name: 'Priya', email: 'Priya@Company.in', access: 'staff' }, actor);
-    expect(invitationService.create).not.toHaveBeenCalled();
+    await service.add({ name: 'Priya', email: 'Priya@Company.in', access: 'member' }, actor);
+    expect(invitationService.create).toHaveBeenCalledWith(
+      { email: 'priya@company.in', role: 'member' },
+      actor,
+    );
     expect(activity.record).toHaveBeenCalledWith(
       expect.objectContaining({
         action: 'PERSON_ADDED',
-        details: { name: 'Priya', email: 'priya@company.in', access: 'staff' },
+        details: { name: 'Priya', email: 'priya@company.in', access: 'member' },
       }),
     );
   });
@@ -59,7 +63,7 @@ describe('PeopleService.add', () => {
     expect(Object.keys(data).sort()).toEqual(['department', 'email', 'jobTitle', 'name']);
   });
 
-  it('invites them to sign in when they are given a login role', async () => {
+  it('invites them with the role they were given', async () => {
     const { service, invitationService } = build();
     await service.add({ name: 'Priya', email: 'priya@company.in', access: 'auditor' }, actor);
     expect(invitationService.create).toHaveBeenCalledWith(
@@ -71,7 +75,7 @@ describe('PeopleService.add', () => {
   it('keeps emails unique, ignoring capitals', async () => {
     const { service, people } = build({ emailTaken: true });
     await expect(
-      service.add({ name: 'Priya', email: 'PRIYA@company.in', access: 'staff' }, actor),
+      service.add({ name: 'Priya', email: 'PRIYA@company.in', access: 'member' }, actor),
     ).rejects.toMatchObject({ code: 'CONFLICT' });
     expect(people.findByEmail).toHaveBeenCalledWith('priya@company.in');
     expect(people.create).not.toHaveBeenCalled();
@@ -93,5 +97,27 @@ describe('PeopleService.ensureForAccount', () => {
     await service.ensureForAccount({ email: 'b@company.in', name: '' });
     expect(people.ensure).toHaveBeenNthCalledWith(1, { name: 'Asha', email: 'a@company.in' });
     expect(people.ensure).toHaveBeenNthCalledWith(2, { name: 'b', email: 'b@company.in' });
+  });
+});
+
+describe('PeopleService.resendInvitation', () => {
+  it('sends the invitation of that person again and returns them', async () => {
+    const { service, invitationService } = build();
+    const result = await service.resendInvitation('p1', actor);
+    expect(invitationService.resend).toHaveBeenCalledWith('priya@company.in', actor);
+    expect(result.id).toBe('p1');
+  });
+
+  it('refuses someone who has left, or who does not exist', async () => {
+    const left = build();
+    vi.mocked(left.people.findById).mockResolvedValueOnce({ id: 'p1', status: 'left' } as Person);
+    await expect(left.service.resendInvitation('p1', actor)).rejects.toMatchObject({
+      code: 'CONFLICT',
+    });
+    const none = build();
+    vi.mocked(none.people.findById).mockResolvedValueOnce(null);
+    await expect(none.service.resendInvitation('x', actor)).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
   });
 });

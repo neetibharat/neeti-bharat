@@ -1,11 +1,19 @@
 import type { MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
 import { baseApi } from './base-api';
 
-const WORK_TAGS = ['Proof', 'Evidence', 'Policy', 'Checklist', 'People'] as const;
+const WORK_TAGS = [
+  'Proof',
+  'Evidence',
+  'Policy',
+  'Checklist',
+  'People',
+  'Breach',
+  'Request',
+] as const;
 
 export const myWorkApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    // What is waiting on someone moves with proof, policies, controls and who holds which job.
+    // What is waiting on someone moves with proof, policies, breaches, requests, controls and who holds which job.
     // Pass a person to see their work instead (admins only).
     getMyWork: build.query<MyWorkResponse, string | void>({
       query: (personId) => (personId ? `/my-work/of/${encodeURIComponent(personId)}` : '/my-work'),

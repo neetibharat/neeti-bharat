@@ -34,7 +34,7 @@ With `SMTP_HOST` empty, links are printed to the API log. That works for develop
 ## 3. Who can sign in
 
 - The first person to sign in becomes the **admin**. Set `INITIAL_ADMIN_EMAIL` to the address that may do this: it is required in production, so nobody else can claim a new install. Without it (development only), anyone can.
-- After that, only people an admin has given a login can sign in: add them under Settings, People, which sends the invitation.
+- After that, only people an admin has given a login can sign in: add them under Settings, People, which sends the invitation. An invitation is valid for 7 days. **Resend invitation** on the person's row sends a fresh link for another 7 days, also after the first one has run out.
 - Sign-in methods: an email link (always on), plus Google and Microsoft if you set them up below.
 
 ## 4. Microsoft sign-in (optional)
@@ -63,7 +63,57 @@ Leaving `MICROSOFT_TENANT_ID` as `common` lets any Microsoft account try to sign
 3. Add the authorised redirect URI `<WEB_ORIGIN>/api/auth/callback/google`.
 4. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-## 6. Check it works
+## 6. Storage for proof files (optional)
+
+Proof can be a file. Files are kept in any S3-compatible service: AWS S3, MinIO, Cloudflare R2, DigitalOcean Spaces or Backblaze B2. Azure Blob is not S3-compatible and is not supported yet.
+
+| Variable                    | What it is                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `STORAGE_BUCKET`            | The bucket name. Leave it empty to switch file uploads off                                              |
+| `STORAGE_REGION`            | The region (default `us-east-1`)                                                                        |
+| `STORAGE_ENDPOINT`          | The service address, for services other than AWS S3                                                     |
+| `STORAGE_ACCESS_KEY_ID`     | The access key. Set it together with the secret, or leave both empty to use the default AWS credentials |
+| `STORAGE_SECRET_ACCESS_KEY` | The secret for that key                                                                                 |
+| `STORAGE_FORCE_PATH_STYLE`  | `true` for services that want the bucket in the path, such as MinIO (default `false`)                   |
+
+The bucket must be private. The API uploads files itself, and people download through links that last 5 minutes. The browser opens those links, so `STORAGE_ENDPOINT` must be an address people can reach, not only the API.
+
+**AWS S3.** Create a private bucket and a user that may put, get and delete objects in it.
+
+```
+STORAGE_BUCKET=dpdp-proof
+STORAGE_REGION=ap-south-1
+STORAGE_ACCESS_KEY_ID=...
+STORAGE_SECRET_ACCESS_KEY=...
+```
+
+On AWS itself, leave the keys empty to use the role of the machine the API runs on.
+
+**MinIO with Docker Compose.** `pnpm db:up` starts MinIO on `127.0.0.1:9000` (console on `9001`) and creates the bucket. Use:
+
+```
+STORAGE_BUCKET=dpdp-proof
+STORAGE_ENDPOINT=http://localhost:9000
+STORAGE_ACCESS_KEY_ID=dpdpminio
+STORAGE_SECRET_ACCESS_KEY=dpdpminio-secret
+STORAGE_FORCE_PATH_STYLE=true
+```
+
+Those keys are for development. Docker Compose reads the same two variables, so change them in `.env` before first start for anything else.
+
+**Cloudflare R2.** Create a bucket and an API token with object read and write, then:
+
+```
+STORAGE_BUCKET=dpdp-proof
+STORAGE_REGION=auto
+STORAGE_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+STORAGE_ACCESS_KEY_ID=...
+STORAGE_SECRET_ACCESS_KEY=...
+```
+
+Without `STORAGE_BUCKET`, the app runs as before: proof can be links and notes, the drop-zone shows "File storage is not set up" and stays off, and an upload sent to the API directly is refused with `STORAGE_NOT_CONFIGURED` (503). Setting only one of the two keys stops the API from starting.
+
+## 7. Check it works
 
 1. Restart the API after changing `.env`.
 2. Open `WEB_ORIGIN`. Google and Microsoft buttons show only when set up.

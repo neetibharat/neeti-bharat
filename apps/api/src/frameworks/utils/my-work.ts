@@ -1,8 +1,11 @@
 import {
+  isBoardPending,
   proofDue,
   proofStatus,
   reviewDueAt,
+  type BreachStep,
   type JobRole,
+  type RequestType,
   type MyWorkItem,
   type MyWorkKind,
   type MyWorkload,
@@ -21,6 +24,26 @@ export interface WorkPolicy {
   approvedAt: Date | null;
 }
 
+/** The little of an open breach that makes it work for someone. */
+export interface WorkBreach {
+  id: string;
+  title: string;
+  currentStep: BreachStep;
+  reportDueAt: Date;
+  overdue: boolean;
+  assigneeId: string | null;
+}
+
+/** The little of an open request that makes it work for someone. */
+export interface WorkRequest {
+  id: string;
+  type: RequestType;
+  personName: string;
+  dueAt: Date;
+  overdue: boolean;
+  assigneeId: string | null;
+}
+
 export interface MyWorkInput {
   personId: string;
   /** The jobs this person holds. */
@@ -29,6 +52,8 @@ export interface MyWorkInput {
   controls: ControlRow[];
   policies: WorkPolicy[];
   briefs: PolicyBriefs;
+  breaches: WorkBreach[];
+  requests: WorkRequest[];
   now: Date;
 }
 
@@ -36,9 +61,16 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 /** A policy review this close counts as work now. */
 const REVIEW_WINDOW_DAYS = 30;
 
-const RANK: Record<MyWorkKind, number> = { approve: 1, review: 2, proof: 3, draft: 4 };
+const RANK: Record<MyWorkKind, number> = {
+  breach: 0,
+  request: 1,
+  approve: 2,
+  review: 3,
+  proof: 4,
+  draft: 5,
+};
 
-/** Overdue first, then what is waiting on a decision, then reviews, proof, and drafts; the earliest date first within each. */
+/** Overdue first, then open breaches and requests, what is waiting on a decision, then reviews, proof, and drafts; the earliest date first within each. */
 const byUrgency = (a: MyWorkItem, b: MyWorkItem): number =>
   (a.overdue ? 0 : RANK[a.kind]) - (b.overdue ? 0 : RANK[b.kind]) ||
   (a.dueOn ?? '9999').localeCompare(b.dueOn ?? '9999');
@@ -102,10 +134,46 @@ function reviewWork(
   return { ...base, kind: 'review', dueOn: iso(due), overdue: days < 0 };
 }
 
+/** An item that names someone is theirs alone; one that names nobody is for whoever holds the DPO job, and for admins. */
+function isMine(assigneeId: string | null, input: MyWorkInput): boolean {
+  if (assigneeId) return assigneeId === input.personId;
+  return input.isAdmin || input.roles.has('DPO');
+}
+
+/** An open breach is dated by the Board deadline until the Board is told. */
+function breachWork(input: MyWorkInput): MyWorkItem[] {
+  return input.breaches
+    .filter((breach) => isMine(breach.assigneeId, input))
+    .map((breach) => ({
+      kind: 'breach' as const,
+      id: breach.id,
+      title: breach.title,
+      context: breach.currentStep,
+      dueOn: isBoardPending(breach.currentStep) ? iso(breach.reportDueAt) : null,
+      overdue: breach.overdue,
+    }));
+}
+
+/** An open request is dated by its due date. */
+function requestWork(input: MyWorkInput): MyWorkItem[] {
+  return input.requests
+    .filter((request) => isMine(request.assigneeId, input))
+    .map((request) => ({
+      kind: 'request' as const,
+      id: request.id,
+      title: request.personName,
+      context: request.type,
+      dueOn: iso(request.dueAt),
+      overdue: request.overdue,
+    }));
+}
+
 /** Everything assigned to one person, most urgent first. */
 export function myWorkItems(input: MyWorkInput): MyWorkItem[] {
   const policies = input.policies.flatMap((policy) => policyWork(policy, input) ?? []);
-  return [...proofWork(input), ...policies].sort(byUrgency);
+  return [...breachWork(input), ...requestWork(input), ...proofWork(input), ...policies].sort(
+    byUrgency,
+  );
 }
 
 /** The counts for one person's items. */

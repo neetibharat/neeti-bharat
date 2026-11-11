@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ACCESS_LEVELS, JOB_ROLES, PEOPLE_PAGE_SIZE } from '@dpdp-kit/shared';
+import { APP_ROLES, JOB_ROLES, PEOPLE_PAGE_SIZE } from '@dpdp-kit/shared';
 import { z } from 'zod';
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -15,7 +15,7 @@ export const addPersonSchema = z.object({
   email: z.email().transform((email) => email.toLowerCase()),
   department: optionalText,
   jobTitle: optionalText,
-  access: z.enum(ACCESS_LEVELS),
+  access: z.enum(APP_ROLES),
 });
 
 export const updatePersonSchema = z.object({
@@ -33,7 +33,7 @@ export const listPeopleSchema = z.object({
 
 export type ListPeopleQuery = z.output<typeof listPeopleSchema>;
 
-export const setAccessSchema = z.object({ access: z.enum(ACCESS_LEVELS) });
+export const setAccessSchema = z.object({ access: z.enum(APP_ROLES) });
 
 export const assignRoleSchema = z.object({ personId: z.string().min(1).nullable() });
 
@@ -58,7 +58,7 @@ export class AddPersonDto {
   @ApiPropertyOptional()
   jobTitle?: string;
 
-  @ApiProperty({ enum: ACCESS_LEVELS, description: 'staff means no login' })
+  @ApiProperty({ enum: APP_ROLES, description: 'The role they are invited with' })
   access!: string;
 }
 
@@ -74,7 +74,7 @@ export class UpdatePersonDto {
 }
 
 export class SetAccessDto {
-  @ApiProperty({ enum: ACCESS_LEVELS })
+  @ApiProperty({ enum: APP_ROLES })
   access!: string;
 }
 

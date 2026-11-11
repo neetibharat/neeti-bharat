@@ -1,5 +1,7 @@
 export * from './activity.js';
 export * from './auth.js';
+export * from './breaches.js';
+export * from './duration.js';
 export * from './error-codes.js';
 export * from './frameworks/dpdp/checklist.js';
 export * from './frameworks/dpdp/control-edit.js';
@@ -15,4 +17,5 @@ export * from './health.js';
 export * from './locales.js';
 export * from './people.js';
 export * from './profile.js';
+export * from './requests.js';
 export * from './roles.js';

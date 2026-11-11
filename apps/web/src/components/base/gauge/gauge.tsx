@@ -2,7 +2,7 @@
 
 import { PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer } from 'recharts';
 
-/** A ring that fills to `percent` (0 to 100), for use on the brand gradient. */
+/** A ring that fills to `percent` (0 to 100) in the brand colour, on a pale track. */
 export function Gauge({ percent }: { percent: number }) {
   return (
     <ResponsiveContainer>

@@ -29,8 +29,8 @@ export interface NewActivityEvent {
 const column = (value: JsonValues) => value ?? Prisma.DbNull;
 
 export interface ListQuery {
+  page: number;
   limit: number;
-  cursor?: string;
   action?: string;
 }
 
@@ -65,14 +65,23 @@ export class ActivityRepository {
     });
   }
 
-  /** Newest first. Asks for one more than `limit` so the caller can tell whether there is a next page. */
-  list({ limit, cursor, action }: ListQuery): Promise<ActivityEvent[]> {
-    return this.prisma.db.activityEvent.findMany({
-      where: action ? { action } : undefined,
-      orderBy: { seq: 'desc' },
-      take: limit + 1,
-      ...(cursor ? { cursor: { seq: BigInt(cursor) }, skip: 1 } : {}),
-    });
+  /** One page, newest first, and how many events match in all. */
+  async list({
+    page,
+    limit,
+    action,
+  }: ListQuery): Promise<{ rows: ActivityEvent[]; total: number }> {
+    const where = action ? { action } : undefined;
+    const [rows, total] = await Promise.all([
+      this.prisma.db.activityEvent.findMany({
+        where,
+        orderBy: { seq: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.db.activityEvent.count({ where }),
+    ]);
+    return { rows, total };
   }
 
   /** Where the chain should end, or null before the first event. */

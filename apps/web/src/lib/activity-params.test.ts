@@ -4,6 +4,8 @@ import { sentenceParams, type ParamWords } from './activity-params';
 
 const words: ParamWords = {
   role: (role) => `role:${role}`,
+  step: (step) => `step:${step}`,
+  requestType: (type) => `type:${type}`,
   show: (value) => `shown:${String(value)}`,
   entry: 'Real entry',
 };
@@ -32,6 +34,21 @@ describe('sentenceParams', () => {
     const params = sentenceParams(event({ details: { role: 'admin', email: 'a@b.in' } }), words);
     expect(params.role).toBe('role:admin');
     expect(params.email).toBe('shown:a@b.in');
+  });
+
+  it('words a breach step code, and only under the step key', () => {
+    const params = sentenceParams(
+      event({ details: { step: 'tell_board', title: 'close' } }),
+      words,
+    );
+    expect(params.step).toBe('step:tell_board');
+    expect(params.title).toBe('shown:close');
+  });
+
+  it('words a request type code, and only under the type key', () => {
+    const params = sentenceParams(event({ details: { type: 'erasure', name: 'access' } }), words);
+    expect(params.type).toBe('type:erasure');
+    expect(params.name).toBe('shown:access');
   });
 
   it('shows an unknown role value without translating it', () => {

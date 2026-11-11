@@ -55,6 +55,10 @@ export const peopleApi = baseApi.injectEndpoints({
       // The dialog refreshes the lists when it is closed.
       invalidatesTags: ['Activity'],
     }),
+    resendInvitation: build.mutation<PersonResponse, string>({
+      query: (id) => ({ url: `/people/${id}/resend-invitation`, method: 'POST' }),
+      invalidatesTags: ['People', 'Activity'],
+    }),
     assignRole: build.mutation<void, { role: JobRole } & AssignRoleRequest>({
       query: ({ role, ...body }) => ({ url: `/roles/${role}`, method: 'PUT', body }),
       invalidatesTags: [...CHANGES.person],
@@ -70,5 +74,6 @@ export const {
   useUpdatePersonMutation,
   useSetAccessMutation,
   useLeavePersonMutation,
+  useResendInvitationMutation,
   useAssignRoleMutation,
 } = peopleApi;

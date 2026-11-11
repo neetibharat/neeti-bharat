@@ -8,16 +8,28 @@ export interface Access {
   access: AccessLevel;
   /** True when the access is an invitation that has not been accepted yet. */
   invited: boolean;
+  /** True when an invitation was sent, never accepted, and has run out. */
+  inviteExpired: boolean;
 }
 
 /**
  * Someone's access, read from where it really lives: their account, or failing that their open
- * invitation. A disabled account, or neither, means no login: staff.
+ * invitation. A disabled account, or neither, means no login: staff. An invitation that has run out is not a login
+ * either, but is reported so it can be sent again.
  */
-export function accessOf(account?: Account | null, invitation?: Invitation | null): Access {
-  if (account && !account.disabledAt) return { access: account.role, invited: false };
-  if (!account && invitation) return { access: invitation.role, invited: true };
-  return { access: 'staff', invited: false };
+export function accessOf(
+  account?: Account | null,
+  invitation?: Invitation | null,
+  now: Date = new Date(),
+): Access {
+  if (account && !account.disabledAt) {
+    return { access: account.role, invited: false, inviteExpired: false };
+  }
+  if (account || !invitation) return { access: 'staff', invited: false, inviteExpired: false };
+  if (invitation.expiresAt > now) {
+    return { access: invitation.role, invited: true, inviteExpired: false };
+  }
+  return { access: 'staff', invited: false, inviteExpired: true };
 }
 
 export function toPersonResponse(

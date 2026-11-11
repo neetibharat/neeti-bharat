@@ -8,12 +8,19 @@ import type { Evidence } from '../../generated/prisma/client';
 import type { RequirementWithEvidence } from '../repositories/proof-requirement.repository';
 import { day, iso, lastProvided } from './dates';
 
+/** The file's name, size and type. Its place in storage stays on the server. */
+const fileView = (row: Evidence): Pick<EvidenceResponse, 'fileName' | 'fileSize' | 'fileType'> =>
+  row.kind === 'file'
+    ? { fileName: row.fileName!, fileSize: row.fileSize!, fileType: row.fileType! }
+    : {};
+
 export const evidenceView = (row: Evidence): EvidenceResponse => ({
   id: row.id,
   kind: row.kind,
   title: row.title,
   url: row.url,
   note: row.note,
+  ...fileView(row),
   addedByName: row.addedByName,
   createdAt: iso(row.createdAt)!,
 });

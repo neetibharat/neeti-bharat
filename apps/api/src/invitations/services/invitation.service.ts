@@ -18,6 +18,8 @@ export interface InviteInput {
 const INVITATION_DAYS = 7;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+const newExpiry = (): Date => new Date(Date.now() + INVITATION_DAYS * DAY_MS);
+
 @Injectable()
 export class InvitationService {
   constructor(
@@ -38,6 +40,11 @@ export class InvitationService {
     return this.invitations.findOpenByEmails(emails, new Date());
   }
 
+  /** Invitations still waiting for an answer, including ones that have run out, newest first. */
+  findPendingByEmails(emails: string[]): Promise<Invitation[]> {
+    return this.invitations.findPendingByEmails(emails);
+  }
+
   countOpen(): Promise<number> {
     return this.invitations.countOpen(new Date());
   }
@@ -52,7 +59,7 @@ export class InvitationService {
     const invitation = await this.invitations.create({
       ...input,
       invitedById: actor.id,
-      expiresAt: new Date(Date.now() + INVITATION_DAYS * DAY_MS),
+      expiresAt: newExpiry(),
     });
     await this.activity.record({
       actor,
@@ -62,6 +69,23 @@ export class InvitationService {
     });
     await this.sendInvitationEmail(invitation);
     return invitation;
+  }
+
+  /** Sends the same invitation again with a fresh last day. It needs an invitation nobody has answered yet. */
+  async resend(email: string, actor: Actor): Promise<Invitation> {
+    const pending = await this.invitations.findLatestPendingByEmail(email);
+    if (!pending) throw new AppException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    if (await this.users.existsByEmail(email))
+      throw new AppException('CONFLICT', HttpStatus.CONFLICT);
+    const renewed = await this.invitations.renew(pending.id, newExpiry());
+    await this.activity.record({
+      actor,
+      action: 'INVITATION_RESENT',
+      subject: { type: 'invitation', id: renewed.id },
+      details: { email: renewed.email, role: renewed.role },
+    });
+    await this.sendInvitationEmail(renewed);
+    return renewed;
   }
 
   async revoke(id: string, actor: Actor): Promise<void> {

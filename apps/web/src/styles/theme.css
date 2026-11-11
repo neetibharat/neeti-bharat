@@ -78,26 +78,15 @@
   --color-overlay: rgb(15 23 42 / 0.4);
   --color-tooltip: var(--color-gray-900);
 
-  /* ---------- Semantic: gradients ---------- */
-  --color-hero-from: var(--color-accent-500);
-  --color-hero-to: var(--color-brand-700);
-  --color-brand-panel-from: var(--color-brand-700);
-  --color-brand-panel-to: var(--color-brand-900);
-
-  /* ---------- Semantic: on a brand fill (buttons, gradient panels) ---------- */
+  /* ---------- Semantic: on a brand fill (buttons) ---------- */
   --color-on-brand: #ffffff;
-  --color-on-brand-muted: rgb(255 255 255 / 0.85);
-  --color-on-brand-dim: rgb(255 255 255 / 0.35);
-  --color-on-brand-soft: rgb(255 255 255 / 0.2);
-  --color-on-brand-faint: rgb(255 255 255 / 0.1);
-  --color-on-brand-warm: var(--color-accent-200);
 
   /* ---------- Semantic: charts ---------- */
   --color-chart-approved: var(--color-success);
   --color-chart-in-review: var(--color-accent);
   --color-chart-draft: var(--color-gray-300);
-  --color-chart-gauge-fill: var(--color-on-brand);
-  --color-chart-gauge-track: var(--color-on-brand-soft);
+  --color-chart-gauge-fill: var(--color-brand);
+  --color-chart-gauge-track: var(--color-surface-muted);
 
   /* ---------- Semantic: status ---------- */
   --color-success: var(--color-green-600);

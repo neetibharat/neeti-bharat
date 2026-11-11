@@ -3,7 +3,9 @@
 import {
   IconAlertTriangle,
   IconCalendarDue,
+  IconFlame,
   IconHourglassHigh,
+  IconInbox,
   IconPaperclip,
   type Icon,
 } from '@tabler/icons-react';
@@ -13,6 +15,10 @@ import type { RowTone } from '@/components/base/icon-link-row/icon-link-row';
 import type { DashboardAttention, DashboardReason } from '@/lib/dashboard-stats';
 
 const LOOK: Record<DashboardReason, { icon: Icon; tone: RowTone }> = {
+  breach_overdue: { icon: IconFlame, tone: 'danger' },
+  breach_open: { icon: IconFlame, tone: 'accent' },
+  request_overdue: { icon: IconInbox, tone: 'danger' },
+  request_due_soon: { icon: IconInbox, tone: 'accent' },
   proof_overdue: { icon: IconPaperclip, tone: 'danger' },
   review_overdue: { icon: IconAlertTriangle, tone: 'danger' },
   awaiting_approval: { icon: IconHourglassHigh, tone: 'accent' },
@@ -21,7 +27,7 @@ const LOOK: Record<DashboardReason, { icon: Icon; tone: RowTone }> = {
 
 const MAX_ROWS = 5;
 
-/** The things that most need someone: late proof and reviews, policies waiting on a decision, reviews coming up. */
+/** The things that most need someone: open breaches, late proof, reviews and requests, requests and policies waiting on a decision, reviews coming up. */
 export function AttentionCard({ items }: { items: DashboardAttention[] }) {
   const t = useTranslations('dashboard.attention');
 

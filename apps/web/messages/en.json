@@ -48,7 +48,7 @@
     "admin": "Admin",
     "member": "Member",
     "auditor": "Auditor",
-    "staff": "Staff"
+    "staff": "No login yet"
   },
   "auth": {
     "signIn": {
@@ -86,7 +86,16 @@
     "CONFIRMATION_REQUIRED": "Please confirm this change first.",
     "LAST_ADMIN": "There must always be at least one admin.",
     "BUILT_IN": "This is built in and cannot be changed.",
-    "HAS_CONTROLS": "It still has controls. Archive them first."
+    "HAS_CONTROLS": "It still has controls. Archive them first.",
+    "STEP_ORDER": "That step cannot be done yet. Steps go in order, and the Board and the affected people must be told before a breach is closed.",
+    "BREACH_CLOSED": "This breach is closed and can no longer be changed.",
+    "REQUEST_CLOSED": "This request is closed and can no longer be changed.",
+    "REQUEST_NOT_READY": "The request cannot be closed yet. Check the identity, give every task an outcome and write the reply.",
+    "IDENTITY_NOT_VERIFIED": "Check the person's identity first. Nothing is shared or erased before that.",
+    "FILE_REQUIRED": "Choose a file that is not empty.",
+    "FILE_TOO_LARGE": "That file is larger than the allowed size.",
+    "FILE_TYPE_NOT_ALLOWED": "That type of file is not accepted, or its contents do not match its type.",
+    "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up."
   },
   "comingSoon": {
     "title": "On its way",
@@ -160,7 +169,6 @@
     },
     "empty": "Nothing has been recorded yet.",
     "emptyFiltered": "No changes of that kind yet.",
-    "loadMore": "Load older changes",
     "checkIntegrity": "Check integrity",
     "checking": "Checking",
     "intact": "No changes found. All {count} events match their fingerprints.",
@@ -202,7 +210,21 @@
       "FRAMEWORK_ARCHIVED": "Framework archived",
       "REQUIREMENT_CREATED": "Rule added",
       "REQUIREMENT_EDITED": "Rule edited",
-      "REQUIREMENT_ARCHIVED": "Rule archived"
+      "REQUIREMENT_ARCHIVED": "Rule archived",
+      "BREACH_REPORTED": "Breach reported",
+      "BREACH_EDITED": "Breach edited",
+      "BREACH_ASSIGNED": "Breach assigned",
+      "BREACH_STEP_COMPLETED": "Breach step completed",
+      "BREACH_CLOSED": "Breach closed",
+      "REQUEST_RECEIVED": "Request logged",
+      "REQUEST_EDITED": "Request edited",
+      "REQUEST_ASSIGNED": "Request assigned",
+      "REQUEST_IDENTITY_VERIFIED": "Request identity checked",
+      "REQUEST_TASK_ADDED": "Request task added",
+      "REQUEST_TASK_UPDATED": "Request task changed",
+      "REQUEST_TASK_REMOVED": "Request task removed",
+      "REQUEST_CLOSED": "Request closed",
+      "INVITATION_RESENT": "Invitation sent again"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -241,7 +263,21 @@
       "FRAMEWORK_ARCHIVED": "Archived the framework {name}",
       "REQUIREMENT_CREATED": "Added the rule {reference} ({title}) to {framework}",
       "REQUIREMENT_EDITED": "Edited the rule {reference} ({title}) in {framework}",
-      "REQUIREMENT_ARCHIVED": "Archived the rule {reference} ({title}) in {framework}"
+      "REQUIREMENT_ARCHIVED": "Archived the rule {reference} ({title}) in {framework}",
+      "BREACH_REPORTED": "Reported the breach {title}",
+      "BREACH_EDITED": "Changed the details of the breach {title}",
+      "BREACH_ASSIGNED": "Changed who deals with the breach {title} from {before} to {after}",
+      "BREACH_STEP_COMPLETED": "Completed the step \"{step}\" on the breach {title}",
+      "BREACH_CLOSED": "Closed the breach {title}",
+      "REQUEST_RECEIVED": "Logged a request from {name} ({type})",
+      "REQUEST_EDITED": "Changed the details of the request from {name} ({type})",
+      "REQUEST_ASSIGNED": "Changed who deals with the request from {name} ({type}) from {before} to {after}",
+      "REQUEST_IDENTITY_VERIFIED": "Checked the identity of {name} for the request ({type})",
+      "REQUEST_TASK_ADDED": "Added a task to the request from {name} ({type})",
+      "REQUEST_TASK_UPDATED": "Changed a task on the request from {name} ({type})",
+      "REQUEST_TASK_REMOVED": "Removed a task from the request from {name} ({type})",
+      "REQUEST_CLOSED": "Closed the request from {name} ({type})",
+      "INVITATION_RESENT": "Sent the invitation to {email} again"
     },
     "emptyValue": "empty",
     "values": {
@@ -437,7 +473,8 @@
     "status": {
       "active": "Active",
       "left": "Left",
-      "invited": "Invited"
+      "invited": "Invited",
+      "inviteExpired": "Invitation expired"
     },
     "leftOn": "Left {date}",
     "accessLevels": {
@@ -445,10 +482,7 @@
       "admin": "Everything, including people, connections, keys and secrets.",
       "member": "Does the work: policies, data map, proof, requests and breaches.",
       "auditor": "Reads everything and changes nothing.",
-      "staff": "Is a person on record, for example to hold a role. Has no login.",
-      "description": "Choose one for each person. Only the first three can sign in.",
-      "canSignIn": "Can sign in",
-      "noLogin": "No login"
+      "description": "Choose one for each person. Everyone you add gets an email invitation to sign in."
     },
     "form": {
       "name": "Name",
@@ -456,7 +490,7 @@
       "department": "Department",
       "jobTitle": "Job title",
       "access": "Access",
-      "accessHint": "Admin, Member and Auditor get an email invitation to sign in. Staff have no login.",
+      "accessHint": "They get an email invitation to sign in with this access.",
       "save": "Save",
       "cancel": "Cancel",
       "add": "Add person"
@@ -487,7 +521,7 @@
       "people": "People",
       "peopleNote": "{count, plural, one {1 has left} other {# have left}}",
       "login": "Can sign in",
-      "loginNote": "{count, plural, one {1 is staff with no login} other {# are staff with no login}}",
+      "loginNote": "{count, plural, one {1 has no login yet} other {# have no login yet}}",
       "roles": "Roles filled",
       "rolesNote": "{count, plural, =0 {Every role has a holder} one {1 role has no holder} other {# roles have no holder}}",
       "overdue": "Overdue work",
@@ -504,6 +538,12 @@
       "open": "{count} open",
       "overdue": "{count} overdue",
       "view": "See their work"
+    },
+    "resend": {
+      "action": "Resend invitation",
+      "title": "Resend the invitation to {name}?",
+      "body": "{email} gets a new email with a fresh link, valid for 7 days. Any earlier link stops working once they use the new one.",
+      "confirm": "Resend"
     }
   },
   "frameworks": {
@@ -601,8 +641,11 @@
       "addedBy": "Added by {name} on {date}",
       "kinds": {
         "link": "Link",
-        "note": "Note"
+        "note": "Note",
+        "file": "File"
       },
+      "download": "Download",
+      "fileMeta": "{name} · {size}",
       "form": {
         "kind": "Type",
         "title": "Title",
@@ -1008,7 +1051,16 @@
     "search": "Search evidence",
     "files": {
       "title": "Drag and drop files here",
-      "soon": "File upload is coming in a later version. For now, add a link or a note."
+      "hint": "Accepted: {types}. Up to {max} each.",
+      "choose": "Choose files",
+      "uploading": "Uploading…",
+      "off": "File storage is not set up",
+      "offHint": "Ask whoever runs this app to set it up. The steps are under Storage in docs/self-hosting.md. Until then, add a link or a note.",
+      "problems": {
+        "empty": "“{name}” is empty.",
+        "tooLarge": "“{name}” is larger than {max}.",
+        "type": "“{name}” is not an accepted type. Accepted: {types}."
+      }
     },
     "settings": {
       "title": "Settings",
@@ -1033,9 +1085,13 @@
     },
     "control": {
       "showing": "Proof asked for by this control. Add what an auditor would want to see.",
-      "showAll": "Show all",
       "fallback": "Control",
-      "archived": "Archived requirements"
+      "back": "All proof",
+      "tabs": {
+        "requirements": "Requirements ({count})",
+        "other": "Other proof ({count})",
+        "archived": "Archived ({count})"
+      }
     }
   },
   "dashboard": {
@@ -1046,13 +1102,17 @@
         "all": "All ({count})",
         "proof": "Proof ({count})",
         "approve": "To approve ({count})",
-        "policies": "Policies ({count})"
+        "policies": "Policies ({count})",
+        "breach": "Breaches ({count})",
+        "request": "Requests ({count})"
       },
       "kinds": {
         "proof": "Proof to collect",
         "approve": "Waiting for your approval",
         "review": "Policy review",
-        "draft": "Policy to write"
+        "draft": "Policy to write",
+        "breach": "Breach to handle",
+        "request": "Request to answer"
       },
       "due": "Due {date}",
       "overdue": "Overdue · {date}",
@@ -1066,7 +1126,9 @@
         "overdue": "Overdue",
         "approve": "To approve",
         "proof": "Proof to collect",
-        "policies": "Policies to look after"
+        "policies": "Policies to look after",
+        "breach": "Open breaches",
+        "request": "Open requests"
       },
       "groups": {
         "overdue": "Overdue",
@@ -1093,7 +1155,11 @@
         "proof_overdue": "{days, plural, =0 {Proof is due today} one {Proof was due 1 day ago} other {Proof was due # days ago}}",
         "review_overdue": "{days, plural, one {Review was due 1 day ago} other {Review was due # days ago}}",
         "awaiting_approval": "Waiting for approval from {approver}",
-        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}"
+        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}",
+        "breach_overdue": "The report to the Board is overdue",
+        "breach_open": "An open breach: the report clock is running",
+        "request_overdue": "{days, plural, =0 {Request was due today} one {Request was due 1 day ago} other {Request was due # days ago}}",
+        "request_due_soon": "{days, plural, =0 {Request is due today} one {Request due in 1 day} other {Request due in # days}}"
       }
     },
     "frameworks": {
@@ -1130,5 +1196,304 @@
   },
   "confirm": {
     "cancel": "Cancel"
+  },
+  "breaches": {
+    "report": "Report a breach",
+    "edit": "Edit",
+    "editTitle": "Edit breach",
+    "back": "Breaches",
+    "search": "Search breaches",
+    "summary": {
+      "open": "Open",
+      "overdue": "Overdue",
+      "closed": "Closed",
+      "openNote": "Not closed yet",
+      "overdueNote": "The Board has not been told in time",
+      "closedNote": "All five steps done"
+    },
+    "tabs": {
+      "open": "Open ({count})",
+      "closed": "Closed ({count})"
+    },
+    "columns": {
+      "title": "Breach",
+      "found": "Found",
+      "people": "People affected",
+      "step": "Step",
+      "clock": "Board report",
+      "assignee": "Assigned to"
+    },
+    "empty": {
+      "openTitle": "No open breaches",
+      "openText": "When a breach is found, report it here to start the clock.",
+      "closedTitle": "No closed breaches",
+      "closedText": "A breach moves here once all five steps are done.",
+      "noMatch": "No breach matches your search."
+    },
+    "unknownPeople": "Not known",
+    "unassigned": "Unassigned",
+    "steps": {
+      "found": "Found",
+      "assess": "Assess",
+      "tell_board": "Tell the Board",
+      "tell_people": "Tell people",
+      "close": "Close"
+    },
+    "stepHints": {
+      "found": "The breach is on record and the clock is running.",
+      "assess": "Find out what happened, which systems and data were affected, and how many people. Write what you learn in the note.",
+      "tell_board": "Send the full report to the Data Protection Board of India within the report window. Write in the note what you sent and when. This app records it; it does not send it.",
+      "tell_people": "Tell each affected person without delay, in plain language: what happened, what data, what you are doing, and what they can do. Write in the note how and when you told them. This app records it; it does not send it.",
+      "close": "Close the breach once the Board and the affected people have been told and the work is done. A closed breach can no longer be changed."
+    },
+    "clock": {
+      "title": "Board report clock",
+      "description": "The Board needs a full report within the breach report window in Company profile. The clock starts when the breach is found.",
+      "due": "Report due {date}",
+      "left": "Time left",
+      "pastDue": "Time past due",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "overdue": "Overdue",
+      "boardTold": "The Board was told on {date}. The clock has stopped."
+    },
+    "badge": {
+      "left": "{unit, select, days {{days}d {hours}h left} hours {{hours}h {minutes}m left} other {{minutes}m left}}",
+      "overdue": "Overdue by {unit, select, days {{days}d {hours}h} hours {{hours}h {minutes}m} other {{minutes}m}}",
+      "boardTold": "Board told",
+      "closed": "Closed"
+    },
+    "detail": {
+      "stepTitle": "Next step: {step}",
+      "notes": "Note",
+      "notesHint": "Optional. Saved with the step as proof.",
+      "markDone": "Mark \"{step}\" done",
+      "closeTitle": "Close this breach?",
+      "closeText": "A closed breach can no longer be changed. Its steps stay on record.",
+      "closedTitle": "This breach is closed",
+      "closedText": "It was closed on {date}. Every step is on record below.",
+      "detailsTitle": "What happened",
+      "description": "What happened",
+      "systems": "Systems affected",
+      "data": "Personal data affected",
+      "people": "People affected",
+      "found": "Found",
+      "assignee": "Assigned to",
+      "unassigned": "Unassigned",
+      "unassignedHint": "Nobody is named, so it is the DPO's to deal with.",
+      "reportedBy": "Reported by {name}",
+      "historyTitle": "Steps done",
+      "historyEmpty": "No step has been done yet.",
+      "doneBy": "{name} · {date}",
+      "noNote": "No note.",
+      "trackerLabel": "Steps of the breach",
+      "stateDone": "Done",
+      "stateCurrent": "Now",
+      "stateUpcoming": "To do"
+    },
+    "form": {
+      "title": "Title",
+      "description": "What happened",
+      "descriptionHint": "In plain words. This is what the Board report starts from.",
+      "foundDate": "Date found",
+      "foundTime": "Time found",
+      "foundHint": "The report clock starts from this time.",
+      "systems": "Systems affected",
+      "data": "Personal data affected",
+      "people": "People affected",
+      "peopleHint": "A number, or leave it empty if not known yet.",
+      "assignee": "Assigned to",
+      "assigneeNone": "Nobody: the DPO",
+      "assigneeHint": "Leave it as nobody and it is the DPO's to deal with.",
+      "openCalendar": "Open calendar",
+      "clearDate": "Clear date",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Report breach"
+    },
+    "alert": {
+      "title": "{count, plural, one {1 open breach} other {# open breaches}}",
+      "more": "{count, plural, one {1 more open breach} other {# more open breaches}} on the Breaches page.",
+      "all": "All breaches"
+    }
+  },
+  "requests": {
+    "log": "Log a request",
+    "edit": "Edit",
+    "editTitle": "Edit request",
+    "back": "Requests",
+    "search": "Search requests",
+    "filterType": "Filter by type",
+    "allTypes": "All types",
+    "noTasks": "No tasks",
+    "unassigned": "Unassigned",
+    "progress": "{done} of {total}",
+    "types": {
+      "access": "Copy of data",
+      "correction": "Correction",
+      "erasure": "Erasure",
+      "nomination": "Nomination",
+      "complaint": "Complaint"
+    },
+    "sources": {
+      "email": "Email",
+      "website": "Website",
+      "manual": "Added by hand"
+    },
+    "statuses": {
+      "new": "New",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "outcomes": {
+      "todo": "To do",
+      "done": "Done",
+      "erased": "Erased",
+      "kept_by_law": "Kept by law"
+    },
+    "summary": {
+      "new": "New",
+      "inProgress": "In progress",
+      "overdue": "Overdue",
+      "done": "Done",
+      "newNote": "Identity not checked yet",
+      "inProgressNote": "Identity checked, not closed",
+      "overdueNote": "Past the reply time",
+      "doneNote": "Replied and closed"
+    },
+    "tabs": {
+      "new": "New ({count})",
+      "in_progress": "In progress ({count})",
+      "done": "Done ({count})"
+    },
+    "view": {
+      "label": "View",
+      "board": "Board",
+      "list": "List"
+    },
+    "board": {
+      "empty": "Nothing here",
+      "showMore": "Show more",
+      "seeAllClosed": "See all closed"
+    },
+    "card": {
+      "meta": "{ref} · {type}",
+      "left": "Due in {unit, select, days {{days, plural, one {# day} other {# days}}} hours {{hours, plural, one {# hour} other {# hours}}} other {{minutes, plural, one {# minute} other {# minutes}}}}",
+      "late": "{unit, select, days {{days, plural, one {# day} other {# days}}} hours {{hours, plural, one {# hour} other {# hours}}} other {{minutes, plural, one {# minute} other {# minutes}}}} late",
+      "closedOnTime": "Closed on time",
+      "closedLate": "Closed late"
+    },
+    "columns": {
+      "ref": "Number",
+      "person": "Person",
+      "type": "Request",
+      "received": "Received",
+      "due": "Reply due",
+      "tasks": "Tasks done",
+      "assignee": "Assigned to"
+    },
+    "empty": {
+      "new": {
+        "title": "No new requests",
+        "text": "When someone asks to see, fix or erase their data, or complains, log it here to start the clock."
+      },
+      "in_progress": {
+        "title": "No requests in progress",
+        "text": "A request moves here once its identity is checked."
+      },
+      "done": {
+        "title": "No closed requests",
+        "text": "A request moves here once it is replied to and closed."
+      },
+      "noMatch": "No request matches your search."
+    },
+    "badge": {
+      "left": "{unit, select, days {{days}d {hours}h left} hours {{hours}h {minutes}m left} other {{minutes}m left}}",
+      "overdue": "Overdue by {unit, select, days {{days}d {hours}h} hours {{hours}h {minutes}m} other {{minutes}m}}",
+      "done": "Done"
+    },
+    "clock": {
+      "title": "Reply clock",
+      "description": "The reply is due within the grievance reply time in Company profile, counted from the day the request was received.",
+      "due": "Reply due {date}",
+      "left": "Time left",
+      "pastDue": "Time past due",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "overdue": "Overdue",
+      "closed": "The request was closed on {date}. The clock has stopped."
+    },
+    "detail": {
+      "loggedBy": "Logged by {name}",
+      "detailsTitle": "The request",
+      "details": "What the person asks",
+      "email": "Email",
+      "received": "Received",
+      "source": "Came by",
+      "assignee": "Assigned to",
+      "unassigned": "Unassigned",
+      "unassignedHint": "Nobody is named, so it is the DPO's to deal with.",
+      "closedTitle": "This request is closed",
+      "closedText": "It was closed by {name} on {date}. It can no longer be changed."
+    },
+    "identity": {
+      "title": "Identity check",
+      "description": "Check that the person is who they say they are, in a way that fits the request. Nothing is shared or erased before this is done.",
+      "note": "How it was checked",
+      "noteHint": "Optional. Say what you checked, not the documents themselves.",
+      "verify": "Mark identity verified",
+      "notDone": "The identity has not been checked yet.",
+      "doneBy": "Identity checked by {name} on {date}",
+      "noNote": "No note."
+    },
+    "tasks": {
+      "title": "Tasks",
+      "description": "Each system that holds the person's data. Mark it done, erased, or kept by law with the reason.",
+      "needsIdentity": "You can list the systems now, but outcomes can be set only after the identity is checked.",
+      "empty": "No system has been added yet.",
+      "system": "Add a system",
+      "systemPlaceholder": "For example: Billing, CRM, Email list",
+      "add": "Add",
+      "outcome": "What came of {system}",
+      "remove": "Remove {system}",
+      "reason": "Why the law keeps it",
+      "reasonHint": "Required. Name the law or rule that says to keep the data.",
+      "save": "Save"
+    },
+    "reply": {
+      "title": "Reply",
+      "description": "Write the reply to the person. Closing records it with the request, its tasks and its history. This app does not send it.",
+      "label": "Reply to the person",
+      "hint": "Required to close.",
+      "close": "Close request",
+      "confirmTitle": "Close this request?",
+      "confirmText": "A closed request can no longer be changed. The reply, the tasks and the history stay on record.",
+      "closedBy": "Closed by {name} on {date}",
+      "blocked": {
+        "identity": "Check the identity before closing.",
+        "tasks": "Give every task an outcome before closing."
+      }
+    },
+    "form": {
+      "type": "What the person asks for",
+      "personName": "Name",
+      "personEmail": "Email",
+      "details": "What they ask",
+      "detailsHint": "In their own words, as far as you can.",
+      "source": "How it came",
+      "receivedDate": "Date received",
+      "receivedTime": "Time received",
+      "receivedHint": "The reply clock starts from this time.",
+      "assignee": "Assigned to",
+      "assigneeNone": "Nobody: the DPO",
+      "assigneeHint": "Leave it as nobody and it is the DPO's to deal with.",
+      "openCalendar": "Open calendar",
+      "clearDate": "Clear date",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Log request"
+    }
   }
 }

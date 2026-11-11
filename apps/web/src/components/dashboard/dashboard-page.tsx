@@ -4,8 +4,11 @@ import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';
+import { OpenBreachesAlert } from '@/components/breaches/open-breaches-alert';
+import { DASHBOARD_BREACHES, useGetBreachesQuery } from '@/lib/api/breaches-api';
 import { useGetFrameworksQuery, useGetPoliciesQuery } from '@/lib/api/frameworks-api';
 import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
+import { useGetRequestAttentionQuery } from '@/lib/api/requests-api';
 import { dashboardAttention, overall } from '@/lib/dashboard-stats';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { statusCounts } from '@/lib/policy-stats';
@@ -23,6 +26,7 @@ export function DashboardPage() {
 
   return (
     <>
+      <BreachesBanner />
       <PageHeader title={t('heading')} description={t('tagline')} />
       <div className="flex flex-col gap-5">
         <TopRow />
@@ -39,6 +43,12 @@ export function DashboardPage() {
       </div>
     </>
   );
+}
+
+/** Open breaches, above everything else, until each one is closed. */
+function BreachesBanner() {
+  const { data } = useGetBreachesQuery(DASHBOARD_BREACHES);
+  return data ? <OpenBreachesAlert data={data} /> : null;
 }
 
 /** How ready the company is, next to what most needs someone. */
@@ -67,9 +77,37 @@ function TopRow() {
           overdue: proof.data.counts.overdue,
         }}
       />
-      <AttentionCard items={dashboardAttention(policies.data.policies, proof.data.items)} />
+      <AttentionPanel />
     </div>
   );
+}
+
+/** What needs attention, once everything it is worked out from has loaded. The queries are shared with the rest of the page. */
+function useAttentionItems() {
+  const policies = useGetPoliciesQuery();
+  const proof = useGetProofOverviewQuery({ tab: 'overdue', limit: 5 });
+  const breaches = useGetBreachesQuery(DASHBOARD_BREACHES);
+  const requests = useGetRequestAttentionQuery();
+  const error = policies.error ?? proof.error ?? breaches.error ?? requests.error;
+  if (!policies.data || !proof.data || !breaches.data || !requests.data) return { error };
+
+  const items = dashboardAttention(
+    policies.data.policies,
+    proof.data.items,
+    new Date(),
+    breaches.data.items,
+    requests.data.items,
+  );
+  return { error, items };
+}
+
+/** What needs attention: open breaches first, then late proof and requests, then policies. */
+function AttentionPanel() {
+  const errorMessage = useErrorMessage();
+  const { error, items } = useAttentionItems();
+
+  if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
+  return items ? <AttentionCard items={items} /> : null;
 }
 
 function FrameworksRow() {

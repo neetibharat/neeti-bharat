@@ -3,25 +3,21 @@ import type {
   ActivityListResponse,
   ActivityVerifyResponse,
 } from '@dpdp-kit/shared';
+import { ACTIVITY_PAGE_SIZE } from '@dpdp-kit/shared';
 import { baseApi } from './base-api';
 
-const PAGE_SIZE = 25;
-
-export interface ActivityFilter {
+export interface ActivityQuery {
   action?: ActivityAction;
+  page: number;
 }
 
 export const activityApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    // Pages of the log, newest first. The cursor from one page asks for the next, older one.
-    listActivity: build.infiniteQuery<ActivityListResponse, ActivityFilter, string | undefined>({
-      infiniteQueryOptions: {
-        initialPageParam: undefined,
-        getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-      },
-      query: ({ queryArg, pageParam }) => ({
+    // One page of the log, newest first. The total lets the page controls work out how many pages there are.
+    listActivity: build.query<ActivityListResponse, ActivityQuery>({
+      query: ({ action, page }) => ({
         url: '/activity',
-        params: { limit: PAGE_SIZE, cursor: pageParam, action: queryArg.action },
+        params: { action, page, limit: ACTIVITY_PAGE_SIZE },
       }),
       providesTags: ['Activity'],
     }),
@@ -32,4 +28,4 @@ export const activityApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useListActivityInfiniteQuery, useLazyVerifyActivityQuery } = activityApi;
+export const { useListActivityQuery, useLazyVerifyActivityQuery } = activityApi;

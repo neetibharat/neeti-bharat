@@ -308,10 +308,10 @@ model ProofRequirement {
 enum EvidenceKind {
   link
   note
+  file
 }
 
-// Proof that a control is in place: a link to where it lives, or a note that is the proof itself.
-// Files will be added as a third kind once the app has somewhere to keep them.
+// Proof that a control is in place: a link to where it lives, a note that is the proof itself, or a file in storage.
 model Evidence {
   id                 String            @id @default(uuid(7))
   controlId          String
@@ -322,6 +322,15 @@ model Evidence {
   url                String?
   /// For a note.
   note               String?
+  /// For a file: where it is kept in storage. Never sent to the web.
+  fileKey            String?
+  fileName           String?
+  /// Bytes.
+  fileSize           Int?
+  /// The type the file was checked to be, such as application/pdf.
+  fileType           String?
+  /// Hex SHA-256 of the contents, to show the file has not changed.
+  fileSha256         String?
   /// The requirement this is proof of. Empty for general proof on the control.
   proofRequirementId String?
   proofRequirement   ProofRequirement? @relation(fields: [proofRequirementId], references: [id], onDelete: SetNull)
@@ -433,6 +442,8 @@ model Person {
   controls          Control[]
   proofRequirements ProofRequirement[]
   policies          Policy[]
+  breaches          Breach[]
+  requests          DataRequest[]
 
   @@map("persons")
 }
@@ -447,4 +458,132 @@ model RoleAssignment {
 
   @@index([personId])
   @@map("role_assignments")
+}
+
+// Keep in step with BREACH_STEPS in packages/shared (a test checks).
+enum BreachStep {
+  found
+  assess
+  tell_board
+  tell_people
+  close
+}
+
+// A personal data breach. It is open until its close step exists.
+model Breach {
+  id              String             @id @default(uuid(7))
+  title           String
+  description     String
+  /// When the breach was found: the report clock starts here.
+  foundAt         DateTime           @db.Timestamptz(3)
+  affectedSystems String
+  affectedData    String
+  peopleAffected  Int?
+  /// The name is copied here, so the record stays attributed after the person leaves.
+  reportedByName  String
+  /// Who deals with it. Empty means the DPO does. Cleared if they are removed.
+  assigneeId      String?
+  assignee        Person?            @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt       DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime           @updatedAt @db.Timestamptz(3)
+  steps           BreachStepRecord[]
+
+  @@index([assigneeId])
+  @@map("breaches")
+}
+
+// A step of a breach that has been done. A step that has no row is still to do.
+model BreachStepRecord {
+  id              String     @id @default(uuid(7))
+  breachId        String
+  breach          Breach     @relation(fields: [breachId], references: [id], onDelete: Cascade)
+  step            BreachStep
+  completedAt     DateTime   @db.Timestamptz(3)
+  completedByName String
+  note            String?
+
+  @@unique([breachId, step])
+  @@index([breachId])
+  @@map("breach_steps")
+}
+
+// Keep in step with REQUEST_TYPES in packages/shared (a test checks).
+enum RequestType {
+  access
+  correction
+  erasure
+  nomination
+  complaint
+}
+
+// Keep in step with REQUEST_STATUSES in packages/shared (a test checks).
+enum RequestStatus {
+  new
+  in_progress
+  done
+}
+
+// Keep in step with REQUEST_SOURCES in packages/shared (a test checks).
+enum RequestSource {
+  email
+  website
+  manual
+}
+
+// Keep in step with TASK_OUTCOMES in packages/shared (a test checks).
+enum TaskOutcome {
+  todo
+  done
+  erased
+  kept_by_law
+}
+
+// A request or complaint from a person about their data. It is open until it is done.
+model DataRequest {
+  id                     String            @id @default(uuid(7))
+  /// The short number people say, shown as REQ-<number>. It follows a sequence, so it is never reused.
+  number                 Int               @unique @default(autoincrement())
+  type                   RequestType
+  source                 RequestSource     @default(manual)
+  status                 RequestStatus     @default(new)
+  personName             String
+  personEmail            String
+  details                String
+  receivedAt             DateTime          @db.Timestamptz(3)
+  /// Worked out when the request is logged (received plus the grievance reply time) and kept, so a later change to the profile does not move it.
+  dueAt                  DateTime          @db.Timestamptz(3)
+  identityVerifiedAt     DateTime?         @db.Timestamptz(3)
+  /// The names are copied here, so the record stays attributed after the person leaves.
+  identityVerifiedByName String?
+  identityNote           String?
+  replyNote              String?
+  closedAt               DateTime?         @db.Timestamptz(3)
+  closedByName           String?
+  loggedByName           String
+  /// Who deals with it. Empty means the DPO does. Cleared if they are removed.
+  assigneeId             String?
+  assignee               Person?           @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt              DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime          @updatedAt @db.Timestamptz(3)
+  tasks                  DataRequestTask[]
+
+  @@index([status, dueAt])
+  @@index([assigneeId])
+  @@map("data_requests")
+}
+
+// A system that holds the person's data, and what was done about it.
+model DataRequestTask {
+  id        String      @id @default(uuid(7))
+  requestId String
+  request   DataRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  system    String
+  outcome   TaskOutcome @default(todo)
+  /// Why the law says to keep the data. Only set when the outcome is kept_by_law.
+  reason    String?
+  createdAt DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime    @updatedAt @db.Timestamptz(3)
+
+  @@index([requestId])
+  @@map("data_request_tasks")
 }

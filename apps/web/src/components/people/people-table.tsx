@@ -15,6 +15,7 @@ import {
 import { EditPersonButton } from './edit-person-button';
 import { LeavePersonButton } from './leave-person-button';
 import { PersonAccess } from './person-access';
+import { ResendInvitationButton } from './resend-invitation-button';
 import { PersonWork } from './person-work';
 
 function Head() {
@@ -108,6 +109,8 @@ function StatusBadge({ person }: { person: PersonResponse }) {
   const format = useFormatter();
   if (person.status === 'active' && person.invited)
     return <Badge color="warning">{t('status.invited')}</Badge>;
+  if (person.status === 'active' && person.inviteExpired)
+    return <Badge color="danger">{t('status.inviteExpired')}</Badge>;
   if (person.status === 'active') return <Badge color="success">{t('status.active')}</Badge>;
   const date = person.leftAt
     ? format.dateTime(new Date(person.leftAt), { dateStyle: 'medium' })
@@ -120,6 +123,7 @@ function RowActions({ person }: { person: PersonResponse }) {
   if (person.status === 'left') return null;
   return (
     <div className="flex justify-end gap-1">
+      {(person.invited || person.inviteExpired) && <ResendInvitationButton person={person} />}
       <EditPersonButton person={person} />
       <LeavePersonButton person={person} />
     </div>

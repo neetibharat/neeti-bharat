@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  EVIDENCE_KINDS,
   EVIDENCE_NOTE_MAX_LENGTH,
   EVIDENCE_TITLE_MAX_LENGTH,
   EVIDENCE_URL_MAX_LENGTH,
@@ -25,6 +24,10 @@ const webAddress = z
 
 const forRequirement = { proofRequirementId: z.string().min(1).optional() };
 
+/** A form field left empty counts as not sent. */
+const blankAsMissing = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (value === '' ? undefined : value), schema.optional());
+
 export const addEvidenceSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('link'), title, url: webAddress, ...forRequirement }),
   z.object({
@@ -37,9 +40,17 @@ export const addEvidenceSchema = z.discriminatedUnion('kind', [
 
 export type AddEvidenceInput = z.output<typeof addEvidenceSchema>;
 
+/** The text fields sent beside the file. The title defaults to the file name. */
+export const addEvidenceFileSchema = z.object({
+  title: blankAsMissing(title),
+  proofRequirementId: blankAsMissing(z.string().min(1)),
+});
+
+export type AddEvidenceFileInput = z.output<typeof addEvidenceFileSchema>;
+
 // Swagger reads the request shape from this class; validation uses the schema above.
 export class AddEvidenceDto {
-  @ApiProperty({ enum: EVIDENCE_KINDS })
+  @ApiProperty({ enum: ['link', 'note'] })
   kind!: string;
 
   @ApiProperty({ maxLength: EVIDENCE_TITLE_MAX_LENGTH })
@@ -50,6 +61,22 @@ export class AddEvidenceDto {
 
   @ApiPropertyOptional({ description: 'For a note: the proof itself' })
   note?: string;
+
+  @ApiPropertyOptional({
+    description: 'The proof requirement this is for. Leave out for general proof.',
+  })
+  proofRequirementId?: string;
+}
+
+export class AddEvidenceFileDto {
+  @ApiProperty({ type: 'string', format: 'binary', description: 'The file to attach' })
+  file!: unknown;
+
+  @ApiPropertyOptional({
+    maxLength: EVIDENCE_TITLE_MAX_LENGTH,
+    description: 'Defaults to the file name',
+  })
+  title?: string;
 
   @ApiPropertyOptional({
     description: 'The proof requirement this is for. Leave out for general proof.',

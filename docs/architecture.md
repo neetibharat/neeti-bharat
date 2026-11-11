@@ -30,13 +30,17 @@ Failures end in `AllExceptionsFilter`, which returns `{ statusCode, code, params
 
 Every request that changes something runs in one database transaction (`TransactionInterceptor`). Repositories read and write through `PrismaService.db`, which is that transaction while there is one. A change and its activity log entry are therefore saved together, and a request that fails halfway leaves nothing behind. Reads are not wrapped.
 
+## File storage
+
+Services that keep files depend on the abstract `FileStorage` in `core/storage` (`put`, `signedDownloadUrl`, `remove`, `isEnabled`), never on a provider's SDK. `S3FileStorage` is the one driver, for any S3-compatible service. With no `STORAGE_BUCKET` set, `DisabledFileStorage` is used instead and refuses every call with `STORAGE_NOT_CONFIGURED`. `createFileStorage` is the one place that picks the driver, so another (such as Azure Blob) is one more class and one more branch there. Tests use `MemoryFileStorage`.
+
 ## Folder map of the API
 
 ```
 src/
   main.ts
   app.module.ts
-  core/                shared plumbing: config, prisma, mail, docs, error mapping, health
+  core/                shared plumbing: config, prisma, mail, storage, docs, error mapping, health
   <feature>/           one folder per feature, for example people/
     controllers/       HTTP only: read the request, call a service, return the result
     services/          the business rules

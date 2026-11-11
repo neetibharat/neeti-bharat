@@ -1,5 +1,6 @@
 import type {
   AddEvidenceRequest,
+  EvidenceDownloadResponse,
   EvidenceListResponse,
   EvidenceResponse,
   ProofOverviewResponse,
@@ -45,6 +46,32 @@ export const evidenceApi = baseApi.injectEndpoints({
   }),
 });
 
+export const evidenceFileApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    // A multipart form: the browser sets the content type, with the boundary, itself.
+    addEvidenceFile: build.mutation<
+      EvidenceResponse,
+      { controlId: string; file: File; proofRequirementId?: string }
+    >({
+      query: ({ controlId, file, proofRequirementId }) => {
+        const body = new FormData();
+        body.append('file', file);
+        if (proofRequirementId) body.append('proofRequirementId', proofRequirementId);
+        return { url: `/controls/${controlId}/evidence/files`, method: 'POST', body };
+      },
+      invalidatesTags: [...CHANGES.proof],
+    }),
+    // A mutation only so that a link is never cached: each one is made when asked for and expires in minutes.
+    downloadEvidence: build.mutation<
+      EvidenceDownloadResponse,
+      { controlId: string; evidenceId: string }
+    >({
+      query: ({ controlId, evidenceId }) =>
+        `/controls/${controlId}/evidence/${evidenceId}/download`,
+    }),
+  }),
+});
+
 export const requirementApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     createRequirement: build.mutation<void, { controlId: string } & SaveProofRequirementRequest>({
@@ -81,6 +108,8 @@ export const {
   useAddEvidenceMutation,
   useRemoveEvidenceMutation,
 } = evidenceApi;
+
+export const { useAddEvidenceFileMutation, useDownloadEvidenceMutation } = evidenceFileApi;
 
 export const {
   useCreateRequirementMutation,

@@ -88,11 +88,12 @@ Every change is written to the activity log: `CONTROL_CREATED`, `CONTROL_EDITED`
 A control lists what it needs **proof** of, and proof is attached to each of those. Both belong to the company, like controls and policies.
 
 - **Requirements.** Each control starts with the proof a company would typically keep for it (90 in the DPDP catalogue, in `packages/shared/src/frameworks/dpdp/proof-requirements.ts`), copied into the database on API start. A requirement has a title, a description and a **frequency**: only once, monthly, quarterly or yearly. Companies add, edit and archive their own; seeding never overwrites an edit and never brings back an archived one.
-- **Proof** is a **link** (a scan, a document, a ticket) or a **note**, given against a requirement. Links must be `http` or `https`, and open in a new tab. Proof on a control that is not for any requirement shows as "Other proof". Auditors read but cannot change.
+- **Proof** is a **link** (a scan, a document, a ticket), a **note**, or a **file**, given against a requirement. Links must be `http` or `https`, and open in a new tab. Proof on a control that is not for any requirement shows as "Other proof". Auditors read and download but cannot change.
+- **Files** are kept in the company's own S3-compatible storage (see [Storage](self-hosting.md#6-storage-for-proof-files-optional)). A file can be a PDF, PNG, JPG, WebP, GIF, text, CSV, Word, Excel, PowerPoint or ZIP file, up to 25 MB. The API reads the contents of every upload and refuses one that is not what its extension says, so a renamed program is turned back. The stored name has folders and control characters removed and is at most 120 characters. The object is private. A download is a link that lasts 5 minutes (`GET /v1/controls/:id/evidence/:evidenceId/download`), saved under the original name. The SHA-256 of the contents is stored with the proof. Removing the proof removes the file. Without storage the drop-zone says so and links and notes still work.
 - **Who and when.** A requirement can name the person who collects it (otherwise the control's owner does) and a **first due date**. Once proof is given, the frequency sets the next date. A requirement whose date has passed without fresh proof is **overdue**, shown in red.
 - **Freshness.** A requirement is **missing** until proof is given, **provided** while the latest proof is inside its window, and **due again** once it is not: monthly 31 days, quarterly 92, yearly 366. "Only once" never goes stale.
-- **Evidence page** (`/proof`). Every requirement across all frameworks, 25 to a page, with counts of overdue, missing, due again and provided, a tab for each, a search, and filters for the person and the rule. Search, filters, counts and paging are done by the API (`GET /v1/proof`). Overdue comes first. A title opens that requirement's own page. `/proof?control=<id>` narrows the list to one control and adds that control's **Add proof requirement** button, its archived requirements and its loose proof.
-- **Requirement page** (`/proof/:id`). An Overview tab with its status, assignee, frequency and due date (each saves as it is changed), the proof given, and a file drop-zone that is shown but switched off until storage exists. A Mappings tab shows the control it is for and that control's policies. A control's proof link opens the Evidence page narrowed to that control.
+- **Evidence page** (`/proof`). Every requirement across all frameworks, 25 to a page, with counts of overdue, missing, due again and provided, a tab for each, a search, and filters for the person and the rule. Search, filters, counts and paging are done by the API (`GET /v1/proof`). Overdue comes first. A title opens that requirement's own page. `/proof?control=<id>` is that control's own page: its name as the title, a link back to all proof, **Add proof requirement** in the header, the four counts for that control, and three tabs: **Requirements** (its requirements, paged), **Other proof** (proof that is not for any requirement, with the drop zone) and **Archived** (requirements that were archived, which can be restored; the tab is shown only when there are some).
+- **Requirement page** (`/proof/:id`). An Overview tab with its status, assignee, frequency and due date (each saves as it is changed), the proof given, and a file drop-zone (switched off, with a note, while storage is not set up). A Mappings tab shows the control it is for and that control's policies. A control's proof link opens the Evidence page narrowed to that control.
 - **Files** are not supported. They need storage first: an S3-compatible bucket, uploaded through the API and read through short-lived signed links.
 
 Changes are written to the activity log: `EVIDENCE_ADDED`, `EVIDENCE_REMOVED`, `PROOF_REQUIREMENT_ADDED`, `PROOF_REQUIREMENT_EDITED`, `PROOF_REQUIREMENT_ARCHIVED`, `PROOF_REQUIREMENT_RESTORED`.
@@ -115,10 +116,12 @@ Status is calculated rather than chosen so it cannot be ticked without the work 
 
 ## Dashboard and My work
 
-The **Dashboard** (`/`) shows where the company stands: a readiness gauge across all frameworks with the policies approved and proof in, what needs attention (late proof and reviews, policies waiting on a decision, reviews coming up), each framework's progress, and the first few things waiting on the signed-in person. Admins also see who carries the most open work and the latest changes from the activity log.
+The **Dashboard** (`/`) shows, above everything else, a red notice listing every open [breach](breaches.md) with its time left or how late it is, for every role. Below it sits where the company stands: a readiness gauge across all frameworks with the policies approved and proof in, what needs attention (open breaches first, then late proof, reviews and [requests](requests.md), policies waiting on a decision, requests due within a week, reviews coming up), each framework's progress, and the first few things waiting on the signed-in person. Admins also see who carries the most open work and the latest changes from the activity log.
 
-**My work** (`/my-work`) lists everything waiting on one person, most urgent first, in sections: overdue, due in the next 7 days, due later, and waiting with no date. Four figures sit on top, and tabs split it by kind. It is worked out from who they are in People and roles, so nobody has to assign "tasks" separately. Admins can choose another person to see how work is split (`GET /v1/my-work/of/:personId`).
+**My work** (`/my-work`) lists everything waiting on one person, most urgent first, in sections: overdue, due in the next 7 days, due later, and waiting with no date. Six figures sit on top, and tabs split it by kind. It is worked out from who they are in People and roles, so nobody has to assign "tasks" separately. Admins can choose another person to see how work is split (`GET /v1/my-work/of/:personId`).
 
+- **Breach.** An open [breach](breaches.md) that names an assignee, for that person only. One that names nobody, for whoever holds the DPO job and for admins. It is dated by the Board report deadline until the Board is told, and is overdue once that deadline passes. Open breaches come before other work.
+- **Request.** An open [request](requests.md) from a person that names an assignee, for that person only. One that names nobody, for whoever holds the DPO job and for admins. It is dated by its due date and is overdue once that date passes. It comes after breaches and before approvals.
 - **Proof to collect.** A requirement that names them, or that names nobody on a control they own. A control is theirs when it names them, or names nobody and they hold its owner job. Proof that is provided and still fresh drops off.
 - **Approve.** A policy in review whose named approver is them, or, when no approver is named, any admin.
 - **Review.** An approved policy they own whose yearly review is within 30 days or late.
@@ -128,7 +131,7 @@ Order: overdue first, then approvals, reviews, proof and drafts, the earliest da
 
 ## Who owns what
 
-Ownership flows down and is only set where it differs. A policy has an owner job and an approver. A control's owner job starts as its main policy's owner, and can be changed (with an optional named person) in the control's edit dialog. A proof requirement is collected by the control's owner unless it names someone. The control row shows the result, not a picker.
+Ownership flows down and is only set where it differs. A policy has an owner job and an approver. A control's owner job starts as its main policy's owner, and can be changed (with an optional named person) in the control's edit dialog. A proof requirement is collected by the control's owner unless it names someone. The control row shows the result, not a picker. A breach or a request has no job behind it: it names a person, and while it names nobody it is the DPO's (and every admin's) in My work.
 
 ## Defaults
 
@@ -160,7 +163,10 @@ Ownership flows down and is only set where it differs. A policy has an owner job
 | `GET /v1/my-work/team`, `GET /v1/my-work/of/:personId` | admin                  | How much is waiting on each person, and one person's work.                                                                                                          |
 | `GET /v1/proof`                                        | admin, member, auditor | One page of what needs proof. Narrow it with `tab`, `q`, `assigneeId`, `ruleId`, `controlId`; page with `page` and `limit`. It also returns the count for each tab. |
 | `GET /v1/proof/:id`                                    | admin, member, auditor | One proof requirement with its proof and the control it is for.                                                                                                     |
-| `GET/POST /v1/controls/:id/evidence`                   | admin, member (write)  | A control's archived requirements and loose proof, or add proof. `DELETE .../evidence/:evidenceId` removes it.                                                      |
+| `GET/POST /v1/controls/:id/evidence`                   | admin, member (write)  | A control's archived requirements and loose proof, or add a link or note. `DELETE .../evidence/:evidenceId` removes it.                                             |
+| `POST /v1/controls/:id/evidence/files`                 | admin, member          | Attach a file: a multipart form with `file`, and optional `title` and `proofRequirementId`.                                                                         |
+| `GET /v1/controls/:id/evidence/:evidenceId/download`   | admin, member, auditor | A `{ url, expiresAt }` for a proof file. The link works for 5 minutes.                                                                                              |
+| `GET /v1/storage`                                      | all roles              | Whether uploads are set up, the size limit and the accepted types.                                                                                                  |
 | `POST /v1/controls/:id/proof-requirements`             | admin, member          | Add a requirement. `PUT`/`DELETE /v1/proof-requirements/:id` edit or archive, `POST .../restore` brings it back.                                                    |
 
 Each change is written to the [activity log](activity-log.md), in the same database transaction as the change itself. A control's status is calculated, so no event is written for it.
@@ -170,7 +176,7 @@ Lists send only what their screen shows, and long ones are paged (`page`, `limit
 ## Not decided yet
 
 - **Which rules apply to a company.** Each rule says what switches it on (`appliesWhen`: always, children's data, data abroad, significant data fiduciary). The company answers that decide it come with the set-up wizard.
-- **Proof files.** Needs file storage. Owners and reminders for proof come with Notifications.
+- **Proof reminders.** Owners and reminders for proof come with Notifications.
 - **ISO 27001 and SOC 2.** Not decided yet, and not shown in the product. The mapping needs legal review.
 
 ## Review

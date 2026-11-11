@@ -8,7 +8,7 @@ export const APP_ROLES = ['admin', 'member', 'auditor'] as const;
 
 export type AppRole = (typeof APP_ROLES)[number];
 
-/** Access as shown on a person: a login role, or `staff` for someone with no login at all. */
+/** Access as shown on a person: a login role, or `staff` for someone who has no login yet. It is never chosen. */
 export const ACCESS_LEVELS = [...APP_ROLES, 'staff'] as const;
 
 export type AccessLevel = (typeof ACCESS_LEVELS)[number];
