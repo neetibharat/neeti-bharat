@@ -1,4 +1,4 @@
-# Niti Bharat
+# DPDP Kit
 
 Open-source, self-hosted toolkit for complying with India's Digital Personal Data Protection Act.
 
@@ -6,11 +6,11 @@ Open-source, self-hosted toolkit for complying with India's Digital Personal Dat
 
 ## Layout
 
-| Path              | What it is                                              |
-| ----------------- | ------------------------------------------------------- |
-| `apps/api`        | NestJS API with Prisma and Postgres                     |
-| `apps/web`        | Next.js app, translated with next-intl                  |
-| `packages/shared` | Types and constants used by both apps (locales, errors) |
+| Path              | What it is                                                |
+| ----------------- | --------------------------------------------------------- |
+| `apps/api`        | NestJS API with Prisma and Postgres                       |
+| `apps/web`        | Next.js app, translated with next-intl                    |
+| `packages/shared` | Types, constants and the DPDP catalogue used by both apps |
 
 ## Quick start
 
@@ -34,4 +34,4 @@ The web app runs on http://localhost:3200 and the API on http://localhost:3201/v
 | `pnpm format` | Formats the whole repo                  |
 | `pnpm db:up`  | Starts Postgres in Docker               |
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the standards and [docs/architecture.md](docs/architecture.md) for how the pieces fit.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the standards and [docs/architecture.md](docs/architecture.md) for how the pieces fit. To configure email and sign-in, see [docs/self-hosting.md](docs/self-hosting.md).

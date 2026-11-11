@@ -1,5 +1,5 @@
 {
-  "name": "@niti-bharat/api",
+  "name": "@dpdp-kit/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,15 +14,18 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
-    "@niti-bharat/shared": "workspace:*",
     "@nestjs/common": "^12.4.0",
     "@nestjs/config": "^12.1.1",
     "@nestjs/core": "^12.4.0",
     "@nestjs/platform-express": "^12.4.0",
+    "@nestjs/swagger": "^12.1.1",
+    "@dpdp-kit/shared": "workspace:*",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
-    "dotenv": "^18.0.9",
+    "@thallesp/nestjs-better-auth": "^2.8.0",
+    "better-auth": "^1.7.19",
     "helmet": "^8.3.0",
+    "nodemailer": "^10.4.0",
     "pg": "^8.23.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
@@ -35,6 +38,7 @@
     "@types/express": "^5.0.6",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
+    "dotenv": "^18.0.9",
     "prisma": "7.10.1",
     "supertest": "^7.3.1",
     "typescript": "~6.0.3",

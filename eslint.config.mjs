@@ -45,16 +45,37 @@ export default tseslint.config(
     },
   },
   {
-    files: ['apps/api/src/**/*.{controller,service}.ts'],
-    ignores: ['apps/api/src/core/prisma/**'],
+    // Promises that nobody awaits fail silently; these rules need type information.
+    files: ['apps/api/**/*.{ts,mts}'],
+    ignores: ['apps/api/src/generated/**'],
+    languageOptions: {
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+    },
     rules: {
-      'no-restricted-imports': [
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+    },
+  },
+  {
+    // Controllers, services and utils never query: no PrismaService, and from the generated client only types.
+    files: ['apps/api/src/**/{controllers,services,utils}/**/*.ts'],
+    ignores: ['apps/api/src/core/prisma/**', '**/*.test.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
+      '@typescript-eslint/no-restricted-imports': [
         'error',
         {
           patterns: [
             {
               regex: 'prisma\\.service',
-              message: 'Query the database from a repository, not a controller or service.',
+              message: 'Query the database from a repository, not a controller, service or util.',
+            },
+            {
+              regex: 'generated/prisma',
+              allowTypeImports: true,
+              message:
+                'Import only types from the generated client; runtime values belong in repositories.',
             },
           ],
         },

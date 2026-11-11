@@ -4,6 +4,7 @@ import { validateEnv } from './env.validation';
 const valid = {
   DATABASE_URL: 'postgresql://u:p@localhost:5432/db',
   WEB_ORIGIN: 'http://localhost:3200',
+  BETTER_AUTH_SECRET: 'x'.repeat(32),
 };
 
 describe('validateEnv', () => {
@@ -16,6 +17,37 @@ describe('validateEnv', () => {
   });
 
   it('rejects a missing database url', () => {
-    expect(() => validateEnv({ WEB_ORIGIN: valid.WEB_ORIGIN })).toThrow(/DATABASE_URL/);
+    expect(() => validateEnv({ ...valid, DATABASE_URL: undefined })).toThrow(/DATABASE_URL/);
+  });
+
+  it('rejects a short auth secret', () => {
+    expect(() => validateEnv({ ...valid, BETTER_AUTH_SECRET: 'short' })).toThrow(
+      /BETTER_AUTH_SECRET/,
+    );
+  });
+
+  it('runs without SMTP so links go to the log', () => {
+    expect(validateEnv(valid).SMTP_HOST).toBeUndefined();
+  });
+
+  it('needs SMTP in production', () => {
+    expect(() => validateEnv({ ...valid, NODE_ENV: 'production' })).toThrow(/SMTP_HOST/);
+  });
+
+  it('needs a secret with each OAuth client id', () => {
+    expect(() => validateEnv({ ...valid, GOOGLE_CLIENT_ID: 'id' })).toThrow(/GOOGLE_CLIENT_ID/);
+    expect(() => validateEnv({ ...valid, MICROSOFT_CLIENT_ID: 'id' })).toThrow(
+      /MICROSOFT_CLIENT_ID/,
+    );
+  });
+
+  it('leaves OAuth off by default and uses the common Microsoft tenant', () => {
+    const env = validateEnv(valid);
+    expect(env.GOOGLE_CLIENT_ID).toBeUndefined();
+    expect(env.MICROSOFT_TENANT_ID).toBe('common');
+  });
+
+  it('needs a sender when SMTP is on', () => {
+    expect(() => validateEnv({ ...valid, SMTP_HOST: 'smtp.example.com' })).toThrow(/SMTP_FROM/);
   });
 });

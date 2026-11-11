@@ -9,5 +9,9 @@ const UNSET_URL = 'postgresql://unset:unset@unset:5432/unset';
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: { path: 'prisma/migrations' },
-  datasource: { url: process.env.DATABASE_URL ?? UNSET_URL },
+  // Only Prisma tooling reads the shadow database (migrate dev, and diffing migrations against the schema).
+  datasource: {
+    url: process.env.DATABASE_URL ?? UNSET_URL,
+    shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL,
+  },
 });

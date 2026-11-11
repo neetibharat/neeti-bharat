@@ -10,3 +10,441 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum AppRole {
+  admin
+  member
+  auditor
+}
+
+// The named jobs policies and controls refer to. Keep in step with JOB_ROLES in packages/shared (a test checks).
+enum JobRole {
+  DPO
+  PRIVACY_LEAD
+  SECURITY_LEAD
+  ENGINEERING_LEAD
+  PROCUREMENT_LEAD
+  HR_LEAD
+  AI_OWNER
+  LEGAL_COUNSEL
+  INTERNAL_AUDIT
+}
+
+enum PersonStatus {
+  active
+  left
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  revoked
+}
+
+// The next four models are the tables Better Auth reads and writes. Keep their fields as it expects.
+model User {
+  id            String       @id
+  name          String
+  email         String       @unique
+  emailVerified Boolean      @default(false)
+  image         String?
+  role          AppRole      @default(member)
+  /// Set when the person has left: their sessions are ended and they cannot sign in again.
+  disabledAt    DateTime?    @db.Timestamptz(3)
+  createdAt     DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime     @updatedAt @db.Timestamptz(3)
+  sessions      Session[]
+  accounts      Account[]
+  invitations   Invitation[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  token     String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(3)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime  @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@map("verifications")
+}
+
+model Invitation {
+  id          String           @id @default(uuid(7))
+  email       String
+  role        AppRole          @default(member)
+  status      InvitationStatus @default(pending)
+  invitedById String
+  /// Restrict on purpose: an account that invited people cannot be deleted, so who invited whom stays on record.
+  invitedBy   User             @relation(fields: [invitedById], references: [id], onDelete: Restrict)
+  expiresAt   DateTime         @db.Timestamptz(3)
+  acceptedAt  DateTime?        @db.Timestamptz(3)
+  createdAt   DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime         @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@index([email, status])
+  @@map("invitations")
+}
+
+// The record of every change, as a chain: each event holds the fingerprint of the one before it, so an
+// edit or a missing row is detectable. A database trigger refuses updates and deletes; only the
+// retention job may delete, and only rows past the legal keep-for period.
+// There is deliberately no foreign key to users, so the record outlives anyone who is removed.
+model ActivityEvent {
+  id          String   @id @default(uuid(7))
+  /// The order of the chain. A row's id says nothing about order: two ids made in one millisecond can swap.
+  seq         BigInt   @unique @default(autoincrement())
+  occurredAt  DateTime @db.Timestamptz(3)
+  actorId     String?
+  actorLabel  String
+  action      String
+  subjectType String?
+  subjectId   String?
+  details     Json?
+  before      Json?
+  after       Json?
+  prevHash    String?
+  hash        String   @unique
+
+  @@index([action, seq])
+  @@index([occurredAt])
+  @@map("activity_events")
+}
+
+// The newest event of the chain, kept in step with it by every write. A chain that ends anywhere else has lost
+// events from its end, which the chain alone could not show. One row, id 1.
+model ActivityAnchor {
+  id        Int      @id @default(1)
+  lastSeq   BigInt
+  lastHash  String
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@map("activity_anchor")
+}
+
+// Answers about the company. A built-in answer has no row until someone changes it: its default lives in
+// code (packages/shared), so correcting a default reaches everyone who never touched it.
+model ProfileEntry {
+  id        String   @id @default(uuid(7))
+  key       String   @unique
+  value     String
+  /// Only for answers people added themselves.
+  label     String?
+  isCustom  Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@map("profile_entries")
+}
+
+// A set of rules a company follows, such as DPDP. A built-in framework is copied from the catalogue; a company can
+// also make its own. A policy belongs to the company: the framework it names is only where it was copied from, and
+// one policy can back controls in several frameworks.
+model Framework {
+  /// A built-in framework keeps its catalogue id, such as dpdp. One the company adds gets a generated id.
+  id           String        @id
+  name         String
+  /// One sentence on what it is.
+  about        String
+  /// The short mark shown on its badge, such as DPDP.
+  seal         String
+  isBuiltIn    Boolean       @default(false)
+  sortOrder    Int           @default(0)
+  archivedAt   DateTime?     @db.Timestamptz(3)
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(3)
+  requirements Requirement[]
+  controls     Control[]
+  policies     Policy[]
+
+  @@map("frameworks")
+}
+
+enum RequirementCondition {
+  always
+  children
+  abroad
+  sdf
+}
+
+// One rule of a framework, such as "Rule 6 · Security safeguards". A built-in rule is copied from the catalogue
+// (packages/shared) like controls and policies, so it can be switched on or off by the company's set-up answers.
+model Requirement {
+  /// A built-in rule keeps its catalogue id, such as R6 or ORG. One the company adds gets a generated id.
+  id          String               @id
+  frameworkId String
+  framework   Framework            @relation(fields: [frameworkId], references: [id], onDelete: Restrict)
+  /// The catalogue id this was copied from. Empty for a rule the company added.
+  templateId  String?
+  /// How the law names it, such as "Rule 6".
+  reference   String
+  title       String
+  summary     String
+  /// The set-up answer that switches this rule on. Always means it applies to everyone.
+  appliesWhen RequirementCondition @default(always)
+  sortOrder   Int                  @default(0)
+  archivedAt  DateTime?            @db.Timestamptz(3)
+  createdAt   DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime             @updatedAt @db.Timestamptz(3)
+  controls    Control[]
+
+  @@unique([frameworkId, templateId])
+  @@index([frameworkId, sortOrder])
+  @@map("requirements")
+}
+
+// The company's own controls. A built-in control is copied from the framework catalogue (packages/shared) when
+// its framework is switched on, so the company can edit, archive or add to them without touching the catalogue.
+model Control {
+  /// A built-in control keeps its catalogue code, such as DPDP-R6-01. One the company adds gets a generated id.
+  id                String              @id
+  frameworkId       String
+  framework         Framework           @relation(fields: [frameworkId], references: [id], onDelete: Restrict)
+  /// The catalogue code this was copied from. Empty for a control the company added.
+  templateId        String?
+  /// The rule or group the control sits under, such as R6 or ORG.
+  requirementId     String
+  requirement       Requirement         @relation(fields: [requirementId], references: [id], onDelete: Restrict)
+  title             String
+  description       String
+  /// Empty while the control keeps its default owner.
+  ownerRole         JobRole?
+  /// A named person on the control, shown alongside the job's owner. Cleared if they are removed.
+  assigneeId        String?
+  assignee          Person?             @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  /// When the control is next due a look. Only noted for now; reminders come later.
+  reviewDate        DateTime?           @db.Timestamptz(3)
+  /// Where it sits in its list. Built-in controls follow the catalogue's order.
+  sortOrder         Int                 @default(0)
+  archivedAt        DateTime?           @db.Timestamptz(3)
+  createdAt         DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+  policies          ControlPolicyLink[]
+  evidence          Evidence[]
+  proofRequirements ProofRequirement[]
+
+  @@unique([frameworkId, templateId])
+  @@index([frameworkId, requirementId])
+  @@index([requirementId])
+  @@index([assigneeId])
+  @@map("controls")
+}
+
+enum ProofFrequency {
+  once
+  monthly
+  quarterly
+  yearly
+}
+
+// Something a control needs proof of, such as "TLS configuration scan for public endpoints". Built-in ones are
+// copied from the catalogue (packages/shared) like controls and policies, so the company can edit, add and archive them.
+model ProofRequirement {
+  /// A built-in requirement keeps its catalogue id, such as PR-P05-02. One the company adds gets a generated id.
+  id          String         @id
+  controlId   String
+  control     Control        @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  /// The catalogue id this was copied from. Empty for a requirement the company added.
+  templateId  String?
+  title       String
+  /// What to collect, in a sentence or two.
+  description String         @default("")
+  /// How often proof has to be provided again. Proof older than this stops counting.
+  frequency   ProofFrequency @default(yearly)
+  /// Who collects it. Empty means the control's own owner does.
+  assigneeId  String?
+  assignee    Person?        @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  /// When the first proof is due. Once proof is given, the frequency sets the next date.
+  dueDate     DateTime?      @db.Timestamptz(3)
+  sortOrder   Int            @default(0)
+  archivedAt  DateTime?      @db.Timestamptz(3)
+  createdAt   DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime       @updatedAt @db.Timestamptz(3)
+  evidence    Evidence[]
+
+  @@index([controlId])
+  @@index([assigneeId])
+  @@map("proof_requirements")
+}
+
+enum EvidenceKind {
+  link
+  note
+}
+
+// Proof that a control is in place: a link to where it lives, or a note that is the proof itself.
+// Files will be added as a third kind once the app has somewhere to keep them.
+model Evidence {
+  id                 String            @id @default(uuid(7))
+  controlId          String
+  control            Control           @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  kind               EvidenceKind
+  title              String
+  /// For a link.
+  url                String?
+  /// For a note.
+  note               String?
+  /// The requirement this is proof of. Empty for general proof on the control.
+  proofRequirementId String?
+  proofRequirement   ProofRequirement? @relation(fields: [proofRequirementId], references: [id], onDelete: SetNull)
+  /// No foreign key on purpose: the name is copied here, so the proof stays attributed after the person leaves.
+  addedById          String
+  addedByName        String
+  createdAt          DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@index([controlId, createdAt])
+  @@index([proofRequirementId, createdAt])
+  @@map("evidence")
+}
+
+enum PolicyStatus {
+  draft
+  in_review
+  approved
+}
+
+// The company's own policies, copied from the catalogue in the same way as controls.
+model Policy {
+  /// A built-in policy keeps its catalogue code, such as P08. One the company adds gets a generated id.
+  id                  String              @id
+  /// The framework this policy was copied from. Controls in any framework may still point at it.
+  frameworkId         String
+  framework           Framework           @relation(fields: [frameworkId], references: [id], onDelete: Restrict)
+  templateId          String?
+  title               String
+  summary             String
+  ownerRole           JobRole
+  /// A plain title such as "General Counsel". It becomes a real person in a later step.
+  approverTitle       String
+  reviewEvery         String              @default("annual")
+  legalReferences     String[]
+  /// What the company keeps to show the policy is followed.
+  evidence            String[]
+  status              PolicyStatus        @default(draft)
+  /// Set while approved, and cleared when the policy goes back to draft.
+  approvedAt          DateTime?           @db.Timestamptz(3)
+  approvedByName      String?
+  /// The working text, in the editor's JSON. Empty until someone edits it: until then the text is built from the controls.
+  content             Json?
+  /// When and by whom the working text was last saved. Empty until someone edits it.
+  contentEditedAt     DateTime?           @db.Timestamptz(3)
+  contentEditedByName String?
+  /// What changed, written when approval is asked for.
+  changelog           String?
+  /// The person who must approve it. Empty means the plain title in approverTitle.
+  approverId          String?
+  approver            Person?             @relation(fields: [approverId], references: [id], onDelete: SetNull)
+  sortOrder           Int                 @default(0)
+  archivedAt          DateTime?           @db.Timestamptz(3)
+  createdAt           DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime            @updatedAt @db.Timestamptz(3)
+  controls            ControlPolicyLink[]
+  approvals           PolicyApproval[]
+
+  @@unique([frameworkId, templateId])
+  @@index([approverId])
+  @@map("policies")
+}
+
+// Which policies cover which controls. Stored once; both screens read it from here.
+model ControlPolicyLink {
+  controlId String
+  control   Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  policyId  String
+  policy    Policy  @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  /// 0 is the primary policy. Its owner is the control's default owner.
+  position  Int     @default(0)
+
+  @@id([controlId, policyId])
+  @@index([policyId])
+  @@map("control_policy_links")
+}
+
+// Every approval a policy has had, kept even after it is reopened. This is the policy's history.
+model PolicyApproval {
+  id             String   @id @default(uuid(7))
+  policyId       String
+  policy         Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  approvedAt     DateTime @default(now()) @db.Timestamptz(3)
+  /// No foreign key on purpose: the name is copied here, so the approval stays attributed after the person leaves.
+  approvedById   String
+  approvedByName String
+  /// 1 for the first approval, then counting up. Each approval keeps the text it approved.
+  version        Int
+  content        Json
+  changelog      String?
+
+  @@unique([policyId, version])
+  @@index([policyId, approvedAt])
+  @@map("policy_approvals")
+}
+
+// Everyone who works at the company, with or without a login. A person's access is not stored here:
+// it is read from their account (User) or open invitation, matched by email, so there is one source of truth.
+model Person {
+  id                String             @id @default(uuid(7))
+  name              String
+  email             String             @unique
+  department        String?
+  jobTitle          String?
+  status            PersonStatus       @default(active)
+  leftAt            DateTime?          @db.Timestamptz(3)
+  createdAt         DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime           @updatedAt @db.Timestamptz(3)
+  roles             RoleAssignment[]
+  controls          Control[]
+  proofRequirements ProofRequirement[]
+  policies          Policy[]
+
+  @@map("persons")
+}
+
+// Who holds each named job (DPO, Security Lead ...). The role code is the key, so a job has at most one holder.
+model RoleAssignment {
+  role     JobRole  @id
+  personId String
+  person   Person   @relation(fields: [personId], references: [id], onDelete: Restrict)
+  /// When the job last changed hands: the time of the latest change, not of the first assignment.
+  since    DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([personId])
+  @@map("role_assignments")
+}

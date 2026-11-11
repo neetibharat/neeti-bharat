@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES } from '@niti-bharat/shared';
+import { DEFAULT_LOCALE, LOCALES } from '@dpdp-kit/shared';
 import { defineRouting } from 'next-intl/routing';
 
 export const routing = defineRouting({

@@ -1,11 +1,71 @@
 {
   "meta": {
-    "title": "Niti Bharat",
+    "title": "DPDP Kit",
     "description": "An open-source, self-hosted toolkit for complying with India's DPDP law."
   },
   "home": {
     "heading": "DPDP compliance, in one place",
     "tagline": "Know what the law asks, do the work, and keep the proof."
+  },
+  "nav": {
+    "label": "Main",
+    "openMenu": "Open menu",
+    "soon": "Soon",
+    "areas": {
+      "workspace": "Workspace",
+      "data": "Data",
+      "privacy": "Privacy operations",
+      "settings": "Settings"
+    },
+    "sections": {
+      "company": "Company",
+      "alerts": "Alerts",
+      "developers": "Developers",
+      "records": "Records"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "frameworks": "Frameworks",
+      "policies": "Policies",
+      "proof": "Proof",
+      "dataMap": "Data map",
+      "connections": "Connections",
+      "noticeAndConsent": "Notice and consent",
+      "requests": "Requests",
+      "breaches": "Breaches",
+      "general": "General",
+      "companyProfile": "Company profile",
+      "people": "People and roles",
+      "notifications": "Notifications",
+      "apiKeys": "API keys",
+      "secrets": "Secrets",
+      "activityLog": "Activity log",
+      "aiHelp": "AI help",
+      "myWork": "My work"
+    }
+  },
+  "roles": {
+    "admin": "Admin",
+    "member": "Member",
+    "auditor": "Auditor",
+    "staff": "Staff"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in to DPDP Kit",
+      "description": "Enter your work email and we will send you a sign-in link.",
+      "emailLabel": "Work email",
+      "emailPlaceholder": "you@company.in",
+      "submit": "Email me a sign-in link",
+      "sentTitle": "Check your email",
+      "sentBody": "If {email} has access, a sign-in link is on its way. It works once and expires in 5 minutes.",
+      "useAnother": "Use a different email",
+      "or": "or",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithMicrosoft": "Continue with Microsoft",
+      "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation."
+    },
+    "signOut": "Sign out"
   },
   "language": {
     "label": "Language",
@@ -21,6 +81,1054 @@
     "FORBIDDEN": "You do not have permission to do this.",
     "NOT_FOUND": "We could not find that.",
     "CONFLICT": "That already exists or is in use somewhere else.",
-    "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "INVITATION_REQUIRED": "You need an invitation to sign in. Ask your admin to invite you.",
+    "CONFIRMATION_REQUIRED": "Please confirm this change first.",
+    "LAST_ADMIN": "There must always be at least one admin.",
+    "BUILT_IN": "This is built in and cannot be changed.",
+    "HAS_CONTROLS": "It still has controls. Archive them first."
+  },
+  "comingSoon": {
+    "title": "On its way",
+    "body": "This part of DPDP Kit has not been built yet."
+  },
+  "pages": {
+    "frameworks": {
+      "title": "Frameworks",
+      "description": "Turns the law into a list of small jobs, each with one owner and some proof."
+    },
+    "policies": {
+      "title": "Policies",
+      "description": "The 18 policies a company needs under the DPDP Rules, each with an owner, an approver and the proof to keep."
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "Everything the company has to be able to show, and where each stands."
+    },
+    "dataMap": {
+      "title": "Data map",
+      "description": "The list of personal data kept, why, for how long, and who receives it."
+    },
+    "connections": {
+      "title": "Connections",
+      "description": "Collects proof from cloud accounts and the code repository without manual uploads."
+    },
+    "noticeAndConsent": {
+      "title": "Notice and consent",
+      "description": "The public page where people read the notice, give or withdraw consent, and file requests."
+    },
+    "requests": {
+      "title": "Requests",
+      "description": "Handles people asking to see, fix or erase their data, or to complain."
+    },
+    "breaches": {
+      "title": "Breaches",
+      "description": "Walks the team through a personal data breach against the clock."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Emails and in-app notices that keep the work moving."
+    },
+    "apiKeys": {
+      "title": "API keys",
+      "description": "Keys that let your own systems talk to DPDP Kit."
+    },
+    "secrets": {
+      "title": "Secrets",
+      "description": "Passwords and keys DPDP Kit uses to reach your other systems."
+    },
+    "aiHelp": {
+      "title": "AI help",
+      "description": "Optional help with drafting. A person always decides."
+    },
+    "myWork": {
+      "title": "My work",
+      "description": "Everything waiting on one person, in the order to do it.",
+      "mine": "Me",
+      "viewing": "Whose work to show"
+    }
+  },
+  "activity": {
+    "title": "Activity log",
+    "description": "Every change, with who made it and when. Nothing here can be edited or removed.",
+    "filterLabel": "Show",
+    "allActions": "All changes",
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "what": "What"
+    },
+    "empty": "Nothing has been recorded yet.",
+    "emptyFiltered": "No changes of that kind yet.",
+    "loadMore": "Load older changes",
+    "checkIntegrity": "Check integrity",
+    "checking": "Checking",
+    "intact": "No changes found. All {count} events match their fingerprints.",
+    "broken": "An event does not match its fingerprint. It may have been edited or removed.",
+    "actionNames": {
+      "USER_CREATED": "Account created",
+      "INVITATION_CREATED": "Invitation sent",
+      "INVITATION_REVOKED": "Invitation cancelled",
+      "PROFILE_UPDATED": "Profile answer changed",
+      "PROFILE_ENTRY_ADDED": "Profile entry added",
+      "PROFILE_ENTRY_REMOVED": "Profile entry removed",
+      "PERSON_ADDED": "Person added",
+      "PERSON_UPDATED": "Person details changed",
+      "ACCESS_CHANGED": "Access changed",
+      "PERSON_LEFT": "Person left",
+      "ROLE_ASSIGNED": "Role assigned",
+      "ROLE_UNASSIGNED": "Role left vacant",
+      "CONTROL_STATUS_CHANGED": "Control status changed",
+      "CONTROL_OWNER_CHANGED": "Control owner changed",
+      "POLICY_REVIEW_REQUESTED": "Policy sent for approval",
+      "POLICY_APPROVED": "Policy approved",
+      "POLICY_SENT_BACK": "Policy sent back",
+      "POLICY_REOPENED": "Policy reopened",
+      "CONTROL_CREATED": "Control added",
+      "CONTROL_EDITED": "Control edited",
+      "CONTROL_ASSIGNED": "Control assigned",
+      "CONTROL_ARCHIVED": "Control archived",
+      "CONTROL_RESTORED": "Control restored",
+      "POLICY_EDITED": "Policy text edited",
+      "POLICY_APPROVER_CHANGED": "Policy approver changed",
+      "EVIDENCE_ADDED": "Proof added",
+      "EVIDENCE_REMOVED": "Proof removed",
+      "PROOF_REQUIREMENT_ADDED": "Proof requirement added",
+      "PROOF_REQUIREMENT_EDITED": "Proof requirement changed",
+      "PROOF_REQUIREMENT_ARCHIVED": "Proof requirement archived",
+      "PROOF_REQUIREMENT_RESTORED": "Proof requirement restored",
+      "FRAMEWORK_CREATED": "Framework added",
+      "FRAMEWORK_EDITED": "Framework edited",
+      "FRAMEWORK_ARCHIVED": "Framework archived",
+      "REQUIREMENT_CREATED": "Rule added",
+      "REQUIREMENT_EDITED": "Rule edited",
+      "REQUIREMENT_ARCHIVED": "Rule archived"
+    },
+    "actions": {
+      "USER_CREATED": "Account created for {email} as {role}",
+      "INVITATION_CREATED": "Invited {email} as {role}",
+      "INVITATION_REVOKED": "Cancelled the invitation for {email}",
+      "PROFILE_UPDATED": "Changed {entry} from {before} to {after}",
+      "PROFILE_ENTRY_ADDED": "Added the profile entry {label}",
+      "PROFILE_ENTRY_REMOVED": "Removed the profile entry {label}",
+      "PERSON_ADDED": "Added {name} ({email}) with {access} access",
+      "PERSON_UPDATED": "Changed the details of {name}",
+      "ACCESS_CHANGED": "Changed access for {name} from {from} to {to}",
+      "PERSON_LEFT": "Marked {name} as left",
+      "ROLE_ASSIGNED": "Made {name} the {jobRole}",
+      "ROLE_UNASSIGNED": "{name} is no longer the {jobRole}",
+      "CONTROL_STATUS_CHANGED": "Marked {controlId} ({title}) as {after}, was {before}",
+      "CONTROL_OWNER_CHANGED": "Moved {controlId} ({title}) from {before} to {after}",
+      "POLICY_REVIEW_REQUESTED": "Asked for approval of {policyId} ({title})",
+      "POLICY_APPROVED": "Approved {policyId} ({title})",
+      "POLICY_SENT_BACK": "Sent {policyId} ({title}) back to draft",
+      "POLICY_REOPENED": "Reopened {policyId} ({title}) as a draft",
+      "CONTROL_CREATED": "Added the control {controlId} ({title})",
+      "CONTROL_EDITED": "Edited {controlId} ({title})",
+      "CONTROL_ASSIGNED": "Changed the person on {controlId} ({title}) from {before} to {after}",
+      "CONTROL_ARCHIVED": "Archived {controlId} ({title})",
+      "CONTROL_RESTORED": "Restored {controlId} ({title})",
+      "POLICY_EDITED": "Edited the text of {policyId} ({title})",
+      "POLICY_APPROVER_CHANGED": "Changed the approver of {policyId} ({title}) from {before} to {after}",
+      "EVIDENCE_ADDED": "Added proof {proof} to {controlId} ({title})",
+      "EVIDENCE_REMOVED": "Removed proof {proof} from {controlId} ({title})",
+      "PROOF_REQUIREMENT_ADDED": "Added the proof requirement {proof} to {controlId} ({title})",
+      "PROOF_REQUIREMENT_EDITED": "Changed the proof requirement {proof} on {controlId} ({title})",
+      "PROOF_REQUIREMENT_ARCHIVED": "Archived the proof requirement {proof} on {controlId} ({title})",
+      "PROOF_REQUIREMENT_RESTORED": "Restored the proof requirement {proof} on {controlId} ({title})",
+      "FRAMEWORK_CREATED": "Added the framework {name}",
+      "FRAMEWORK_EDITED": "Edited the framework {name}",
+      "FRAMEWORK_ARCHIVED": "Archived the framework {name}",
+      "REQUIREMENT_CREATED": "Added the rule {reference} ({title}) to {framework}",
+      "REQUIREMENT_EDITED": "Edited the rule {reference} ({title}) in {framework}",
+      "REQUIREMENT_ARCHIVED": "Archived the rule {reference} ({title}) in {framework}"
+    },
+    "emptyValue": "empty",
+    "values": {
+      "not_started": "not started",
+      "in_progress": "in progress",
+      "done": "done"
+    }
+  },
+  "profile": {
+    "title": "Company profile",
+    "description": "Plain questions about your company. Policies and the privacy notice use your answers, so one change here updates every document.",
+    "unanswered": "{count, plural, one {# not answered} other {# not answered}}",
+    "allAnswered": "All answered",
+    "groups": {
+      "general": "General",
+      "setup": "Set-up answers",
+      "company": "Company",
+      "contacts": "Contacts",
+      "legalLimits": "Legal limits",
+      "standards": "Your standards",
+      "custom": "Your entries"
+    },
+    "fromRules": "From the Rules",
+    "legalNote": "These limits come from the DPDP Rules as we read them. Confirm them with counsel before you rely on them. Every change is recorded in the activity log.",
+    "notAnswered": "Not answered",
+    "save": "Save",
+    "keepIt": "Keep it",
+    "confirm": {
+      "body": "This limit comes from the DPDP Rules. Change it only if counsel tells you to. The change is recorded in the activity log."
+    },
+    "addEntry": "Add entry",
+    "addTitle": "Add your own entry",
+    "addDescription": "For anything a policy should mention that is not asked here, such as your office address.",
+    "labelLabel": "Question",
+    "valueLabel": "Answer",
+    "add": "Add",
+    "cancel": "Cancel",
+    "removeEntry": "Remove entry",
+    "removeTitle": "Remove this entry?",
+    "removeBody": "Policies that use it will show it as missing.",
+    "remove": "Remove",
+    "general": {
+      "title": "General",
+      "description": "How your company appears on policies, the privacy notice and auditor reports.",
+      "installTitle": "This install",
+      "runsOn": "Runs on your own server.",
+      "framework": "Framework",
+      "frameworkValue": "DPDP Act 2023 and Rules 2025",
+      "dataStoredIn": "Data stored in",
+      "version": "Version",
+      "fields": {
+        "companyName": {
+          "hint": "Use 120 characters at most."
+        },
+        "website": {
+          "hint": "Include https:// in the address."
+        }
+      },
+      "save": "Save"
+    },
+    "fields": {
+      "companyName": {
+        "label": "Company name",
+        "hint": "Use the legal name. It heads every policy and the notice."
+      },
+      "website": {
+        "label": "Website",
+        "hint": "Where your public privacy notice lives."
+      },
+      "hostingRegion": {
+        "label": "Hosting region",
+        "hint": "Where personal data is stored. Rule 15 cares about this."
+      },
+      "languagesOffered": {
+        "label": "Languages offered",
+        "hint": "The languages your privacy notice is offered in."
+      },
+      "dpoName": {
+        "label": "DPO name",
+        "hint": "The person people contact about their data."
+      },
+      "dpoEmail": {
+        "label": "DPO email",
+        "hint": "Published so people can reach the DPO."
+      },
+      "grievanceEmail": {
+        "label": "Grievance email",
+        "hint": "Where complaints and requests are sent."
+      },
+      "breachContact": {
+        "label": "Breach contact",
+        "hint": "Who the team calls first when a breach is found."
+      },
+      "breachReportWindow": {
+        "label": "Breach report window",
+        "hint": "Time to send the full breach report to the Board (Rule 7)."
+      },
+      "grievanceReplyTime": {
+        "label": "Grievance reply time",
+        "hint": "Time to answer a complaint (Rule 14)."
+      },
+      "logKeepPeriod": {
+        "label": "Log keep-for period",
+        "hint": "How long records of who used personal data are kept (Rule 6)."
+      },
+      "erasureWarning": {
+        "label": "Erasure warning",
+        "hint": "Warning given before inactive accounts are erased (Rule 8)."
+      },
+      "inactivityErasureAfter": {
+        "label": "Inactivity erasure after",
+        "hint": "For the kinds of company the Rules name (Third Schedule)."
+      },
+      "leaverAccessWithin": {
+        "label": "Leavers lose access within",
+        "hint": "How fast access is removed when someone leaves."
+      },
+      "minTls": {
+        "label": "Minimum TLS version",
+        "hint": "The oldest way of securing data in transit that you allow."
+      },
+      "encryptionStandard": {
+        "label": "Encryption standard",
+        "hint": "How stored data is encrypted."
+      },
+      "keyRotation": {
+        "label": "Key rotation",
+        "hint": "How often encryption keys are replaced."
+      },
+      "accessReview": {
+        "label": "Access review",
+        "hint": "How often someone checks who can open what."
+      },
+      "maxDataLoss": {
+        "label": "Most data we can lose",
+        "hint": "Backup target: how much recent work can be lost in a disaster."
+      },
+      "timeToRestore": {
+        "label": "Time to restore",
+        "hint": "Backup target: how long it takes to be running again."
+      },
+      "handlesChildrenData": {
+        "label": "Do you handle data of children or people with disabilities?",
+        "hint": "Switches on Rules 10, 11 and 12."
+      },
+      "sendsDataAbroad": {
+        "label": "Do you send personal data outside India?",
+        "hint": "Switches on Rule 15."
+      },
+      "isSignificantFiduciary": {
+        "label": "Has the government named you a Significant Data Fiduciary?",
+        "hint": "Switches on Rule 13."
+      }
+    },
+    "searchPlaceholder": "Search questions and answers",
+    "columns": {
+      "question": "Question",
+      "answer": "Answer",
+      "actions": "Actions"
+    },
+    "editEntry": "Edit answer",
+    "editTitle": "Edit answer",
+    "legalConfirm": "I have checked this with counsel and I want to change it.",
+    "fromRole": "From the DPO role",
+    "noResults": "Nothing matches your search.",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "jobRoles": {
+    "DPO": "DPO",
+    "PRIVACY_LEAD": "Privacy Lead",
+    "SECURITY_LEAD": "Security Lead",
+    "ENGINEERING_LEAD": "Engineering Lead",
+    "PROCUREMENT_LEAD": "Procurement Lead",
+    "HR_LEAD": "HR Lead",
+    "AI_OWNER": "AI Owner",
+    "LEGAL_COUNSEL": "Legal Counsel",
+    "INTERNAL_AUDIT": "Internal Audit"
+  },
+  "people": {
+    "title": "People and roles",
+    "description": "One list of everyone who handles personal data. Access decides what a person can do here. Roles are the named jobs that policies refer to, such as the DPO.",
+    "addPerson": "Add person",
+    "columns": {
+      "person": "Person",
+      "access": "Access",
+      "roles": "Roles held",
+      "status": "Status",
+      "work": "Open work",
+      "actions": "Actions"
+    },
+    "noRoles": "None",
+    "status": {
+      "active": "Active",
+      "left": "Left",
+      "invited": "Invited"
+    },
+    "leftOn": "Left {date}",
+    "accessLevels": {
+      "title": "Access levels",
+      "admin": "Everything, including people, connections, keys and secrets.",
+      "member": "Does the work: policies, data map, proof, requests and breaches.",
+      "auditor": "Reads everything and changes nothing.",
+      "staff": "Is a person on record, for example to hold a role. Has no login.",
+      "description": "Choose one for each person. Only the first three can sign in.",
+      "canSignIn": "Can sign in",
+      "noLogin": "No login"
+    },
+    "form": {
+      "name": "Name",
+      "email": "Work email",
+      "department": "Department",
+      "jobTitle": "Job title",
+      "access": "Access",
+      "accessHint": "Admin, Member and Auditor get an email invitation to sign in. Staff have no login.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "add": "Add person"
+    },
+    "edit": "Edit details",
+    "editTitle": "Edit details",
+    "leave": {
+      "action": "Mark as left",
+      "title": "Mark {name} as left?",
+      "body": "Their login stops working straight away, any invitation is cancelled, and the roles they hold become vacant. This cannot be undone here.",
+      "confirm": "Mark as left",
+      "doneTitle": "{name} is marked as left",
+      "doneLogin": "Their login has been turned off.",
+      "doneRoles": "These roles are now vacant: {roles}.",
+      "doneChecklist": "Remove their access to your other systems within {time}.",
+      "done": "Done",
+      "doneAssignments": "{count, plural, one {1 item that named them now falls back to its role or an admin.} other {# items that named them now fall back to their role or an admin.}}"
+    },
+    "roleHolders": {
+      "title": "Who holds each role",
+      "description": "Each role has one holder. Policies and controls use these to say who is responsible. A role with no holder falls back to an admin.",
+      "vacant": "Not assigned",
+      "dpoNote": "The DPO's name and email also fill in the DPO answers in Company profile.",
+      "holds": "{count, plural, one {1 item open} other {# items open}}",
+      "nobody": "Nobody yet"
+    },
+    "summary": {
+      "people": "People",
+      "peopleNote": "{count, plural, one {1 has left} other {# have left}}",
+      "login": "Can sign in",
+      "loginNote": "{count, plural, one {1 is staff with no login} other {# are staff with no login}}",
+      "roles": "Roles filled",
+      "rolesNote": "{count, plural, =0 {Every role has a holder} one {1 role has no holder} other {# roles have no holder}}",
+      "overdue": "Overdue work",
+      "overdueNote": "Across everyone"
+    },
+    "tabs": {
+      "active": "Active ({count})",
+      "left": "Left ({count})"
+    },
+    "search": "Search by name, email or job",
+    "noMatch": "No one matches that search.",
+    "work": {
+      "none": "Nothing open",
+      "open": "{count} open",
+      "overdue": "{count} overdue",
+      "view": "See their work"
+    }
+  },
+  "frameworks": {
+    "back": "Frameworks",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "appliesWhen": {
+      "children": "Applies if you handle data of children or people with disabilities",
+      "abroad": "Applies if you send data outside India",
+      "sdf": "Applies if you are a Significant Data Fiduciary"
+    },
+    "owner": "Owner",
+    "status": "Status",
+    "nobody": "No one holds this job yet",
+    "coveredBy": "Covered by",
+    "statuses": {
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "ruleStatus": {
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "done": "Done",
+      "off": "Not switched on"
+    },
+    "list": {
+      "framework": "Framework",
+      "readiness": "Readiness",
+      "requirements": "Requirements",
+      "status": "Status",
+      "soon": "Soon",
+      "iso": {
+        "seal": "ISO",
+        "name": "ISO 27001:2022",
+        "about": "Information security standard. Reached through your DPDP controls."
+      },
+      "soc": {
+        "seal": "SOC 2",
+        "name": "SOC 2",
+        "about": "Trust Services Criteria, often asked for by enterprise customers."
+      },
+      "count": "{done} of {total} controls done",
+      "builtIn": "Built in",
+      "custom": "Custom"
+    },
+    "rules": {
+      "rule": "Rule",
+      "readiness": "Readiness",
+      "controls": "Controls",
+      "policies": "Covered by policies",
+      "status": "Status",
+      "count": "{done} of {total}"
+    },
+    "setup": {
+      "title": "Your set-up",
+      "description": "Some rules only apply to some companies. Answer these to switch them on or off. They are also in Company profile."
+    },
+    "control": {
+      "custom": "Custom",
+      "edit": "Edit control",
+      "editHint": "This changes your own copy of the control. The built-in catalogue is not affected.",
+      "add": "Add control",
+      "addHint": "A control of your own, under this rule.",
+      "reviewOn": "Review on {date}",
+      "form": {
+        "title": "Title",
+        "description": "What it asks",
+        "assignee": "Person",
+        "nobody": "Nobody",
+        "reviewDate": "Review date",
+        "policies": "Covered by these policies",
+        "save": "Save",
+        "create": "Add",
+        "cancel": "Cancel",
+        "archive": "Archive this control",
+        "clearDate": "Clear",
+        "openCalendar": "Open calendar",
+        "ownerRole": "Owner job",
+        "ownerRoleHint": "Who is accountable when no one person is named. It starts as the owner of the main policy."
+      },
+      "missing": {
+        "policies": "{approved} of {total} policies approved",
+        "proof": "No proof yet",
+        "proofProgress": "{provided} of {required} proof in"
+      }
+    },
+    "archived": {
+      "title": "Archived controls",
+      "description": "These no longer count. Restore one to bring it back.",
+      "restore": "Restore",
+      "empty": "Nothing is archived."
+    },
+    "evidence": {
+      "remove": "Remove",
+      "addedBy": "Added by {name} on {date}",
+      "kinds": {
+        "link": "Link",
+        "note": "Note"
+      },
+      "form": {
+        "kind": "Type",
+        "title": "Title",
+        "url": "Address",
+        "note": "Note",
+        "submit": "Add",
+        "cancel": "Cancel"
+      },
+      "removeTitle": "Remove “{title}”?",
+      "removeBody": "The control may stop counting as done until new proof is added.",
+      "removeConfirm": "Remove"
+    },
+    "tabs": {
+      "rules": "Rules",
+      "setup": "Your set-up",
+      "archived": "Archived ({count})"
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "What this control needs proof of, and what has been given. It is done once its policies are approved and all of it is in.",
+      "progress": "Proof ({provided}/{required})",
+      "count": "Proof ({count})",
+      "none": "Proof",
+      "empty": "Nothing is needed here yet. Add what this control needs proof of.",
+      "edit": "Change requirement",
+      "archive": "Archive requirement",
+      "addRequirement": "Add proof requirement",
+      "general": {
+        "title": "Other proof",
+        "hint": "Proof on this control that is not for one of the requirements above.",
+        "add": "Add other proof"
+      },
+      "status": {
+        "missing": "Missing",
+        "provided": "Provided",
+        "due": "Due again"
+      },
+      "frequencies": {
+        "once": "Only once",
+        "monthly": "Every month",
+        "quarterly": "Every quarter",
+        "yearly": "Every year"
+      },
+      "form": {
+        "title": "What is needed",
+        "description": "What to collect (optional)",
+        "frequency": "How often",
+        "save": "Save",
+        "create": "Add",
+        "cancel": "Cancel",
+        "frequencies": {
+          "once": "Only once",
+          "monthly": "Every month",
+          "quarterly": "Every quarter",
+          "yearly": "Every year"
+        },
+        "assignee": "Who collects it",
+        "controlOwner": "The control's owner",
+        "dueDate": "First due",
+        "clearDate": "Clear",
+        "openCalendar": "Open calendar"
+      },
+      "tabs": {
+        "needed": "Needed ({count})",
+        "archived": "Archived ({count})"
+      },
+      "restore": "Restore",
+      "archivedEmpty": "No archived requirements.",
+      "archivedHint": "Archived requirements do not count towards the control. Proof given for them is kept under \"Other proof\" and returns when you restore them.",
+      "archiveTitle": "Archive “{title}”?",
+      "archiveBody": "It stops counting toward this control. You can bring it back from the Archived tab."
+    },
+    "ownerDefault": "The owner of its main policy",
+    "ownerDefaultTag": "default",
+    "rulePage": {
+      "back": "DPDP",
+      "notApplicable": "This rule does not apply to your company, based on your set-up answers. It is shown for reference and does not count towards your progress.",
+      "pillars": {
+        "count": "{done} of {total}",
+        "none": "None",
+        "controls": {
+          "label": "Controls done",
+          "hint": "What the company does to meet this rule"
+        },
+        "policies": {
+          "label": "Policies approved",
+          "hint": "The written rules behind those controls"
+        },
+        "proof": {
+          "label": "Proof in",
+          "hint": "Evidence that they are followed"
+        }
+      },
+      "tabs": {
+        "controls": "Controls ({count})",
+        "policies": "Policies ({count})",
+        "proof": "Proof ({count})"
+      },
+      "controls": {
+        "hint": "Each control is one thing the company does. It is done when its policies are approved and its proof is in."
+      },
+      "policies": {
+        "title": "Policies",
+        "hint": "The policies that cover this rule. Open one to write it or to approve it.",
+        "empty": "No policy covers this rule yet.",
+        "columns": {
+          "policy": "Policy",
+          "status": "Status",
+          "owner": "Owner",
+          "approver": "Approver",
+          "covers": "Covers"
+        },
+        "coversCount": "{count} of {total} controls"
+      },
+      "proof": {
+        "hint": "The evidence this rule needs, most urgent first. Open one to add proof or to say who collects it.",
+        "empty": "No proof is needed for this rule yet."
+      }
+    },
+    "summary": {
+      "size": "{applying} of {rules} rules apply · {controls} controls",
+      "done": "{done} of {total} done"
+    },
+    "description": "Pick a rule to see its controls. A control is done when its policies are approved and it has proof. Each has an owner, which is a job someone holds in People and roles.",
+    "add": {
+      "button": "Add framework",
+      "title": "Add a framework",
+      "description": "A set of rules your company follows besides the built-in ones, such as a customer’s security review or an internal standard. You add its rules next."
+    },
+    "form": {
+      "name": "Name",
+      "about": "What it is",
+      "aboutHint": "One sentence. It shows on the list.",
+      "seal": "Badge",
+      "sealHint": "A short mark, up to 8 characters.",
+      "create": "Add framework",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "actions": {
+      "edit": "Edit framework",
+      "archive": "Archive",
+      "archiveTitle": "Archive {name}?",
+      "archiveHint": "It disappears from the list. You can only archive it once its controls are archived.",
+      "cancel": "Cancel"
+    },
+    "ruleForm": {
+      "reference": "Reference",
+      "referenceHint": "For example 4.2",
+      "title": "Title",
+      "summary": "What it asks",
+      "create": "Add rule",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "ruleActions": {
+      "add": "Add rule",
+      "addHint": "A rule is one requirement of this framework. Controls go under it.",
+      "edit": "Edit rule",
+      "archive": "Archive",
+      "archiveTitle": "Archive {title}?",
+      "archiveHint": "It disappears from the framework. You can only archive it once its controls are archived.",
+      "cancel": "Cancel"
+    },
+    "rulesTab": {
+      "emptyTitle": "No rules yet",
+      "emptyText": "Add the first rule of this framework. Then add the controls that meet it, and link the policies that back them."
+    }
+  },
+  "policies": {
+    "search": "Search policies",
+    "empty": "No policy matches your search.",
+    "back": "Policies",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "columns": {
+      "policy": "Policy",
+      "owner": "Owner",
+      "approver": "Approver",
+      "review": "Review",
+      "controls": "Controls",
+      "status": "Status"
+    },
+    "reviewEvery": {
+      "annual": "Every year"
+    },
+    "details": {
+      "owner": "Owner",
+      "approver": "Approver",
+      "review": "Review",
+      "legal": "Legal references",
+      "useTitle": "{title}"
+    },
+    "evidence": {
+      "title": "Proof to keep",
+      "description": "What a company keeps to show this policy is followed."
+    },
+    "covers": {
+      "title": "Controls it covers",
+      "description": "Open a rule in Frameworks to change a control’s owner or status.",
+      "empty": "No control points to this policy yet."
+    },
+    "status": {
+      "draft": "Draft",
+      "in_review": "In review",
+      "approved": "Approved"
+    },
+    "actions": {
+      "request": "Request approval",
+      "approve": "Approve",
+      "sendBack": "Send back",
+      "reopen": "Reopen as draft"
+    },
+    "approval": {
+      "title": "Approval",
+      "notApproved": "Not approved yet.",
+      "waiting": "Waiting for an admin to approve it.",
+      "approvedBy": "Approved by {name} on {date}.",
+      "reviewDue": "Next review due {date}.",
+      "overdue": "Review overdue since {date}.",
+      "history": "Approval history",
+      "version": "Version {version}",
+      "view": "View",
+      "versionTitle": "Version {version}",
+      "changelog": "What changed: {text}"
+    },
+    "document": {
+      "title": "Policy text",
+      "description": "Your company’s answers are filled in for readers. Answers in orange are not filled in yet.",
+      "editingHint": "Company answers show as {{name}} while you edit, and are filled in for readers. Use the list on the right of the toolbar to add one.",
+      "edit": "Edit text",
+      "save": "Save draft",
+      "cancel": "Cancel",
+      "locked": "To change the text, send the policy back to draft first.",
+      "insert": "Insert company answer",
+      "fillIn": "Answers shown in orange are not filled in yet.",
+      "openProfile": "Add them in Company profile",
+      "toolbar": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "heading": "Heading",
+        "subheading": "Subheading",
+        "bullets": "Bulleted list",
+        "numbers": "Numbered list",
+        "undo": "Undo",
+        "redo": "Redo"
+      },
+      "meta": {
+        "status": "Status",
+        "version": "Version",
+        "edited": "Last edited",
+        "review": "Next review",
+        "neverApproved": "Not approved yet",
+        "current": "Version {version}",
+        "draftOf": "Draft of version {version}",
+        "editedBy": "{date} by {name}",
+        "startingText": "Not edited yet",
+        "none": "Not set"
+      }
+    },
+    "requestApproval": {
+      "open": "Request approval",
+      "title": "Request approval",
+      "description": "Tell the approver what changed. This is optional.",
+      "changelog": "What changed",
+      "cancel": "Cancel",
+      "submit": "Send for approval"
+    },
+    "tabs": {
+      "text": "Text",
+      "approval": "Approval",
+      "coverage": "Proof and controls"
+    },
+    "properties": {
+      "title": "Properties"
+    },
+    "overview": {
+      "status": {
+        "title": "Where the policies stand",
+        "description": "How many are signed off, waiting for approval, or still being written.",
+        "approved": "approved",
+        "summary": "{approved} of {total} policies approved"
+      },
+      "owner": {
+        "title": "Who owns them",
+        "description": "Each job with the policies it looks after, by status.",
+        "summary": "Policies by owner, across {count} jobs"
+      }
+    },
+    "summary": "{total} policies · {approved} approved · {review} in review · {draft} draft",
+    "flow": {
+      "law": {
+        "label": "The law",
+        "title": "{rules} DPDP rules",
+        "text": "From the Act and its Rules"
+      },
+      "controls": {
+        "label": "Controls",
+        "title": "{controls} controls",
+        "text": "Each names the policy that covers it"
+      },
+      "templates": {
+        "label": "Templates",
+        "title": "{policies} ready-made policies",
+        "text": "Ship with the Kit, in plain English"
+      },
+      "copy": {
+        "label": "Your copy",
+        "title": "Filled from your profile",
+        "text": "Your answers fill every blank"
+      },
+      "proof": {
+        "label": "Approval",
+        "title": "Approved and signed",
+        "text": "Proof then shows it is followed"
+      }
+    },
+    "whereFrom": {
+      "button": "Where do these come from?",
+      "title": "Where this comes from",
+      "description": "Everything here is a starting point that your company can change.",
+      "rules": {
+        "title": "The rules and controls",
+        "text": "They follow the Digital Personal Data Protection Act and its Rules, written up from the prototype framework this project started with."
+      },
+      "policies": {
+        "title": "The policies",
+        "text": "The 18 policies are templates written in plain English from the same source. On first start each is copied to your company, so editing yours never changes the original."
+      },
+      "proof": {
+        "title": "The proof",
+        "text": "The suggested proof comes from what each policy says to keep. Each item was placed under the control whose wording fits best, by matching words, so some may need moving."
+      },
+      "review": {
+        "title": "Not legal advice",
+        "text": "A lawyer has not yet reviewed any of this. Have counsel check the rules, policies and proof before you rely on them."
+      },
+      "close": "Close"
+    },
+    "filters": {
+      "all": "All ({count})",
+      "draft": "Draft ({count})",
+      "in_review": "In review ({count})",
+      "approved": "Approved ({count})"
+    },
+    "readiness": {
+      "tag": "Policy readiness",
+      "title": "Signed off",
+      "text": "{approved} of {total} policies are approved. The rest still need writing or sign-off.",
+      "summary": "{approved} of {total} policies approved"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "description": "What to act on first.",
+      "next": "Suggested next",
+      "clear": "Nothing needs attention right now.",
+      "more": "{count, plural, one {1 more item} other {# more items}} not shown.",
+      "reasons": {
+        "review_overdue": "{days, plural, one {Review was due 1 day ago} other {Review was due # days ago}}",
+        "awaiting_approval": "Waiting for approval from {approver}",
+        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}"
+      }
+    },
+    "allOwners": "All owners",
+    "allApprovers": "All approvers",
+    "clearFilters": "Clear"
+  },
+  "proofPage": {
+    "summary": {
+      "missing": "Missing",
+      "due": "Due again",
+      "provided": "Provided",
+      "overdue": "Overdue"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "missing": "Missing ({count})",
+      "due": "Due again ({count})",
+      "provided": "Provided ({count})",
+      "overdue": "Overdue ({count})",
+      "overview": "Overview",
+      "mappings": "Mappings"
+    },
+    "columns": {
+      "proof": "Proof",
+      "control": "Control",
+      "owner": "Owner",
+      "frequency": "How often",
+      "status": "Status",
+      "last": "Last provided",
+      "assignee": "Assignee",
+      "due": "Due"
+    },
+    "open": "Open",
+    "never": "Never",
+    "nobody": "No one holds this job yet",
+    "empty": "Nothing here.",
+    "back": "Evidence",
+    "overdueBadge": "Overdue",
+    "noDate": "No date",
+    "everyone": "Everyone",
+    "allRules": "All rules",
+    "filterRule": "Rule",
+    "search": "Search evidence",
+    "files": {
+      "title": "Drag and drop files here",
+      "soon": "File upload is coming in a later version. For now, add a link or a note."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Who collects this, how often, and by when. Changes save as you make them.",
+      "status": "Status",
+      "overdue": "Overdue",
+      "nextDue": "Next due: {date}",
+      "noDate": "no date set"
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "What has been given for this, newest first.",
+      "add": "Add proof",
+      "empty": "Nothing has been given yet."
+    },
+    "mappings": {
+      "control": "Control",
+      "controlHint": "The control this proof is for.",
+      "policies": "Policies",
+      "policiesHint": "The policies that control answers to.",
+      "noPolicies": "No policy covers this control yet."
+    },
+    "control": {
+      "showing": "Proof asked for by this control. Add what an auditor would want to see.",
+      "showAll": "Show all",
+      "fallback": "Control",
+      "archived": "Archived requirements"
+    }
+  },
+  "dashboard": {
+    "work": {
+      "title": "My work",
+      "description": "Open the earliest first. Tabs split it by the kind of work.",
+      "tabs": {
+        "all": "All ({count})",
+        "proof": "Proof ({count})",
+        "approve": "To approve ({count})",
+        "policies": "Policies ({count})"
+      },
+      "kinds": {
+        "proof": "Proof to collect",
+        "approve": "Waiting for your approval",
+        "review": "Policy review",
+        "draft": "Policy to write"
+      },
+      "due": "Due {date}",
+      "overdue": "Overdue · {date}",
+      "nothingHere": "Nothing here.",
+      "empty": {
+        "title": "Nothing is waiting on you",
+        "text": "When proof, an approval or a policy is assigned to you, it shows up here.",
+        "textOther": "Nothing is assigned to this person right now."
+      },
+      "summary": {
+        "overdue": "Overdue",
+        "approve": "To approve",
+        "proof": "Proof to collect",
+        "policies": "Policies to look after"
+      },
+      "groups": {
+        "overdue": "Overdue",
+        "week": "Due in the next 7 days",
+        "later": "Due later",
+        "undated": "Waiting on you, no date"
+      }
+    },
+    "hero": {
+      "tag": "Readiness",
+      "title": "How ready you are",
+      "text": "{done} of {total} controls are done across {count, plural, one {1 framework} other {# frameworks}}.",
+      "summary": "{done} of {total} controls done",
+      "policies": "Policies approved",
+      "proof": "Proof in",
+      "overdue": "Proof overdue"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "description": "What to look at first.",
+      "clear": "Nothing needs attention right now.",
+      "more": "{count, plural, one {1 more item} other {# more items}} not shown.",
+      "reasons": {
+        "proof_overdue": "{days, plural, =0 {Proof is due today} one {Proof was due 1 day ago} other {Proof was due # days ago}}",
+        "review_overdue": "{days, plural, one {Review was due 1 day ago} other {Review was due # days ago}}",
+        "awaiting_approval": "Waiting for approval from {approver}",
+        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}"
+      }
+    },
+    "frameworks": {
+      "title": "Frameworks",
+      "description": "How far along each one is.",
+      "count": "{done} of {total} controls done"
+    },
+    "preview": {
+      "title": "Your work",
+      "description": "The most urgent things waiting on you.",
+      "all": "See all",
+      "clear": "Nothing is waiting on you.",
+      "more": "{count, plural, one {1 more item} other {# more items}} on your work page."
+    },
+    "team": {
+      "title": "Open work by person",
+      "description": "Who is carrying the most. Red is overdue.",
+      "clear": "No one has open work.",
+      "open": "{open} open",
+      "openOverdue": "{open} open, {overdue} late"
+    },
+    "activity": {
+      "title": "Recent changes",
+      "description": "The latest things anyone changed.",
+      "all": "Activity log",
+      "empty": "Nothing has changed yet."
+    }
+  },
+  "pagination": {
+    "label": "Pagination",
+    "showing": "{from}–{to} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "confirm": {
+    "cancel": "Cancel"
   }
 }
