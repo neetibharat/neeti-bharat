@@ -17,14 +17,18 @@ Failures end in `AllExceptionsFilter`, which returns `{ statusCode, code, params
 
 ## Shared package
 
-`packages/shared` is plain ESM built with `tsc`. It holds only what both apps must agree on: locales, error codes and response types. It has no runtime dependencies.
+`packages/shared` is plain ESM built with `tsc`. It holds what both apps must agree on: locales, error codes, response types, the limits on what can be sent, the DPDP catalogue (its rules, controls, policies and proof), and the rules that work out a control's status. It has no runtime dependencies.
 
 ## Internationalisation
 
 - Locales are defined once in `packages/shared`.
-- The web app routes by locale prefix (`/en`, `/hi`) and loads one message file per request.
+- The web app routes by locale prefix (`/en`) and loads one message file per request.
 - Translation keys are type-checked against `messages/en.json`.
 - Tests enforce that every locale has the same keys and that every API error code has a message.
+
+## One transaction per change
+
+Every request that changes something runs in one database transaction (`TransactionInterceptor`). Repositories read and write through `PrismaService.db`, which is that transaction while there is one. A change and its activity log entry are therefore saved together, and a request that fails halfway leaves nothing behind. Reads are not wrapped.
 
 ## Folder map of the API
 
@@ -32,12 +36,15 @@ Failures end in `AllExceptionsFilter`, which returns `{ statusCode, code, params
 src/
   main.ts
   app.module.ts
-  core/
-    config/    environment validation
-    prisma/    the single database client
-    common/    exceptions and error mapping
-    health/    liveness and database check
-  generated/   Prisma client (git-ignored)
+  core/                shared plumbing: config, prisma, mail, docs, error mapping, health
+  <feature>/           one folder per feature, for example people/
+    controllers/       HTTP only: read the request, call a service, return the result
+    services/          the business rules
+    repositories/      every database query (the only place that uses PrismaService)
+    dto/               request shapes and their validation
+    utils/             small pure helpers the feature needs
+    <feature>.module.ts
+  generated/           Prisma client (git-ignored)
 ```
 
-Feature code goes in `src/<area>/<feature>/`, next to `core/`.
+Tests sit next to the file they test, as `*.test.ts`. A feature only gets the folders it needs: a feature with no routes has no `controllers/`.

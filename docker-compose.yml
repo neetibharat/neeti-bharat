@@ -2,15 +2,15 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: nitibharat
-      POSTGRES_PASSWORD: nitibharat
-      POSTGRES_DB: nitibharat
+      POSTGRES_USER: dpdp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dpdp}
+      POSTGRES_DB: dpdp
     ports:
-      - '5440:5432'
+      - '127.0.0.1:5440:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U nitibharat']
+      test: ['CMD-SHELL', 'pg_isready -U dpdp']
       interval: 5s
       timeout: 3s
       retries: 10

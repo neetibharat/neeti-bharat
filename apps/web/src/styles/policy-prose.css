@@ -1,0 +1,60 @@
+/* How policy text looks, both while editing and when reading. The editor (Tiptap) only supplies the structure. */
+.policy-prose {
+  color: var(--color-fg);
+  line-height: 1.65;
+}
+
+.policy-prose .ProseMirror {
+  outline: none;
+}
+
+.policy-prose h2 {
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.policy-prose h3 {
+  margin: 1.25rem 0 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.policy-prose > :first-child,
+.policy-prose .ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+.policy-prose p {
+  margin: 0.5rem 0;
+}
+
+.policy-prose ul {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.policy-prose ol {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+  list-style: decimal;
+}
+
+.policy-prose li > p {
+  margin: 0.25rem 0;
+}
+
+.policy-prose strong {
+  font-weight: 600;
+}
+
+/* A company answer that has not been filled in yet. */
+.policy-prose mark {
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}

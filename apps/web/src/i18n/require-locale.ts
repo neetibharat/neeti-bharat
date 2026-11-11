@@ -1,4 +1,4 @@
-import type { Locale } from '@niti-bharat/shared';
+import type { Locale } from '@dpdp-kit/shared';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from './routing';

@@ -1,9 +1,20 @@
 import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { MotionProvider } from '@/components/providers/motion-provider';
+import { StoreProvider } from '@/components/providers/store-provider';
 import { requireLocale } from '@/i18n/require-locale';
 import { routing } from '@/i18n/routing';
+import '../globals.css';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist', display: 'swap' });
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+});
 
 interface LocaleParams {
   params: Promise<{ locale: string }>;
@@ -27,9 +38,13 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
-      <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    <html lang={locale} className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="bg-page text-fg antialiased">
+        <NextIntlClientProvider>
+          <MotionProvider>
+            <StoreProvider>{children}</StoreProvider>
+          </MotionProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

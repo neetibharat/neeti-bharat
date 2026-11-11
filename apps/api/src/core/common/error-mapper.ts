@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common';
-import type { ApiErrorBody, ErrorCode } from '@niti-bharat/shared';
+import type { ApiErrorBody, ErrorCode } from '@dpdp-kit/shared';
 import { Prisma } from '../../generated/prisma/client';
 import { AppException } from './app.exception';
 

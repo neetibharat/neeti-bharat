@@ -10,6 +10,11 @@ export const ERROR_CODES = [
   'NOT_FOUND',
   'CONFLICT',
   'RATE_LIMITED',
+  'INVITATION_REQUIRED',
+  'CONFIRMATION_REQUIRED',
+  'LAST_ADMIN',
+  'BUILT_IN',
+  'HAS_CONTROLS',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
