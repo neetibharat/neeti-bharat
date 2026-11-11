@@ -9,6 +9,7 @@ export const TAG_TYPES = [
   'Proof',
   'Breach',
   'Request',
+  'WebsiteCheck',
 ] as const;
 
 /**
@@ -40,4 +41,6 @@ export const CHANGES = {
   breach: ['Breach', 'Activity'],
   // A request shows on its list and page, in My work and on the Dashboard.
   request: ['Request', 'Activity'],
+  // A run shows on the Website check page only.
+  websiteCheck: ['WebsiteCheck', 'Activity'],
 } as const;

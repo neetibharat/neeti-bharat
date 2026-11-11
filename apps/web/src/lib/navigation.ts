@@ -20,6 +20,7 @@ import {
   IconShieldLock,
   IconSparkles,
   IconUsers,
+  IconWorldSearch,
   type Icon,
 } from '@tabler/icons-react';
 
@@ -45,6 +46,7 @@ export type NavItemId =
   | 'exports'
   | 'dataMap'
   | 'connections'
+  | 'websiteCheck'
   | 'noticeAndConsent'
   | 'requests'
   | 'breaches'
@@ -103,6 +105,7 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'soon' },
+          { id: 'websiteCheck', href: '/website-check', icon: IconWorldSearch, status: 'live' },
         ],
       },
     ],

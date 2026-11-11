@@ -14,6 +14,7 @@ import { FrameworksModule } from './frameworks/frameworks.module';
 import { PeopleModule } from './people/people.module';
 import { ProfileModule } from './profile/profile.module';
 import { PrismaModule } from './core/prisma/prisma.module';
+import { WebsiteChecksModule } from './website-checks/website-checks.module';
 import { StorageModule } from './core/storage/storage.module';
 
 @Module({
@@ -34,6 +35,7 @@ import { StorageModule } from './core/storage/storage.module';
     FrameworksModule,
     PeopleModule,
     ProfileModule,
+    WebsiteChecksModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
