@@ -4,7 +4,6 @@ import { IconHistory } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
-import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Pagination } from '@/components/base/pagination/pagination';
@@ -23,8 +22,8 @@ export function ActivityLog() {
   return (
     <>
       <PageHeader title={t('title')} description={t('description')} />
-      <Card>
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <ActivityFilter
             value={filter}
             onChange={(next) => {
@@ -39,7 +38,7 @@ export function ActivityLog() {
           page={page}
           onPage={setPage}
         />
-      </Card>
+      </div>
     </>
   );
 }
