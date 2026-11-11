@@ -12,6 +12,7 @@ const person = (name: string, over: Partial<PersonResponse> = {}): PersonRespons
   leftAt: null,
   access: 'member',
   invited: false,
+  inviteExpired: false,
   roles: [],
   ...over,
 });

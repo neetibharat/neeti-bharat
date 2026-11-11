@@ -31,11 +31,10 @@ function fakeRepository() {
       return row;
     },
     findAnchor: async () => anchor.value,
-    list: async ({ limit, cursor }: { limit: number; cursor?: string }) =>
-      [...rows]
-        .reverse()
-        .filter((row) => (cursor ? row.seq < BigInt(cursor) : true))
-        .slice(0, limit + 1),
+    list: async ({ page, limit, action }: { page: number; limit: number; action?: string }) => {
+      const matching = [...rows].reverse().filter((row) => !action || row.action === action);
+      return { rows: matching.slice((page - 1) * limit, page * limit), total: matching.length };
+    },
     chainBatch: async (after: bigint | null, size: number) =>
       rows.filter((row) => (after === null ? true : row.seq > after)).slice(0, size),
   } as unknown as ActivityRepository;
@@ -65,18 +64,18 @@ describe('ActivityService.record', () => {
 });
 
 describe('ActivityService.list', () => {
-  it('returns newest first, with a cursor only when there is more', async () => {
+  it('returns newest first, a page at a time, with the total across pages', async () => {
     const { service } = fakeRepository();
     await recordThree(service);
-    const first = await service.list({ limit: 2 });
+    const first = await service.list({ page: 1, limit: 2 });
     expect(first.items.map((item) => item.details?.email)).toEqual([
       'c@company.in',
       'b@company.in',
     ]);
-    expect(first.nextCursor).not.toBeNull();
-    const second = await service.list({ limit: 2, cursor: first.nextCursor! });
+    expect(first).toMatchObject({ total: 3, page: 1, pageSize: 2 });
+    const second = await service.list({ page: 2, limit: 2 });
     expect(second.items.map((item) => item.details?.email)).toEqual(['a@company.in']);
-    expect(second.nextCursor).toBeNull();
+    expect(second.total).toBe(3);
   });
 });
 

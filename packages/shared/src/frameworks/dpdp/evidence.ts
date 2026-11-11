@@ -1,12 +1,51 @@
 import type { ControlPolicyResponse, ControlStatus } from './checklist.js';
 
-/** What a piece of proof is. Files will be added once the app has somewhere to keep them. */
-export const EVIDENCE_KINDS = ['link', 'note'] as const;
+/** What a piece of proof is: an address, a note, or a file kept in storage. */
+export const EVIDENCE_KINDS = ['link', 'note', 'file'] as const;
 export type EvidenceKind = (typeof EVIDENCE_KINDS)[number];
 
 export const EVIDENCE_TITLE_MAX_LENGTH = 120;
 export const EVIDENCE_NOTE_MAX_LENGTH = 2000;
 export const EVIDENCE_URL_MAX_LENGTH = 2000;
+
+/** The largest proof file, in bytes. */
+export const EVIDENCE_FILE_MAX_BYTES = 25 * 1024 * 1024;
+export const EVIDENCE_FILE_NAME_MAX_LENGTH = 120;
+
+/** The file types accepted as proof, by extension. The API also checks the contents of each file. */
+export const EVIDENCE_FILE_EXTENSIONS = [
+  'pdf',
+  'png',
+  'jpg',
+  'jpeg',
+  'webp',
+  'gif',
+  'txt',
+  'csv',
+  'docx',
+  'xlsx',
+  'pptx',
+  'zip',
+] as const;
+export type EvidenceFileExtension = (typeof EVIDENCE_FILE_EXTENSIONS)[number];
+
+/** How long a download link works, in seconds. */
+export const EVIDENCE_DOWNLOAD_SECONDS = 300;
+
+/** From `GET /v1/storage`: whether files can be uploaded, and what is accepted. */
+export interface StorageStatusResponse {
+  enabled: boolean;
+  maxBytes: number;
+  /** File extensions, without the dot. */
+  allowedTypes: string[];
+}
+
+/** From `GET .../evidence/:id/download`: a short-lived link to the file. */
+export interface EvidenceDownloadResponse {
+  url: string;
+  /** ISO date and time the link stops working. */
+  expiresAt: string;
+}
 
 /** How often proof has to be provided again. `once` never goes out of date. */
 export const PROOF_FREQUENCIES = ['once', 'monthly', 'quarterly', 'yearly'] as const;
@@ -68,6 +107,10 @@ export interface EvidenceResponse {
   url: string | null;
   /** For a note. */
   note: string | null;
+  /** For a file. */
+  fileName?: string;
+  fileSize?: number;
+  fileType?: string;
   addedByName: string;
   /** ISO date and time. */
   createdAt: string;
@@ -125,7 +168,7 @@ export interface EvidenceListResponse {
   other: EvidenceResponse[];
 }
 
-/** Proof to attach. Give `proofRequirementId` to attach it to a requirement; leave it out for general proof. */
+/** A link or note to attach as proof (files go up as a form). Give `proofRequirementId` for a requirement, or leave it out. */
 export type AddEvidenceRequest = (
   { kind: 'link'; title: string; url: string } | { kind: 'note'; title: string; note: string }
 ) & { proofRequirementId?: string };

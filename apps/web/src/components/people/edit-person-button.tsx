@@ -40,7 +40,7 @@ function EditPersonForm({ person, onDone }: { person: PersonResponse; onDone: ()
         email: person.email,
         department: person.department ?? '',
         jobTitle: person.jobTitle ?? '',
-        access: person.access,
+        access: person.access === 'staff' ? 'member' : person.access,
       }}
       isSaving={isLoading}
       error={error}

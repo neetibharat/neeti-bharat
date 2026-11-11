@@ -1,6 +1,6 @@
 'use client';
 
-import type { AccessLevel, PersonResponse } from '@dpdp-kit/shared';
+import type { AppRole, PersonResponse } from '@dpdp-kit/shared';
 import { Alert } from '@/components/base/alert/alert';
 import { useSetAccessMutation } from '@/lib/api/people-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -17,7 +17,7 @@ export function PersonAccess({ person }: { person: PersonResponse }) {
         className="w-36"
         value={person.access}
         isDisabled={person.status === 'left'}
-        onChange={(access: AccessLevel) => void setAccess({ id: person.id, access })}
+        onChange={(access: AppRole) => void setAccess({ id: person.id, access })}
       />
       {error && <Alert tone="error">{errorMessage(error)}</Alert>}
     </div>

@@ -7,6 +7,7 @@ export const ACTIVITY_ACTIONS = [
   'USER_CREATED',
   'INVITATION_CREATED',
   'INVITATION_REVOKED',
+  'INVITATION_RESENT',
   'PERSON_ADDED',
   'PERSON_UPDATED',
   'ACCESS_CHANGED',
@@ -41,6 +42,19 @@ export const ACTIVITY_ACTIONS = [
   'REQUIREMENT_CREATED',
   'REQUIREMENT_EDITED',
   'REQUIREMENT_ARCHIVED',
+  'BREACH_REPORTED',
+  'BREACH_EDITED',
+  'BREACH_ASSIGNED',
+  'BREACH_STEP_COMPLETED',
+  'BREACH_CLOSED',
+  'REQUEST_RECEIVED',
+  'REQUEST_EDITED',
+  'REQUEST_ASSIGNED',
+  'REQUEST_IDENTITY_VERIFIED',
+  'REQUEST_TASK_ADDED',
+  'REQUEST_TASK_UPDATED',
+  'REQUEST_TASK_REMOVED',
+  'REQUEST_CLOSED',
 ] as const;
 
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];
@@ -59,10 +73,16 @@ export interface ActivityEventResponse {
   after: Record<string, ActivityValue> | null;
 }
 
+/** How many events the activity log shows on a page. */
+export const ACTIVITY_PAGE_SIZE = 25;
+
+/** One page of the log, newest first, from `GET /v1/activity?action=&page=&limit=`. */
 export interface ActivityListResponse {
   items: ActivityEventResponse[];
-  /** Pass it back as `cursor` for the next, older page. Null on the last page. */
-  nextCursor: string | null;
+  /** How many events match the filter, across every page. */
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 /** The answer to "has anyone tampered with the log?", from `GET /v1/activity/verify`. */

@@ -11,7 +11,7 @@ import { EvidenceForm } from '@/components/proof/evidence-form';
 import { EvidenceRow } from '@/components/proof/evidence-row';
 import { FileDropzone } from './file-dropzone';
 
-/** The proof given for one requirement, newest first, with a way to add a link or a note. */
+/** The proof given for one requirement, newest first, with a way to add a link, a note or a file. */
 export function RequirementProof(props: {
   controlId: string;
   requirement: ProofRequirementResponse;
@@ -41,7 +41,7 @@ export function RequirementProof(props: {
           </div>
         )}
         {!adding && <ProofList controlId={controlId} requirement={requirement} />}
-        <FileDropzone />
+        <FileDropzone controlId={controlId} proofRequirementId={requirement.id} />
       </div>
     </Card>
   );

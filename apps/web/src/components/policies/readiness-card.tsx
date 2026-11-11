@@ -6,11 +6,11 @@ import { HeroFact, HeroFacts, HeroPanel } from '@/components/base/hero-panel/her
 import { percentOf } from '@/lib/percent';
 import type { StatusCounts } from '@/lib/policy-stats';
 
-/** The dot beside each status on the gradient. Approved is solid, in review is warm, draft is faint. */
+/** The dot beside each status, in the chart colours: approved is green, in review is warm, draft is grey. */
 const DOTS: Record<PolicyStatus, string> = {
-  approved: 'bg-on-brand',
-  in_review: 'bg-on-brand-warm',
-  draft: 'bg-on-brand-dim',
+  approved: 'bg-chart-approved',
+  in_review: 'bg-chart-in-review',
+  draft: 'bg-chart-draft',
 };
 
 const totalOf = (counts: StatusCounts): number =>

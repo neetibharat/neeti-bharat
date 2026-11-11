@@ -22,6 +22,17 @@ const oauthFields = {
   MICROSOFT_TENANT_ID: z.string().min(1).default('common'),
 };
 
+const storageFields = {
+  STORAGE_BUCKET: optionalText,
+  STORAGE_REGION: z.string().min(1).default('us-east-1'),
+  STORAGE_ENDPOINT: z.preprocess((v) => (v === '' ? undefined : v), z.url().optional()),
+  STORAGE_ACCESS_KEY_ID: optionalText,
+  STORAGE_SECRET_ACCESS_KEY: optionalText,
+  STORAGE_FORCE_PATH_STYLE: z
+    .preprocess((v) => (v === '' ? undefined : v), z.stringbool())
+    .default(false),
+};
+
 const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -32,6 +43,7 @@ const envSchema = z
     INITIAL_ADMIN_EMAIL: z.preprocess((v) => (v === '' ? undefined : v), z.email().optional()),
     ...smtpFields,
     ...oauthFields,
+    ...storageFields,
   })
   .refine((env) => env.NODE_ENV !== 'production' || Boolean(env.SMTP_HOST), {
     message: 'SMTP_HOST is required in production, so sign-in links can be emailed',
@@ -49,6 +61,11 @@ const envSchema = z
   .refine((env) => Boolean(env.MICROSOFT_CLIENT_ID) === Boolean(env.MICROSOFT_CLIENT_SECRET), {
     message: 'Set both MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET, or neither',
     path: ['MICROSOFT_CLIENT_ID'],
+  })
+  .refine((env) => Boolean(env.STORAGE_ACCESS_KEY_ID) === Boolean(env.STORAGE_SECRET_ACCESS_KEY), {
+    message:
+      'Set both STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY, or neither to use the default AWS credentials',
+    path: ['STORAGE_ACCESS_KEY_ID'],
   })
   .refine((env) => !env.SMTP_HOST || Boolean(env.SMTP_FROM), {
     message: 'SMTP_FROM is required when SMTP_HOST is set',

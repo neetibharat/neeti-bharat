@@ -122,8 +122,8 @@ export class PeopleRepository {
   }
 
   /**
-   * Marks someone as left, frees every role they held, and takes their name off any control, proof requirement
-   * and policy approval, which then fall back to their role or to an admin. All or nothing.
+   * Marks someone as left, frees every role they held, and takes their name off any control, proof requirement,
+   * breach, request and policy approval, which then fall back to their role or to an admin. All or nothing.
    */
   async markLeft(id: string, now: Date): Promise<LeaveOutcome> {
     return this.prisma.transact(async (db) => {
@@ -137,6 +137,14 @@ export class PeopleRepository {
         where: { assigneeId: id },
         data: { assigneeId: null },
       });
+      const breaches = await db.breach.updateMany({
+        where: { assigneeId: id },
+        data: { assigneeId: null },
+      });
+      const requests = await db.dataRequest.updateMany({
+        where: { assigneeId: id },
+        data: { assigneeId: null },
+      });
       const policies = await db.policy.updateMany({
         where: { approverId: id },
         data: { approverId: null },
@@ -144,7 +152,8 @@ export class PeopleRepository {
       await db.person.update({ where: { id }, data: { status: 'left', leftAt: now } });
       return {
         roles: held.map((assignment) => assignment.role),
-        assignments: controls.count + proofs.count + policies.count,
+        assignments:
+          controls.count + proofs.count + breaches.count + requests.count + policies.count,
       };
     });
   }

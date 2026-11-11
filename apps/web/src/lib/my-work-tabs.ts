@@ -1,6 +1,6 @@
 import type { MyWorkItem } from '@dpdp-kit/shared';
 
-export const MY_WORK_TABS = ['all', 'proof', 'approve', 'policies'] as const;
+export const MY_WORK_TABS = ['all', 'breach', 'request', 'proof', 'approve', 'policies'] as const;
 export type MyWorkTab = (typeof MY_WORK_TABS)[number];
 
 /** The items on one tab. "Policies" covers the reviews and the drafts, which are both a policy to look after. */
@@ -10,6 +10,14 @@ export function onMyWorkTab(items: MyWorkItem[], tab: MyWorkTab): MyWorkItem[] {
   return items.filter((item) => item.kind === tab);
 }
 
-/** Where an item opens: a proof requirement or a policy. */
-export const myWorkHref = (item: MyWorkItem): string =>
-  item.kind === 'proof' ? `/proof/${item.id}` : `/policies/${item.id}`;
+const FOLDER: Record<MyWorkItem['kind'], string> = {
+  breach: 'breaches',
+  request: 'requests',
+  proof: 'proof',
+  approve: 'policies',
+  review: 'policies',
+  draft: 'policies',
+};
+
+/** Where an item opens: a breach, a request, a proof requirement or a policy. */
+export const myWorkHref = (item: MyWorkItem): string => `/${FOLDER[item.kind]}/${item.id}`;

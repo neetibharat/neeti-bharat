@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AccessLevel, LeaveResponse } from '@dpdp-kit/shared';
+import type { AppRole, LeaveResponse } from '@dpdp-kit/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import type { Account } from '../../users/repositories/user.repository';
 import { UserService } from '../../users/services/user.service';
@@ -20,7 +20,7 @@ export class AccessChangeService {
     private readonly activity: ActivityService,
   ) {}
 
-  async setAccess(personId: string, target: AccessLevel, actor: Actor): Promise<void> {
+  async setAccess(personId: string, target: AppRole, actor: Actor): Promise<void> {
     const person = await this.activePerson(personId);
     const account = await this.users.findByEmail(person.email);
     const invitation = await this.invitations.findOpenByEmail(person.email);
@@ -69,24 +69,21 @@ export class AccessChangeService {
     return person;
   }
 
-  private async changeAccount(account: Account, target: AccessLevel): Promise<void> {
+  private async changeAccount(account: Account, target: AppRole): Promise<void> {
     const losesAdmin = account.role === 'admin' && !account.disabledAt && target !== 'admin';
     if (losesAdmin) await this.assertNotLastAdmin();
-    if (target === 'staff') await this.users.disable(account.id, new Date());
-    else await this.users.setRole(account.id, target);
+    await this.users.setRole(account.id, target);
   }
 
   /** Nobody has signed in yet, so the change is a new invitation in place of the old one. */
   private async changeInvitation(
     person: Person,
     openInvitationId: string | undefined,
-    target: AccessLevel,
+    target: AppRole,
     actor: Actor,
   ): Promise<void> {
     if (openInvitationId) await this.invitations.revoke(openInvitationId, actor);
-    if (target !== 'staff') {
-      await this.invitations.create({ email: person.email, role: target }, actor);
-    }
+    await this.invitations.create({ email: person.email, role: target }, actor);
   }
 
   private async disableLogin(account: Account): Promise<void> {

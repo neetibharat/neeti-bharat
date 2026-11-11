@@ -1,21 +1,24 @@
 'use client';
 
-import { ACCESS_LEVELS, type AccessLevel } from '@dpdp-kit/shared';
+import { APP_ROLES, type AccessLevel, type AppRole } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Select } from '@/components/base/select/select';
 
 export interface AccessSelectProps {
   value: AccessLevel;
-  onChange: (value: AccessLevel) => void;
+  /** Only a login role can be chosen. */
+  onChange: (value: AppRole) => void;
   label?: string;
   isDisabled?: boolean;
   className?: string;
 }
 
-/** Picks Admin, Member, Auditor or Staff (no login). */
+/** Picks Admin, Member or Auditor. Someone with no login yet shows "No login yet" until a role is chosen. */
 export function AccessSelect({ value, onChange, label, isDisabled, className }: AccessSelectProps) {
   const t = useTranslations('roles');
-  const options = ACCESS_LEVELS.map((level) => ({ id: level, label: t(level) }));
+  const roles = APP_ROLES.map((role) => ({ id: role as AccessLevel, label: t(role) }));
+  const options =
+    value === 'staff' ? [{ id: 'staff' as AccessLevel, label: t('staff') }, ...roles] : roles;
 
   return (
     <Select
@@ -25,7 +28,9 @@ export function AccessSelect({ value, onChange, label, isDisabled, className }: 
       options={options}
       selectedKey={value}
       isDisabled={isDisabled}
-      onSelectionChange={onChange}
+      onSelectionChange={(level) => {
+        if (level !== 'staff') onChange(level);
+      }}
     />
   );
 }

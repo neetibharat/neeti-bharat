@@ -15,8 +15,8 @@ export class ActivityController {
 
   @Get()
   @ApiOperation({ summary: 'The activity log, newest first (admin only)' })
+  @ApiQuery({ name: 'page', required: false, description: 'From 1, default 1' })
   @ApiQuery({ name: 'limit', required: false, description: '1 to 100, default 25' })
-  @ApiQuery({ name: 'cursor', required: false, description: 'nextCursor from the previous page' })
   @ApiQuery({ name: 'action', required: false, description: 'Only this kind of change' })
   list(
     @Query(new ZodValidationPipe(listActivitySchema)) query: ListActivityQuery,

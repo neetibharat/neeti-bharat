@@ -11,16 +11,21 @@ import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
 import { useDebouncedValue } from '@/lib/hooks/use-debounced-value';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { NO_FILTERS, toProofQuery, type ProofFilters } from '@/lib/proof-query';
-import { ControlFocus } from './control-focus';
+import { ControlProofPage } from './control-proof-page';
 import { ProofFilterBar } from './proof-filters';
 import { ProofList } from './proof-list';
 import { ProofSummary } from './proof-summary';
 
-/** Everything the company has to be able to show, one page at a time: overdue, missing, due again and in. */
+/** Everything the company has to be able to show, or, given a control, that control's own page. */
 export function ProofPage({ controlId }: { controlId?: string }) {
+  return controlId ? <ControlProofPage controlId={controlId} /> : <AllProofPage />;
+}
+
+/** Everything the company has to be able to show, one page at a time: overdue, missing, due again and in. */
+function AllProofPage() {
   const tPage = useTranslations('pages.proof');
   const errorMessage = useErrorMessage();
-  const { filters, setFilters, tab, setTab, setPage, query } = useProofView(controlId);
+  const { filters, setFilters, tab, setTab, setPage, query } = useProofView();
   const { data, error } = useGetProofOverviewQuery(query);
   const tabs = useProofTabs(data, setPage);
 
@@ -31,7 +36,6 @@ export function ProofPage({ controlId }: { controlId?: string }) {
     <>
       <PageHeader title={tPage('title')} description={tPage('description')} />
       <div className="flex flex-col gap-4">
-        {controlId && <ControlFocus control={data.control} controlId={controlId} />}
         <ProofSummary counts={data.counts} />
         <ProofFilterBar rules={data.rules} filters={filters} onChange={setFilters} />
         <Tabs selectedKey={tab} onSelectionChange={setTab} tabs={tabs} />
@@ -41,7 +45,7 @@ export function ProofPage({ controlId }: { controlId?: string }) {
 }
 
 /** What the person has chosen: the filters, the tab and the page. Changing the filters or the tab goes back to page one. */
-function useProofView(controlId?: string) {
+function useProofView() {
   const [filters, setFilters] = useState<ProofFilters>(NO_FILTERS);
   const [tab, setTab] = useState<ProofTab>('all');
   const [page, setPage] = useState(1);
@@ -60,7 +64,7 @@ function useProofView(controlId?: string) {
     },
     page,
     setPage,
-    query: toProofQuery({ filters: { ...filters, search }, tab, page, controlId }),
+    query: toProofQuery({ filters: { ...filters, search }, tab, page }),
   };
 }
 

@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ActivityModule } from '../activity/activity.module';
+import { BreachesModule } from '../breaches/breaches.module';
+import { StorageModule } from '../core/storage/storage.module';
+import { RequestsModule } from '../requests/requests.module';
 import { PeopleModule } from '../people/people.module';
 import { ProfileModule } from '../profile/profile.module';
 import { AssigneesController } from './controllers/assignees.controller';
@@ -28,7 +31,14 @@ import { RuleReader } from './services/rule-reader';
 import { ProofService } from './services/proof.service';
 
 @Module({
-  imports: [ActivityModule, PeopleModule, ProfileModule],
+  imports: [
+    ActivityModule,
+    BreachesModule,
+    PeopleModule,
+    ProfileModule,
+    RequestsModule,
+    StorageModule,
+  ],
   controllers: [
     FrameworksController,
     AssigneesController,

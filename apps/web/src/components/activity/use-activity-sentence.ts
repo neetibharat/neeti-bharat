@@ -15,6 +15,8 @@ export function useActivitySentence(): (event: ActivityEventResponse) => string 
   const tValues = useTranslations('activity.values');
   const empty = useTranslations('activity')('emptyValue');
   const tFields = useTranslations('profile.fields');
+  const tSteps = useTranslations('breaches.steps');
+  const tRequestTypes = useTranslations('requests.types');
 
   /** Codes the log stores for roles and statuses are shown in words. Anything else is shown as it is. */
   const show = (value: unknown): string => {
@@ -28,6 +30,8 @@ export function useActivitySentence(): (event: ActivityEventResponse) => string 
       event.action,
       sentenceParams(event, {
         role: (role) => tRoles(role),
+        step: (step) => tSteps(step),
+        requestType: (type) => tRequestTypes(type),
         show,
         entry: entryName(event, tFields),
       }),

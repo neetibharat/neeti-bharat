@@ -1,6 +1,6 @@
 'use client';
 
-import type { AccessLevel } from '@dpdp-kit/shared';
+import type { AppRole } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';
@@ -16,7 +16,7 @@ export interface PersonValues {
   email: string;
   department: string;
   jobTitle: string;
-  access: AccessLevel;
+  access: AppRole;
 }
 
 export interface PersonFormProps {

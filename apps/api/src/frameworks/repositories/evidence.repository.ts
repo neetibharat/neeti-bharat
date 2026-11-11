@@ -9,6 +9,8 @@ export interface NewEvidence {
   title: string;
   url: string | null;
   note: string | null;
+  /** For a file: where it is kept, and what it is. */
+  file?: { key: string; name: string; size: number; type: string; sha256: string };
   addedById: string;
   addedByName: string;
 }
@@ -32,8 +34,15 @@ export class EvidenceRepository {
     return this.prisma.db.evidence.findFirst({ where: { id, controlId } });
   }
 
-  create(data: NewEvidence): Promise<Evidence> {
-    return this.prisma.db.evidence.create({ data });
+  create({ file, ...data }: NewEvidence): Promise<Evidence> {
+    const fileColumns = file && {
+      fileKey: file.key,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      fileSha256: file.sha256,
+    };
+    return this.prisma.db.evidence.create({ data: { ...data, ...fileColumns } });
   }
 
   delete(id: string): Promise<Evidence> {

@@ -49,10 +49,8 @@ export class ActivityService {
   }
 
   async list(query: ListQuery): Promise<ActivityListResponse> {
-    const rows = await this.repository.list(query);
-    const page = rows.slice(0, query.limit);
-    const hasMore = rows.length > query.limit;
-    return { items: page.map(toResponse), nextCursor: hasMore ? String(page.at(-1)!.seq) : null };
+    const { rows, total } = await this.repository.list(query);
+    return { items: rows.map(toResponse), total, page: query.page, pageSize: query.limit };
   }
 
   /**

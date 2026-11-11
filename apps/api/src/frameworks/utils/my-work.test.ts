@@ -1,7 +1,14 @@
 import type { PolicyStatus } from '@dpdp-kit/shared';
 import { describe, expect, it } from 'vitest';
 import type { ControlRow, PolicyBriefs } from './checklist-view';
-import { myWorkItems, workloadOf, type MyWorkInput, type WorkPolicy } from './my-work';
+import {
+  myWorkItems,
+  workloadOf,
+  type MyWorkInput,
+  type WorkBreach,
+  type WorkRequest,
+  type WorkPolicy,
+} from './my-work';
 
 const NOW = new Date('2026-11-10T12:00:00Z');
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -49,6 +56,8 @@ const input = (over: Partial<MyWorkInput> = {}): MyWorkInput => ({
   controls: [],
   policies: [],
   briefs: new Map() as PolicyBriefs,
+  breaches: [],
+  requests: [],
   now: NOW,
   ...over,
 });
@@ -120,6 +129,134 @@ describe('policy work', () => {
       ['P2', 'review', true],
       ['P1', 'draft', false],
     ]);
+  });
+});
+
+const breach = (id: string, over: Partial<WorkBreach> = {}): WorkBreach => ({
+  id,
+  title: `Breach ${id}`,
+  currentStep: 'assess',
+  reportDueAt: new Date('2026-11-12T12:00:00Z'),
+  overdue: false,
+  assigneeId: null,
+  ...over,
+});
+
+describe('breach work', () => {
+  it('gives an open breach to whoever holds the DPO job, dated by the Board deadline', () => {
+    expect(myWorkItems(input({ breaches: [breach('b1')] }))).toEqual([
+      {
+        kind: 'breach',
+        id: 'b1',
+        title: 'Breach b1',
+        context: 'assess',
+        dueOn: '2026-11-12T12:00:00.000Z',
+        overdue: false,
+      },
+    ]);
+  });
+
+  it('gives it to an admin who does not hold the job, and to nobody else', () => {
+    const items = [breach('b1')];
+    expect(myWorkItems(input({ breaches: items, roles: new Set(), isAdmin: true }))).toHaveLength(
+      1,
+    );
+    expect(myWorkItems(input({ breaches: items, roles: new Set(['SECURITY_LEAD']) }))).toEqual([]);
+  });
+
+  it('gives a breach that names someone to that person alone', () => {
+    const items = [breach('b1', { assigneeId: 'me' })];
+    expect(myWorkItems(input({ breaches: items, roles: new Set() }))).toHaveLength(1);
+    const other = [breach('b1', { assigneeId: 'someone-else' })];
+    expect(myWorkItems(input({ breaches: other }))).toEqual([]);
+    expect(myWorkItems(input({ breaches: other, roles: new Set(), isAdmin: true }))).toEqual([]);
+  });
+
+  it('has no date once the Board is told, and flags a late report', () => {
+    const told = breach('b1', { currentStep: 'tell_people' });
+    const late = breach('b2', { overdue: true });
+    const items = myWorkItems(input({ breaches: [told, late] }));
+    expect(items.map((i) => [i.id, i.dueOn !== null, i.overdue])).toEqual([
+      ['b2', true, true],
+      ['b1', false, false],
+    ]);
+  });
+
+  it('comes before approvals, proof and drafts, and after anything overdue and earlier', () => {
+    const items = myWorkItems(
+      input({
+        controls: [control()],
+        policies: [policy('A', 'in_review', { approverId: 'me' })],
+        breaches: [breach('b1')],
+      }),
+    );
+    expect(items.map((i) => i.kind)).toEqual(['breach', 'approve', 'proof']);
+  });
+
+  it('orders late breaches and late proof together, earliest deadline first', () => {
+    const late = control({ proofRequirements: [requirement('a', { dueDate: daysAgo(1) })] });
+    const items = myWorkItems(
+      input({
+        controls: [late],
+        breaches: [breach('b1', { overdue: true, reportDueAt: daysAgo(2) })],
+      }),
+    );
+    expect(items.map((i) => i.kind)).toEqual(['breach', 'proof']);
+  });
+});
+
+const request = (id: string, over: Partial<WorkRequest> = {}): WorkRequest => ({
+  id,
+  type: 'access',
+  personName: `Person ${id}`,
+  dueAt: new Date('2026-12-01T00:00:00Z'),
+  overdue: false,
+  assigneeId: null,
+  ...over,
+});
+
+describe('request work', () => {
+  it('gives an open request to whoever holds the DPO job, dated by its due date', () => {
+    expect(myWorkItems(input({ requests: [request('r1')] }))).toEqual([
+      {
+        kind: 'request',
+        id: 'r1',
+        title: 'Person r1',
+        context: 'access',
+        dueOn: '2026-12-01T00:00:00.000Z',
+        overdue: false,
+      },
+    ]);
+  });
+
+  it('gives it to an admin who does not hold the job, and to nobody else', () => {
+    const items = [request('r1')];
+    expect(myWorkItems(input({ requests: items, roles: new Set(), isAdmin: true }))).toHaveLength(
+      1,
+    );
+    expect(myWorkItems(input({ requests: items, roles: new Set(['SECURITY_LEAD']) }))).toEqual([]);
+  });
+
+  it('gives a request that names someone to that person alone', () => {
+    const mine = [request('r1', { assigneeId: 'me' })];
+    expect(myWorkItems(input({ requests: mine, roles: new Set() }))).toHaveLength(1);
+    const other = [request('r1', { assigneeId: 'someone-else' })];
+    expect(myWorkItems(input({ requests: other }))).toEqual([]);
+    expect(myWorkItems(input({ requests: other, roles: new Set(), isAdmin: true }))).toEqual([]);
+  });
+
+  it('puts a late request first and one that is not late after breaches and before approvals', () => {
+    const items = myWorkItems(
+      input({
+        policies: [policy('A', 'in_review', { approverId: 'me' })],
+        breaches: [breach('b1')],
+        requests: [
+          request('r1'),
+          request('r2', { overdue: true, dueAt: new Date('2026-11-01T00:00:00Z') }),
+        ],
+      }),
+    );
+    expect(items.map((i) => i.id)).toEqual(['r2', 'b1', 'r1', 'A']);
   });
 });
 

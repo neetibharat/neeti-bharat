@@ -23,6 +23,26 @@ export class InvitationRepository {
     });
   }
 
+  /** Invitations nobody has accepted or cancelled yet, expired or not, newest first. */
+  findPendingByEmails(emails: string[]): Promise<Invitation[]> {
+    return this.prisma.db.invitation.findMany({
+      where: { email: { in: emails }, status: 'pending' },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  findLatestPendingByEmail(email: string): Promise<Invitation | null> {
+    return this.prisma.db.invitation.findFirst({
+      where: { email, status: 'pending' },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /** Gives an invitation a new last day. */
+  renew(id: string, expiresAt: Date): Promise<Invitation> {
+    return this.prisma.db.invitation.update({ where: { id }, data: { expiresAt } });
+  }
+
   countOpen(now: Date): Promise<number> {
     return this.prisma.db.invitation.count({
       where: { status: 'pending', expiresAt: { gt: now } },

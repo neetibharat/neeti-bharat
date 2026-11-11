@@ -9,8 +9,6 @@ export type ComingSoonId =
   | 'dataMap'
   | 'connections'
   | 'noticeAndConsent'
-  | 'requests'
-  | 'breaches'
   | 'notifications'
   | 'apiKeys'
   | 'secrets'

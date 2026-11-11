@@ -11,22 +11,33 @@ const account = (over: Partial<Account> = {}): Account => ({
   disabledAt: null,
   ...over,
 });
-const invitation = (role: Invitation['role'] = 'member') => ({ role }) as Invitation;
+const DAY = 24 * 60 * 60 * 1000;
+const invitation = (role: Invitation['role'] = 'member', expiresIn = 7 * DAY) =>
+  ({ role, expiresAt: new Date(Date.now() + expiresIn) }) as Invitation;
 
 describe('accessOf', () => {
   it('reads access from the account', () => {
-    expect(accessOf(account({ role: 'admin' }))).toEqual({ access: 'admin', invited: false });
+    expect(accessOf(account({ role: 'admin' }))).toEqual({
+      access: 'admin',
+      invited: false,
+      inviteExpired: false,
+    });
   });
 
   it('reads access from an open invitation when there is no account yet', () => {
-    expect(accessOf(null, invitation('auditor'))).toEqual({ access: 'auditor', invited: true });
+    expect(accessOf(null, invitation('auditor'))).toEqual({
+      access: 'auditor',
+      invited: true,
+      inviteExpired: false,
+    });
   });
 
   it('is staff when there is neither, or when the account has been disabled', () => {
-    expect(accessOf()).toEqual({ access: 'staff', invited: false });
+    expect(accessOf()).toEqual({ access: 'staff', invited: false, inviteExpired: false });
     expect(accessOf(account({ disabledAt: new Date() }))).toEqual({
       access: 'staff',
       invited: false,
+      inviteExpired: false,
     });
   });
 
@@ -34,7 +45,24 @@ describe('accessOf', () => {
     expect(accessOf(account({ role: 'member' }), invitation('admin'))).toEqual({
       access: 'member',
       invited: false,
+      inviteExpired: false,
     });
+  });
+});
+
+describe('accessOf with an invitation that ran out', () => {
+  it('is staff, but says the invitation expired so it can be sent again', () => {
+    expect(accessOf(null, invitation('member', -DAY))).toEqual({
+      access: 'staff',
+      invited: false,
+      inviteExpired: true,
+    });
+  });
+
+  it('ignores an old invitation once the person has an account', () => {
+    expect(accessOf(account({ role: 'admin' }), invitation('member', -DAY)).inviteExpired).toBe(
+      false,
+    );
   });
 });
 
@@ -55,7 +83,13 @@ describe('toPersonResponses', () => {
     const people = toPersonResponses(
       [person('p1', 'a@company.in'), person('p2', 'b@company.in'), person('p3', 'c@company.in')],
       [account({ email: 'a@company.in', role: 'admin' })],
-      [{ email: 'b@company.in', role: 'member' } as Invitation],
+      [
+        {
+          email: 'b@company.in',
+          role: 'member',
+          expiresAt: new Date(Date.now() + DAY),
+        } as Invitation,
+      ],
     );
     expect(people.map((entry) => [entry.access, entry.invited])).toEqual([
       ['admin', false],

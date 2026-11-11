@@ -12,17 +12,28 @@ interface Setup {
   userExists?: boolean;
   openInvitation?: boolean;
   revoked?: { email: string } | null;
+  pending?: boolean;
 }
 
 function build({
   userExists = false,
   openInvitation = false,
   revoked = { email: 'a@company.in' },
+  pending = true,
 }: Setup) {
   const invitations = {
     create: vi.fn().mockImplementation(async (data) => ({ id: 'inv-1', ...data })),
     findOpenByEmail: vi.fn().mockResolvedValue(openInvitation ? { id: 'old' } : null),
     revoke: vi.fn().mockResolvedValue(revoked),
+    findLatestPendingByEmail: vi
+      .fn()
+      .mockResolvedValue(pending ? { id: 'inv-old', email: 'a@company.in', role: 'member' } : null),
+    renew: vi.fn().mockImplementation(async (id: string, expiresAt: Date) => ({
+      id,
+      email: 'a@company.in',
+      role: 'member',
+      expiresAt,
+    })),
   } as unknown as InvitationRepository;
   const users = {
     existsByEmail: vi.fn().mockResolvedValue(userExists),
@@ -92,5 +103,36 @@ describe('InvitationService.revoke', () => {
     const { service, activity } = build({ revoked: null });
     await expect(service.revoke('missing', actor)).rejects.toMatchObject({ code: 'NOT_FOUND' });
     expect(activity.record).not.toHaveBeenCalled();
+  });
+});
+
+describe('InvitationService.resend', () => {
+  it('gives the invitation a fresh last day, emails the person again and records it', async () => {
+    const { service, invitations, mail, activity } = build({});
+    await service.resend('a@company.in', actor);
+    const [id, expiresAt] = vi.mocked(invitations.renew).mock.calls[0] as [string, Date];
+    expect(id).toBe('inv-old');
+    expect(expiresAt.getTime()).toBeGreaterThan(Date.now() + 6 * 24 * 60 * 60 * 1000);
+    expect(mail.send).toHaveBeenCalledWith(expect.objectContaining({ to: 'a@company.in' }));
+    expect(activity.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'INVITATION_RESENT',
+        details: { email: 'a@company.in', role: 'member' },
+      }),
+    );
+  });
+
+  it('refuses when there is no invitation to send again', async () => {
+    const { service, mail } = build({ pending: false });
+    await expect(service.resend('a@company.in', actor)).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    });
+    expect(mail.send).not.toHaveBeenCalled();
+  });
+
+  it('refuses when the person has already signed up', async () => {
+    const { service, invitations } = build({ userExists: true });
+    await expect(service.resend('a@company.in', actor)).rejects.toMatchObject({ code: 'CONFLICT' });
+    expect(invitations.renew).not.toHaveBeenCalled();
   });
 });

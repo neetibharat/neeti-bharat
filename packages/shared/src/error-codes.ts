@@ -15,6 +15,15 @@ export const ERROR_CODES = [
   'LAST_ADMIN',
   'BUILT_IN',
   'HAS_CONTROLS',
+  'STEP_ORDER',
+  'BREACH_CLOSED',
+  'REQUEST_CLOSED',
+  'REQUEST_NOT_READY',
+  'IDENTITY_NOT_VERIFIED',
+  'FILE_REQUIRED',
+  'FILE_TOO_LARGE',
+  'FILE_TYPE_NOT_ALLOWED',
+  'STORAGE_NOT_CONFIGURED',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

@@ -8,11 +8,11 @@ import {
   IconSearch,
   IconTrash,
 } from '@tabler/icons-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Alert } from '@/components/base/alert/alert';
 import { Avatar } from '@/components/base/avatar/avatar';
 import { FormActions } from '@/components/base/form-actions/form-actions';
-import { GradientCard } from '@/components/base/gradient-card/gradient-card';
+import { HighlightCard } from '@/components/base/highlight-card/highlight-card';
 import { HeroFact, HeroFacts, HeroPanel } from '@/components/base/hero-panel/hero-panel';
 import { IconLinkRow } from '@/components/base/icon-link-row/icon-link-row';
 import { ProgressBar } from '@/components/base/progress-bar/progress-bar';
@@ -22,10 +22,12 @@ import { BrandMark } from '@/components/base/brand-mark/brand-mark';
 import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
+import { DropZone } from '@/components/base/drop-zone/drop-zone';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { Input } from '@/components/base/input/input';
 import { Modal } from '@/components/base/modal/modal';
 import { Select } from '@/components/base/select/select';
+import { SegmentedControl } from '@/components/base/segmented-control/segmented-control';
 import { Switch } from '@/components/base/switch/switch';
 import {
   Table,
@@ -175,6 +177,37 @@ function Fields() {
   );
 }
 
+function DropZones() {
+  return (
+    <Section title="Drop zone">
+      <div className="grid gap-4 sm:grid-cols-3">
+        <DropZone
+          label="Drag and drop files here"
+          hint="Accepted: PDF, PNG. Up to 25 MB each."
+          buttonLabel="Choose files"
+          loadingLabel="Uploading…"
+          accept={['.pdf', '.png']}
+          onFiles={() => undefined}
+        />
+        <DropZone
+          label="Drag and drop files here"
+          buttonLabel="Choose files"
+          loadingLabel="Uploading…"
+          isLoading
+          onFiles={() => undefined}
+        />
+        <DropZone
+          label="File storage is not set up"
+          buttonLabel="Choose files"
+          loadingLabel="Uploading…"
+          isDisabled
+          onFiles={() => undefined}
+        />
+      </div>
+    </Section>
+  );
+}
+
 function Selection() {
   return (
     <Section title="Checkbox and switch">
@@ -276,9 +309,26 @@ function EmptyDemo() {
   );
 }
 
+function SegmentedDemo() {
+  const [view, setView] = useState('board');
+
+  return (
+    <SegmentedControl
+      aria-label="View"
+      value={view}
+      onChange={setView}
+      options={[
+        { id: 'board', label: 'Board' },
+        { id: 'list', label: 'List' },
+      ]}
+    />
+  );
+}
+
 function Navigation() {
   return (
-    <Section title="Tabs and table">
+    <Section title="Tabs, segmented control and table">
+      <SegmentedDemo />
       <Tabs
         tabs={[
           { id: 'people', label: 'People', content: <PeopleTable /> },
@@ -305,9 +355,9 @@ function DashboardPieces() {
           </div>
         </StatCard>
         <StatCard label="Readiness" value="57%" delta={{ value: '4%', direction: 'up' }} />
-        <GradientCard tag="Insight" figure="75%" title="Controls with proof attached">
+        <HighlightCard tag="Insight" figure="75%" title="Controls with proof attached">
           Five more controls need proof before the readiness date.
-        </GradientCard>
+        </HighlightCard>
       </div>
     </Section>
   );
@@ -398,6 +448,7 @@ export function Sections() {
       <Typography />
       <Buttons />
       <Fields />
+      <DropZones />
       <Selection />
       <Feedback />
       <Overlays />

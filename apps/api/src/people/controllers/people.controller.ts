@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type {
   LeaveResponse,
@@ -61,7 +61,7 @@ export class PeopleController {
 
   @Post()
   @ApiOperation({
-    summary: 'Add a person. Any access except staff also invites them to sign in (admin only)',
+    summary: 'Add a person and invite them to sign in with the given role (admin only)',
   })
   @ApiBody({ type: AddPersonDto })
   add(
@@ -80,6 +80,18 @@ export class PeopleController {
     @Session() session: UserSession,
   ): Promise<PersonResponse> {
     return this.service.update(id, body, actorOf(session.user));
+  }
+
+  @Post(':id/resend-invitation')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Send an invitation again with a fresh last day, even if it ran out (admin only)',
+  })
+  resendInvitation(
+    @Param('id') id: string,
+    @Session() session: UserSession,
+  ): Promise<PersonResponse> {
+    return this.service.resendInvitation(id, actorOf(session.user));
   }
 
   @Put(':id/access')

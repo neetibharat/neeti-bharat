@@ -1,4 +1,4 @@
-import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { HttpStatus, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { Prisma } from '../../generated/prisma/client';
 import { AppException } from './app.exception';
@@ -23,6 +23,20 @@ describe('toErrorBody', () => {
 
   it('maps Nest HTTP exceptions by status', () => {
     expect(toErrorBody(new NotFoundException())).toEqual({ statusCode: 404, code: 'NOT_FOUND' });
+  });
+
+  it('maps the upload size limit multer raises to FILE_TOO_LARGE', () => {
+    expect(toErrorBody(new PayloadTooLargeException('File too large'))).toEqual({
+      statusCode: 413,
+      code: 'FILE_TOO_LARGE',
+    });
+  });
+
+  it('maps the upload size limit multer raises to FILE_TOO_LARGE', () => {
+    expect(toErrorBody(new PayloadTooLargeException('File too large'))).toEqual({
+      statusCode: 413,
+      code: 'FILE_TOO_LARGE',
+    });
   });
 
   it('hides unknown errors behind INTERNAL', () => {

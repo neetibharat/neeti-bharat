@@ -1,11 +1,9 @@
 'use client';
 
 import {
-  EVIDENCE_KINDS,
   EVIDENCE_NOTE_MAX_LENGTH,
   EVIDENCE_TITLE_MAX_LENGTH,
   type AddEvidenceRequest,
-  type EvidenceKind,
 } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
@@ -18,9 +16,12 @@ import { useAddEvidenceMutation } from '@/lib/api/evidence-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
 
+/** Files are added by the drop zone, so the form only has the two kinds that are typed. */
+const TYPED_KINDS = ['link', 'note'] as const satisfies readonly AddEvidenceRequest['kind'][];
+
 /** What is typed so far: the kind of proof, its title, and its address or note. */
 interface Draft {
-  kind: EvidenceKind;
+  kind: AddEvidenceRequest['kind'];
   title: string;
   detail: string;
 }
@@ -87,7 +88,7 @@ function Fields({ draft, onChange }: { draft: Draft; onChange: (change: Partial<
       <div className="grid gap-3 sm:grid-cols-[10rem_1fr]">
         <Select
           label={t('form.kind')}
-          options={EVIDENCE_KINDS.map((id) => ({ id, label: t(`kinds.${id}`) }))}
+          options={TYPED_KINDS.map((id) => ({ id, label: t(`kinds.${id}`) }))}
           selectedKey={draft.kind}
           onSelectionChange={(kind) => onChange({ kind, detail: '' })}
         />

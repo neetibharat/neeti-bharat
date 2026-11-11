@@ -8,6 +8,7 @@ import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
 import { EvidenceForm } from '@/components/proof/evidence-form';
 import { EvidenceRow } from '@/components/proof/evidence-row';
+import { FileDropzone } from '@/components/proof/file-dropzone';
 
 /** Proof on a control that is not for any one requirement, with a way to add more. */
 export function GeneralProof(props: { controlId: string; proof: EvidenceResponse[] }) {
@@ -37,6 +38,7 @@ export function GeneralProof(props: { controlId: string; proof: EvidenceResponse
             ))}
           </ul>
         )}
+        <FileDropzone controlId={props.controlId} />
       </div>
     </Card>
   );

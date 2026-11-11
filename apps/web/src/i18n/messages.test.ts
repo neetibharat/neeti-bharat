@@ -1,5 +1,6 @@
 import {
   ACCESS_LEVELS,
+  APP_ROLES,
   ACTIVITY_ACTIONS,
   CONTROL_STATUSES,
   DPDP_RULES,
@@ -64,10 +65,8 @@ describe('message catalogs', () => {
       people: { accessLevels: Tree };
     };
     expect(Object.keys(jobRoles).sort()).toEqual([...JOB_ROLES].sort());
-    for (const level of ACCESS_LEVELS) {
-      expect(roles).toHaveProperty(level);
-      expect(people.accessLevels).toHaveProperty(level);
-    }
+    for (const level of ACCESS_LEVELS) expect(roles).toHaveProperty(level);
+    for (const role of APP_ROLES) expect(people.accessLevels).toHaveProperty(role);
   });
 
   it('words every control status and every condition that switches a rule on', () => {

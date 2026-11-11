@@ -1,4 +1,4 @@
-import type { AccessLevel } from './roles.js';
+import type { AccessLevel, AppRole } from './roles.js';
 
 /**
  * The named jobs that policies and controls refer to, such as the DPO. Each can be held by one person.
@@ -35,10 +35,12 @@ export interface PersonResponse {
   jobTitle: string | null;
   status: PersonStatus;
   leftAt: string | null;
-  /** A login role, or `staff` for no login. Taken from the person's account or open invitation. */
+  /** A login role, or `staff` while they have no login (no invitation yet, or it ran out). */
   access: AccessLevel;
   /** True while `access` is an invitation that has not been accepted yet. */
   invited: boolean;
+  /** True when an invitation was sent, was never accepted, and has run out. It can be sent again. */
+  inviteExpired: boolean;
   roles: JobRole[];
 }
 
@@ -89,7 +91,8 @@ export interface AddPersonRequest {
   email: string;
   department?: string;
   jobTitle?: string;
-  access: AccessLevel;
+  /** Every person is invited to sign in with this role. */
+  access: AppRole;
 }
 
 export interface UpdatePersonRequest {
@@ -99,7 +102,7 @@ export interface UpdatePersonRequest {
 }
 
 export interface SetAccessRequest {
-  access: AccessLevel;
+  access: AppRole;
 }
 
 export interface AssignRoleRequest {

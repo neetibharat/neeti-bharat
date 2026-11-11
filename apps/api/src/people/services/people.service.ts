@@ -65,9 +65,7 @@ export class PeopleService {
       department: input.department,
       jobTitle: input.jobTitle,
     });
-    if (input.access !== 'staff') {
-      await this.invitations.create({ email, role: input.access }, actor);
-    }
+    await this.invitations.create({ email, role: input.access }, actor);
     await this.activity.record({
       actor,
       action: 'PERSON_ADDED',
@@ -95,6 +93,18 @@ export class PeopleService {
     return this.one(id);
   }
 
+  /** Sends someone's invitation again, with a fresh last day. */
+  async resendInvitation(
+    id: string,
+    actor: ActivityActor & { id: string },
+  ): Promise<PersonResponse> {
+    const person = await this.people.findById(id);
+    if (!person) throw new AppException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    if (person.status === 'left') throw new AppException('CONFLICT', HttpStatus.CONFLICT);
+    await this.invitations.resend(person.email, actor);
+    return this.one(id);
+  }
+
   /** Called when an account is created, so everyone who can sign in is also a person. */
   async ensureForAccount(account: { email: string; name: string }): Promise<void> {
     const name = account.name || account.email.split('@')[0] || account.email;
@@ -110,7 +120,7 @@ export class PeopleService {
     const emails = persons.map((person) => person.email);
     const [accounts, invitations] = await Promise.all([
       this.users.findByEmails(emails),
-      this.invitations.findOpenByEmails(emails),
+      this.invitations.findPendingByEmails(emails),
     ]);
     return toPersonResponses(persons, accounts, invitations);
   }

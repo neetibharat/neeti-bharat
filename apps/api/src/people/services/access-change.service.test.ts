@@ -71,13 +71,7 @@ describe('AccessChangeService.setAccess', () => {
     expect(activity.record).not.toHaveBeenCalled();
   });
 
-  it('switches off the login, and ends its sessions, when access becomes staff', async () => {
-    const { service, users } = build({ account: { role: 'member' } });
-    await service.setAccess('p1', 'staff', actor);
-    expect(users.disable).toHaveBeenCalledWith('u1', expect.any(Date));
-  });
-
-  it('turns a login back on when a staff person gets access again', async () => {
+  it('turns a login back on when a disabled account gets access again', async () => {
     const { service, users } = build({ account: { role: 'member', disabledAt: new Date() } });
     await service.setAccess('p1', 'admin', actor);
     expect(users.setRole).toHaveBeenCalledWith('u1', 'admin');
@@ -86,9 +80,6 @@ describe('AccessChangeService.setAccess', () => {
   it('will not demote or remove the last admin', async () => {
     const { service, users } = build({ account: { role: 'admin' }, activeAdmins: 1 });
     await expect(service.setAccess('p1', 'member', actor)).rejects.toMatchObject({
-      code: 'LAST_ADMIN',
-    });
-    await expect(service.setAccess('p1', 'staff', actor)).rejects.toMatchObject({
       code: 'LAST_ADMIN',
     });
     expect(users.setRole).not.toHaveBeenCalled();
