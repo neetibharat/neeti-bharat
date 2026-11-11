@@ -2,6 +2,7 @@ import {
   ACCESS_LEVELS,
   APP_ROLES,
   ACTIVITY_ACTIONS,
+  EXPORT_DATASETS,
   CONTROL_STATUSES,
   DPDP_RULES,
   POLICY_STATUSES,
@@ -47,6 +48,14 @@ describe('message catalogs', () => {
     const { actions, actionNames } = catalogs.en.activity as { actions: Tree; actionNames: Tree };
     expect(Object.keys(actions).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
     expect(Object.keys(actionNames).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
+  });
+
+  it('words every download on the exports page', () => {
+    const { datasets } = catalogs.en.exports as { datasets: Tree };
+    expect(Object.keys(datasets).sort()).toEqual([...EXPORT_DATASETS].sort());
+    for (const key of EXPORT_DATASETS) {
+      expect(Object.keys(datasets[key] as Tree).sort()).toEqual(['about', 'name']);
+    }
   });
 
   it('words every company profile answer and group', () => {

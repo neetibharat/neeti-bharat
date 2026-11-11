@@ -9,6 +9,7 @@ import { AllExceptionsFilter } from './core/common/all-exceptions.filter';
 import { validateEnv } from './core/config/env.validation';
 import { RequestsModule } from './requests/requests.module';
 import { HealthModule } from './core/health/health.module';
+import { ExportsModule } from './exports/exports.module';
 import { FrameworksModule } from './frameworks/frameworks.module';
 import { PeopleModule } from './people/people.module';
 import { ProfileModule } from './profile/profile.module';
@@ -29,6 +30,7 @@ import { StorageModule } from './core/storage/storage.module';
     BreachesModule,
     RequestsModule,
     ActivityModule,
+    ExportsModule,
     FrameworksModule,
     PeopleModule,
     ProfileModule,

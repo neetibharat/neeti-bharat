@@ -34,4 +34,4 @@ The web app runs on http://localhost:3200 and the API on http://localhost:3201/v
 | `pnpm format` | Formats the whole repo                  |
 | `pnpm db:up`  | Starts Postgres and MinIO in Docker     |
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the standards and [docs/architecture.md](docs/architecture.md) for how the pieces fit. To configure email, sign-in and file storage for proof, see [docs/self-hosting.md](docs/self-hosting.md). For how a personal data breach is handled, see [docs/breaches.md](docs/breaches.md). For how requests and complaints from people are handled, see [docs/requests.md](docs/requests.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the standards and [docs/architecture.md](docs/architecture.md) for how the pieces fit. To configure email, sign-in and file storage for proof, see [docs/self-hosting.md](docs/self-hosting.md). For how a personal data breach is handled, see [docs/breaches.md](docs/breaches.md). For how requests and complaints from people are handled, see [docs/requests.md](docs/requests.md). For the audit pack and CSV downloads, see [docs/exports.md](docs/exports.md).

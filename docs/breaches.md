@@ -40,7 +40,7 @@ When someone is marked as left, they come off every breach and [request](request
 
 - **Breaches page** (`/breaches`): three figures (open, overdue, closed), tabs for open and closed with their counts, a search on title and description, and a paged table with the step each breach is at, its clock and who it is assigned to ("Unassigned" when nobody is named). Open breaches list the late ones first, then the one found longest ago. Closed breaches list the most recently closed first.
 - **One breach** (`/breaches/:id`): the five steps with who did each and when, the clock, the details with who it is assigned to, the step to do now with its note, and the notes of the steps done. Admins and members change the assignee there while the breach is open; auditors see it read-only.
-- **Dashboard**: a notice at the very top lists open breaches for every role, and they are the first items in what needs attention.
+- **Dashboard**: open breaches are the first items in what needs attention, for every role.
 - **My work**: each open breach is an item of kind `breach`, dated by the Board deadline while the Board is not told. A breach that names someone is work for that person only. A breach that names nobody is work for whoever holds the DPO job and for admins. Admins still see every breach on the Breaches page and the Dashboard.
 
 ## What is recorded

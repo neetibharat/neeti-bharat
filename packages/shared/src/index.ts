@@ -3,6 +3,7 @@ export * from './auth.js';
 export * from './breaches.js';
 export * from './duration.js';
 export * from './error-codes.js';
+export * from './exports.js';
 export * from './frameworks/dpdp/checklist.js';
 export * from './frameworks/dpdp/control-edit.js';
 export * from './frameworks/dpdp/evidence.js';

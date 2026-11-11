@@ -41,7 +41,8 @@
       "secrets": "Secrets",
       "activityLog": "Activity log",
       "aiHelp": "AI help",
-      "myWork": "My work"
+      "myWork": "My work",
+      "exports": "Exports"
     }
   },
   "roles": {
@@ -224,7 +225,8 @@
       "REQUEST_TASK_UPDATED": "Request task changed",
       "REQUEST_TASK_REMOVED": "Request task removed",
       "REQUEST_CLOSED": "Request closed",
-      "INVITATION_RESENT": "Invitation sent again"
+      "INVITATION_RESENT": "Invitation sent again",
+      "DATA_EXPORTED": "Data downloaded"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -277,7 +279,8 @@
       "REQUEST_TASK_UPDATED": "Changed a task on the request from {name} ({type})",
       "REQUEST_TASK_REMOVED": "Removed a task from the request from {name} ({type})",
       "REQUEST_CLOSED": "Closed the request from {name} ({type})",
-      "INVITATION_RESENT": "Sent the invitation to {email} again"
+      "INVITATION_RESENT": "Sent the invitation to {email} again",
+      "DATA_EXPORTED": "Downloaded {what}"
     },
     "emptyValue": "empty",
     "values": {
@@ -1311,11 +1314,6 @@
       "save": "Save",
       "cancel": "Cancel",
       "submit": "Report breach"
-    },
-    "alert": {
-      "title": "{count, plural, one {1 open breach} other {# open breaches}}",
-      "more": "{count, plural, one {1 more open breach} other {# more open breaches}} on the Breaches page.",
-      "all": "All breaches"
     }
   },
   "requests": {
@@ -1494,6 +1492,54 @@
       "save": "Save",
       "cancel": "Cancel",
       "submit": "Log request"
+    }
+  },
+  "exports": {
+    "title": "Exports",
+    "description": "Take the records out of the app: everything in one zip for an auditor, or one list at a time as a spreadsheet. Every download is written to the activity log.",
+    "pack": {
+      "title": "Audit pack",
+      "description": "One zip with every list below, the newest approved text of each policy, every file uploaded as proof, and the result of the activity log's integrity check.",
+      "download": "Download audit pack"
+    },
+    "lists": {
+      "title": "Lists",
+      "description": "The whole list, not just the page you are looking at. They open in Excel.",
+      "download": "Download CSV"
+    },
+    "datasets": {
+      "checklist": {
+        "name": "Checklist",
+        "about": "Every control with its status, owner, policies and proof."
+      },
+      "proof_requirements": {
+        "name": "Proof requirements",
+        "about": "What each control must prove, how often, who collects it and when it was last given."
+      },
+      "evidence": {
+        "name": "Proof",
+        "about": "Every file, link and note attached as proof, with who added it and when."
+      },
+      "policies": {
+        "name": "Policies",
+        "about": "Each policy with its status, approver and approved version."
+      },
+      "breaches": {
+        "name": "Breaches",
+        "about": "Every breach with the date of each step, from found to closed."
+      },
+      "requests": {
+        "name": "Requests",
+        "about": "Every request with its due date, identity check, systems handled and outcome."
+      },
+      "people": {
+        "name": "People and roles",
+        "about": "Everyone on record, the jobs they hold and their access."
+      },
+      "activity": {
+        "name": "Activity log",
+        "about": "Every change, oldest first, with the fingerprints that link them."
+      }
     }
   }
 }

@@ -1,21 +1,15 @@
-import type { ErrorCode } from '@dpdp-kit/shared';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { BrandMark } from '@/components/base/brand-mark/brand-mark';
 import { Card } from '@/components/base/card/card';
 import { redirect } from '@/i18n/navigation';
 import { requireLocale } from '@/i18n/require-locale';
+import { signInErrorCode } from '@/lib/sign-in-error';
 import { getAuthProviders, getCurrentUser } from '@/lib/server-session';
 
 interface SignInPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ error?: string }>;
-}
-
-/** Better Auth sends people back here with ?error=. A refused new account means no invitation. */
-function refusalCode(error?: string): ErrorCode | undefined {
-  if (!error) return undefined;
-  return error === 'unable_to_create_user' ? 'INVITATION_REQUIRED' : 'INTERNAL';
 }
 
 export default async function SignInPage({ params, searchParams }: SignInPageProps) {
@@ -36,7 +30,7 @@ export default async function SignInPage({ params, searchParams }: SignInPagePro
           </div>
           <h1 className="text-title font-semibold tracking-tight text-fg">{t('title')}</h1>
         </div>
-        <SignInForm providers={providers} initialError={refusalCode(error)} />
+        <SignInForm providers={providers} initialError={signInErrorCode(error)} />
       </Card>
     </main>
   );

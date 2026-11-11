@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { OpenBreachesAlert } from '@/components/breaches/open-breaches-alert';
 import { DASHBOARD_BREACHES, useGetBreachesQuery } from '@/lib/api/breaches-api';
 import { useGetFrameworksQuery, useGetPoliciesQuery } from '@/lib/api/frameworks-api';
 import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
@@ -26,7 +25,6 @@ export function DashboardPage() {
 
   return (
     <>
-      <BreachesBanner />
       <PageHeader title={t('heading')} description={t('tagline')} />
       <div className="flex flex-col gap-5">
         <TopRow />
@@ -43,12 +41,6 @@ export function DashboardPage() {
       </div>
     </>
   );
-}
-
-/** Open breaches, above everything else, until each one is closed. */
-function BreachesBanner() {
-  const { data } = useGetBreachesQuery(DASHBOARD_BREACHES);
-  return data ? <OpenBreachesAlert data={data} /> : null;
 }
 
 /** How ready the company is, next to what most needs someone. */

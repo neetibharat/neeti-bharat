@@ -6,7 +6,7 @@ import { FileStorage, type DownloadOptions, type PutOptions } from './file-stora
 export class MemoryFileStorage extends FileStorage {
   readonly objects = new Map<string, { body: Buffer; options: PutOptions }>();
   /** Name a method to make it fail, to test what happens then. */
-  failOn: 'put' | 'remove' | 'signedDownloadUrl' | null = null;
+  failOn: 'put' | 'read' | 'remove' | 'signedDownloadUrl' | null = null;
 
   isEnabled(): boolean {
     return true;
@@ -16,6 +16,12 @@ export class MemoryFileStorage extends FileStorage {
     if (this.failOn === 'put') return Promise.reject(new Error('put failed'));
     this.objects.set(key, { body, options });
     return Promise.resolve();
+  }
+
+  read(key: string): Promise<Buffer> {
+    if (this.failOn === 'read') return Promise.reject(new Error('read failed'));
+    const object = this.objects.get(key);
+    return object ? Promise.resolve(object.body) : Promise.reject(new Error('missing'));
   }
 
   signedDownloadUrl(key: string, options: DownloadOptions): Promise<string> {

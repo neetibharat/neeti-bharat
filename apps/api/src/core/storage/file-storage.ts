@@ -20,6 +20,8 @@ export abstract class FileStorage {
   /** False when no storage is configured; every other method then refuses with STORAGE_NOT_CONFIGURED. */
   abstract isEnabled(): boolean;
   abstract put(key: string, body: Buffer, options: PutOptions): Promise<void>;
+  /** The whole object, for the audit pack. Uploads are capped, so one fits in memory. */
+  abstract read(key: string): Promise<Buffer>;
   abstract signedDownloadUrl(key: string, options: DownloadOptions): Promise<string>;
   abstract remove(key: string): Promise<void>;
 }

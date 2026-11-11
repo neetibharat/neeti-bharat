@@ -5,6 +5,7 @@ import {
   IconBuilding,
   IconChecklist,
   IconDatabase,
+  IconDownload,
   IconFileCheck,
   IconFileText,
   IconHistory,
@@ -41,6 +42,7 @@ export type NavItemId =
   | 'frameworks'
   | 'policies'
   | 'proof'
+  | 'exports'
   | 'dataMap'
   | 'connections'
   | 'noticeAndConsent'
@@ -88,6 +90,7 @@ export const NAV_AREAS: NavArea[] = [
           { id: 'frameworks', href: '/frameworks', icon: IconScale, status: 'live' },
           { id: 'policies', href: '/policies', icon: IconFileText, status: 'live' },
           { id: 'proof', href: '/proof', icon: IconShieldCheck, status: 'live' },
+          { id: 'exports', href: '/exports', icon: IconDownload, status: 'live' },
         ],
       },
     ],
