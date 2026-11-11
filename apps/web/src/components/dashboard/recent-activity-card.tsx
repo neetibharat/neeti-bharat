@@ -4,7 +4,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { useActivitySentence } from '@/components/activity/use-activity-sentence';
 import { Link } from '@/i18n/navigation';
-import { useListActivityInfiniteQuery } from '@/lib/api/activity-api';
+import { useListActivityQuery } from '@/lib/api/activity-api';
 
 const MAX_ROWS = 6;
 
@@ -13,9 +13,9 @@ export function RecentActivityCard() {
   const t = useTranslations('dashboard.activity');
   const format = useFormatter();
   const sentence = useActivitySentence();
-  const { data } = useListActivityInfiniteQuery({});
+  const { data } = useListActivityQuery({ page: 1, limit: MAX_ROWS });
   if (!data) return null;
-  const events = (data.pages[0]?.items ?? []).slice(0, MAX_ROWS);
+  const events = data.items;
 
   return (
     <Card
