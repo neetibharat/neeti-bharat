@@ -43,6 +43,13 @@ const VARIANTS: readonly (readonly [string, (result: WebsiteCheckResult) => bool
 const variantOf = (result: WebsiteCheckResult): string =>
   VARIANTS.find(([, applies]) => applies(result))?.[0] ?? '';
 
+/** How the report is grouped, in the order shown: what DPDP asks to see first, then the technical checks. */
+export const CHECK_GROUPS: readonly { id: string; checks: readonly WebsiteCheckId[] }[] = [
+  { id: 'privacy', checks: ['privacy_notice', 'grievance_contact', 'cookies'] },
+  { id: 'connection', checks: ['reachable', 'https', 'http_redirect', 'certificate', 'hsts'] },
+  { id: 'browser', checks: ['csp', 'content_type_options', 'referrer_policy', 'frame_options'] },
+];
+
 /** The key, inside `websiteCheck.checks.<id>`, of the sentence that says what this result found. */
 export function checkMessageKey(result: WebsiteCheckResult): string {
   const variant = variantOf(result);

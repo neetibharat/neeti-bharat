@@ -1655,6 +1655,21 @@
         "pass": "No cookies are set when the home page loads.",
         "warn": "{count, plural, one {# cookie is} other {# cookies are}} set before anyone agrees: {names}. Only cookies the site needs to work are allowed without consent."
       }
+    },
+    "groups": {
+      "needsWork": "{count, plural, one {# to fix} other {# to fix}}",
+      "privacy": {
+        "title": "What DPDP expects to see",
+        "about": "A privacy notice, a way to complain, and no cookies before consent."
+      },
+      "connection": {
+        "title": "Secure connection",
+        "about": "Whether visitors reach the site safely."
+      },
+      "browser": {
+        "title": "Browser protections",
+        "about": "Headers that stop other sites from misusing yours."
+      }
     }
   }
 }

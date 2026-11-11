@@ -3,12 +3,12 @@
 import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';
-import { StatTile } from '@/components/base/stat-tile/stat-tile';
+import { HeroFact, HeroFacts } from '@/components/base/hero-panel/hero-panel';
 import { useGetWebsiteCheckQuery } from '@/lib/api/website-check-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { CheckList } from './check-list';
 
-/** One run: how many things passed, warned and failed, then each of them. */
+/** One run: the address and how many things passed, warned and failed, then each thing checked, in groups. */
 export function CheckResults({ id }: { id: string }) {
   const t = useTranslations('websiteCheck.results');
   const format = useFormatter();
@@ -20,11 +20,6 @@ export function CheckResults({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatTile label={t('passed')} value={data.passed} />
-        <StatTile label={t('warned')} value={data.warned} tone="accent" />
-        <StatTile label={t('failed')} value={data.failed} tone="danger" />
-      </div>
       <Card
         title={data.url}
         description={t('checked', {
@@ -35,8 +30,18 @@ export function CheckResults({ id }: { id: string }) {
           name: data.checkedByName,
         })}
       >
-        <CheckList results={data.results} />
+        <HeroFacts>
+          <HeroFact label={t('passed')} value={String(data.passed)} dot="bg-success" />
+          <HeroFact label={t('warned')} value={String(data.warned)} dot="bg-accent" />
+          <HeroFact
+            label={t('failed')}
+            value={String(data.failed)}
+            dot="bg-danger"
+            isAlert={data.failed > 0}
+          />
+        </HeroFacts>
       </Card>
+      <CheckList results={data.results} />
     </div>
   );
 }

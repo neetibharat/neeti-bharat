@@ -1,8 +1,16 @@
 import type { WebsiteCheckResult } from '@dpdp-kit/shared';
 import { describe, expect, it } from 'vitest';
-import { checkMessageKey, WEBSITE_MESSAGE_KEYS } from './website-check';
+import { WEBSITE_CHECK_IDS } from '@dpdp-kit/shared';
+import { CHECK_GROUPS, checkMessageKey, WEBSITE_MESSAGE_KEYS } from './website-check';
 
 const key = (result: WebsiteCheckResult) => checkMessageKey(result);
+
+describe('CHECK_GROUPS', () => {
+  it('lists every check once', () => {
+    const listed = CHECK_GROUPS.flatMap((group) => [...group.checks]);
+    expect([...listed].sort()).toEqual([...WEBSITE_CHECK_IDS].sort());
+  });
+});
 
 describe('checkMessageKey', () => {
   it('is just the status when there is nothing more to say', () => {
