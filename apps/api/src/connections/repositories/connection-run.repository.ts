@@ -37,6 +37,22 @@ export class ConnectionRunRepository {
     });
   }
 
+  /**
+   * Saves the run and whatever has to be saved with it, such as its activity log entry, together or not at all. It
+   * opens the transaction itself, because a run reads a system for seconds first, and a transaction held open that
+   * long would expire.
+   */
+  createWith(
+    data: NewConnectionRun,
+    alongside: (run: ConnectionRun) => Promise<void>,
+  ): Promise<ConnectionRun> {
+    return this.prisma.runInTransaction(async () => {
+      const run = await this.create(data);
+      await alongside(run);
+      return run;
+    });
+  }
+
   findById(id: string): Promise<ConnectionRun | null> {
     return this.prisma.db.connectionRun.findUnique({ where: { id } });
   }

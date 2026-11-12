@@ -6,7 +6,7 @@ import type {
   OrganizationSummary,
 } from '@dpdp-kit/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { REFUSED_SECRET } from './support/fake-azure-connector';
+import { REFUSED_SECRET, azureConnector } from './support/fake-azure-connector';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 
 const SECRET = 'a-client-secret-that-must-never-come-back';
@@ -114,6 +114,18 @@ describe('adding a connection', () => {
   });
 });
 
+describe('opening one connection', () => {
+  it('gives its details and latest run, never the secret, to anyone who can read', async () => {
+    const one = await world.alice.get<ConnectionSummary>(
+      `/v1/connections/${world.connectionId}`,
+      world.alpha,
+    );
+    expect(one.status).toBe(200);
+    expect(one.body).toMatchObject({ id: world.connectionId, name: 'Production', lastRun: null });
+    expect(one.text).not.toContain(SECRET);
+  });
+});
+
 describe('checking a connection', () => {
   it('reads the system and keeps the results, one for each check', async () => {
     const run = await world.alice.post<ConnectionRunResponse>(
@@ -122,8 +134,8 @@ describe('checking a connection', () => {
       world.alpha,
     );
     expect(run.status).toBe(201);
-    expect(run.body.results).toHaveLength(11);
-    expect(run.body.passed + run.body.warned + run.body.failed + run.body.skipped).toBe(11);
+    expect(run.body.results).toHaveLength(51);
+    expect(run.body.passed + run.body.warned + run.body.failed + run.body.skipped).toBe(51);
     expect(run.body.results.find((result) => result.id === 'entra_mfa_enforced')?.status).toBe(
       'pass',
     );
@@ -131,7 +143,7 @@ describe('checking a connection', () => {
       `/v1/connections/runs/${run.body.id}`,
       world.alpha,
     );
-    expect(one.body.results).toHaveLength(11);
+    expect(one.body.results).toHaveLength(51);
     const listed = await world.alice.get<ConnectionListResponse>('/v1/connections', world.alpha);
     expect(listed.body.items[0]!.lastRun?.id).toBe(run.body.id);
   });
@@ -168,8 +180,43 @@ describe('between organisations', () => {
     const path = `/v1/connections/${world.connectionId}`;
     expect((await world.bob.post(`${path}/run`, undefined, world.beta)).status).toBe(404);
     expect((await world.bob.get(`${path}/runs`, world.beta)).status).toBe(404);
+    expect((await world.bob.get(path, world.beta)).status).toBe(404);
     expect((await world.bob.delete(path, world.beta)).status).toBe(404);
   });
+});
+
+describe('a run that takes longer than a database transaction may', () => {
+  it('is still saved, because nothing is held open while Azure is read', async () => {
+    const made = await world.alice.post<ConnectionSummary>(
+      '/v1/connections',
+      { provider: 'azure', name: 'Slow tenant', credentials: credentials() },
+      world.alpha,
+    );
+    expect(made.status).toBe(201);
+    // Longer than the 15 seconds a request's own transaction is allowed.
+    azureConnector.delayMs = 16_000;
+    try {
+      const run = await world.alice.post<ConnectionRunResponse>(
+        `/v1/connections/${made.body.id}/run`,
+        undefined,
+        world.alpha,
+      );
+      expect(run.status).toBe(201);
+      expect(run.body.results).toHaveLength(51);
+    } finally {
+      azureConnector.delayMs = 0;
+    }
+    const listed = await world.alice.get<ConnectionListResponse>(
+      '/v1/connections?limit=100',
+      world.alpha,
+    );
+    const slow = listed.body.items.find((item) => item.id === made.body.id);
+    expect(slow?.lastRun).not.toBeNull();
+    // Leaves nothing behind for the tests that follow.
+    expect((await world.alice.delete(`/v1/connections/${made.body.id}`, world.alpha)).status).toBe(
+      204,
+    );
+  }, 60_000);
 });
 
 describe('removing a connection', () => {

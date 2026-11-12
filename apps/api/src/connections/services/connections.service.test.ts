@@ -24,18 +24,27 @@ function build(
   const secrets = options.secrets ?? new AesSecretBox(randomBytes(32).toString('base64'));
   const stored: { credentials?: string } = {};
   const connections = {
-    create: vi.fn().mockImplementation((data: { credentials: string; name: string }) => {
-      stored.credentials = data.credentials;
-      return Promise.resolve({
-        id: 'c1',
-        provider: 'azure',
-        createdAt: new Date(),
-        identifiers: {},
-        removedAt: null,
-        createdByName: 'Asha',
-        ...data,
-      });
-    }),
+    createWith: vi
+      .fn()
+      .mockImplementation(
+        async (
+          data: { credentials: string; name: string },
+          alongside: (row: object) => Promise<void>,
+        ) => {
+          stored.credentials = data.credentials;
+          const row = {
+            id: 'c1',
+            provider: 'azure',
+            createdAt: new Date(),
+            identifiers: {},
+            removedAt: null,
+            createdByName: 'Asha',
+            ...data,
+          };
+          await alongside(row);
+          return row;
+        },
+      ),
     findActive: vi.fn().mockImplementation(() =>
       Promise.resolve({
         id: 'c1',
@@ -49,11 +58,13 @@ function build(
     latestRuns: vi.fn(),
   };
   const runs = {
-    create: vi
+    createWith: vi
       .fn()
-      .mockImplementation((data: object) =>
-        Promise.resolve({ id: 'r1', ranAt: new Date(), ...data }),
-      ),
+      .mockImplementation(async (data: object, alongside: (row: object) => Promise<void>) => {
+        const row = { id: 'r1', ranAt: new Date(), ...data };
+        await alongside(row);
+        return row;
+      }),
     lastRanAt: vi.fn().mockResolvedValue(options.lastRanAt ?? null),
   };
   const azure = {
@@ -103,7 +114,7 @@ describe('ConnectionsService.create', () => {
       code: 'CONNECTION_FAILED',
       params: { reason: 'sign_in' },
     });
-    expect(connections.create).not.toHaveBeenCalled();
+    expect(connections.createWith).not.toHaveBeenCalled();
   });
 
   it('refuses when no secrets key is set, without calling Microsoft', async () => {
@@ -126,15 +137,37 @@ describe('ConnectionsService.run', () => {
     const { service, runs, azure, activity, inOrg } = await created();
     const run = await inOrg(() => service.run('c1', actor));
     expect(azure.verify).toHaveBeenCalledTimes(2);
-    expect(run.results).toHaveLength(11);
-    expect(runs.create).toHaveBeenCalledWith(
+    expect(run.results).toHaveLength(51);
+    expect(runs.createWith).toHaveBeenCalledWith(
       expect.objectContaining({ connectionId: 'c1', ranByName: 'Asha' }),
+      expect.any(Function),
     );
     expect(activity.record).toHaveBeenLastCalledWith(
       expect.objectContaining({
         action: 'CONNECTION_CHECKED',
-        details: { name: 'Production', passed: 0, total: 11 },
+        details: { name: 'Production', passed: 0, total: 51 },
       }),
+    );
+  });
+
+  it('saves the run and its log entry together, and only after Azure has been read', async () => {
+    const { service, runs, activity, azure, inOrg } = await created();
+    const order: string[] = [];
+    azure.connect.mockImplementation(() => {
+      order.push('read');
+      return fakeAzure();
+    });
+    runs.createWith.mockImplementation(
+      async (data: object, alongside: (row: object) => Promise<void>) => {
+        order.push('saved');
+        await alongside({ id: 'r1', ranAt: new Date(), ...data });
+        return { id: 'r1', ranAt: new Date(), ...data };
+      },
+    );
+    await inOrg(() => service.run('c1', actor));
+    expect(order).toEqual(['read', 'saved']);
+    expect(activity.record).toHaveBeenLastCalledWith(
+      expect.objectContaining({ action: 'CONNECTION_CHECKED' }),
     );
   });
 
@@ -153,7 +186,7 @@ describe('ConnectionsService.run', () => {
       code: 'CONNECTION_FAILED',
       params: { reason: 'sign_in' },
     });
-    expect(runs.create).not.toHaveBeenCalled();
+    expect(runs.createWith).not.toHaveBeenCalled();
   });
 });
 

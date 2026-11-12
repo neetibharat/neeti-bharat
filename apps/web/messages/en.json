@@ -33,6 +33,7 @@
       "proof": "Proof",
       "dataMap": "Data map",
       "connections": "Connections",
+      "cloudTests": "Cloud tests",
       "noticeAndConsent": "Notice and consent",
       "requests": "Requests",
       "breaches": "Breaches",
@@ -1699,7 +1700,13 @@
       "passed": "Passed",
       "warned": "To review",
       "failed": "Failed",
-      "skipped": "Not checked"
+      "skipped": "Not checked",
+      "view": {
+        "label": "Which checks to show",
+        "attention": "Needs attention ({count})",
+        "all": "All checks ({count})"
+      },
+      "allClear": "Nothing needs attention. Choose All checks to see what passed."
     },
     "groups": {
       "needsWork": "{count} to look at",
@@ -1709,11 +1716,27 @@
       },
       "data": {
         "title": "Where the data is kept",
-        "about": "Storage, databases and key vaults: how they are protected, and where they are."
+        "about": "Storage, encryption and key vaults: how they are protected, and where they are."
+      },
+      "databases": {
+        "title": "Databases",
+        "about": "SQL, PostgreSQL, MySQL, MongoDB, Redis and Cosmos DB: who can reach them, and how."
+      },
+      "apps": {
+        "title": "Apps and servers",
+        "about": "Web apps, function apps and virtual machines: how they accept connections and sign in."
+      },
+      "containers": {
+        "title": "Containers",
+        "about": "Kubernetes clusters and container registries."
       },
       "network": {
         "title": "Network",
         "about": "What can be reached from the internet."
+      },
+      "governance": {
+        "title": "Monitoring and governance",
+        "about": "Whether changes are watched, logs are kept, policies are enforced, and production is kept apart."
       }
     },
     "skipped": {
@@ -1740,6 +1763,24 @@
         "pass": "{count} people are global administrators.",
         "problem": "{count, plural, one {# person is} other {# people are}} global administrators. Aim for two to five: one leaves a single point of failure, and many is a lot of power."
       },
+      "rbac_privileged": {
+        "name": "Few accounts can do everything in Azure",
+        "about": "Only a handful of accounts hold Owner or User Access Administrator over the whole subscription.",
+        "pass": "{count} accounts hold Owner or User Access Administrator over the whole subscription, within the limit of {limit}.",
+        "problem": "{count} accounts hold Owner or User Access Administrator over the whole subscription. Aim for {limit} or fewer: an account that is broken into can do all that it can."
+      },
+      "rbac_wildcard_roles": {
+        "name": "No custom role allows everything",
+        "about": "A custom role that allows every action is Owner under another name.",
+        "pass": "None of the {total} custom roles allows every action.",
+        "problem": "{count} of {total} custom roles allow every action: {names}."
+      },
+      "rbac_service_principals": {
+        "name": "No app holds broad power over the subscription",
+        "about": "Apps that hold Owner, User Access Administrator or Contributor over the whole subscription can change anything in it.",
+        "pass": "No app holds Owner, User Access Administrator or Contributor over the whole subscription.",
+        "problem": "{count} apps hold Owner, User Access Administrator or Contributor over the whole subscription. Whoever has an app’s secret has that power."
+      },
       "storage_secure_transfer": {
         "name": "Storage requires HTTPS and TLS 1.2",
         "about": "Storage accounts refuse plain HTTP and old versions of TLS.",
@@ -1747,16 +1788,52 @@
         "problem": "{count} of {total} storage accounts allow plain HTTP or old TLS: {names}."
       },
       "storage_public_access": {
-        "name": "Storage has no public access",
+        "name": "Storage has no public containers",
         "about": "Nobody who only has an address can read a container.",
         "pass": "None of the {total} storage accounts allow public access to containers.",
         "problem": "{count} of {total} storage accounts allow public access to containers: {names}."
       },
-      "keyvault_protection": {
-        "name": "Key vaults can recover deleted keys",
-        "about": "Soft delete and purge protection are on, so a key cannot be lost for good by mistake.",
-        "pass": "All {total} key vaults have soft delete and purge protection.",
-        "problem": "{count} of {total} key vaults lack soft delete or purge protection: {names}."
+      "storage_network_access": {
+        "name": "Storage is not open to every network",
+        "about": "Storage accounts accept connections only from the networks that need them.",
+        "pass": "None of the {total} storage accounts accept connections from every network.",
+        "problem": "{count} of {total} storage accounts accept connections from every network: {names}. This is Azure’s default, and a key is still needed, but a firewall rule narrows who can try."
+      },
+      "encryption_at_rest": {
+        "name": "Data is encrypted at rest",
+        "about": "Storage accounts, managed disks and SQL databases encrypt what they hold when it is not in use.",
+        "pass": "All {total} storage accounts, disks and SQL databases are encrypted at rest.",
+        "problem": "{count} of {total} storage accounts, disks and SQL databases are not encrypted at rest: {names}."
+      },
+      "keyvault_soft_delete": {
+        "name": "Key vaults can recover what is deleted",
+        "about": "Soft delete is on, so a deleted vault or key can be brought back.",
+        "pass": "Soft delete is on for all {total} key vaults.",
+        "problem": "Soft delete is off for {count} of {total} key vaults: {names}."
+      },
+      "keyvault_purge_protection": {
+        "name": "Key vaults cannot be destroyed early",
+        "about": "Purge protection stops a deleted vault or key being destroyed for good before its time.",
+        "pass": "Purge protection is on for all {total} key vaults.",
+        "problem": "Purge protection is off for {count} of {total} key vaults: {names}."
+      },
+      "keyvault_public_access": {
+        "name": "Key vaults are not open to the internet",
+        "about": "Public network access is off, or limited by the vault’s firewall.",
+        "pass": "None of the {total} key vaults are open to every network.",
+        "problem": "{count} of {total} key vaults are open to every network: {names}."
+      },
+      "keyvault_rbac": {
+        "name": "Key vault access is given by roles",
+        "about": "Access is given through Azure roles, which are reviewed in one place, and not through policies kept on each vault.",
+        "pass": "All {total} key vaults use Azure roles for access.",
+        "problem": "{count} of {total} key vaults still use access policies kept on the vault: {names}."
+      },
+      "data_in_india": {
+        "name": "Data stores are in India",
+        "about": "Where your storage, databases, caches, disks and key vaults are. The Act allows data to go abroad unless a country is restricted, but you should know where it is.",
+        "pass": "All {total} data stores are in India.",
+        "problem": "{count} of {total} data stores are outside India: {names}."
       },
       "sql_tls": {
         "name": "SQL servers require TLS 1.2",
@@ -1770,23 +1847,209 @@
         "pass": "None of the {total} SQL servers allow public network access.",
         "problem": "{count} of {total} SQL servers allow public network access: {names}. Check their firewall rules."
       },
+      "sql_firewall": {
+        "name": "SQL firewalls do not let everyone in",
+        "about": "No firewall rule opens a server to every address, or to every Azure service, which includes other people’s.",
+        "pass": "None of the {total} SQL servers has a rule that opens it widely.",
+        "problem": "{count} of {total} SQL servers have a firewall rule that opens them to every address, or to every Azure service: {names}."
+      },
       "sql_auditing": {
         "name": "SQL auditing is on",
         "about": "Access to the data is recorded, which helps when a breach is investigated.",
         "pass": "Auditing is on for all {total} SQL servers.",
         "problem": "Auditing is off for {count} of {total} SQL servers: {names}."
       },
-      "data_in_india": {
-        "name": "Data stores are in India",
-        "about": "Where your storage, databases and key vaults are. The Act allows data to go abroad unless a country is restricted, but you should know where it is.",
-        "pass": "All {total} data stores are in India.",
-        "problem": "{count} of {total} data stores are outside India: {names}."
+      "flexible_servers_tls": {
+        "name": "PostgreSQL and MySQL require TLS 1.2",
+        "about": "Flexible servers insist on encrypted connections, using TLS 1.2 or newer.",
+        "pass": "All {total} PostgreSQL and MySQL servers require encrypted connections with TLS 1.2 or newer.",
+        "problem": "{count} of {total} PostgreSQL and MySQL servers allow unencrypted connections or older TLS: {names}."
+      },
+      "datastores_public_access": {
+        "name": "Databases and caches are not open to the internet",
+        "about": "PostgreSQL, MySQL, MongoDB, Redis and Cosmos DB have public network access off, or kept in check by firewall rules.",
+        "pass": "None of the {total} databases and caches allow public network access.",
+        "problem": "{count} of {total} databases and caches allow public network access: {names}. Check their firewall rules."
+      },
+      "cosmos_key_access": {
+        "name": "Cosmos DB does not rely on shared keys",
+        "about": "Sign-in with an account replaces keys that can be copied and cannot be taken back from one person.",
+        "pass": "None of the {total} Cosmos DB accounts allow access by key.",
+        "problem": "{count} of {total} Cosmos DB accounts allow access by key: {names}."
+      },
+      "cosmos_failover": {
+        "name": "Cosmos DB fails over by itself",
+        "about": "An account in several regions moves to another when one fails.",
+        "pass": "All {total} Cosmos DB accounts fail over by themselves, or have only one region.",
+        "problem": "{count} of {total} Cosmos DB accounts in several regions do not fail over by themselves: {names}."
+      },
+      "cosmos_backup": {
+        "name": "Cosmos DB keeps a week of backups",
+        "about": "Backups are continuous, or kept for at least a week.",
+        "pass": "All {total} Cosmos DB accounts keep backups for a week or more.",
+        "problem": "{count} of {total} Cosmos DB accounts keep backups for less than a week: {names}."
+      },
+      "webapp_https": {
+        "name": "Web apps only accept HTTPS",
+        "about": "Web apps and function apps turn plain HTTP away, so what travels to them is encrypted.",
+        "pass": "All {total} web apps only accept HTTPS.",
+        "problem": "{count} of {total} web apps also accept plain HTTP: {names}."
+      },
+      "webapp_tls": {
+        "name": "Web apps require TLS 1.2",
+        "about": "Web apps refuse connections that use TLS older than 1.2.",
+        "pass": "All {total} web apps require TLS 1.2 or newer.",
+        "problem": "{count} of {total} web apps accept older TLS: {names}."
+      },
+      "webapp_remote_debugging": {
+        "name": "Web apps have remote debugging off",
+        "about": "A debugger that can be attached from outside is a way in.",
+        "pass": "Remote debugging is off for all {total} web apps.",
+        "problem": "Remote debugging is on for {count} of {total} web apps: {names}."
+      },
+      "webapp_ftp": {
+        "name": "Web apps do not allow plain FTP",
+        "about": "Files are sent over FTPS, or not at all, because plain FTP sends passwords in the clear.",
+        "pass": "None of the {total} web apps allows plain FTP.",
+        "problem": "{count} of {total} web apps allow plain FTP: {names}."
+      },
+      "webapp_identity": {
+        "name": "Web apps have an identity of their own",
+        "about": "An identity lets the app reach other services without a password kept in its settings.",
+        "pass": "All {total} web apps have a managed identity.",
+        "problem": "{count} of {total} web apps have no managed identity: {names}."
+      },
+      "vm_identity": {
+        "name": "Virtual machines have an identity of their own",
+        "about": "An identity lets a machine reach other services without a password kept on it.",
+        "pass": "All {total} virtual machines have a managed identity.",
+        "problem": "{count} of {total} virtual machines have no managed identity: {names}."
+      },
+      "vm_ssh_password": {
+        "name": "Linux machines do not accept passwords",
+        "about": "A Linux machine that accepts a password can be guessed at, so keys are used instead.",
+        "pass": "None of the {total} Linux machines accepts a password to sign in.",
+        "problem": "{count} of {total} Linux machines accept a password to sign in: {names}."
+      },
+      "vm_secure_boot": {
+        "name": "Virtual machines use secure boot",
+        "about": "Secure boot stops software that has been tampered with from starting.",
+        "pass": "None of the {total} virtual machines has secure boot turned off.",
+        "problem": "{count} of {total} virtual machines have secure boot turned off: {names}."
+      },
+      "aks_rbac": {
+        "name": "Kubernetes clusters use role-based access",
+        "about": "What each person and service may do in a cluster is decided by roles.",
+        "pass": "All {total} clusters use role-based access control.",
+        "problem": "{count} of {total} clusters do not use role-based access control: {names}."
+      },
+      "aks_aad": {
+        "name": "Kubernetes clusters use work accounts",
+        "about": "People sign in to a cluster with their work account, which the organisation can switch off.",
+        "pass": "All {total} clusters use Microsoft Entra ID to sign people in.",
+        "problem": "{count} of {total} clusters do not use Microsoft Entra ID to sign people in: {names}."
+      },
+      "aks_network_policy": {
+        "name": "Kubernetes clusters limit traffic between workloads",
+        "about": "A network policy stops any workload from talking to any other.",
+        "pass": "All {total} clusters have a network policy.",
+        "problem": "{count} of {total} clusters have no network policy: {names}."
+      },
+      "aks_private_api": {
+        "name": "Kubernetes control points are not open to everyone",
+        "about": "A cluster’s control point is private, or open only to listed addresses.",
+        "pass": "All {total} clusters have a private or restricted control point.",
+        "problem": "{count} of {total} clusters have a control point open to every address: {names}."
+      },
+      "aks_policy_addon": {
+        "name": "Kubernetes clusters enforce Azure Policy",
+        "about": "The Azure Policy add-on checks what runs in a cluster against your rules.",
+        "pass": "All {total} clusters have the Azure Policy add-on.",
+        "problem": "{count} of {total} clusters lack the Azure Policy add-on: {names}."
+      },
+      "aks_auto_upgrade": {
+        "name": "Kubernetes clusters upgrade themselves",
+        "about": "An upgrade channel keeps a cluster on a supported version.",
+        "pass": "All {total} clusters have an upgrade channel.",
+        "problem": "{count} of {total} clusters have no upgrade channel: {names}."
+      },
+      "aks_monitoring": {
+        "name": "Kubernetes clusters are monitored",
+        "about": "Container monitoring records what a cluster is doing.",
+        "pass": "All {total} clusters are monitored.",
+        "problem": "{count} of {total} clusters are not monitored: {names}."
+      },
+      "acr_admin_user": {
+        "name": "Container registries have no shared admin login",
+        "about": "A shared login cannot be tied to a person, so each person or service signs in as themselves.",
+        "pass": "None of the {total} container registries has the admin user on.",
+        "problem": "The admin user is on for {count} of {total} container registries: {names}."
+      },
+      "acr_public_access": {
+        "name": "Container registries are not open to the internet",
+        "about": "Public network access is off, or limited by firewall rules.",
+        "pass": "None of the {total} container registries is open to the public network.",
+        "problem": "{count} of {total} container registries are open to the public network: {names}."
+      },
+      "acr_anonymous_pull": {
+        "name": "Container registries need a sign-in to pull images",
+        "about": "Nobody can pull an image without signing in.",
+        "pass": "None of the {total} container registries allows anonymous pulls.",
+        "problem": "{count} of {total} container registries allow anonymous pulls: {names}."
+      },
+      "acr_content_trust": {
+        "name": "Container registries use signed images",
+        "about": "Content trust lets only signed images be used. It is a Premium feature, so smaller registries are not marked down.",
+        "pass": "All Premium container registries use content trust.",
+        "problem": "{count} of {total} registries have content trust off: {names}."
+      },
+      "acr_retention": {
+        "name": "Container registries clear out old images",
+        "about": "A retention policy removes untagged images that are no longer needed. It is a Premium feature, so smaller registries are not marked down.",
+        "pass": "All Premium container registries have a retention policy.",
+        "problem": "{count} of {total} registries have no retention policy: {names}."
       },
       "nsg_open_ports": {
         "name": "No remote login or database port is open to the internet",
         "about": "Network security groups do not let anyone reach SSH, remote desktop or database ports.",
         "pass": "None of the {total} network security groups opens these ports to the internet.",
         "problem": "{count} of {total} network security groups open a remote login or database port to the internet: {names}."
+      },
+      "environment_separation": {
+        "name": "Production is kept apart from other environments",
+        "about": "Production and non-production sit in separate resource groups, told apart by an environment tag or by the name.",
+        "pass": "Production ({production} resource groups) is kept apart from non-production ({nonProduction}) by resource group.",
+        "problem": "Production and non-production could not both be found among the {total} resource groups, by tag or by name: {production} production, {nonProduction} non-production. Tag each group with its environment, or use separate subscriptions."
+      },
+      "monitor_alerts": {
+        "name": "Alerts watch the changes that open a way in",
+        "about": "Someone is told when a policy, a security setting, a network rule or a SQL firewall rule is changed.",
+        "pass": "Alerts exist for all {total} of the watched changes.",
+        "problem": "{count} of {total} watched changes have no alert: {names}."
+      },
+      "monitor_log_export": {
+        "name": "The activity log is kept somewhere",
+        "about": "The subscription’s activity log is exported to a workspace or storage account, because Azure keeps it only for 90 days.",
+        "pass": "The activity log is exported to {count, plural, one {# place} other {# places}}.",
+        "problem": "The activity log is not exported anywhere, so Azure keeps it for only 90 days."
+      },
+      "policy_assignments": {
+        "name": "Azure Policy is in use",
+        "about": "At least one policy is assigned, so something checks resources against rules.",
+        "pass": "{count, plural, one {# policy is} other {# policies are}} assigned.",
+        "problem": "No Azure policy is assigned, so nothing checks resources against rules."
+      },
+      "defender_plans": {
+        "name": "Defender for Cloud plans are on",
+        "about": "Defender for Cloud plans watch each kind of resource for threats and weaknesses. Each plan is paid, so this is a choice to make.",
+        "pass": "All {total} Defender for Cloud plans are on.",
+        "problem": "{count} of {total} Defender for Cloud plans are off: {names}."
+      },
+      "defender_recommendations": {
+        "name": "Defender for Cloud has nothing to fix",
+        "about": "What Defender for Cloud itself recommends fixing: high severity counts as a failure.",
+        "pass": "None of the {total} items Defender for Cloud assessed needs attention.",
+        "problem": "{count} of {total} items Defender for Cloud assessed need attention: {names}."
       }
     },
     "history": {
@@ -1823,9 +2086,9 @@
         "ids": "On its Overview page, copy the Application (client) ID and the Directory (tenant) ID.",
         "secret": "Under Certificates and secrets, make a new client secret and copy its value now. It is shown only once.",
         "reader": "On your subscription, open Access control (IAM) and add the Reader role for the app. Copy the Subscription ID from the subscription’s Overview.",
-        "graph": "On the app, open API permissions, add Microsoft Graph application permissions Reports.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
+        "graph": "On the app, open API permissions, add Microsoft Graph application permissions AuditLog.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
       },
-      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run.",
+      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run. The multi-factor report also needs a Microsoft Entra ID P1 or P2 licence.",
       "back": "Back to the form"
     },
     "remove": {
@@ -1848,7 +2111,7 @@
         "azure": {
           "name": "Microsoft Azure",
           "category": "Cloud and identity",
-          "about": "Read-only checks of sign-in, storage, databases and the network in Azure and Entra ID."
+          "about": "Read-only checks of sign-in, storage, databases, apps, containers and the network in Azure and Entra ID."
         },
         "google_workspace": {
           "name": "Google Workspace",
@@ -1875,7 +2138,10 @@
         "logging": "Audit logging",
         "people": "People and leavers",
         "codeReview": "Code review",
-        "access": "Access control"
+        "access": "Access control",
+        "apps": "Apps and servers",
+        "containers": "Containers",
+        "governance": "Monitoring and policy"
       }
     }
   },
@@ -2186,6 +2452,361 @@
     "readiness": {
       "title": "Check where you stand",
       "description": "Twenty-five short questions in eight areas, about five minutes. There are no wrong answers, and you can skip this and come back to it from the sidebar."
+    }
+  },
+  "cloudTests": {
+    "title": "Cloud tests",
+    "description": "How your connected cloud accounts compare with what the DPDP Act expects. Each check says what it looks at, why it matters, what your account shows, and how to fix it.",
+    "account": "Account",
+    "empty": {
+      "title": "No cloud account is connected",
+      "body": "Connect an Azure subscription to see its results here.",
+      "link": "Go to Connections"
+    },
+    "tabs": {
+      "results": "Results",
+      "history": "History"
+    },
+    "notRunYet": {
+      "title": "Not checked yet",
+      "canRun": "Run the checks to see how this account looks.",
+      "readOnly": "No one has run the checks yet."
+    },
+    "filters": {
+      "severity": "Severity",
+      "all": "All ({count})",
+      "high": "High ({count})",
+      "medium": "Medium ({count})",
+      "low": "Low ({count})",
+      "search": "Search results",
+      "noMatches": "No check matches."
+    },
+    "severity": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "finding": {
+      "about": "About this check",
+      "whatItChecks": "What it checks",
+      "passRule": "Passes when",
+      "failRule": "Needs attention when",
+      "why": "Why it matters",
+      "result": "This account’s result",
+      "resources": "Resources that need attention ({count})",
+      "resourceFail": "Failed",
+      "resourceWarn": "Review",
+      "shown": "Showing {shown} of {count}.",
+      "fix": "How to fix",
+      "attentionCount": "{count} to fix"
+    },
+    "details": {
+      "entra_mfa_registered": {
+        "passRule": "Every member of your organisation has registered at least one multi-factor method.",
+        "failRule": "At least one member has not.",
+        "why": "A stolen password alone should not be enough to sign in. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "In Entra ID, open Protection, then Authentication methods, then Activity, then User registration details. Filter to users who have not registered, and ask them to register at aka.ms/mfasetup. A registration campaign can nudge them."
+      },
+      "entra_mfa_enforced": {
+        "passRule": "Security defaults are on, or an enabled conditional access policy requires multi-factor authentication for all users.",
+        "failRule": "Neither is true.",
+        "why": "Registering a second step does nothing if signing in never asks for it.",
+        "fix": "Turn on security defaults under Entra ID, Properties, Manage security defaults. Or create a conditional access policy for All users that grants access only with multi-factor authentication."
+      },
+      "entra_admin_count": {
+        "passRule": "Between two and five people hold the Global Administrator role.",
+        "failRule": "One person holds it, or more than five.",
+        "why": "One administrator is a single point of failure, and many is a lot of power in the accounts attackers aim for.",
+        "fix": "Under Entra ID, Roles and administrators, Global Administrator: add a second account, or remove people who do not need it and give them a narrower role."
+      },
+      "rbac_privileged": {
+        "passRule": "At most five accounts hold Owner or User Access Administrator over the whole subscription.",
+        "failRule": "More accounts do.",
+        "why": "These roles can change anything, or hand that power to others.",
+        "fix": "Under the subscription’s Access control (IAM), Role assignments: remove the ones that are not needed, move them to a resource group, or use time-limited access with Privileged Identity Management."
+      },
+      "rbac_wildcard_roles": {
+        "passRule": "No custom role lists * (every action) in its permissions.",
+        "failRule": "A custom role does.",
+        "why": "A role that allows everything is Owner under another name, and is easy to miss in a review.",
+        "fix": "Under the subscription’s Access control (IAM), Roles: edit the custom role so that it lists only the actions it needs."
+      },
+      "rbac_service_principals": {
+        "passRule": "No app holds Owner, User Access Administrator or Contributor over the whole subscription.",
+        "failRule": "An app does.",
+        "why": "Whoever holds an app’s secret has its power, and secrets are copied and leaked more easily than people’s sign-ins.",
+        "fix": "Under the subscription’s Access control (IAM), Role assignments: filter by Service principal and replace broad roles with narrower ones, scoped to the resource group the app needs."
+      },
+      "storage_secure_transfer": {
+        "passRule": "Every storage account requires HTTPS and a minimum TLS version of 1.2 or newer.",
+        "failRule": "An account allows plain HTTP, or an older TLS version.",
+        "why": "Personal data sent without encryption can be read by anyone on the path. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Open the storage account, then Settings, Configuration. Set Secure transfer required to Enabled and Minimum TLS version to 1.2."
+      },
+      "storage_public_access": {
+        "passRule": "No storage account allows anonymous public access to blobs.",
+        "failRule": "An account allows it.",
+        "why": "A public container can be read by anyone who has the address, with no sign-in.",
+        "fix": "Open the storage account, then Settings, Configuration. Set Allow Blob anonymous access to Disabled, and check that each container’s access level is Private."
+      },
+      "storage_network_access": {
+        "passRule": "Every storage account accepts connections only from selected networks, or has public network access off.",
+        "failRule": "An account accepts connections from every network.",
+        "why": "A firewall narrows who can even try to reach the data, which limits the damage of a leaked key.",
+        "fix": "Open the storage account, then Security and networking, Networking. Choose Enabled from selected virtual networks and IP addresses, or Disabled, and add the networks that need access."
+      },
+      "encryption_at_rest": {
+        "passRule": "Storage accounts, managed disks and SQL databases are encrypted at rest.",
+        "failRule": "One is not.",
+        "why": "Encryption at rest protects the data if a disk or a backup is taken. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Azure encrypts by default, so something was turned off on purpose. Turn it back on: on a storage account under Encryption, and on a SQL database under Transparent data encryption."
+      },
+      "keyvault_soft_delete": {
+        "passRule": "Soft delete is on for every key vault.",
+        "failRule": "It is off for a vault.",
+        "why": "Without it, a deleted vault or key is gone for good.",
+        "fix": "Soft delete cannot be switched off on new vaults. Recreate an old vault that lacks it, after copying its contents."
+      },
+      "keyvault_purge_protection": {
+        "passRule": "Purge protection is on for every key vault.",
+        "failRule": "It is not for a vault.",
+        "why": "Without it, someone with access can destroy a deleted vault or key before its retention ends.",
+        "fix": "Open the key vault, then Properties, and set Purge protection to Enable. It cannot be turned off afterwards, so choose the retention period first."
+      },
+      "keyvault_public_access": {
+        "passRule": "Every key vault has public network access disabled, or a firewall that denies by default.",
+        "failRule": "A vault is open to every network.",
+        "why": "Keys and secrets should be reachable only from the networks that use them.",
+        "fix": "Open the key vault, then Networking. Choose Enabled from selected virtual networks and IP addresses, or Disabled with a private endpoint, and add the networks that need access."
+      },
+      "keyvault_rbac": {
+        "passRule": "Every key vault uses Azure role-based access control.",
+        "failRule": "A vault still uses access policies kept on the vault.",
+        "why": "Roles are reviewed in one place with the rest of your access, instead of on each vault separately.",
+        "fix": "Open the key vault, then Access configuration. Switch the permission model to Azure role-based access control, after copying each access policy to a role assignment."
+      },
+      "data_in_india": {
+        "passRule": "Every data store is in an Indian region.",
+        "failRule": "A data store is in another region.",
+        "why": "The Act lets personal data go abroad unless the government restricts a country, but you should know where it is, for your records of processing and for your notice.",
+        "fix": "Review each store listed. If its data should stay in India, move or recreate it in Central India, South India or West India. If abroad is intended, record it in your transfer register."
+      },
+      "sql_tls": {
+        "passRule": "Every SQL server’s minimum TLS version is 1.2 or newer.",
+        "failRule": "A server accepts an older version.",
+        "why": "Older TLS versions have known weaknesses.",
+        "fix": "Open the SQL server, then Security, Networking, Connectivity. Set Minimum TLS version to 1.2."
+      },
+      "sql_public_access": {
+        "passRule": "Every SQL server has public network access disabled.",
+        "failRule": "A server allows it.",
+        "why": "A database on the public internet can be attacked by anyone, and its firewall rules and logins are the only defence.",
+        "fix": "Open the SQL server, then Security, Networking. Set Public network access to Disable and use private endpoints, or keep it on with tight firewall rules."
+      },
+      "sql_firewall": {
+        "passRule": "No SQL server has a firewall rule that opens it to every address or to every Azure service.",
+        "failRule": "A server has a rule from 0.0.0.0 to 255.255.255.255 (every address, a failure) or from 0.0.0.0 to 0.0.0.0 (every Azure service, a warning).",
+        "why": "A rule open to everyone makes the database reachable from anywhere, and every Azure service includes other people’s subscriptions.",
+        "fix": "Open the SQL server, then Security, Networking, Firewall rules. Delete the open rule and add rules for the addresses that need access."
+      },
+      "sql_auditing": {
+        "passRule": "Auditing is on for every SQL server.",
+        "failRule": "It is off for a server.",
+        "why": "An audit log is how a breach is investigated afterwards, and the Act’s breach duties depend on knowing what happened.",
+        "fix": "Open the SQL server, then Security, Auditing. Switch on Azure SQL auditing and send it to a storage account or a Log Analytics workspace."
+      },
+      "flexible_servers_tls": {
+        "passRule": "Every PostgreSQL and MySQL flexible server requires encrypted connections with TLS 1.2 or newer.",
+        "failRule": "A server allows unencrypted connections or older TLS.",
+        "why": "Database traffic should not travel in the clear. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Open the server, then Settings, Server parameters. Set require_secure_transport to ON, and set ssl_min_protocol_version (PostgreSQL) or tls_version (MySQL) to TLS 1.2 or newer."
+      },
+      "datastores_public_access": {
+        "passRule": "No PostgreSQL, MySQL, MongoDB, Redis or Cosmos DB service allows public network access.",
+        "failRule": "One does.",
+        "why": "As with SQL, a database on the public internet depends only on its firewall and logins.",
+        "fix": "Open each service’s Networking page and use private access, or restrict public access to the addresses that need it."
+      },
+      "cosmos_key_access": {
+        "passRule": "Every Cosmos DB account disables key-based access (local authentication).",
+        "failRule": "An account allows keys.",
+        "why": "Keys can be copied and cannot be tied to a person, while sign-in with Entra ID can be taken back.",
+        "fix": "Open the Cosmos DB account, then Keys, and set Local authentication to Disabled, after moving apps to Entra ID sign-in."
+      },
+      "cosmos_failover": {
+        "passRule": "Every Cosmos DB account with more than one region fails over automatically.",
+        "failRule": "An account with several regions does not.",
+        "why": "Without it, a regional failure means someone must act before the data is available again.",
+        "fix": "Open the Cosmos DB account, then Replicate data globally, and turn on Automatic failover."
+      },
+      "cosmos_backup": {
+        "passRule": "Every Cosmos DB account keeps continuous backups, or periodic backups for a week or more.",
+        "failRule": "An account keeps periodic backups for less than a week.",
+        "why": "A short backup window leaves little time to notice a problem and restore.",
+        "fix": "Open the Cosmos DB account, then Backup and restore. Raise the retention, or switch to continuous backup."
+      },
+      "webapp_https": {
+        "passRule": "Every web app and function app accepts only HTTPS.",
+        "failRule": "An app also accepts plain HTTP.",
+        "why": "Anything sent over plain HTTP, including sign-ins, can be read on the way.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set HTTPS Only to On."
+      },
+      "webapp_tls": {
+        "passRule": "Every web app’s minimum TLS version is 1.2 or newer.",
+        "failRule": "An app accepts an older version.",
+        "why": "Older TLS versions have known weaknesses.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set Minimum inbound TLS version to 1.2."
+      },
+      "webapp_remote_debugging": {
+        "passRule": "Remote debugging is off for every web app.",
+        "failRule": "It is on for an app.",
+        "why": "A debugger that can be attached from outside is a way in to the code and its data.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set Remote debugging to Off."
+      },
+      "webapp_ftp": {
+        "passRule": "No web app allows plain FTP.",
+        "failRule": "An app allows it.",
+        "why": "Plain FTP sends the deployment password and the files in the clear.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set FTP state to FTPS only, or Disabled."
+      },
+      "webapp_identity": {
+        "passRule": "Every web app has a managed identity.",
+        "failRule": "An app has none.",
+        "why": "An identity lets the app reach other services without a password kept in its settings, which could leak.",
+        "fix": "Open the app, then Settings, Identity. Switch on a system-assigned managed identity and give it only the roles it needs."
+      },
+      "vm_identity": {
+        "passRule": "Every virtual machine has a managed identity.",
+        "failRule": "A machine has none.",
+        "why": "An identity lets a machine reach other services without a password kept on it.",
+        "fix": "Open the virtual machine, then Security, Identity. Switch on a system-assigned managed identity and give it only the roles it needs."
+      },
+      "vm_ssh_password": {
+        "passRule": "No Linux virtual machine accepts password sign-in.",
+        "failRule": "A Linux machine does.",
+        "why": "A password on a machine reachable from the internet is guessed at all day.",
+        "fix": "Use SSH keys. Set PasswordAuthentication no in the machine’s sshd configuration, or recreate it with key-only sign-in."
+      },
+      "vm_secure_boot": {
+        "passRule": "No virtual machine has secure boot turned off.",
+        "failRule": "A machine does.",
+        "why": "Secure boot stops tampered start-up software from running.",
+        "fix": "Open the virtual machine’s Configuration and enable Trusted launch with Secure boot, on a size that supports it."
+      },
+      "aks_rbac": {
+        "passRule": "Every Kubernetes cluster uses role-based access control.",
+        "failRule": "A cluster does not.",
+        "why": "Without it, any credential can do anything in the cluster.",
+        "fix": "Role-based access cannot be turned off on new clusters. Recreate an old cluster with it enabled."
+      },
+      "aks_aad": {
+        "passRule": "Every cluster signs people in with Microsoft Entra ID.",
+        "failRule": "A cluster does not.",
+        "why": "Sign-in with work accounts can be switched off when someone leaves, unlike a shared credential.",
+        "fix": "Open the cluster, then Settings, Cluster configuration. Enable Microsoft Entra authentication with Azure RBAC."
+      },
+      "aks_network_policy": {
+        "passRule": "Every cluster has a network policy.",
+        "failRule": "A cluster has none.",
+        "why": "Without one, any workload can talk to any other, so one break-in spreads.",
+        "fix": "Create the cluster with a network policy (Azure or Calico), or add one to an existing cluster."
+      },
+      "aks_private_api": {
+        "passRule": "Every cluster’s control point is private, or limited to listed addresses.",
+        "failRule": "A cluster’s control point is open to every address.",
+        "why": "The control point is the most powerful door into a cluster.",
+        "fix": "Open the cluster, then Networking. Enable a private cluster, or set Authorized IP ranges."
+      },
+      "aks_policy_addon": {
+        "passRule": "Every cluster has the Azure Policy add-on.",
+        "failRule": "A cluster lacks it.",
+        "why": "It checks what runs in a cluster against your rules.",
+        "fix": "Open the cluster, then Settings, Policies, and enable the Azure Policy add-on."
+      },
+      "aks_auto_upgrade": {
+        "passRule": "Every cluster has an automatic upgrade channel.",
+        "failRule": "A cluster has none.",
+        "why": "A cluster that is not upgraded falls behind on security fixes.",
+        "fix": "Open the cluster, then Settings, Cluster configuration. Set an Automatic upgrade channel such as Stable or Patch."
+      },
+      "aks_monitoring": {
+        "passRule": "Every cluster is monitored.",
+        "failRule": "A cluster is not.",
+        "why": "Monitoring records what a cluster is doing, which an investigation needs.",
+        "fix": "Open the cluster, then Monitoring. Enable Container insights or Azure Monitor managed metrics."
+      },
+      "acr_admin_user": {
+        "passRule": "No container registry has the admin user on.",
+        "failRule": "A registry does.",
+        "why": "A shared login cannot be tied to a person, and its password is usually copied around.",
+        "fix": "Open the registry, then Settings, Access keys. Turn Admin user off, and sign in with Entra ID or a service principal with a role such as AcrPull."
+      },
+      "acr_public_access": {
+        "passRule": "No container registry allows public network access.",
+        "failRule": "A registry does.",
+        "why": "Images can hold secrets and show how your systems are built.",
+        "fix": "Open the registry, then Settings, Networking. Disable public access and use a private endpoint, or restrict it to selected addresses (Premium)."
+      },
+      "acr_anonymous_pull": {
+        "passRule": "No container registry allows anonymous pulls.",
+        "failRule": "A registry does.",
+        "why": "Anyone could pull your images without signing in.",
+        "fix": "Open the registry, then Settings, Properties, and turn off Anonymous pull access."
+      },
+      "acr_content_trust": {
+        "passRule": "Every Premium container registry uses content trust.",
+        "failRule": "A Premium registry does not.",
+        "why": "Signed images stop a tampered image from being used.",
+        "fix": "Open the registry, then Policies, Content trust, and enable it. It is a Premium feature."
+      },
+      "acr_retention": {
+        "passRule": "Every Premium container registry has a retention policy.",
+        "failRule": "A Premium registry has none.",
+        "why": "Old untagged images pile up and may hold weaknesses and data nobody needs.",
+        "fix": "Open the registry, then Policies, Retention. Enable it and choose how many days to keep untagged images."
+      },
+      "nsg_open_ports": {
+        "passRule": "No network security group allows inbound traffic from anywhere to SSH, remote desktop, database ports or all ports.",
+        "failRule": "A group does.",
+        "why": "Login and database ports facing the internet are attacked constantly.",
+        "fix": "Open the network security group, then Inbound security rules. Change the source from Any (or Internet) to your own addresses or a service tag, or delete the rule."
+      },
+      "environment_separation": {
+        "passRule": "Resource groups for production and for non-production both exist, told apart by an environment tag or by name.",
+        "failRule": "Both could not be found.",
+        "why": "Keeping production apart limits what a mistake or a test can reach.",
+        "fix": "Tag each resource group with environment set to production, staging or dev, or name it that way. For stronger separation use separate subscriptions."
+      },
+      "monitor_alerts": {
+        "passRule": "Alerts exist for changes to policy assignments, security solutions, network security groups and SQL firewall rules.",
+        "failRule": "One or more of them has no alert.",
+        "why": "Someone should be told when the rules that protect the environment change.",
+        "fix": "Under Azure Monitor, Alerts, create an Activity log alert for each missing change listed, with an action group that notifies the right people."
+      },
+      "monitor_log_export": {
+        "passRule": "The subscription’s activity log is exported to a workspace, a storage account or an event hub.",
+        "failRule": "It is not exported.",
+        "why": "Azure keeps the activity log for only 90 days, and the Act’s breach duties may need older records.",
+        "fix": "Under Monitor, Activity log, Export activity logs, add a diagnostic setting that sends it to a Log Analytics workspace or a storage account."
+      },
+      "policy_assignments": {
+        "passRule": "At least one Azure Policy is assigned to the subscription.",
+        "failRule": "None is.",
+        "why": "Policies enforce your rules on every new resource, instead of relying on people remembering.",
+        "fix": "Under Policy, Assignments, assign a built-in initiative such as the Microsoft cloud security benchmark."
+      },
+      "defender_plans": {
+        "passRule": "Every Defender for Cloud plan is on.",
+        "failRule": "Some plans are off.",
+        "why": "Each plan watches one kind of resource for threats and weaknesses. They cost money, so turning on all of them is a choice to make.",
+        "fix": "Under Defender for Cloud, Environment settings, your subscription: switch on the plans for the kinds of resource you use."
+      },
+      "defender_recommendations": {
+        "passRule": "Defender for Cloud has no unhealthy recommendations.",
+        "failRule": "It has some. High severity counts as a failure.",
+        "why": "These are Microsoft’s own findings about your resources.",
+        "fix": "Under Defender for Cloud, Recommendations, work through them by severity. Each has steps or a Remediate button."
+      }
     }
   }
 }

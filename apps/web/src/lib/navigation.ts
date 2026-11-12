@@ -14,6 +14,7 @@ import {
   IconKey,
   IconLayoutDashboard,
   IconLock,
+  IconCloudCheck,
   IconPlugConnected,
   IconScale,
   IconSettings,
@@ -48,6 +49,7 @@ export type NavItemId =
   | 'exports'
   | 'dataMap'
   | 'connections'
+  | 'cloudTests'
   | 'websiteCheck'
   | 'noticeAndConsent'
   | 'requests'
@@ -108,6 +110,7 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'live' },
+          { id: 'cloudTests', href: '/cloud-tests', icon: IconCloudCheck, status: 'live' },
           { id: 'websiteCheck', href: '/website-check', icon: IconWorldSearch, status: 'live' },
         ],
       },

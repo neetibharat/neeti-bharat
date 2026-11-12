@@ -7,7 +7,7 @@ import { AzureConnector } from '../../src/connections/providers/azure/azure-api'
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
-import { FakeAzureConnector } from './fake-azure-connector';
+import { azureConnector } from './fake-azure-connector';
 import { createTestDatabase, type TestDatabase } from './test-database';
 
 const WEB_ORIGIN = 'http://localhost:3200';
@@ -115,7 +115,7 @@ async function compileApp(inbox: MailMessage[]) {
     return await Test.createTestingModule({ imports: [AppModule] })
       // Microsoft is replaced by a fake that answers from a table, so no test leaves the machine.
       .overrideProvider(AzureConnector)
-      .useValue(new FakeAzureConnector())
+      .useValue(azureConnector)
       .overrideProvider(MailService)
       .useValue({
         send: (message: MailMessage) => {

@@ -47,25 +47,35 @@ export class ConnectionsService {
     };
   }
 
+  /** One connection with its latest run, for its own page. */
+  async get(id: string): Promise<ConnectionSummary> {
+    const row = await this.find(id);
+    const [latest] = await this.connections.latestRuns([id]);
+    return toSummary(row, latest);
+  }
+
   /** Signs in with the details to see that they work, then keeps them sealed. Nothing is kept if they do not work. */
   async create(input: CreateConnectionInput, actor: ActivityActor): Promise<ConnectionSummary> {
     if (!this.secrets.isEnabled()) {
       throw new AppException('SECRETS_NOT_CONFIGURED', HttpStatus.SERVICE_UNAVAILABLE);
     }
     await this.confirmWorks(input.credentials);
-    const row = await this.connections.create({
-      provider: input.provider,
-      name: input.name,
-      identifiers: identifiersOf(input.credentials),
-      credentials: this.secrets.seal(JSON.stringify(input.credentials), this.context()),
-      createdByName: actor.label,
-    });
-    await this.activity.record({
-      actor,
-      action: 'CONNECTION_ADDED',
-      subject: { type: 'connection', id: row.id },
-      details: { name: row.name, provider: row.provider },
-    });
+    const row = await this.connections.createWith(
+      {
+        provider: input.provider,
+        name: input.name,
+        identifiers: identifiersOf(input.credentials),
+        credentials: this.secrets.seal(JSON.stringify(input.credentials), this.context()),
+        createdByName: actor.label,
+      },
+      (created) =>
+        this.activity.record({
+          actor,
+          action: 'CONNECTION_ADDED',
+          subject: { type: 'connection', id: created.id },
+          details: { name: created.name, provider: created.provider },
+        }),
+    );
     return toSummary(row, undefined);
   }
 
@@ -91,18 +101,17 @@ export class ConnectionsService {
       credentials.subscriptionId,
     );
     const counts = tally(results);
-    const saved = await this.runs.create({
-      connectionId: id,
-      ranByName: actor.label,
-      results,
-      ...counts,
-    });
-    await this.activity.record({
-      actor,
-      action: 'CONNECTION_CHECKED',
-      subject: { type: 'connection', id },
-      details: { name: row.name, passed: counts.passed, total: results.length },
-    });
+    // Nothing is held open while Azure is read: the run and its log entry are saved together only now.
+    const saved = await this.runs.createWith(
+      { connectionId: id, ranByName: actor.label, results, ...counts },
+      () =>
+        this.activity.record({
+          actor,
+          action: 'CONNECTION_CHECKED',
+          subject: { type: 'connection', id },
+          details: { name: row.name, passed: counts.passed, total: results.length },
+        }),
+    );
     return toRunResponse(saved);
   }
 

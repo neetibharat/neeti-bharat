@@ -1,4 +1,8 @@
-import { CONNECTION_NAMES_SHOWN, type ConnectionCheckResult } from '@dpdp-kit/shared';
+import {
+  CONNECTION_NAMES_SHOWN,
+  CONNECTION_RESOURCES_KEPT,
+  type ConnectionCheckResult,
+} from '@dpdp-kit/shared';
 import type { AzureApi } from '../azure-api';
 
 /** What a check found. The runner adds the check's id. */
@@ -28,7 +32,14 @@ export function judge<T>(
   const values: Record<string, string | number> = { count: flagged.length, total: items.length };
   if (name) values.names = flagged.slice(0, CONNECTION_NAMES_SHOWN).map(name).join(', ');
   const failed = flagged.some((item) => verdict(item) === 'fail');
-  return { status: failed ? 'fail' : 'warn', values };
+  const status = failed ? 'fail' : 'warn';
+  if (!name) return { status, values };
+  // Every one that did not pass is kept, up to a limit, so its own page can list them all and say how each did.
+  const resources = flagged.slice(0, CONNECTION_RESOURCES_KEPT).map((item) => ({
+    name: name(item),
+    status: verdict(item) as 'warn' | 'fail',
+  }));
+  return { status, values, resources };
 }
 
 /** The path of a subscription's resources of one kind. */
