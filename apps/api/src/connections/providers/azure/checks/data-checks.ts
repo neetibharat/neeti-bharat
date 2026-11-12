@@ -1,121 +1,135 @@
-import { AzureAccessError } from '../azure-api';
-import { judge, resourcesPath, type AzureCheck, type Verdict } from './outcome';
-
-interface Named {
-  id?: string;
-  name: string;
-  location?: string;
-}
-
-interface StorageAccount extends Named {
-  properties?: {
-    supportsHttpsTrafficOnly?: boolean;
-    minimumTlsVersion?: string;
-    allowBlobPublicAccess?: boolean;
-  };
-}
-
-interface KeyVault extends Named {
-  properties?: { enableSoftDelete?: boolean; enablePurgeProtection?: boolean };
-}
-
-interface SqlServer extends Named {
-  properties?: { minimalTlsVersion?: string; publicNetworkAccess?: string };
-}
-
-const storageAccounts = (api: Parameters<AzureCheck['run']>[0], subscriptionId: string) =>
-  api.arm.list<StorageAccount>(
-    resourcesPath(subscriptionId, 'Microsoft.Storage/storageAccounts', '2023-05-01'),
-  );
-const keyVaults = (api: Parameters<AzureCheck['run']>[0], subscriptionId: string) =>
-  api.arm.list<KeyVault>(resourcesPath(subscriptionId, 'Microsoft.KeyVault/vaults', '2023-07-01'));
-const sqlServers = (api: Parameters<AzureCheck['run']>[0], subscriptionId: string) =>
-  api.arm.list<SqlServer>(resourcesPath(subscriptionId, 'Microsoft.Sql/servers', '2021-11-01'));
-
-const nameOf = (item: Named): string => item.name;
-
-const OLD_TLS = new Set(['TLS1_0', 'TLS1_1']);
+import {
+  belongsTo,
+  cosmosAccounts,
+  disks,
+  fulfilled,
+  keyVaults,
+  mongoClusters,
+  mysqlServers,
+  postgresServers,
+  readable,
+  redisCaches,
+  refusedAmong,
+  sqlServers,
+  storageAccounts,
+  MAX_ONE_BY_ONE,
+  type Named,
+} from './azure-lists';
+import { judge, type AzureCheck, type Verdict } from './outcome';
+import { rule, weakTlsVersion } from './rules';
 
 /** Plain HTTP, or a version of TLS older than 1.2, is refused. */
-export const storageSecureTransfer: AzureCheck = {
-  id: 'storage_secure_transfer',
-  run: async (api, subscriptionId) =>
-    judge(
-      await storageAccounts(api, subscriptionId),
-      ({ properties }): Verdict =>
-        properties?.supportsHttpsTrafficOnly === false ||
-        OLD_TLS.has(properties?.minimumTlsVersion ?? '')
-          ? 'fail'
-          : 'ok',
-      nameOf,
-    ),
-};
+export const storageSecureTransfer = rule(
+  'storage_secure_transfer',
+  storageAccounts,
+  ({ properties }): Verdict =>
+    properties?.supportsHttpsTrafficOnly === false || weakTlsVersion(properties?.minimumTlsVersion)
+      ? 'fail'
+      : 'ok',
+);
 
 /** Nothing in a container can be read by anyone who has only the address. */
-export const storagePublicAccess: AzureCheck = {
-  id: 'storage_public_access',
-  run: async (api, subscriptionId) =>
-    judge(
-      await storageAccounts(api, subscriptionId),
-      ({ properties }): Verdict => (properties?.allowBlobPublicAccess === true ? 'fail' : 'ok'),
-      nameOf,
-    ),
-};
+export const storagePublicAccess = rule(
+  'storage_public_access',
+  storageAccounts,
+  ({ properties }): Verdict => (properties?.allowBlobPublicAccess === true ? 'fail' : 'ok'),
+);
 
-/** A deleted key can be recovered, and cannot be destroyed for good by mistake or by someone who has got in. */
-export const keyVaultProtection: AzureCheck = {
-  id: 'keyvault_protection',
-  run: async (api, subscriptionId) =>
-    judge(
-      await keyVaults(api, subscriptionId),
-      ({ properties }): Verdict => {
-        if (properties?.enableSoftDelete === false) return 'fail';
-        return properties?.enablePurgeProtection === true ? 'ok' : 'warn';
-      },
-      nameOf,
-    ),
-};
+/** Open to every network is a warning, not a failure: it is Azure's default, and what is inside may still need a key. */
+export const storageNetworkAccess = rule(
+  'storage_network_access',
+  storageAccounts,
+  ({ properties }): Verdict =>
+    properties?.networkAcls?.defaultAction === 'Allow' &&
+    properties?.publicNetworkAccess !== 'Disabled'
+      ? 'warn'
+      : 'ok',
+);
 
-/** The oldest version of TLS the server accepts: 1.2, or newer. */
-const weakTls = (version?: string): boolean => {
-  if (version === undefined) return false;
-  const number = Number.parseFloat(version);
-  return Number.isNaN(number) || number < 1.2;
-};
+/** A deleted vault or key can be recovered. */
+export const keyVaultSoftDelete = rule(
+  'keyvault_soft_delete',
+  keyVaults,
+  ({ properties }): Verdict => (properties?.enableSoftDelete === false ? 'fail' : 'ok'),
+);
 
-export const sqlTls: AzureCheck = {
-  id: 'sql_tls',
-  run: async (api, subscriptionId) =>
-    judge(
-      await sqlServers(api, subscriptionId),
-      ({ properties }): Verdict => (weakTls(properties?.minimalTlsVersion) ? 'fail' : 'ok'),
-      nameOf,
-    ),
-};
+/** A deleted vault or key cannot be destroyed for good, by mistake or by someone who has got in, before its time. */
+export const keyVaultPurgeProtection = rule(
+  'keyvault_purge_protection',
+  keyVaults,
+  ({ properties }): Verdict => (properties?.enablePurgeProtection === true ? 'ok' : 'warn'),
+);
+
+export const keyVaultPublicAccess = rule(
+  'keyvault_public_access',
+  keyVaults,
+  ({ properties }): Verdict =>
+    properties?.publicNetworkAccess !== 'Disabled' &&
+    properties?.networkAcls?.defaultAction !== 'Deny'
+      ? 'warn'
+      : 'ok',
+);
+
+/** Access is given by Azure roles, which are reviewed in one place, and not by access policies kept on each vault. */
+export const keyVaultRbac = rule('keyvault_rbac', keyVaults, ({ properties }): Verdict =>
+  properties?.enableRbacAuthorization === true ? 'ok' : 'warn',
+);
+
+export const sqlTls = rule('sql_tls', sqlServers, ({ properties }): Verdict =>
+  weakTlsVersion(properties?.minimalTlsVersion) ? 'fail' : 'ok',
+);
 
 /** Open to the public internet is a warning, not a failure: firewall rules may still keep it closed. */
-export const sqlPublicAccess: AzureCheck = {
-  id: 'sql_public_access',
-  run: async (api, subscriptionId) =>
-    judge(
-      await sqlServers(api, subscriptionId),
-      ({ properties }): Verdict => (properties?.publicNetworkAccess === 'Enabled' ? 'warn' : 'ok'),
-      nameOf,
-    ),
-};
+export const sqlPublicAccess = rule('sql_public_access', sqlServers, ({ properties }): Verdict =>
+  properties?.publicNetworkAccess === 'Enabled' ? 'warn' : 'ok',
+);
 
-/** The most servers whose auditing is read, one call each. */
-const MAX_AUDITED = 50;
+interface FirewallRule {
+  properties?: { startIpAddress?: string; endIpAddress?: string };
+}
+
+const covers = ({ properties }: FirewallRule, from: string, to: string): boolean =>
+  properties?.startIpAddress === from && properties?.endIpAddress === to;
+
+/** Every address is a failure. Every Azure service, which includes other people's, is a warning. */
+function firewallVerdict(rules: FirewallRule[]): Verdict {
+  if (rules.some((entry) => covers(entry, '0.0.0.0', '255.255.255.255'))) return 'fail';
+  return rules.some((entry) => covers(entry, '0.0.0.0', '0.0.0.0')) ? 'warn' : 'ok';
+}
+
+/** Each SQL server's firewall rules. A server the app may not read is reported as no access, not as a failure. */
+export const sqlFirewall: AzureCheck = {
+  id: 'sql_firewall',
+  run: async (api, subscriptionId) => {
+    const servers = (await sqlServers(api, subscriptionId))
+      .filter((server) => belongsTo(server, subscriptionId))
+      .slice(0, MAX_ONE_BY_ONE);
+    const read = await Promise.allSettled(
+      servers.map(async (server) => ({
+        server,
+        rules: await api.arm.list<FirewallRule>(
+          `${server.id}/firewallRules?api-version=2021-11-01`,
+        ),
+      })),
+    );
+    refusedAmong(read);
+    return judge(
+      fulfilled(read),
+      ({ rules }) => firewallVerdict(rules),
+      ({ server }) => server.name,
+    );
+  },
+};
 
 /** Reads each server's auditing setting. A server the app may not read is reported as no access, not as a failure. */
 export const sqlAuditing: AzureCheck = {
   id: 'sql_auditing',
   run: async (api, subscriptionId) => {
-    const servers = (await sqlServers(api, subscriptionId)).slice(0, MAX_AUDITED);
-    const prefix = `/subscriptions/${subscriptionId}/`;
+    const servers = (await sqlServers(api, subscriptionId))
+      .filter((server) => belongsTo(server, subscriptionId))
+      .slice(0, MAX_ONE_BY_ONE);
     const states = await Promise.all(
       servers.map(async (server) => {
-        if (!server.id?.startsWith(prefix)) return { server, on: false };
         const setting = await api.arm.get<{ properties?: { state?: string } }>(
           `${server.id}/auditingSettings/default?api-version=2021-11-01`,
         );
@@ -139,22 +153,28 @@ const INDIA = new Set([
 ]);
 
 /**
- * Where the data stores are. DPDP lets personal data go abroad unless the government restricts a country, so this is a
- * warning to know about, not a failure. A kind of store the app may not read is left out, unless none can be read.
+ * Where the data stores are: storage accounts, SQL, PostgreSQL and MySQL servers, MongoDB, Redis and Cosmos DB,
+ * managed disks and key vaults. DPDP lets personal data go abroad unless the government restricts a country, so this
+ * is a warning to know about, not a failure. A kind the app may not read is left out, unless none can be read.
  */
 export const dataInIndia: AzureCheck = {
   id: 'data_in_india',
   run: async (api, subscriptionId) => {
-    const lists = await Promise.allSettled<Named[]>([
-      storageAccounts(api, subscriptionId),
-      sqlServers(api, subscriptionId),
-      keyVaults(api, subscriptionId),
-    ]);
-    const readable = lists.flatMap((list) => (list.status === 'fulfilled' ? list.value : []));
-    const refused = lists.find((list): list is PromiseRejectedResult => list.status === 'rejected');
-    if (readable.length === 0 && refused) throw refused.reason ?? new AzureAccessError('No access');
+    const lists = await Promise.allSettled<Named[]>(
+      [
+        storageAccounts,
+        sqlServers,
+        postgresServers,
+        mysqlServers,
+        mongoClusters,
+        redisCaches,
+        cosmosAccounts,
+        disks,
+        keyVaults,
+      ].map((list) => list(api, subscriptionId)),
+    );
     return judge(
-      readable,
+      readable(lists),
       ({ location }): Verdict => (INDIA.has((location ?? '').toLowerCase()) ? 'ok' : 'warn'),
       ({ name, location }) => `${name} (${location ?? '?'})`,
     );

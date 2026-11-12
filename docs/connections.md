@@ -20,27 +20,41 @@ Adding a connection signs in and reads the subscription first. If Microsoft refu
 
 ## What is checked
 
-| Check                                                    | What it looks at                                                                                                                      | Result                                                      |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Everyone has a second sign-in step                       | Members who have registered multi-factor authentication. Guests are left out                                                          | Fail if any member has not. People are counted, never named |
-| A second step is required at sign-in                     | Security defaults, or an enabled conditional access policy for all users                                                              | Fail if neither                                             |
-| A sensible number of global administrators               | Two to five holders of the Global Administrator role                                                                                  | Warn outside that range                                     |
-| Storage requires HTTPS and TLS 1.2                       | Storage accounts                                                                                                                      | Fail for plain HTTP or TLS 1.0 and 1.1                      |
-| Storage has no public access                             | Whether containers may be public                                                                                                      | Fail if allowed                                             |
-| Key vaults can recover deleted keys                      | Soft delete and purge protection                                                                                                      | Fail without soft delete, warn without purge protection     |
-| SQL servers require TLS 1.2                              | Minimum TLS version                                                                                                                   | Fail below 1.2                                              |
-| SQL servers are not open to the internet                 | Public network access                                                                                                                 | Warn if enabled                                             |
-| SQL auditing is on                                       | Auditing of each server, up to 50                                                                                                     | Fail if off                                                 |
-| Data stores are in India                                 | Where storage accounts, SQL servers and key vaults are                                                                                | Warn for any outside India                                  |
-| No remote login or database port is open to the internet | Network security groups: inbound allow rules from anywhere to SSH, RDP, SQL, MySQL, Postgres, SMB, WinRM, Redis, MongoDB or all ports | Fail if any                                                 |
+There are 51 checks in seven groups. Each is one rule about one kind of resource, read across the whole subscription: every resource group in it. A result says how many resources were looked at, how many are not fine, and names up to five of them.
 
-A check that cannot answer is shown as not checked, with the reason: nothing of that kind was found, the app is not allowed to read it, or it did not finish. One check failing never stops the others. Where the check can name resources, the result lists up to five.
+| Group                         | What it looks at                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Sign-in and access**        | Multi-factor sign-in registered for members (people are counted, never named) and required for everyone; two to five global administrators; no more than five Owners or User Access Administrators over the subscription; no custom role that allows every action; no app holding Owner, User Access Administrator or Contributor over the subscription |
+| **Where the data is kept**    | Storage: HTTPS and TLS 1.2, no public containers, not open to every network. Encryption at rest of storage, disks and SQL databases. Key vaults: soft delete, purge protection, not open to the internet, access by Azure roles. Whether data stores are in India                                                                                       |
+| **Databases**                 | SQL: TLS 1.2, public network access, firewall rules (every address fails, every Azure service warns), auditing. PostgreSQL and MySQL: encrypted connections with TLS 1.2. Public network access of PostgreSQL, MySQL, MongoDB, Redis and Cosmos DB. Cosmos DB: no key access, failover, a week of backups                                               |
+| **Apps and servers**          | Web apps and function apps: HTTPS only, TLS 1.2, remote debugging off, no plain FTP, managed identity. Virtual machines: managed identity, no password sign-in on Linux, secure boot                                                                                                                                                                    |
+| **Containers**                | Kubernetes: role-based access, Entra ID sign-in, network policy, a private or restricted control point, the Azure Policy add-on, auto-upgrade, monitoring. Container registries: no admin user, not public, no anonymous pulls, and for Premium registries content trust and a retention policy                                                         |
+| **Network**                   | No network security group lets the internet reach SSH, remote desktop, database ports, or every port                                                                                                                                                                                                                                                    |
+| **Monitoring and governance** | Production kept apart from non-production by resource group (by an `environment` tag or by name); alerts for policy, security, network and SQL firewall changes; the activity log exported; Azure Policy in use; Defender for Cloud plans on and its recommendations                                                                                    |
 
-The Act lets personal data go abroad unless the government restricts a country, so a data store outside India is a warning to know about, not a failure.
+How each result is judged:
+
+- **Fail** is for what should not be there: plain HTTP, old TLS, a public container, a firewall open to every address, the shared admin login of a registry, remote debugging.
+- **Warn** is for what is worth a look but may be deliberate: a database open to the public network (a firewall may still keep it closed), storage open to every network (Azure's default), a vault without purge protection, a web app without a managed identity, a Defender plan that is off (each is paid).
+- A check that cannot answer is shown as not checked, with the reason: nothing of that kind was found, the app is not allowed to read it, or it did not finish. One check failing never stops the others.
+- Kinds a subscription does not have, such as Kubernetes clusters, show as nothing to check.
+
+Notes on specific checks:
+
+- The Act lets personal data go abroad unless the government restricts a country, so a data store outside India is a warning to know about, not a failure.
+- Content trust and clean-up of old images are Premium features of a container registry, so smaller ones are not marked down for them.
+- Customer-managed keys are not asked for: Azure encrypts at rest by default, and the Act does not require your own keys.
+- The Azure Policy compliance summary is not read, because Azure only offers it as a POST, and a connection only ever sends GET requests.
+- The multi-factor report needs a Microsoft Entra ID P1 or P2 licence; without one that check is shown as not checked.
+- Reads of one resource at a time, such as the settings of each web app, stop at 100 resources.
 
 ## Running the checks
 
-**Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it, and the page shows the latest with the earlier ones listed below. Checks are run by hand; there is no schedule.
+## Cloud tests
+
+The results are on their own page, **Cloud tests**, with one account at a time (a selector appears when there are several; the Connections page links to the right one). It shows the totals, the checks that need attention or all of them, filters by severity (high, medium or low, a fixed judgement about each check) and a search. Findings are grouped by area. Opening one shows what it checks, when it passes and when it needs attention, why it matters, what this account showed with every resource that did not pass (up to 200), and how to fix it. The History tab lists earlier runs.
+
+**Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it. Checks are run by hand; there is no schedule.
 
 ## How credentials are kept
 

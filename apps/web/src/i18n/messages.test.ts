@@ -75,6 +75,14 @@ describe('message catalogs', () => {
     expect(Object.keys(skipped).sort()).toEqual([...SKIPPED_REASONS].sort());
   });
 
+  it('explains every Azure check on the Cloud tests page', () => {
+    const { details } = catalogs.en.cloudTests as { details: Record<string, Tree> };
+    expect(Object.keys(details).sort()).toEqual([...AZURE_CHECK_IDS].sort());
+    for (const id of AZURE_CHECK_IDS) {
+      expect(Object.keys(details[id]!).sort(), id).toEqual(['failRule', 'fix', 'passRule', 'why']);
+    }
+  });
+
   it('words every download on the exports page', () => {
     const { datasets } = catalogs.en.exports as { datasets: Tree };
     expect(Object.keys(datasets).sort()).toEqual([...EXPORT_DATASETS].sort());

@@ -26,6 +26,22 @@ export class ConnectionRepository {
     });
   }
 
+  /**
+   * Saves the connection and whatever has to be saved with it, such as its activity log entry, together or not at all.
+   * It opens the transaction itself, because adding a connection tries the details with Azure first, and a transaction
+   * held open while that waits could expire.
+   */
+  createWith(
+    data: NewConnection,
+    alongside: (connection: Connection) => Promise<void>,
+  ): Promise<Connection> {
+    return this.prisma.runInTransaction(async () => {
+      const connection = await this.create(data);
+      await alongside(connection);
+      return connection;
+    });
+  }
+
   findActive(id: string): Promise<Connection | null> {
     return this.prisma.db.connection.findFirst({ where: { id, ...active } });
   }

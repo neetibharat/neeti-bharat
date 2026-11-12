@@ -19,6 +19,9 @@ export const CATALOG_TAG_IDS = [
   'people',
   'codeReview',
   'access',
+  'apps',
+  'containers',
+  'governance',
 ] as const;
 export type CatalogTagId = (typeof CATALOG_TAG_IDS)[number];
 
@@ -37,7 +40,16 @@ export const CATALOG: readonly CatalogProvider[] = [
     id: 'azure',
     icon: IconBrandAzure,
     available: true,
-    tags: ['mfa', 'encryption', 'publicAccess', 'dataLocation', 'network', 'logging'],
+    tags: [
+      'mfa',
+      'encryption',
+      'publicAccess',
+      'dataLocation',
+      'apps',
+      'containers',
+      'network',
+      'governance',
+    ],
   },
   { id: 'google_workspace', icon: IconBrandGoogle, available: false, tags: ['mfa', 'people'] },
   {

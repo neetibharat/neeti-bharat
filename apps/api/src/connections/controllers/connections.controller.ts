@@ -8,6 +8,7 @@ import type {
 } from '@dpdp-kit/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
+import { TransactionAfterBody } from '../../core/prisma/transaction.interceptor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import { NoApiKey, Roles } from '../../core/org/roles.decorator';
 import {
@@ -39,9 +40,12 @@ export class ConnectionsController {
   }
 
   // Credentials are handled by a person only: a key cannot add or remove a connection.
+  // Both routes that call Azure keep out of the request-wide transaction: it would expire while they wait. Their
+  // services save in a transaction of their own once the answer is in.
   @Post()
   @Roles(['admin'])
   @NoApiKey()
+  @TransactionAfterBody()
   @ApiOperation({
     summary:
       'Connect a system. The details are tried first and kept encrypted, and are never sent back (admin only, never a key)',
@@ -67,12 +71,20 @@ export class ConnectionsController {
 
   @Post(':id/run')
   @Roles(['admin', 'member'])
+  @TransactionAfterBody()
   @ApiOperation({
     summary:
       'Read the connected system and check it now. Takes up to about half a minute, and is not repeated within seconds (admin and member)',
   })
   run(@Param('id') id: string, @Session() { user }: UserSession): Promise<ConnectionRunResponse> {
     return this.service.run(id, actorOf(user));
+  }
+
+  @Get(':id')
+  @Roles(['admin', 'member', 'auditor'])
+  @ApiOperation({ summary: 'One connection with its latest run. The credentials are never sent' })
+  get(@Param('id') id: string): Promise<ConnectionSummary> {
+    return this.service.get(id);
   }
 
   @Get(':id/runs')
