@@ -100,7 +100,8 @@
     "FILE_TYPE_NOT_ALLOWED": "That type of file is not accepted, or its contents do not match its type.",
     "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up.",
     "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed.",
-    "ORGANIZATION_REQUIRED": "Choose which organisation you are working in."
+    "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
+    "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use."
   },
   "comingSoon": {
     "title": "On its way",
@@ -142,10 +143,6 @@
     "notifications": {
       "title": "Notifications",
       "description": "Emails and in-app notices that keep the work moving."
-    },
-    "apiKeys": {
-      "title": "API keys",
-      "description": "Keys that let your own systems talk to DPDP Kit."
     },
     "secrets": {
       "title": "Secrets",
@@ -234,6 +231,8 @@
       "WEBSITE_CHECKED": "Website checked",
       "LOGO_CHANGED": "Company logo changed",
       "LOGO_REMOVED": "Company logo removed",
+      "API_KEY_CREATED": "API key created",
+      "API_KEY_REVOKED": "API key revoked",
       "ORGANIZATION_CREATED": "Organisation created",
       "ONBOARDING_COMPLETED": "Set-up finished",
       "READINESS_CHECKED": "Readiness check taken"
@@ -294,6 +293,8 @@
       "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed",
       "LOGO_CHANGED": "Changed the company logo to {fileName}",
       "LOGO_REMOVED": "Removed the company logo {fileName}",
+      "API_KEY_CREATED": "Created the API key {name} with {role} access",
+      "API_KEY_REVOKED": "Revoked the API key {name}",
       "ORGANIZATION_CREATED": "Created the organisation {name}",
       "ONBOARDING_COMPLETED": "Finished setting up the organisation",
       "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100"
@@ -1568,6 +1569,70 @@
         "name": "Activity log",
         "about": "Every change, oldest first, with the fingerprints that link them."
       }
+    }
+  },
+  "apiKeys": {
+    "title": "API keys",
+    "description": "Let a script or an AI agent work in this organisation. A key acts as the person who made it, with the access you choose, and everything it changes shows in the activity log.",
+    "create": "Create key",
+    "empty": {
+      "title": "No API keys yet",
+      "body": "Create one to let a script or an AI agent, such as Claude Code, read or change things here."
+    },
+    "columns": {
+      "table": "API keys",
+      "name": "Name",
+      "access": "Access",
+      "createdBy": "Created by",
+      "lastUsed": "Last used",
+      "expires": "Expires",
+      "status": "Status"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "auditor": "Auditor"
+    },
+    "roleHelp": {
+      "admin": "Can do everything an admin can, including managing people. It still cannot make or revoke keys. Keep it as safe as a password.",
+      "member": "Can read and change things, like a team member. It cannot manage people.",
+      "auditor": "Can only read."
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "revoked": "Revoked"
+    },
+    "neverUsed": "Never used",
+    "neverExpires": "Never",
+    "form": {
+      "title": "Create an API key",
+      "description": "The key works in this organisation only. It stops working if you revoke it, if it expires, or if you leave the organisation.",
+      "name": "Name",
+      "namePlaceholder": "Claude Code",
+      "access": "Access",
+      "expires": "Expires",
+      "expiryNever": "Never",
+      "expiryDays": "In {days} days",
+      "cancel": "Cancel",
+      "submit": "Create key"
+    },
+    "created": {
+      "title": "Your new key",
+      "warning": "Copy the key now. It is shown only once and cannot be read again.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "done": "Done"
+    },
+    "revoke": {
+      "action": "Revoke {name}",
+      "title": "Revoke {name}?",
+      "body": "Anything using this key stops working at once. This cannot be undone.",
+      "confirm": "Revoke key"
+    },
+    "usage": {
+      "title": "Using a key",
+      "body": "Send the key in the x-api-key header of each request. It needs no sign-in and no organisation header, because a key belongs to one organisation."
     }
   },
   "websiteCheck": {

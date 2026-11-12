@@ -6,13 +6,7 @@ import { PageHeader } from '@/components/base/page-header/page-header';
 import { requireLocale } from '@/i18n/require-locale';
 
 export type ComingSoonId =
-  | 'dataMap'
-  | 'connections'
-  | 'noticeAndConsent'
-  | 'notifications'
-  | 'apiKeys'
-  | 'secrets'
-  | 'aiHelp';
+  'dataMap' | 'connections' | 'noticeAndConsent' | 'notifications' | 'secrets' | 'aiHelp';
 
 /**
  * Builds the page for a module that is not built yet: its title and one-line purpose,

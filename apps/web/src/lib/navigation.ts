@@ -163,7 +163,7 @@ export const NAV_AREAS: NavArea[] = [
       {
         id: 'developers',
         items: [
-          { id: 'apiKeys', href: '/settings/api-keys', icon: IconKey, status: 'soon' },
+          { id: 'apiKeys', href: '/settings/api-keys', icon: IconKey, status: 'live' },
           { id: 'secrets', href: '/settings/secrets', icon: IconLock, status: 'soon' },
         ],
       },

@@ -54,6 +54,7 @@ model User {
   accounts      Account[]
   invitations   Invitation[]
   memberships   Membership[]
+  apiKeys       ApiKey[]
 
   @@map("users")
 }
@@ -138,6 +139,7 @@ model Organization {
   invitations        Invitation[]
   activityAnchor     ActivityAnchor?
   companyLogo        CompanyLogo?
+  apiKeys            ApiKey[]
 
   @@map("organizations")
 }
@@ -742,4 +744,29 @@ model ReadinessCheck {
 
   @@index([organizationId, takenAt])
   @@map("readiness_checks")
+}
+
+// A key a script or an AI agent signs in with. It works in one organisation, as a member or an auditor, for as long as the
+// person who made it is still a member there. Only a hash of the key is kept; the key itself is shown once, when made.
+model ApiKey {
+  id             String       @id @default(uuid(7))
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  role           AppRole
+  /// The start of the key, kept so keys can be told apart in a list.
+  prefix         String
+  /// SHA-256 of the key. The key is 32 random bytes, so it needs no salt.
+  keyHash        String       @unique
+  createdById    String
+  createdBy      User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  /// Copied here, so the list still says who made it after they leave.
+  createdByName  String
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  expiresAt      DateTime?    @db.Timestamptz(3)
+  lastUsedAt     DateTime?    @db.Timestamptz(3)
+  revokedAt      DateTime?    @db.Timestamptz(3)
+
+  @@index([organizationId, createdAt])
+  @@map("api_keys")
 }

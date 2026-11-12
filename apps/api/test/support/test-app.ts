@@ -1,7 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Test } from '@nestjs/testing';
-import { ORGANIZATION_HEADER } from '@dpdp-kit/shared';
+import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@dpdp-kit/shared';
 import type { AddressInfo } from 'node:net';
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
@@ -44,6 +44,7 @@ export class Client {
   constructor(
     private readonly base: string,
     private readonly cookie: string,
+    private readonly apiKey = '',
   ) {}
 
   async call<T = unknown>(
@@ -53,6 +54,7 @@ export class Client {
   ): Promise<Reply<T>> {
     const headers: Record<string, string> = { origin: WEB_ORIGIN };
     if (this.cookie) headers.cookie = this.cookie;
+    if (this.apiKey) headers[API_KEY_HEADER] = this.apiKey;
     if (options.organization) headers[ORGANIZATION_HEADER] = options.organization;
     if (options.body !== undefined) headers['content-type'] = 'application/json';
     const response = await fetch(`${this.base}${path}`, {
@@ -76,6 +78,8 @@ export class Client {
     this.call<T>('POST', path, { organization, body });
   put = <T = unknown>(path: string, body: unknown, organization?: string) =>
     this.call<T>('PUT', path, { organization, body });
+  delete = <T = unknown>(path: string, organization?: string) =>
+    this.call<T>('DELETE', path, { organization });
 }
 
 export interface TestApp {
@@ -83,6 +87,8 @@ export interface TestApp {
   signIn: (email: string) => Promise<Client>;
   /** Someone who has not signed in. */
   anonymous: Client;
+  /** A script or agent calling with an API key and nothing else. */
+  withKey: (key: string) => Client;
   /** Every path of the API that is a GET and takes no parameters, for sweeping. */
   readRoutes: () => string[];
   stop: () => Promise<void>;
@@ -188,6 +194,7 @@ export async function startTestApp(): Promise<TestApp> {
   return {
     signIn: (email) => signInAs(base, inbox, email),
     anonymous: new Client(base, ''),
+    withKey: (key) => new Client(base, '', key),
     readRoutes: () => readRoutesOf(app),
     stop: async () => {
       await app.close();

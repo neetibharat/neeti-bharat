@@ -11,6 +11,7 @@ import { validateEnv } from './core/config/env.validation';
 import { ReadinessModule } from './readiness/readiness.module';
 import { RequestsModule } from './requests/requests.module';
 import { HealthModule } from './core/health/health.module';
+import { ApiKeysModule } from './api-keys/api-keys.module';
 import { CompanyLogoModule } from './company-logo/company-logo.module';
 import { ExportsModule } from './exports/exports.module';
 import { FrameworksModule } from './frameworks/frameworks.module';
@@ -39,6 +40,7 @@ import { StorageModule } from './core/storage/storage.module';
     ReadinessModule,
     RequestsModule,
     ActivityModule,
+    ApiKeysModule,
     CompanyLogoModule,
     ExportsModule,
     FrameworksModule,

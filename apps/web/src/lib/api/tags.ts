@@ -12,6 +12,7 @@ export const TAG_TYPES = [
   'WebsiteCheck',
   'CompanyLogo',
   'Readiness',
+  'ApiKey',
 ] as const;
 
 /**
@@ -49,4 +50,6 @@ export const CHANGES = {
   companyLogo: ['CompanyLogo', 'Activity'],
   // A check shows on the Readiness page only.
   readiness: ['Readiness', 'Activity'],
+  // Keys show on the API keys page only.
+  apiKey: ['ApiKey', 'Activity'],
 } as const;
