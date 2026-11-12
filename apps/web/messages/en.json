@@ -1823,9 +1823,9 @@
         "ids": "On its Overview page, copy the Application (client) ID and the Directory (tenant) ID.",
         "secret": "Under Certificates and secrets, make a new client secret and copy its value now. It is shown only once.",
         "reader": "On your subscription, open Access control (IAM) and add the Reader role for the app. Copy the Subscription ID from the subscription’s Overview.",
-        "graph": "On the app, open API permissions, add Microsoft Graph application permissions Reports.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
+        "graph": "On the app, open API permissions, add Microsoft Graph application permissions AuditLog.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
       },
-      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run.",
+      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run. The multi-factor report also needs a Microsoft Entra ID P1 or P2 licence.",
       "back": "Back to the form"
     },
     "remove": {

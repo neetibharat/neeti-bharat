@@ -21,6 +21,27 @@ describe('toApiError', () => {
     expect(toApiError({ status: 500, data: { code: 42 } }).code).toBe('INTERNAL');
   });
 
+  it('keeps the values the message for the code fills in', () => {
+    const error = {
+      status: 400,
+      data: { code: 'CONNECTION_FAILED', params: { reason: 'sign_in' } },
+    };
+    expect(toApiError(error)).toEqual({
+      status: 400,
+      code: 'CONNECTION_FAILED',
+      params: { reason: 'sign_in' },
+    });
+  });
+
+  it('leaves out values that are not text or numbers, and keeps the rest', () => {
+    const error = {
+      status: 409,
+      data: { code: 'API_KEY_LIMIT', params: { limit: 25, junk: { a: 1 }, flag: true } },
+    };
+    expect(toApiError(error).params).toEqual({ limit: 25 });
+    expect(toApiError({ status: 400, data: { code: 'X', params: 'nope' } }).params).toBeUndefined();
+  });
+
   it('keeps a textual status from a network failure', () => {
     const error = { status: 'FETCH_ERROR' as const, error: 'Failed to fetch' };
     expect(toApiError(error)).toEqual({ status: 'FETCH_ERROR', code: 'INTERNAL' });

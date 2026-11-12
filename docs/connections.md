@@ -12,9 +12,9 @@ An admin connects a subscription with the form on the Connections page, which al
 2. On its Overview page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
 3. Under **Certificates and secrets**, make a client secret and copy its value. It is shown only once.
 4. On the subscription, open **Access control (IAM)** and add the **Reader** role for the app. Copy the **Subscription ID**.
-5. On the app, open **API permissions**, add the Microsoft Graph **application** permissions `Reports.Read.All`, `Policy.Read.All` and `Directory.Read.All`, and choose **Grant admin consent**.
+5. On the app, open **API permissions**, add the Microsoft Graph **application** permissions `AuditLog.Read.All`, `Policy.Read.All` and `Directory.Read.All`, and choose **Grant admin consent**.
 
-Without the Graph permissions the three sign-in checks are shown as not checked and the rest still run. Without the Reader role the resource checks are shown as not checked.
+Without the Graph permissions the three sign-in checks are shown as not checked and the rest still run. Without the Reader role the resource checks are shown as not checked. The multi-factor report that the first check reads needs a Microsoft Entra ID P1 or P2 licence; on a tenant without one, that check is shown as not checked.
 
 Adding a connection signs in and reads the subscription first. If Microsoft refuses the details, nothing is kept and the form says whether the sign-in failed or the subscription cannot be seen.
 

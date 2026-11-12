@@ -13,6 +13,8 @@ import { TAG_TYPES } from './tags';
 export interface ApiError {
   status: number | string;
   code: ErrorCode;
+  /** The values the message for the code fills in, such as a limit or a reason. */
+  params?: ApiErrorBody['params'];
 }
 
 // Every call says which organisation it is for, so one person can work in several.
@@ -26,11 +28,23 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-/** Reads the code the API sent; anything else, such as a network failure or an HTML error page, is INTERNAL. */
+/** Reads the code the API sent, and the values for its message; anything else, such as a network failure or an HTML error page, is INTERNAL. */
 export function toApiError(error: FetchBaseQueryError): ApiError {
   const data: unknown = error.data;
   const code = hasCode(data) ? data.code : 'INTERNAL';
-  return { status: error.status, code };
+  const params = hasCode(data) ? paramsOf(data) : undefined;
+  return { status: error.status, code, ...(params && { params }) };
+}
+
+/** The values are text and numbers; anything else in their place is left out. */
+function paramsOf(data: object): ApiErrorBody['params'] {
+  const params = (data as { params?: unknown }).params;
+  if (typeof params !== 'object' || params === null) return undefined;
+  const values = Object.entries(params).filter(
+    (entry): entry is [string, string | number] =>
+      typeof entry[1] === 'string' || typeof entry[1] === 'number',
+  );
+  return values.length ? Object.fromEntries(values) : undefined;
 }
 
 function hasCode(data: unknown): data is Pick<ApiErrorBody, 'code'> {
