@@ -10,6 +10,9 @@ export const TAG_TYPES = [
   'Breach',
   'Request',
   'WebsiteCheck',
+  'CompanyLogo',
+  'Readiness',
+  'ApiKey',
 ] as const;
 
 /**
@@ -43,4 +46,10 @@ export const CHANGES = {
   request: ['Request', 'Activity'],
   // A run shows on the Website check page only.
   websiteCheck: ['WebsiteCheck', 'Activity'],
+  // The logo shows on General settings only.
+  companyLogo: ['CompanyLogo', 'Activity'],
+  // A check shows on the Readiness page only.
+  readiness: ['Readiness', 'Activity'],
+  // Keys show on the API keys page only.
+  apiKey: ['ApiKey', 'Activity'],
 } as const;

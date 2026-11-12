@@ -10,7 +10,8 @@ export interface SegmentedOption<T extends string = string> {
 
 export interface SegmentedControlProps<T extends string = string> {
   options: SegmentedOption<T>[];
-  value: T;
+  /** Null while nothing is chosen yet. */
+  value: T | null;
   onChange: (value: T) => void;
   'aria-label': string;
   className?: string;
@@ -30,7 +31,7 @@ export function SegmentedControl<T extends string = string>(props: SegmentedCont
       aria-label={props['aria-label']}
       selectionMode="single"
       disallowEmptySelection
-      selectedKeys={[value]}
+      selectedKeys={value === null ? [] : [value]}
       onSelectionChange={handleChange}
       className={cx('inline-flex rounded-full bg-surface-muted p-0.5', className)}
     >

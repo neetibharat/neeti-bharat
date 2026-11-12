@@ -6,9 +6,10 @@ import type {
   PolicyListResponse,
   PolicyVersionResponse,
 } from '@dpdp-kit/shared';
-import { Roles, Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';
-import { isAdmin } from '../../auth/utils/is-admin';
+import { currentRole } from '../../core/org/org-context';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import {
   versionSchema,
@@ -25,7 +26,10 @@ import {
 import { FrameworksService } from '../services/frameworks.service';
 import { PoliciesService } from '../services/policies.service';
 
-const viewerOf = ({ user }: UserSession) => ({ email: user.email, isAdmin: isAdmin(user.role) });
+const viewerOf = ({ user }: UserSession) => ({
+  email: user.email,
+  isAdmin: currentRole() === 'admin',
+});
 const policyActorOf = (session: UserSession) => ({
   ...actorOf(session.user),
   ...viewerOf(session),

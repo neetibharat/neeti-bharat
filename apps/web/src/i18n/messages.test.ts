@@ -3,6 +3,10 @@ import {
   APP_ROLES,
   ACTIVITY_ACTIONS,
   EXPORT_DATASETS,
+  READINESS_ANSWERS,
+  READINESS_BANDS,
+  READINESS_DOMAINS,
+  READINESS_QUESTIONS,
   WEBSITE_CHECK_IDS,
   CONTROL_STATUSES,
   DPDP_RULES,
@@ -67,6 +71,26 @@ describe('message catalogs', () => {
       const words = Object.keys(checks[id] as Tree).sort();
       expect(words).toEqual(['name', ...WEBSITE_MESSAGE_KEYS[id]].sort());
     }
+  });
+
+  it('words every readiness area, question, answer and band', () => {
+    const readiness = catalogs.en.readiness as {
+      domains: Tree;
+      questions: Tree;
+      answers: Tree;
+      bands: Tree;
+      actions: Tree;
+    };
+    const domainIds = READINESS_DOMAINS.map((domain) => domain.id);
+    expect(Object.keys(readiness.domains).sort()).toEqual([...domainIds].sort());
+    expect(Object.keys(readiness.actions).sort()).toEqual([...domainIds].sort());
+    expect(Object.keys(readiness.questions).sort()).toEqual(
+      READINESS_QUESTIONS.map((q) => q.id).sort(),
+    );
+    expect(Object.keys(readiness.answers).sort()).toEqual([...READINESS_ANSWERS].sort());
+    expect(Object.keys(readiness.bands).sort()).toEqual(
+      READINESS_BANDS.map((band) => band.id).sort(),
+    );
   });
 
   it('words every company profile answer and group', () => {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { ProofFrequency } from '@dpdp-kit/shared';
+import { orgKey, orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Evidence, Prisma, ProofRequirement } from '../../generated/prisma/client';
 import { nextSortOrder } from '../utils/sort-order';
@@ -42,7 +43,10 @@ export class ProofRequirementRepository {
   }
 
   findWithEvidence(id: string): Promise<RequirementWithEvidence | null> {
-    return this.prisma.db.proofRequirement.findUnique({ where: { id }, include: WITH_EVIDENCE });
+    return this.prisma.db.proofRequirement.findUnique({
+      where: orgKey(id),
+      include: WITH_EVIDENCE,
+    });
   }
 
   /** The archived requirements of a control, most recently added last. */
@@ -54,7 +58,7 @@ export class ProofRequirementRepository {
   }
 
   findOne(id: string): Promise<ProofRequirement | null> {
-    return this.prisma.db.proofRequirement.findUnique({ where: { id } });
+    return this.prisma.db.proofRequirement.findUnique({ where: orgKey(id) });
   }
 
   /** Adds a requirement at the end of its control's list. */
@@ -66,22 +70,25 @@ export class ProofRequirementRepository {
       }),
     );
     return this.prisma.db.proofRequirement.create({
-      data: { ...data, sortOrder },
+      data: { ...data, ...orgOwned(), sortOrder },
     });
   }
 
   update(id: string, data: RequirementDetails): Promise<ProofRequirement> {
-    return this.prisma.db.proofRequirement.update({ where: { id }, data });
+    return this.prisma.db.proofRequirement.update({ where: orgKey(id), data });
   }
 
   restore(id: string): Promise<ProofRequirement> {
-    return this.prisma.db.proofRequirement.update({ where: { id }, data: { archivedAt: null } });
+    return this.prisma.db.proofRequirement.update({
+      where: orgKey(id),
+      data: { archivedAt: null },
+    });
   }
 
   /** Archives a requirement. Its proof stays on the control as general proof until it is restored. */
   archive(id: string): Promise<ProofRequirement> {
     return this.prisma.db.proofRequirement.update({
-      where: { id },
+      where: orgKey(id),
       data: { archivedAt: new Date() },
     });
   }

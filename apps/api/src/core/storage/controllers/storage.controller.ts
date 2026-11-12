@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { StorageStatusResponse } from '@dpdp-kit/shared';
-import { Roles } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../org/roles.decorator';
 import { StorageService } from '../services/storage.service';
 
 @ApiTags('Storage')

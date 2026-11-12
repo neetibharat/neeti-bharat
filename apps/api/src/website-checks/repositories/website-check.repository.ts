@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import type { WebsiteCheckResult } from '@dpdp-kit/shared';
 import type { Prisma, WebsiteCheck } from '../../generated/prisma/client';
+import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
-export type WebsiteCheckSummaryRow = Omit<WebsiteCheck, 'results'>;
+export type WebsiteCheckSummaryRow = Omit<WebsiteCheck, 'results' | 'organizationId'>;
 
 export interface NewWebsiteCheck {
   url: string;
@@ -30,7 +31,7 @@ export class WebsiteCheckRepository {
 
   create(data: NewWebsiteCheck): Promise<WebsiteCheck> {
     return this.prisma.db.websiteCheck.create({
-      data: { ...data, results: data.results as unknown as Prisma.InputJsonValue },
+      data: { ...data, ...orgOwned(), results: data.results as unknown as Prisma.InputJsonValue },
     });
   }
 

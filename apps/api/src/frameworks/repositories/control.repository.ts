@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { orgKey, orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { JobRole, ProofFrequency } from '@dpdp-kit/shared';
 import type { Control, Prisma } from '../../generated/prisma/client';
@@ -59,7 +60,7 @@ const WITH_LINKS = {
 } satisfies Prisma.ControlInclude;
 
 const linksOf = (controlId: string, policyIds: string[]) =>
-  policyIds.map((policyId, position) => ({ controlId, policyId, position }));
+  policyIds.map((policyId, position) => ({ ...orgOwned(), controlId, policyId, position }));
 
 @Injectable()
 export class ControlRepository {
@@ -93,11 +94,11 @@ export class ControlRepository {
   }
 
   findOne(id: string): Promise<ControlWithLinks | null> {
-    return this.prisma.db.control.findUnique({ where: { id }, include: WITH_LINKS });
+    return this.prisma.db.control.findUnique({ where: orgKey(id), include: WITH_LINKS });
   }
 
   update(id: string, change: ControlChange): Promise<Control> {
-    return this.prisma.db.control.update({ where: { id }, data: change });
+    return this.prisma.db.control.update({ where: orgKey(id), data: change });
   }
 
   /** Adds a control at the end of the list, with its policies in the order given. */
@@ -108,8 +109,11 @@ export class ControlRepository {
     await this.prisma.db.control.create({
       data: {
         ...data,
+        ...orgOwned(),
         sortOrder,
-        policies: { create: policyIds.map((policyId, position) => ({ policyId, position })) },
+        policies: {
+          create: policyIds.map((policyId, position) => ({ ...orgOwned(), policyId, position })),
+        },
       },
     });
   }
@@ -117,13 +121,13 @@ export class ControlRepository {
   /** Saves a control's details and replaces the policies that cover it, together or not at all. */
   async saveDetails(id: string, details: ControlDetails, policyIds: string[]): Promise<void> {
     await this.prisma.transact(async (db) => {
-      await db.control.update({ where: { id }, data: details });
+      await db.control.update({ where: orgKey(id), data: details });
       await db.controlPolicyLink.deleteMany({ where: { controlId: id } });
       await db.controlPolicyLink.createMany({ data: linksOf(id, policyIds) });
     });
   }
 
   setArchived(id: string, archivedAt: Date | null): Promise<Control> {
-    return this.prisma.db.control.update({ where: { id }, data: { archivedAt } });
+    return this.prisma.db.control.update({ where: orgKey(id), data: { archivedAt } });
   }
 }

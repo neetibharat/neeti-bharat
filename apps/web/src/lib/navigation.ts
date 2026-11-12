@@ -8,6 +8,7 @@ import {
   IconDownload,
   IconFileCheck,
   IconFileText,
+  IconGauge,
   IconHistory,
   IconInbox,
   IconKey,
@@ -41,6 +42,7 @@ export type NavItemId =
   | 'dashboard'
   | 'myWork'
   | 'frameworks'
+  | 'readiness'
   | 'policies'
   | 'proof'
   | 'exports'
@@ -90,6 +92,7 @@ export const NAV_AREAS: NavArea[] = [
           { id: 'dashboard', href: '/', icon: IconLayoutDashboard, status: 'live' },
           { id: 'myWork', href: '/my-work', icon: IconChecklist, status: 'live' },
           { id: 'frameworks', href: '/frameworks', icon: IconScale, status: 'live' },
+          { id: 'readiness', href: '/readiness', icon: IconGauge, status: 'live' },
           { id: 'policies', href: '/policies', icon: IconFileText, status: 'live' },
           { id: 'proof', href: '/proof', icon: IconShieldCheck, status: 'live' },
           { id: 'exports', href: '/exports', icon: IconDownload, status: 'live' },
@@ -160,7 +163,7 @@ export const NAV_AREAS: NavArea[] = [
       {
         id: 'developers',
         items: [
-          { id: 'apiKeys', href: '/settings/api-keys', icon: IconKey, status: 'soon' },
+          { id: 'apiKeys', href: '/settings/api-keys', icon: IconKey, status: 'live' },
           { id: 'secrets', href: '/settings/secrets', icon: IconLock, status: 'soon' },
         ],
       },

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { CatalogueRows, ExistingIds } from '../utils/catalogue-rows';
 
@@ -26,12 +27,30 @@ export class FrameworkSeedRepository {
   /** Stores new rows and their links together, or none of them. */
   async insert(rows: CatalogueRows): Promise<void> {
     await this.prisma.transact(async (db) => {
-      await db.framework.createMany({ data: rows.frameworks, skipDuplicates: true });
-      await db.requirement.createMany({ data: rows.requirements, skipDuplicates: true });
-      await db.policy.createMany({ data: rows.policies, skipDuplicates: true });
-      await db.control.createMany({ data: rows.controls, skipDuplicates: true });
-      await db.controlPolicyLink.createMany({ data: rows.links, skipDuplicates: true });
-      await db.proofRequirement.createMany({ data: rows.proofRequirements, skipDuplicates: true });
+      await db.framework.createMany({
+        data: rows.frameworks.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
+      await db.requirement.createMany({
+        data: rows.requirements.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
+      await db.policy.createMany({
+        data: rows.policies.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
+      await db.control.createMany({
+        data: rows.controls.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
+      await db.controlPolicyLink.createMany({
+        data: rows.links.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
+      await db.proofRequirement.createMany({
+        data: rows.proofRequirements.map((row) => ({ ...row, ...orgOwned() })),
+        skipDuplicates: true,
+      });
     });
   }
 }

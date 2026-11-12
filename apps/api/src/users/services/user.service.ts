@@ -7,10 +7,21 @@ import { UserRepository, type Account } from '../repositories/user.repository';
 export class UserService {
   constructor(private readonly users: UserRepository) {}
 
-  count(): Promise<number> {
-    return this.users.count();
+  /** Every account in the install. Zero means nobody has signed in yet. */
+  countAll(): Promise<number> {
+    return this.users.countAll();
   }
 
+  /** The account with this email in any organisation, if there is one. */
+  findAnywhere(email: string): Promise<{ id: string; email: string } | null> {
+    return this.users.findAnywhere(email);
+  }
+
+  findById(id: string): Promise<{ id: string; email: string; name: string } | null> {
+    return this.users.findById(id);
+  }
+
+  /** Whether they have an account here, in the organisation the request works in. */
   existsByEmail(email: string): Promise<boolean> {
     return this.users.existsByEmail(email);
   }
@@ -21,10 +32,6 @@ export class UserService {
 
   findByEmails(emails: string[]): Promise<Account[]> {
     return this.users.findByEmails(emails);
-  }
-
-  isDisabled(id: string): Promise<boolean> {
-    return this.users.isDisabled(id);
   }
 
   countActive(): Promise<number> {

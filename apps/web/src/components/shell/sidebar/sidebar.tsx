@@ -9,12 +9,14 @@ import { useSelectedArea } from './use-selected-area';
 
 export interface SidebarProps {
   isAdmin: boolean;
+  /** Shown at the top of the panel, for example the organisation. */
+  header: ReactNode;
   /** Shown at the bottom of the panel. */
   footer: ReactNode;
 }
 
 /** The slim, two-part sidebar: a rail of icons beside a panel of pages. */
-export function Sidebar({ isAdmin, footer }: SidebarProps) {
+export function Sidebar({ isAdmin, header, footer }: SidebarProps) {
   const areas = NAV_AREAS.filter((area) => !area.adminOnly || isAdmin);
   const { pathname, selected, select } = useSelectedArea(areas);
   // A group per instance, so the desktop sidebar and the mobile drawer animate on their own.
@@ -24,7 +26,7 @@ export function Sidebar({ isAdmin, footer }: SidebarProps) {
     <LayoutGroup id={layoutGroup}>
       <div className="flex h-full">
         <Rail areas={areas} selectedId={selected.id} onSelect={select} />
-        <Panel area={selected} pathname={pathname} footer={footer} />
+        <Panel area={selected} pathname={pathname} header={header} footer={footer} />
       </div>
     </LayoutGroup>
   );

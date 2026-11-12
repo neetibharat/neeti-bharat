@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
 /** How many log events are read at a time, so the whole log is never held at once. */
@@ -30,11 +31,17 @@ export class ExportRepository {
     });
   }
 
-  accounts(emails: string[]) {
-    return this.prisma.db.user.findMany({
-      where: { email: { in: emails } },
-      select: { email: true, role: true, disabledAt: true },
+  /** What each of these people may do in this organisation, and whether they have left it. */
+  async accounts(emails: string[]) {
+    const rows = await this.prisma.db.membership.findMany({
+      where: { organizationId: currentOrganizationId(), user: { email: { in: emails } } },
+      select: { role: true, disabledAt: true, user: { select: { email: true } } },
     });
+    return rows.map((row) => ({
+      email: row.user.email,
+      role: row.role,
+      disabledAt: row.disabledAt,
+    }));
   }
 
   evidence() {

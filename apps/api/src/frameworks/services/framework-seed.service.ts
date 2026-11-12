@@ -1,4 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { runInOrganization } from '../../core/org/org-context';
+import { OrganizationRepository } from '../../organizations/repositories/organization.repository';
 import { FrameworkSeedRepository } from '../repositories/framework-seed.repository';
 import { dpdpRows, planSeed } from '../utils/catalogue-rows';
 
@@ -7,13 +9,19 @@ import { dpdpRows, planSeed } from '../utils/catalogue-rows';
 export class FrameworkSeedService implements OnModuleInit {
   private readonly logger = new Logger(FrameworkSeedService.name);
 
-  constructor(private readonly repository: FrameworkSeedRepository) {}
+  constructor(
+    private readonly repository: FrameworkSeedRepository,
+    private readonly organizations: OrganizationRepository,
+  ) {}
 
+  /** Every organisation gets any catalogue rows it does not have yet, so a new release reaches all of them. */
   async onModuleInit(): Promise<void> {
-    await this.seed();
+    for (const organizationId of await this.organizations.allIds()) {
+      await runInOrganization(organizationId, () => this.seed());
+    }
   }
 
-  /** Safe to run on every start: anything already stored is left as the company has it. */
+  /** For the organisation it is run in. Safe to run on every start: anything already stored is left as it is. */
   async seed(): Promise<void> {
     const plan = planSeed(dpdpRows(), await this.repository.existingIds());
     const nothingNew = [

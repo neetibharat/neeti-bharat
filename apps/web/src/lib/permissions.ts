@@ -1,6 +1,6 @@
-import type { MeResponse } from '@dpdp-kit/shared';
+import type { SessionUser } from './session-user';
 
-type User = Pick<MeResponse, 'role'> | null;
+type User = Pick<SessionUser, 'role'> | null;
 
 /** Whether the person may change things. Nobody signed in, and auditors, may not. */
 export const canEdit = (user: User): boolean => user !== null && user.role !== 'auditor';

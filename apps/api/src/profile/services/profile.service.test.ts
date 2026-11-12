@@ -5,6 +5,8 @@ import type { ProfileEntry } from '../../generated/prisma/client';
 import { customKeyFor } from '../utils/profile-entries';
 import type { RoleHolderReader } from '../../people/services/role-holder-reader';
 import type { ProfileRepository } from '../repositories/profile.repository';
+import { runInOrganization } from '../../core/org/org-context';
+import type { OrganizationRepository } from '../../organizations/repositories/organization.repository';
 import { ProfileService } from './profile.service';
 
 const actor = { id: 'u1', label: 'Asha' };
@@ -16,6 +18,7 @@ function build(
 ) {
   const rows: ProfileEntry[] = initial.map((row, index) => ({
     id: `r${index}`,
+    organizationId: 'org-1',
     key: '',
     value: '',
     label: null,
@@ -45,8 +48,40 @@ function build(
   } as unknown as ProfileRepository;
   const activity = { record: vi.fn().mockResolvedValue(undefined) } as unknown as ActivityService;
   const roleHolders = { holderOf: vi.fn().mockResolvedValue(dpo) } as unknown as RoleHolderReader;
-  return { service: new ProfileService(repository, activity, roleHolders), repository, activity };
+  const organizations = {
+    rename: vi.fn().mockResolvedValue(undefined),
+  } as unknown as OrganizationRepository;
+  return {
+    service: new ProfileService(repository, activity, roleHolders, organizations),
+    repository,
+    activity,
+    organizations,
+  };
 }
+
+describe('ProfileService.update of the company name', () => {
+  it('renames the organisation to match', async () => {
+    const { service, organizations } = build();
+    await runInOrganization('org-1', () =>
+      service.update('companyName', { value: ' Acme Pvt Ltd ' }, actor),
+    );
+    expect(organizations.rename).toHaveBeenCalledWith('org-1', 'Acme Pvt Ltd');
+  });
+
+  it('keeps the organisation name when the answer is emptied', async () => {
+    const { service, organizations } = build([{ key: 'companyName', value: 'Acme' }]);
+    await runInOrganization('org-1', () => service.update('companyName', { value: '' }, actor));
+    expect(organizations.rename).not.toHaveBeenCalled();
+  });
+
+  it('leaves the name alone when any other answer changes', async () => {
+    const { service, organizations } = build();
+    await runInOrganization('org-1', () =>
+      service.update('website', { value: 'https://acme.in' }, actor),
+    );
+    expect(organizations.rename).not.toHaveBeenCalled();
+  });
+});
 
 describe('ProfileService.list', () => {
   it('shows every built-in answer with its default until it is changed', async () => {

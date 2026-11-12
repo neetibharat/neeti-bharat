@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { JobRole } from '@dpdp-kit/shared';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Person, RoleAssignment } from '../../generated/prisma/client';
 
@@ -102,16 +103,23 @@ export class PeopleRepository {
   }
 
   findByEmail(email: string): Promise<Person | null> {
-    return this.prisma.db.person.findUnique({ where: { email } });
+    return this.prisma.db.person.findFirst({ where: { email } });
   }
 
   create(data: NewPerson): Promise<Person> {
-    return this.prisma.db.person.create({ data });
+    return this.prisma.db.person.create({
+      data: { ...data, organizationId: currentOrganizationId() },
+    });
   }
 
   /** Makes sure an account has a person, without touching one that already exists. */
   ensure(data: { name: string; email: string }): Promise<Person> {
-    return this.prisma.db.person.upsert({ where: { email: data.email }, create: data, update: {} });
+    const organizationId = currentOrganizationId();
+    return this.prisma.db.person.upsert({
+      where: { organizationId_email: { organizationId, email: data.email } },
+      create: { ...data, organizationId },
+      update: {},
+    });
   }
 
   update(
@@ -163,13 +171,17 @@ export class PeopleRepository {
   }
 
   findRoleHolding(role: JobRole): Promise<RoleHolding | null> {
-    return this.prisma.db.roleAssignment.findUnique({ where: { role }, include: { person: true } });
+    return this.prisma.db.roleAssignment.findUnique({
+      where: { organizationId_role: { organizationId: currentOrganizationId(), role } },
+      include: { person: true },
+    });
   }
 
   assignRole(role: JobRole, personId: string, since: Date): Promise<RoleAssignment> {
+    const organizationId = currentOrganizationId();
     return this.prisma.db.roleAssignment.upsert({
-      where: { role },
-      create: { role, personId, since },
+      where: { organizationId_role: { organizationId, role } },
+      create: { organizationId, role, personId, since },
       update: { personId, since },
     });
   }

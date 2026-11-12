@@ -17,7 +17,8 @@ import {
   type EvidenceListResponse,
   type EvidenceResponse,
 } from '@dpdp-kit/shared';
-import { Roles, Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';
 import {
   BodyFirstTransactionInterceptor,

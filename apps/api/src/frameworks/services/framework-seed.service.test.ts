@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { FrameworkSeedRepository } from '../repositories/framework-seed.repository';
+import type { OrganizationRepository } from '../../organizations/repositories/organization.repository';
 import { FrameworkSeedService } from './framework-seed.service';
 
 function build(
@@ -19,7 +20,10 @@ function build(
     }),
     insert: vi.fn().mockResolvedValue(undefined),
   } as unknown as FrameworkSeedRepository;
-  return { service: new FrameworkSeedService(repository), repository };
+  const organizations = {
+    allIds: vi.fn().mockResolvedValue([]),
+  } as unknown as OrganizationRepository;
+  return { service: new FrameworkSeedService(repository, organizations), repository };
 }
 
 describe('FrameworkSeedService', () => {

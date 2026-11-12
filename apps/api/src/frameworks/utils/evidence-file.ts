@@ -115,8 +115,13 @@ export function checkEvidenceFile(file: UploadedFile): CheckedFile {
   return { fileName, contentType: CONTENT_TYPES[extension], sha256 };
 }
 
-/** Where a file lives in the bucket. The id keeps two uploads of the same name apart; the name is made safe for any provider. */
-export function evidenceFileKey(controlId: string, id: string, fileName: string): string {
+/** Where a file lives in the bucket, under its organisation. The id keeps two uploads of the same name apart; the name is made safe for any provider. */
+export function evidenceFileKey(
+  organizationId: string,
+  controlId: string,
+  id: string,
+  fileName: string,
+): string {
   const safeName = fileName.replace(/[^A-Za-z0-9._-]+/g, '-');
-  return `evidence/${controlId}/${id}/${safeName}`;
+  return `organizations/${organizationId}/evidence/${controlId}/${id}/${safeName}`;
 }

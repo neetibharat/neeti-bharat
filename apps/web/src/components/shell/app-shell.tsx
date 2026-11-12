@@ -1,9 +1,9 @@
-import type { MeResponse } from '@dpdp-kit/shared';
+import type { SessionUser } from '@/lib/session-user';
 import type { ReactNode } from 'react';
 import { MobileBar } from './mobile-bar';
 import { SidebarContent } from './sidebar-content';
 
-export function AppShell({ user, children }: { user: MeResponse; children: ReactNode }) {
+export function AppShell({ user, children }: { user: SessionUser; children: ReactNode }) {
   return (
     <div className="min-h-screen bg-page lg:grid lg:grid-cols-[20rem_minmax(0,1fr)]">
       <aside className="sticky top-0 hidden h-screen p-3 lg:block">

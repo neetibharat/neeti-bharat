@@ -13,7 +13,7 @@ Allowed scopes: `api`, `web`, `shared`, `deps`, `ci`, `docs`, `repo`.
 - Functions stay small and flat. ESLint caps length, complexity, nesting and parameters.
 - Name things so the code explains itself. Write a comment only for something the code cannot say: a reason, a rule from the law, a trap. Comments are one line where possible.
 - No `console`. Use the Nest `Logger` in the API.
-- Tests sit next to the code as `*.test.ts`.
+- Unit tests sit next to the code as `*.test.ts`. End-to-end tests are in `apps/api/test` as `*.e2e.test.ts`: they run the real API against a database made for the run, and are run with `pnpm test:e2e` (they need a PostgreSQL server: `E2E_DATABASE_URL`, or the `DATABASE_URL` in `.env`). Anything that touches what one organisation can see of another's data needs a case there.
 
 ## API
 

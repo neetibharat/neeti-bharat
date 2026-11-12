@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { AppRole, Invitation } from '../../generated/prisma/client';
 
+/**
+ * Invitations belong to an organisation. Most of what is here works on the one the request is for. The two
+ * `...Anywhere` methods are for sign-in, when a person has no organisation yet and every invitation to them counts.
+ */
 @Injectable()
 export class InvitationRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -12,13 +17,20 @@ export class InvitationRepository {
     invitedById: string;
     expiresAt: Date;
   }): Promise<Invitation> {
-    return this.prisma.db.invitation.create({ data });
+    return this.prisma.db.invitation.create({
+      data: { ...data, organizationId: currentOrganizationId() },
+    });
   }
 
   /** Open invitations for these emails, newest first, so the latest one for an email wins. */
   findOpenByEmails(emails: string[], now: Date): Promise<Invitation[]> {
     return this.prisma.db.invitation.findMany({
-      where: { email: { in: emails }, status: 'pending', expiresAt: { gt: now } },
+      where: {
+        organizationId: currentOrganizationId(),
+        email: { in: emails },
+        status: 'pending',
+        expiresAt: { gt: now },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -26,46 +38,68 @@ export class InvitationRepository {
   /** Invitations nobody has accepted or cancelled yet, expired or not, newest first. */
   findPendingByEmails(emails: string[]): Promise<Invitation[]> {
     return this.prisma.db.invitation.findMany({
-      where: { email: { in: emails }, status: 'pending' },
+      where: { organizationId: currentOrganizationId(), email: { in: emails }, status: 'pending' },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   findLatestPendingByEmail(email: string): Promise<Invitation | null> {
     return this.prisma.db.invitation.findFirst({
-      where: { email, status: 'pending' },
+      where: { organizationId: currentOrganizationId(), email, status: 'pending' },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   /** Gives an invitation a new last day. */
   renew(id: string, expiresAt: Date): Promise<Invitation> {
-    return this.prisma.db.invitation.update({ where: { id }, data: { expiresAt } });
+    return this.prisma.db.invitation.update({
+      where: { id, organizationId: currentOrganizationId() },
+      data: { expiresAt },
+    });
   }
 
   countOpen(now: Date): Promise<number> {
     return this.prisma.db.invitation.count({
-      where: { status: 'pending', expiresAt: { gt: now } },
+      where: { organizationId: currentOrganizationId(), status: 'pending', expiresAt: { gt: now } },
     });
   }
 
   findOpenByEmail(email: string, now: Date): Promise<Invitation | null> {
     return this.prisma.db.invitation.findFirst({
-      where: { email, status: 'pending', expiresAt: { gt: now } },
+      where: {
+        organizationId: currentOrganizationId(),
+        email,
+        status: 'pending',
+        expiresAt: { gt: now },
+      },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /** Every open invitation to this email, from any organisation, oldest first. */
+  findOpenAnywhere(email: string, now: Date): Promise<Invitation[]> {
+    return this.prisma.db.invitation.findMany({
+      where: { email, status: 'pending', expiresAt: { gt: now } },
+      orderBy: { createdAt: 'asc' },
     });
   }
 
   /** Cancels an open invitation and returns it, or null if there was none to cancel. */
   async revoke(id: string): Promise<Invitation | null> {
-    const open = await this.prisma.db.invitation.findFirst({ where: { id, status: 'pending' } });
+    const organizationId = currentOrganizationId();
+    const open = await this.prisma.db.invitation.findFirst({
+      where: { id, organizationId, status: 'pending' },
+    });
     if (!open) return null;
-    return this.prisma.db.invitation.update({ where: { id }, data: { status: 'revoked' } });
+    return this.prisma.db.invitation.update({
+      where: { id, organizationId },
+      data: { status: 'revoked' },
+    });
   }
 
-  async markAccepted(email: string, now: Date): Promise<void> {
-    await this.prisma.db.invitation.updateMany({
-      where: { email, status: 'pending' },
+  async markAccepted(id: string, now: Date): Promise<void> {
+    await this.prisma.db.invitation.update({
+      where: { id },
       data: { status: 'accepted', acceptedAt: now },
     });
   }

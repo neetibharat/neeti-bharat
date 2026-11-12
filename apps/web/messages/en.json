@@ -43,7 +43,8 @@
       "aiHelp": "AI help",
       "myWork": "My work",
       "exports": "Exports",
-      "websiteCheck": "Website check"
+      "websiteCheck": "Website check",
+      "readiness": "Readiness check"
     }
   },
   "roles": {
@@ -98,7 +99,9 @@
     "FILE_TOO_LARGE": "That file is larger than the allowed size.",
     "FILE_TYPE_NOT_ALLOWED": "That type of file is not accepted, or its contents do not match its type.",
     "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up.",
-    "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed."
+    "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed.",
+    "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
+    "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use."
   },
   "comingSoon": {
     "title": "On its way",
@@ -140,10 +143,6 @@
     "notifications": {
       "title": "Notifications",
       "description": "Emails and in-app notices that keep the work moving."
-    },
-    "apiKeys": {
-      "title": "API keys",
-      "description": "Keys that let your own systems talk to DPDP Kit."
     },
     "secrets": {
       "title": "Secrets",
@@ -229,7 +228,14 @@
       "REQUEST_CLOSED": "Request closed",
       "INVITATION_RESENT": "Invitation sent again",
       "DATA_EXPORTED": "Data downloaded",
-      "WEBSITE_CHECKED": "Website checked"
+      "WEBSITE_CHECKED": "Website checked",
+      "LOGO_CHANGED": "Company logo changed",
+      "LOGO_REMOVED": "Company logo removed",
+      "API_KEY_CREATED": "API key created",
+      "API_KEY_REVOKED": "API key revoked",
+      "ORGANIZATION_CREATED": "Organisation created",
+      "ONBOARDING_COMPLETED": "Set-up finished",
+      "READINESS_CHECKED": "Readiness check taken"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -284,7 +290,14 @@
       "REQUEST_CLOSED": "Closed the request from {name} ({type})",
       "INVITATION_RESENT": "Sent the invitation to {email} again",
       "DATA_EXPORTED": "Downloaded {what}",
-      "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed"
+      "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed",
+      "LOGO_CHANGED": "Changed the company logo to {fileName}",
+      "LOGO_REMOVED": "Removed the company logo {fileName}",
+      "API_KEY_CREATED": "Created the API key {name} with {role} access",
+      "API_KEY_REVOKED": "Revoked the API key {name}",
+      "ORGANIZATION_CREATED": "Created the organisation {name}",
+      "ONBOARDING_COMPLETED": "Finished setting up the organisation",
+      "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100"
     },
     "emptyValue": "empty",
     "values": {
@@ -329,12 +342,6 @@
     "general": {
       "title": "General",
       "description": "How your company appears on policies, the privacy notice and auditor reports.",
-      "installTitle": "This install",
-      "runsOn": "Runs on your own server.",
-      "framework": "Framework",
-      "frameworkValue": "DPDP Act 2023 and Rules 2025",
-      "dataStoredIn": "Data stored in",
-      "version": "Version",
       "fields": {
         "companyName": {
           "hint": "Use 120 characters at most."
@@ -451,7 +458,25 @@
     "fromRole": "From the DPO role",
     "noResults": "Nothing matches your search.",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "logo": {
+      "title": "Company logo",
+      "description": "Your logo, for the documents and reports made from this install.",
+      "hint": "{types} up to {max}.",
+      "alt": "The company logo",
+      "drop": "Drag a logo here",
+      "choose": "Choose file",
+      "uploading": "Uploading",
+      "off": "File storage is not set up, so a logo cannot be uploaded. Ask whoever runs this app to set it up.",
+      "remove": "Remove logo",
+      "removeTitle": "Remove the company logo?",
+      "removeBody": "The picture is deleted. You can upload it again at any time.",
+      "problems": {
+        "empty": "That file is empty.",
+        "tooLarge": "That file is larger than {max}.",
+        "type": "A logo must be one of: {types}."
+      }
+    }
   },
   "jobRoles": {
     "DPO": "DPO",
@@ -1546,6 +1571,70 @@
       }
     }
   },
+  "apiKeys": {
+    "title": "API keys",
+    "description": "Let a script or an AI agent work in this organisation. A key acts as the person who made it, with the access you choose, and everything it changes shows in the activity log.",
+    "create": "Create key",
+    "empty": {
+      "title": "No API keys yet",
+      "body": "Create one to let a script or an AI agent, such as Claude Code, read or change things here."
+    },
+    "columns": {
+      "table": "API keys",
+      "name": "Name",
+      "access": "Access",
+      "createdBy": "Created by",
+      "lastUsed": "Last used",
+      "expires": "Expires",
+      "status": "Status"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "auditor": "Auditor"
+    },
+    "roleHelp": {
+      "admin": "Can do everything an admin can, including managing people. It still cannot make or revoke keys. Keep it as safe as a password.",
+      "member": "Can read and change things, like a team member. It cannot manage people.",
+      "auditor": "Can only read."
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "revoked": "Revoked"
+    },
+    "neverUsed": "Never used",
+    "neverExpires": "Never",
+    "form": {
+      "title": "Create an API key",
+      "description": "The key works in this organisation only. It stops working if you revoke it, if it expires, or if you leave the organisation.",
+      "name": "Name",
+      "namePlaceholder": "Claude Code",
+      "access": "Access",
+      "expires": "Expires",
+      "expiryNever": "Never",
+      "expiryDays": "In {days} days",
+      "cancel": "Cancel",
+      "submit": "Create key"
+    },
+    "created": {
+      "title": "Your new key",
+      "warning": "Copy the key now. It is shown only once and cannot be read again.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "done": "Done"
+    },
+    "revoke": {
+      "action": "Revoke {name}",
+      "title": "Revoke {name}?",
+      "body": "Anything using this key stops working at once. This cannot be undone.",
+      "confirm": "Revoke key"
+    },
+    "usage": {
+      "title": "Using a key",
+      "body": "Send the key in the x-api-key header of each request. It needs no sign-in and no organisation header, because a key belongs to one organisation."
+    }
+  },
   "websiteCheck": {
     "title": "Website check",
     "description": "Visit your public website the way a visitor does and check what DPDP expects to see. It reads the page the server sends, so a cookie banner or tracker added by a script is not seen.",
@@ -1670,6 +1759,178 @@
         "title": "Browser protections",
         "about": "Headers that stop other sites from misusing yours."
       }
+    }
+  },
+  "organization": {
+    "switcher": {
+      "label": "Organisation",
+      "create": "Create an organisation"
+    },
+    "create": {
+      "title": "Set up your organisation",
+      "titleAnother": "Create another organisation",
+      "description": "Each organisation has its own people, records, files and activity log. You become its admin.",
+      "label": "Organisation name",
+      "placeholder": "Acme Pvt Ltd",
+      "submit": "Create organisation",
+      "cancel": "Cancel"
+    }
+  },
+  "readiness": {
+    "title": "Readiness check",
+    "description": "Twenty-five short questions to see where you stand on the DPDP Act today. Answer honestly: the score is for you, and you can take the check again whenever things change.",
+    "progress": "Progress",
+    "answered": "{answered} of {total} answered",
+    "area": "Area {current} of {total}",
+    "points": "{points} points",
+    "reference": "Section {section} of the DPDP Act",
+    "next": "Next",
+    "back": "Back",
+    "seeScore": "See my score",
+    "retake": "Take it again",
+    "answers": {
+      "yes": "Yes",
+      "partly": "Partly",
+      "no": "No",
+      "not_applicable": "Not applicable"
+    },
+    "domains": {
+      "governance": {
+        "title": "Who is responsible",
+        "about": "Someone owns data protection, and people know who to contact."
+      },
+      "consent_notice": {
+        "title": "Notice and consent",
+        "about": "People are told what you collect, and agree to it."
+      },
+      "rights": {
+        "title": "People's rights",
+        "about": "People can see, fix and delete the data you hold about them."
+      },
+      "inventory": {
+        "title": "Knowing your data",
+        "about": "You know what you hold, why you hold it, and where."
+      },
+      "security": {
+        "title": "Security",
+        "about": "Your systems keep personal data safe."
+      },
+      "vendors": {
+        "title": "Vendors and partners",
+        "about": "Companies that handle data for you are bound by agreement and checked."
+      },
+      "breach_retention": {
+        "title": "Breaches and keeping data",
+        "about": "You can respond to a breach, and you do not keep data longer than you need it."
+      },
+      "children_special": {
+        "title": "Children and sensitive data",
+        "about": "Extra care where the law asks for it."
+      }
+    },
+    "questions": {
+      "responsible_person": "A named person or team is responsible for data protection in your company.",
+      "written_policy": "You have a written privacy policy that senior management has approved.",
+      "grievance_officer": "You have named someone to handle complaints, and published how to reach them.",
+      "consent_before_collecting": "You ask for clear, specific consent before you collect personal data.",
+      "notice_when_collecting": "You tell people what you collect and why, in plain language, at the moment you collect it.",
+      "withdraw_consent": "People can withdraw their consent as easily as they gave it, and the steps are written down.",
+      "access_to_data": "People can ask for a copy of the personal data you hold about them.",
+      "correct_data": "People can ask you to correct their data when it is wrong or out of date.",
+      "erase_data": "People can ask you to delete their data, and you have a way to do it.",
+      "data_inventory": "You keep a list of the personal data your company collects and uses.",
+      "purposes_written_down": "For each kind of data on that list, the reason you collect it is written down.",
+      "know_where_data_lives": "You know where personal data is stored and who can reach it.",
+      "access_controls": "The systems that hold personal data are protected by logins and access controls.",
+      "encryption": "Personal data is encrypted when it is stored and when it is sent.",
+      "security_reviews": "You check the security of those systems on a regular schedule.",
+      "processor_agreements": "Every company that handles personal data for you has signed a data agreement.",
+      "vendor_reviews": "You review how those vendors protect data at least once a year.",
+      "transfers_abroad": "You know which vendors send personal data outside India, and you disclose it.",
+      "breach_procedure": "You have a written plan for what to do if personal data is breached.",
+      "report_within_window": "You could tell the Data Protection Board and the people affected within the legal time.",
+      "retention_schedule": "You have a retention schedule, and you delete data once its purpose is done.",
+      "age_check": "You check whether the people whose data you collect are under 18.",
+      "parental_consent": "Where you handle children's data, you get verifiable consent from a parent.",
+      "harm_scenarios": "You have listed the ways your use of data could seriously harm someone.",
+      "sensitive_data_consent": "You do not use sensitive data, such as financial, health or location data, without clear consent."
+    },
+    "result": {
+      "title": "Your readiness score",
+      "outOf": "out of 100",
+      "taken": "Taken {when} by {name}",
+      "byArea": "How each area did",
+      "earned": "{earned} of {points} points",
+      "startTitle": "Where to start",
+      "startAbout": "The areas with the most room to improve. Each links to where it is worked on in the app."
+    },
+    "bands": {
+      "starting": {
+        "name": "Just starting",
+        "text": "Most of the groundwork is still ahead of you. That is normal for a new programme, and the checklist in this app is the way through it."
+      },
+      "building": {
+        "name": "Building up",
+        "text": "Some of the important pieces are in place. Close the gaps below, starting with the lowest areas."
+      },
+      "good": {
+        "name": "Well on the way",
+        "text": "You are covering most of what the law asks. A few areas still need attention before an audit."
+      },
+      "strong": {
+        "name": "Strong",
+        "text": "You are in good shape. Keep your proof current and take the check again when things change."
+      }
+    },
+    "actions": {
+      "governance": "Name your Data Protection Officer and the other owners under People and roles.",
+      "consent_notice": "Write and approve your notice and consent policies.",
+      "rights": "Set up how requests from people are received and answered.",
+      "inventory": "Work through the checklist to record what you hold and why.",
+      "security": "Collect proof of your security safeguards.",
+      "vendors": "Cover vendors in your policies and keep their agreements as proof.",
+      "breach_retention": "Know the breach steps, and set how long you keep data.",
+      "children_special": "Review the set-up answers about children's data."
+    },
+    "history": {
+      "title": "Earlier checks",
+      "score": "{score} out of 100"
+    },
+    "empty": {
+      "title": "No check taken yet",
+      "readOnly": "Nobody has taken the readiness check yet."
+    }
+  },
+  "onboarding": {
+    "title": "Set up your organisation",
+    "skip": "Skip for now",
+    "finish": "Go to my dashboard",
+    "steps": {
+      "company": "Your company",
+      "scope": "Scope",
+      "readiness": "Readiness",
+      "result": "Your score"
+    },
+    "company": {
+      "title": "Tell us about your company",
+      "description": "This fills your policies, notices and reports. You can change any of it later in Settings.",
+      "logo": "Company logo",
+      "next": "Continue"
+    },
+    "scope": {
+      "title": "Your framework and scope",
+      "description": "Some rules only apply to some companies. Your answers switch them on or off.",
+      "framework": {
+        "name": "DPDP Act 2023 and Rules 2025",
+        "about": "India's data protection law. It is switched on for you.",
+        "more": "More frameworks are on the way."
+      },
+      "back": "Back",
+      "next": "Continue"
+    },
+    "readiness": {
+      "title": "Check where you stand",
+      "description": "Twenty-five short questions in eight areas, about five minutes. There are no wrong answers, and you can skip this and come back to it from the sidebar."
     }
   }
 }

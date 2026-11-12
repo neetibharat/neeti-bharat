@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { Prisma, type ActivityAnchor, type ActivityEvent } from '../../generated/prisma/client';
 
-/** Any fixed number: writers take turns on this lock so the chain never forks. */
+/** Any fixed number: writers to one organisation's chain take turns on this lock, so the chain never forks. */
 const CHAIN_LOCK = 7_231_001;
-
-/** The anchor is one row. */
-const ANCHOR_ID = 1;
 
 type JsonValues = Record<string, string | number | boolean | null> | null;
 
@@ -38,10 +36,14 @@ export interface ListQuery {
 export class ActivityRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** Adds one event to the end of the chain and moves the anchor to it, together. `build` gets the fingerprint of the current last event. */
+  /**
+   * Adds one event to the end of the organisation's chain and moves its anchor to it, together. `build` gets the
+   * fingerprint of the current last event.
+   */
   append(build: (previousHash: string | null) => NewActivityEvent): Promise<ActivityEvent> {
+    const organizationId = currentOrganizationId();
     return this.prisma.transact(async (tx) => {
-      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${CHAIN_LOCK})`;
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${CHAIN_LOCK}, hashtext(${organizationId}))`;
       const last = await tx.activityEvent.findFirst({
         orderBy: { seq: 'desc' },
         select: { hash: true },
@@ -50,6 +52,7 @@ export class ActivityRepository {
       const created = await tx.activityEvent.create({
         data: {
           ...event,
+          organizationId,
           details: column(event.details),
           before: column(event.before),
           after: column(event.after),
@@ -57,8 +60,8 @@ export class ActivityRepository {
       });
       const head = { lastSeq: created.seq, lastHash: created.hash };
       await tx.activityAnchor.upsert({
-        where: { id: ANCHOR_ID },
-        create: { id: ANCHOR_ID, ...head },
+        where: { organizationId },
+        create: { organizationId, ...head },
         update: head,
       });
       return created;
@@ -86,7 +89,9 @@ export class ActivityRepository {
 
   /** Where the chain should end, or null before the first event. */
   findAnchor(): Promise<ActivityAnchor | null> {
-    return this.prisma.db.activityAnchor.findUnique({ where: { id: ANCHOR_ID } });
+    return this.prisma.db.activityAnchor.findUnique({
+      where: { organizationId: currentOrganizationId() },
+    });
   }
 
   /** Oldest first, in batches, for checking the chain. */

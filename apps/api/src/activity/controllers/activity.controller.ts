@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { ActivityListResponse, ActivityVerifyResponse } from '@dpdp-kit/shared';
-import { Roles } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../core/org/roles.decorator';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import { ActivityService } from '../services/activity.service';
 import { listActivitySchema, type ListActivityQuery } from '../dto/list-activity.dto';

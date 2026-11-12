@@ -36,6 +36,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - name: End-to-end tests
+        env:
+          E2E_DATABASE_URL: postgresql://dpdp:dpdp@localhost:5432/postgres
+        run: pnpm test:e2e
       - name: Migrations match the schema
         working-directory: apps/api
         env:

@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { WebsiteCheckListResponse, WebsiteCheckResponse } from '@dpdp-kit/shared';
-import { Roles, Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import {

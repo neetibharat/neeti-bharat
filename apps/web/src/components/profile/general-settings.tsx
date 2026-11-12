@@ -13,9 +13,8 @@ import { useGetProfileQuery } from '@/lib/api/profile-api';
 import { isIdentityKey } from '@/lib/guards';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { useEntryText } from './use-entry-text';
+import { LogoSetting } from './logo-setting';
 import { useSaveEntry } from './use-save-entry';
-
-const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? '';
 
 /** The company's identity, one setting per card. The same answers are used in policies and notices. */
 export function GeneralSettings() {
@@ -27,22 +26,15 @@ export function GeneralSettings() {
   if (!data) return <PageSkeleton />;
 
   const identity = data.entries.filter((entry) => entry.group === 'general');
-  const region = data.entries.find((entry) => entry.key === 'hostingRegion')?.value;
 
   return (
     <>
       <PageHeader title={t('general.title')} description={t('general.description')} />
       <div className="flex flex-col gap-5">
+        <LogoSetting />
         {identity.map((entry) => (
           <IdentityField key={entry.key} entry={entry} />
         ))}
-        <SettingCard title={t('general.installTitle')} description={t('general.runsOn')}>
-          <dl className="grid max-w-none gap-3 text-body sm:grid-cols-[12rem_1fr]">
-            <Fact term={t('general.framework')} value={t('general.frameworkValue')} />
-            <Fact term={t('general.dataStoredIn')} value={region || t('notAnswered')} />
-            <Fact term={t('general.version')} value={APP_VERSION} />
-          </dl>
-        </SettingCard>
       </div>
     </>
   );
@@ -81,14 +73,5 @@ function IdentityField({ entry }: { entry: ProfileEntryResponse }) {
         error={problem || undefined}
       />
     </SettingCard>
-  );
-}
-
-function Fact({ term, value }: { term: string; value: string }) {
-  return (
-    <>
-      <dt className="text-fg-muted">{term}</dt>
-      <dd className="font-medium text-fg">{value}</dd>
-    </>
   );
 }
