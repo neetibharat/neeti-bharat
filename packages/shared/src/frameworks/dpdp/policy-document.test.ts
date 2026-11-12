@@ -3,6 +3,7 @@ import { PROFILE_FIELDS } from '../../profile.js';
 import { DPDP_POLICIES, controlsForPolicy } from './index.js';
 import {
   SETTING_LABELS,
+  customAnswerLabel,
   resolveDocument,
   starterDocument,
   tokenKeys,
@@ -49,6 +50,40 @@ describe('starterDocument', () => {
     for (const keys of Object.values(POLICY_SETTINGS)) {
       for (const key of keys) expect(SETTING_LABELS[key], key).toBeTruthy();
     }
+  });
+});
+
+describe('answers the company added', () => {
+  const custom: PolicyDocument = {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [{ type: 'text', text: 'Write to us at {{custom:office-address}}.' }],
+      },
+    ],
+  };
+
+  it('are found in the text like any other', () => {
+    expect(tokenKeys(custom)).toEqual(['custom:office-address']);
+  });
+
+  it('are filled in from the profile', () => {
+    const text = flat(
+      resolveDocument(custom, { 'custom:office-address': '12 MG Road' }, customAnswerLabel),
+    );
+    expect(text).toContain('12 MG Road');
+  });
+
+  it('show their name in brackets while they have no answer', () => {
+    expect(flat(resolveDocument(custom, {}, customAnswerLabel))).toContain('[Office address]');
+  });
+});
+
+describe('customAnswerLabel', () => {
+  it('turns the key into a name', () => {
+    expect(customAnswerLabel('custom:office-address')).toBe('Office address');
+    expect(customAnswerLabel('custom:gst-no')).toBe('Gst no');
   });
 });
 

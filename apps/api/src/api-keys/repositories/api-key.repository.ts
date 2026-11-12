@@ -89,6 +89,7 @@ export class ApiKeyRepository {
         expiresAt: true,
         revokedAt: true,
         lastUsedAt: true,
+        organization: { select: { closedAt: true } },
         createdBy: {
           select: {
             id: true,
@@ -110,7 +111,8 @@ export class ApiKeyRepository {
       revokedAt: row.revokedAt,
       lastUsedAt: row.lastUsedAt,
       createdBy,
-      creatorRole: place?.role ?? null,
+      // A closed organisation cannot be opened, with a key either.
+      creatorRole: row.organization.closedAt ? null : (place?.role ?? null),
     };
   }
 

@@ -17,6 +17,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1166.0",
     "@aws-sdk/s3-request-presigner": "^3.1166.0",
+    "@azure/storage-blob": "^12.34.0",
     "@dpdp-kit/shared": "workspace:*",
     "@nestjs/common": "^12.4.0",
     "@nestjs/config": "^12.1.1",

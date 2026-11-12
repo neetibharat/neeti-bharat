@@ -19,6 +19,11 @@ export interface OrganizationListResponse {
   organizations: OrganizationSummary[];
 }
 
+/** Closing an organisation: its name, typed out, to show it is meant. */
+export interface CloseOrganizationRequest {
+  name: string;
+}
+
 /** A new organisation. Whoever makes it is its first admin, and it starts with the DPDP checklist. */
 export interface CreateOrganizationRequest {
   name: string;

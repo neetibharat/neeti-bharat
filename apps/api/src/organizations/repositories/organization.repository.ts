@@ -26,6 +26,19 @@ export class OrganizationRepository {
     return result.count > 0;
   }
 
+  async findName(id: string): Promise<string | null> {
+    const row = await this.prisma.db.organization.findUnique({
+      where: { id },
+      select: { name: true },
+    });
+    return row?.name ?? null;
+  }
+
+  /** Closes the organisation. Nothing is deleted: the rows stay, and nobody can open it. */
+  async close(id: string, now: Date): Promise<void> {
+    await this.prisma.db.organization.update({ where: { id }, data: { closedAt: now } });
+  }
+
   /** Every organisation, for jobs that set each one up. */
   async allIds(): Promise<string[]> {
     const rows = await this.prisma.db.organization.findMany({ select: { id: true } });

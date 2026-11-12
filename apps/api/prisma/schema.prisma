@@ -115,6 +115,8 @@ model Organization {
   requestCounter     Int                 @default(0)
   /// Set when an admin finishes, or skips, the set-up that follows creating an organisation.
   onboardedAt        DateTime?           @db.Timestamptz(3)
+  /// Set when an admin closes the organisation. Nobody can open it after that, and nothing in it is erased.
+  closedAt           DateTime?           @db.Timestamptz(3)
   createdAt          DateTime            @default(now()) @db.Timestamptz(3)
   updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
   memberships        Membership[]
@@ -140,6 +142,8 @@ model Organization {
   activityAnchor     ActivityAnchor?
   companyLogo        CompanyLogo?
   apiKeys            ApiKey[]
+  connections        Connection[]
+  connectionRuns     ConnectionRun[]
 
   @@map("organizations")
 }
@@ -769,4 +773,46 @@ model ApiKey {
 
   @@index([organizationId, createdAt])
   @@map("api_keys")
+}
+
+// A link to an outside system that DPDP Kit reads from to check it, such as an Azure subscription. The credentials are
+// kept encrypted and are never sent back. A connection that is removed keeps its row and its runs, and loses the credentials.
+model Connection {
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  id             String          @id @default(uuid(7))
+  provider       String
+  name           String
+  /// What identifies the system without being a secret, such as the tenant and subscription ids. Shown in the list.
+  identifiers    Json
+  /// The credentials as JSON, sealed by the secret box. Empty once the connection is removed.
+  credentials    String
+  createdByName  String
+  createdAt      DateTime        @default(now()) @db.Timestamptz(3)
+  removedAt      DateTime?       @db.Timestamptz(3)
+  runs           ConnectionRun[]
+
+  @@index([organizationId, createdAt])
+  @@map("connections")
+}
+
+// One time the checks were run against a connection, and what they found.
+model ConnectionRun {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  connectionId   String
+  connection     Connection   @relation(fields: [connectionId], references: [id])
+  ranAt          DateTime     @default(now()) @db.Timestamptz(3)
+  /// The name is copied here, so the run stays attributed after the person leaves.
+  ranByName      String
+  /// The list of results, in the shape of ConnectionCheckResult in packages/shared.
+  results        Json
+  passed         Int
+  warned         Int
+  failed         Int
+  skipped        Int
+
+  @@index([connectionId, ranAt])
+  @@map("connection_runs")
 }

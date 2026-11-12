@@ -72,7 +72,7 @@ export class InvitationService {
       subject: { type: 'invitation', id: invitation.id },
       details: { email: invitation.email, role: invitation.role },
     });
-    await this.sendInvitationEmail(invitation);
+    await this.sendInvitationEmail(invitation, actor.label);
     return invitation;
   }
 
@@ -89,7 +89,7 @@ export class InvitationService {
       subject: { type: 'invitation', id: renewed.id },
       details: { email: renewed.email, role: renewed.role },
     });
-    await this.sendInvitationEmail(renewed);
+    await this.sendInvitationEmail(renewed, actor.label);
     return renewed;
   }
 
@@ -111,11 +111,16 @@ export class InvitationService {
     if (taken) throw new AppException('CONFLICT', HttpStatus.CONFLICT);
   }
 
-  private sendInvitationEmail(invitation: Invitation): Promise<void> {
-    const url = this.config.get('WEB_ORIGIN', { infer: true });
-    return this.mail.send({
+  private async sendInvitationEmail(invitation: Invitation, inviter: string): Promise<void> {
+    await this.mail.send({
       to: invitation.email,
-      ...renderMail('en', 'invitation', { url, days: INVITATION_DAYS }),
+      ...renderMail('en', 'invitation', {
+        url: this.config.get('WEB_ORIGIN', { infer: true }),
+        days: INVITATION_DAYS,
+        organization: await this.invitations.organizationName(),
+        inviter,
+        role: invitation.role,
+      }),
     });
   }
 }

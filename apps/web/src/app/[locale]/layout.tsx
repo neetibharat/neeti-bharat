@@ -27,7 +27,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const locale = requireLocale((await params).locale);
   const t = await getTranslations({ locale, namespace: 'meta' });
-  return { title: t('title'), description: t('description') };
+  return { title: t('title'), description: t('description'), icons: { icon: '/icon.svg' } };
 }
 
 export default async function LocaleLayout({

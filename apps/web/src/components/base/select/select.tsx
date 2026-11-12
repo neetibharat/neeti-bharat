@@ -55,7 +55,7 @@ export function Select<T extends string>({
         <SelectValue className="min-w-0 flex-1 truncate text-left" />
         <IconChevronDown className="size-4 shrink-0 text-fg-subtle" />
       </AriaButton>
-      <Popover className="w-(--trigger-width) rounded-control border border-line bg-surface p-1 shadow-popover">
+      <Popover className="w-(--trigger-width) overflow-y-auto rounded-control border border-line bg-surface p-1 shadow-popover entering:animate-pop-in exiting:animate-fade-out">
         <ListBox items={options} className="outline-none">
           {(option) => <Option option={option} />}
         </ListBox>

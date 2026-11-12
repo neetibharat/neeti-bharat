@@ -13,6 +13,7 @@ import { RequestsModule } from './requests/requests.module';
 import { HealthModule } from './core/health/health.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
 import { CompanyLogoModule } from './company-logo/company-logo.module';
+import { ConnectionsModule } from './connections/connections.module';
 import { ExportsModule } from './exports/exports.module';
 import { FrameworksModule } from './frameworks/frameworks.module';
 import { PeopleModule } from './people/people.module';
@@ -42,6 +43,7 @@ import { StorageModule } from './core/storage/storage.module';
     ActivityModule,
     ApiKeysModule,
     CompanyLogoModule,
+    ConnectionsModule,
     ExportsModule,
     FrameworksModule,
     PeopleModule,

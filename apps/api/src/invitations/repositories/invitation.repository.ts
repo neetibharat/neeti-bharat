@@ -22,6 +22,15 @@ export class InvitationRepository {
     });
   }
 
+  /** The name of the organisation the request is for, to say in the invitation which one it is. */
+  async organizationName(): Promise<string> {
+    const row = await this.prisma.db.organization.findUnique({
+      where: { id: currentOrganizationId() },
+      select: { name: true },
+    });
+    return row?.name ?? 'DPDP Kit';
+  }
+
   /** Open invitations for these emails, newest first, so the latest one for an email wins. */
   findOpenByEmails(emails: string[], now: Date): Promise<Invitation[]> {
     return this.prisma.db.invitation.findMany({

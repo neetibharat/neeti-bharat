@@ -3,9 +3,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Test } from '@nestjs/testing';
 import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@dpdp-kit/shared';
 import type { AddressInfo } from 'node:net';
+import { AzureConnector } from '../../src/connections/providers/azure/azure-api';
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
+import { FakeAzureConnector } from './fake-azure-connector';
 import { createTestDatabase, type TestDatabase } from './test-database';
 
 const WEB_ORIGIN = 'http://localhost:3200';
@@ -30,6 +32,12 @@ function useTestEnvironment(databaseUrl: string): void {
     STORAGE_ENDPOINT: '',
     STORAGE_ACCESS_KEY_ID: '',
     STORAGE_SECRET_ACCESS_KEY: '',
+    // A fixed key for the run, so connections can keep credentials.
+    SECRETS_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString('base64'),
+    AZURE_STORAGE_ACCOUNT: '',
+    AZURE_STORAGE_KEY: '',
+    AZURE_STORAGE_CONTAINER: '',
+    AZURE_STORAGE_ENDPOINT: '',
   });
 }
 
@@ -105,6 +113,9 @@ async function compileApp(inbox: MailMessage[]) {
   try {
     const { AppModule } = await import('../../src/app.module.js');
     return await Test.createTestingModule({ imports: [AppModule] })
+      // Microsoft is replaced by a fake that answers from a table, so no test leaves the machine.
+      .overrideProvider(AzureConnector)
+      .useValue(new FakeAzureConnector())
       .overrideProvider(MailService)
       .useValue({
         send: (message: MailMessage) => {

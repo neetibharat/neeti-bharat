@@ -1,6 +1,6 @@
 'use client';
 
-import { IconLoader2, IconUpload } from '@tabler/icons-react';
+import { IconUpload } from '@tabler/icons-react';
 import {
   DropZone as AriaDropZone,
   FileTrigger,
@@ -9,6 +9,7 @@ import {
   type DropItem,
 } from 'react-aria-components';
 import { Button } from '@/components/base/button/button';
+import { Spinner } from '@/components/base/spinner/spinner';
 import { cx } from '@/lib/utils/cx';
 
 export interface DropZoneProps {
@@ -49,11 +50,7 @@ export function DropZone(props: DropZoneProps) {
       }
     >
       <span className="grid size-9 place-items-center rounded-full bg-surface text-fg-subtle shadow-card">
-        {isLoading ? (
-          <IconLoader2 className="size-4 animate-spin motion-reduce:animate-none" />
-        ) : (
-          <IconUpload className="size-4" />
-        )}
+        {isLoading ? <Spinner /> : <IconUpload className="size-4" />}
       </span>
       <Text slot="label" className="text-label font-medium text-fg">
         {isLoading ? loadingLabel : label}

@@ -6,7 +6,9 @@ import type { Env } from '../config/env.validation';
 export interface MailMessage {
   to: string;
   subject: string;
+  /** Always present: it is what a mail app shows when it shows no HTML, and what the log shows in development. */
   text: string;
+  html?: string;
 }
 
 @Injectable()

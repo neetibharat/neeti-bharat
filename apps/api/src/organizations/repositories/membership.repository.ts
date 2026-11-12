@@ -14,10 +14,10 @@ export interface OpenMembership {
 export class MembershipRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** The organisations a person can open now, oldest first. */
+  /** The organisations a person can open now, oldest first. A closed organisation cannot be opened. */
   async findOpen(userId: string): Promise<OpenMembership[]> {
     const rows = await this.prisma.db.membership.findMany({
-      where: { userId, disabledAt: null },
+      where: { userId, disabledAt: null, organization: { closedAt: null } },
       orderBy: { createdAt: 'asc' },
       select: {
         role: true,

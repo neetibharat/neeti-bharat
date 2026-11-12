@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';
+import { Skeleton } from '@/components/base/skeleton/skeleton';
 import { DASHBOARD_BREACHES, useGetBreachesQuery } from '@/lib/api/breaches-api';
 import { useGetFrameworksQuery, useGetPoliciesQuery } from '@/lib/api/frameworks-api';
 import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
@@ -43,6 +44,15 @@ export function DashboardPage() {
   );
 }
 
+function TopRowSkeleton() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
+      <Skeleton className="h-64 rounded-card" />
+      <Skeleton className="h-64 rounded-card" />
+    </div>
+  );
+}
+
 /** How ready the company is, next to what most needs someone. */
 function TopRow() {
   const errorMessage = useErrorMessage();
@@ -53,7 +63,7 @@ function TopRow() {
   const error = frameworks.error ?? policies.error ?? proof.error;
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!frameworks.data || !policies.data || !proof.data) return null;
+  if (!frameworks.data || !policies.data || !proof.data) return <TopRowSkeleton />;
   const counts = statusCounts(policies.data.policies);
   const total = counts.approved + counts.in_review + counts.draft;
 
@@ -99,10 +109,14 @@ function AttentionPanel() {
   const { error, items } = useAttentionItems();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  return items ? <AttentionCard items={items} /> : null;
+  return items ? <AttentionCard items={items} /> : <Skeleton className="h-64 rounded-card" />;
 }
 
 function FrameworksRow() {
   const { data } = useGetFrameworksQuery();
-  return data ? <FrameworksCard frameworks={data.frameworks} /> : null;
+  return data ? (
+    <FrameworksCard frameworks={data.frameworks} />
+  ) : (
+    <Skeleton className="h-56 rounded-card" />
+  );
 }

@@ -27,6 +27,8 @@ export const ERROR_CODES = [
   'URL_NOT_ALLOWED',
   'ORGANIZATION_REQUIRED',
   'API_KEY_LIMIT',
+  'CONNECTION_FAILED',
+  'SECRETS_NOT_CONFIGURED',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];

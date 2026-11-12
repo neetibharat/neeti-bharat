@@ -4,6 +4,7 @@ import {
   IconArrowBackUp,
   IconArrowForwardUp,
   IconBold,
+  IconBraces,
   IconH2,
   IconH3,
   IconItalic,
@@ -14,12 +15,13 @@ import {
 import Highlight from '@tiptap/extension-highlight';
 import { EditorContent, useEditor, useEditorState, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { PROFILE_FIELDS, type PolicyDocument, type ProfileKey } from '@dpdp-kit/shared';
+import { PROFILE_FIELDS, type PolicyDocument } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Button } from '@/components/base/button/button';
-import { Select } from '@/components/base/select/select';
+import { useGetProfileQuery } from '@/lib/api/profile-api';
 import { cx } from '@/lib/utils/cx';
+import { VariableSuggestion, offerAnswers, type VariableItem } from './variable-suggestion';
 
 const EXTENSIONS = [StarterKit.configure({ heading: { levels: [2, 3] } }), Highlight];
 
@@ -47,13 +49,27 @@ export function PolicyReader({
   return <EditorContent editor={editor} className={cx('policy-prose', className)} />;
 }
 
+/** Every answer a policy can quote: the built-in ones, then any the company added in Company profile. */
+function useAnswers(): VariableItem[] {
+  const tFields = useTranslations('profile.fields');
+  const { data } = useGetProfileQuery();
+
+  return useMemo(() => {
+    const own = (data?.entries ?? [])
+      .filter((entry) => entry.isCustom)
+      .map((entry) => ({ key: entry.key, label: entry.label ?? entry.key }));
+    return [...INSERTABLE.map((key) => ({ key, label: tFields(`${key}.label`) })), ...own];
+  }, [data, tFields]);
+}
+
 /** Policy text, editable, with a toolbar. Tiptap does the editing; this only adds the toolbar and the styles. */
 export function PolicyEditor(props: {
   content: PolicyDocument;
   onChange: (document: PolicyDocument) => void;
 }) {
+  const answers = useAnswers();
   const editor = useEditor({
-    extensions: EXTENSIONS,
+    extensions: [...EXTENSIONS, VariableSuggestion],
     content: props.content,
     immediatelyRender: false,
     onUpdate: ({ editor: current }) => props.onChange(current.getJSON() as PolicyDocument),
@@ -64,6 +80,11 @@ export function PolicyEditor(props: {
       },
     },
   });
+
+  // The answers can change while the editor is open, so the editor is handed the current list each time.
+  useEffect(() => {
+    if (editor) offerAnswers(editor, answers);
+  }, [editor, answers]);
 
   return (
     <div className="rounded-control border border-line-strong">
@@ -138,7 +159,7 @@ function Toolbar({ editor }: { editor: Editor }) {
           onPress={() => void tool.run(editor.chain().focus()).run()}
         />
       ))}
-      <InsertAnswer onInsert={(key) => editor.chain().focus().insertContent(`{{${key}}}`).run()} />
+      <InsertAnswer onOpen={() => editor.chain().focus().insertContent('{{').run()} />
     </div>
   );
 }
@@ -156,19 +177,22 @@ function Tool(props: { label: string; icon: Icon; on?: boolean; onPress: () => v
   );
 }
 
-/** Adds a company answer to the text. It is filled in for readers, and follows the profile when that changes. */
-function InsertAnswer({ onInsert }: { onInsert: (key: ProfileKey) => void }) {
+/**
+ * Opens the same list as typing `{{` does: short, narrowed as you type, and kept on screen. A long menu of every answer
+ * ran off the page, and grew with each new one.
+ */
+function InsertAnswer({ onOpen }: { onOpen: () => void }) {
   const t = useTranslations('policies.document');
-  const tFields = useTranslations('profile.fields');
 
   return (
-    <Select
-      aria-label={t('insert')}
-      placeholder={t('insert')}
-      className="ml-auto w-56"
-      options={INSERTABLE.map((key) => ({ id: key, label: tFields(`${key}.label`) }))}
-      selectedKey={null}
-      onSelectionChange={onInsert}
-    />
+    <Button
+      className="ml-auto"
+      color="secondary"
+      size="sm"
+      iconLeading={IconBraces}
+      onPress={onOpen}
+    >
+      {t('insert')}
+    </Button>
   );
 }

@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { BrandPanel } from '@/components/auth/brand-panel';
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { BrandMark } from '@/components/base/brand-mark/brand-mark';
-import { Card } from '@/components/base/card/card';
 import { redirect } from '@/i18n/navigation';
 import { requireLocale } from '@/i18n/require-locale';
 import { signInErrorCode } from '@/lib/sign-in-error';
@@ -21,17 +21,21 @@ export default async function SignInPage({ params, searchParams }: SignInPagePro
   const [providers, { error }] = await Promise.all([getAuthProviders(), searchParams]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 py-10">
-      <Card className="w-full max-w-sm p-6">
-        <div className="mb-5 flex flex-col items-center gap-3 text-center">
-          <div className="flex items-center gap-2.5">
-            <BrandMark size="sm" />
-            <span className="text-body font-semibold">{tMeta('title')}</span>
+    <main className="grid min-h-screen lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <BrandPanel />
+      <section className="flex items-center justify-center bg-surface px-6 py-12 sm:px-12">
+        <div className="page-stagger w-full max-w-sm">
+          <div>
+            <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+              <BrandMark size="md" />
+              <span className="text-subtitle font-semibold">{tMeta('title')}</span>
+            </div>
+            <h1 className="text-heading font-semibold tracking-tight text-fg">{t('title')}</h1>
+            <p className="mt-2 mb-8 text-body text-fg-muted">{t('description')}</p>
           </div>
-          <h1 className="text-title font-semibold tracking-tight text-fg">{t('title')}</h1>
+          <SignInForm providers={providers} initialError={signInErrorCode(error)} />
         </div>
-        <SignInForm providers={providers} initialError={signInErrorCode(error)} />
-      </Card>
+      </section>
     </main>
   );
 }

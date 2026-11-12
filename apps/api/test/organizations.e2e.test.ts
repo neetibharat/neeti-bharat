@@ -95,6 +95,13 @@ describe('who can open which organisation', () => {
     ]);
   });
 
+  it('lets a person in several organisations use the sign-in routes, which belong to none', async () => {
+    const session = await world.bob.get<{ user?: { email: string } }>('/api/auth/get-session');
+    expect([session.status, session.body.user?.email]).toEqual([200, 'bob@beta.test']);
+    const social = await world.bob.post('/api/auth/sign-in/social', { provider: 'microsoft' });
+    expect(social.status).not.toBe(400);
+  });
+
   it('refuses an organisation the person does not belong to', async () => {
     expect((await world.alice.get('/v1/breaches', world.beta)).status).toBe(403);
     expect((await world.alice.get('/v1/breaches', 'no-such-organisation')).status).toBe(403);

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import type { OrganizationListResponse } from '@dpdp-kit/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
+import { AppException } from '../../core/common/app.exception';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { MembershipRepository } from '../repositories/membership.repository';
 import { OrganizationRepository } from '../repositories/organization.repository';
@@ -24,6 +25,25 @@ export class OrganizationsService {
         onboarded: membership.onboarded,
       })),
     };
+  }
+
+  /**
+   * Closes the organisation the request is for, when the name typed is its own. The activity log keeps the closing
+   * and everything before it: closing hides an organisation and erases nothing.
+   */
+  async close(typedName: string, actor: ActivityActor): Promise<void> {
+    const organizationId = currentOrganizationId();
+    const name = await this.organizations.findName(organizationId);
+    if (name === null || typedName.trim() !== name) {
+      throw new AppException('CONFIRMATION_REQUIRED', HttpStatus.PRECONDITION_REQUIRED);
+    }
+    await this.activity.record({
+      actor,
+      action: 'ORGANIZATION_CLOSED',
+      subject: { type: 'organization', id: organizationId },
+      details: { name },
+    });
+    await this.organizations.close(organizationId, new Date());
   }
 
   /** Ends the set-up that follows creating an organisation, whether it was finished or skipped. */

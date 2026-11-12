@@ -8,7 +8,6 @@ import { Alert } from '@/components/base/alert/alert';
 import { Button } from '@/components/base/button/button';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';
 import { DropZone } from '@/components/base/drop-zone/drop-zone';
-import { SettingCard } from '@/components/base/setting-card/setting-card';
 import {
   useGetCompanyLogoQuery,
   useRemoveCompanyLogoMutation,
@@ -32,24 +31,6 @@ export function LogoPicker() {
       {data?.logo && <CurrentLogo url={data.logo.url} fileName={data.logo.fileName} />}
       {storage && !storage.enabled ? <Alert tone="info">{t('off')}</Alert> : <LogoDropzone />}
     </div>
-  );
-}
-
-/** The company logo on General settings. Needs file storage. */
-export function LogoSetting() {
-  const t = useTranslations('profile.logo');
-
-  return (
-    <SettingCard
-      title={t('title')}
-      description={t('description')}
-      hint={t('hint', {
-        types: listAllowedTypes(RULES.allowedTypes),
-        max: formatFileSize(RULES.maxBytes),
-      })}
-    >
-      <LogoPicker />
-    </SettingCard>
   );
 }
 
