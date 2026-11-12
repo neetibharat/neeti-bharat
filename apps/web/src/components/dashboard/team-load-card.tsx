@@ -4,6 +4,7 @@ import type { MyWorkload } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Avatar } from '@/components/base/avatar/avatar';
 import { Card } from '@/components/base/card/card';
+import { Skeleton } from '@/components/base/skeleton/skeleton';
 import { Link } from '@/i18n/navigation';
 import { useGetMyWorkTeamQuery } from '@/lib/api/my-work-api';
 import { useGetPersonOptionsQuery } from '@/lib/api/people-api';
@@ -21,7 +22,7 @@ export function TeamLoadCard() {
   const t = useTranslations('dashboard.team');
   const { data: team } = useGetMyWorkTeamQuery();
   const { data: people } = useGetPersonOptionsQuery();
-  if (!team || !people) return null;
+  if (!team || !people) return <Skeleton className="h-56 rounded-card" />;
 
   const names = new Map(people.people.map((person) => [person.id, person.name]));
   const rows: Row[] = team.members

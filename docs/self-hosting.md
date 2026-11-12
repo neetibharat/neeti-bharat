@@ -63,9 +63,19 @@ Leaving `MICROSOFT_TENANT_ID` as `common` lets any Microsoft account try to sign
 3. Add the authorised redirect URI `<WEB_ORIGIN>/api/auth/callback/google`.
 4. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-## 6. Storage for proof files (optional)
+## 6. Secrets for connections (optional)
 
-Proof can be a file. Files are kept in any S3-compatible service: AWS S3, MinIO, Cloudflare R2, DigitalOcean Spaces or Backblaze B2. Azure Blob is not S3-compatible and is not supported yet.
+Connections to outside systems, such as an Azure subscription, need credentials that DPDP Kit can read back. They are sealed with a key you hold. Set `SECRETS_ENCRYPTION_KEY` to 32 random bytes in base64:
+
+```
+openssl rand -base64 32
+```
+
+Without it, the Connections page says it cannot keep credentials. Keep the key safe and do not change it once connections exist: values sealed with the old key cannot be opened with a new one, and those connections would have to be added again. See [connections.md](connections.md).
+
+## 7. Storage for proof files (optional)
+
+Proof can be a file. Files are kept in any S3-compatible service (AWS S3, MinIO, Cloudflare R2, DigitalOcean Spaces or Backblaze B2) or in Azure Blob Storage. Set the S3 settings or the Azure ones, not both.
 
 | Variable                    | What it is                                                                                              |
 | --------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -101,6 +111,16 @@ STORAGE_FORCE_PATH_STYLE=true
 
 Those keys are for development. Docker Compose reads the same two variables, so change them in `.env` before first start for anything else.
 
+**Azure Blob Storage.** Create a storage account and a private container in it (public access off), then copy one of the account's access keys from the Azure portal (Security + networking, Access keys). Set the three together and leave `STORAGE_BUCKET` empty:
+
+```
+AZURE_STORAGE_ACCOUNT=<storage account name>
+AZURE_STORAGE_KEY=<an access key of that account>
+AZURE_STORAGE_CONTAINER=<container name>
+```
+
+The key stays on the server. People download through links signed with it that last 5 minutes, so the storage account's address (`https://<account>.blob.core.windows.net`) must be reachable from the browser, and its firewall must allow the people who download. `AZURE_STORAGE_ENDPOINT` is only for the Azurite emulator, for example `http://127.0.0.1:10000/devstoreaccount1`. If a key is ever shared by mistake, rotate it in the portal and update `.env`.
+
 **Cloudflare R2.** Create a bucket and an API token with object read and write, then:
 
 ```
@@ -115,7 +135,7 @@ Without `STORAGE_BUCKET`, the app runs as before: proof can be links and notes, 
 
 The same bucket holds the company logo, under `logo/`. An admin uploads it in Settings, General: a PNG, JPG or WebP up to 2 MB (an SVG is refused because it can carry scripts). A new logo replaces the old one, and the old picture is deleted from the bucket. `GET /v1/company-logo` returns a link that works for 5 minutes, or `null` when no logo is set or storage is off; `PUT` and `DELETE` are for admins only. Each change is written to the activity log.
 
-## 7. Check it works
+## 8. Check it works
 
 1. Restart the API after changing `.env`.
 2. Open `WEB_ORIGIN`. Google and Microsoft buttons show only when set up.

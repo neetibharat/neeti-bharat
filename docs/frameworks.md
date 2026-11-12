@@ -40,7 +40,7 @@ A company can follow more than the built-in framework: a customer's security rev
 A policy's text is a rich-text document, edited with [Tiptap](https://tiptap.dev) (built on ProseMirror). The API stores the editor's JSON and does not look inside it beyond checking its shape and size.
 
 - **Starting text.** Until someone edits a policy, its text is built from what the policy already says: the purpose is its summary, the requirements are the controls it covers, and a few settings are quoted from the company profile.
-- **Company answers.** A company answer is written as `{{key}}` in the text. Readers see it filled in from the profile, so one change in Company profile updates every policy that uses it. An answer that is not filled in yet is shown in orange with its name in square brackets. While editing, the tokens are visible, and "Insert company answer" in the toolbar adds one.
+- **Company answers.** A company answer is written as `{{key}}` in the text. Readers see it filled in from the profile, so one change in Company profile updates every policy that uses it. An answer that is not filled in yet is shown in orange with its name in square brackets. While editing, the tokens are visible, Typing `{{` in the text, or "Insert company answer" in the toolbar, opens a list of the answers to choose from, narrowed as you type. An answer the company added under Company profile (key `custom:` and a name, such as `custom:office-address`) is in the list and is filled in the same way.
 - **Editing.** Only a draft can be edited. To change an in-review or approved policy, send it back or reopen it first.
 
 ### Approval and versions

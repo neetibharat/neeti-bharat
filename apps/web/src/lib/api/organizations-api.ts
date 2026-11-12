@@ -1,4 +1,8 @@
-import type { CreateOrganizationRequest, OrganizationSummary } from '@dpdp-kit/shared';
+import type {
+  CloseOrganizationRequest,
+  CreateOrganizationRequest,
+  OrganizationSummary,
+} from '@dpdp-kit/shared';
 import { baseApi } from './base-api';
 
 export const organizationsApi = baseApi.injectEndpoints({
@@ -8,10 +12,18 @@ export const organizationsApi = baseApi.injectEndpoints({
     completeOnboarding: build.mutation<void, void>({
       query: () => ({ url: '/organizations/current/onboarding', method: 'POST' }),
     }),
+    // Closes the organisation being worked in. The caller reloads the app, which moves into another one.
+    closeOrganization: build.mutation<void, CloseOrganizationRequest>({
+      query: (body) => ({ url: '/organizations/current/close', method: 'POST', body }),
+    }),
     createOrganization: build.mutation<OrganizationSummary, CreateOrganizationRequest>({
       query: (body) => ({ url: '/organizations', method: 'POST', body }),
     }),
   }),
 });
 
-export const { useCompleteOnboardingMutation, useCreateOrganizationMutation } = organizationsApi;
+export const {
+  useCloseOrganizationMutation,
+  useCompleteOnboardingMutation,
+  useCreateOrganizationMutation,
+} = organizationsApi;

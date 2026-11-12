@@ -75,7 +75,7 @@ function OrganizationMenu({ organizations, activeId, onChoose }: OrganizationMen
   const t = useTranslations('organization.switcher');
 
   return (
-    <Popover className="w-64 rounded-control border border-line bg-surface p-1 shadow-popover">
+    <Popover className="w-64 rounded-control border border-line bg-surface p-1 shadow-popover entering:animate-pop-in exiting:animate-fade-out">
       <Menu onAction={onChoose} className="outline-none">
         {organizations.map((org) => (
           <MenuItem key={org.id} id={org.id} textValue={org.name} className={itemClass}>

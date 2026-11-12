@@ -1,11 +1,11 @@
 'use client';
 
 import {
+  customAnswerLabel,
   resolveDocument,
   tokenKeys,
   type PolicyDetailResponse,
   type PolicyDocument,
-  type ProfileKey,
 } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
@@ -15,6 +15,7 @@ import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
 import { Link } from '@/i18n/navigation';
 import { useSavePolicyContentMutation } from '@/lib/api/policy-edit-api';
+import { isProfileKey } from '@/lib/guards';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { PolicyEditor, PolicyReader } from './policy-editor';
 
@@ -25,7 +26,10 @@ export function useResolvedDocument(
 ): PolicyDocument {
   const tFields = useTranslations('profile.fields');
   return useMemo(
-    () => resolveDocument(document, values, (key: ProfileKey) => tFields(`${key}.label`)),
+    () =>
+      resolveDocument(document, values, (key) =>
+        isProfileKey(key) ? tFields(`${key}.label`) : customAnswerLabel(key),
+      ),
     [document, values, tFields],
   );
 }

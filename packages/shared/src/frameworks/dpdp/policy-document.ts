@@ -21,7 +21,17 @@ export interface PolicyDocument {
 /** The biggest policy text accepted, as JSON. Far beyond any real policy. */
 export const POLICY_DOCUMENT_MAX_BYTES = 200_000;
 
-const TOKEN = /\{\{(\w+)\}\}/g;
+// A built-in answer is a plain word; one the company added is `custom:` and a name with hyphens.
+const TOKEN = /\{\{([\w:-]+)\}\}/g;
+
+/** The name of an answer the company added, read from its key when no label is to hand: `custom:office-address` is "Office address". */
+export function customAnswerLabel(key: string): string {
+  const words = key
+    .replace(/^custom:/, '')
+    .replace(/-+/g, ' ')
+    .trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
 
 /** Short English names for the settings a policy quotes, used when the starting text is written. */
 export const SETTING_LABELS: Readonly<Partial<Record<ProfileKey, string>>> = {
@@ -91,10 +101,10 @@ export function starterDocument(template: PolicyTemplate): PolicyDocument {
 }
 
 /** Every company answer a document asks for. */
-export function tokenKeys(document: PolicyDocument): ProfileKey[] {
-  const keys = new Set<ProfileKey>();
+export function tokenKeys(document: PolicyDocument): string[] {
+  const keys = new Set<string>();
   const visit = (node: DocNode): void => {
-    for (const match of node.text?.matchAll(TOKEN) ?? []) keys.add(match[1] as ProfileKey);
+    for (const match of node.text?.matchAll(TOKEN) ?? []) keys.add(match[1]!);
     node.content?.forEach(visit);
   };
   document.content.forEach(visit);
@@ -104,9 +114,9 @@ export function tokenKeys(document: PolicyDocument): ProfileKey[] {
 /** One filled-in answer, or its name in square brackets and highlighted while it is not answered yet. */
 function answerPiece(
   node: DocNode,
-  key: ProfileKey,
+  key: string,
   values: Readonly<Record<string, string>>,
-  labelOf: (key: ProfileKey) => string,
+  labelOf: (key: string) => string,
 ): DocNode {
   const answer = values[key];
   const marks = [...(node.marks ?? []), ...(answer ? [] : [{ type: 'highlight' }])];
@@ -117,14 +127,14 @@ function answerPiece(
 function fillText(
   node: DocNode,
   values: Readonly<Record<string, string>>,
-  labelOf: (key: ProfileKey) => string,
+  labelOf: (key: string) => string,
 ): DocNode[] {
   const pieces: DocNode[] = [];
   let last = 0;
   const source = node.text ?? '';
   for (const match of source.matchAll(TOKEN)) {
     if (match.index > last) pieces.push({ ...node, text: source.slice(last, match.index) });
-    pieces.push(answerPiece(node, match[1] as ProfileKey, values, labelOf));
+    pieces.push(answerPiece(node, match[1]!, values, labelOf));
     last = match.index + match[0].length;
   }
   if (last < source.length) pieces.push({ ...node, text: source.slice(last) });
@@ -138,7 +148,7 @@ function fillText(
 export function resolveDocument(
   document: PolicyDocument,
   values: Readonly<Record<string, string>>,
-  labelOf: (key: ProfileKey) => string,
+  labelOf: (key: string) => string,
 ): PolicyDocument {
   const resolve = (node: DocNode): DocNode[] => {
     if (node.type === 'text') return node.text ? fillText(node, values, labelOf) : [node];

@@ -1,4 +1,7 @@
 {
+  "common": {
+    "loading": "Loading"
+  },
   "meta": {
     "title": "DPDP Kit",
     "description": "An open-source, self-hosted toolkit for complying with India's DPDP law."
@@ -66,7 +69,26 @@
       "or": "or",
       "continueWithGoogle": "Continue with Google",
       "continueWithMicrosoft": "Continue with Microsoft",
-      "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation."
+      "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation.",
+      "brand": {
+        "headline": "Privacy compliance your auditors can trust",
+        "subline": "Everything the DPDP Act asks of you in one place: a checklist, your policies, the proof, and a record of every change.",
+        "features": {
+          "checklist": {
+            "title": "Built on the DPDP Act",
+            "body": "A ready checklist of the Act's duties, each with an owner and the proof behind it."
+          },
+          "log": {
+            "title": "A record that cannot be rewritten",
+            "body": "Every change is chained to the one before it, so any tampering shows."
+          },
+          "selfHosted": {
+            "title": "Yours to host",
+            "body": "It runs on your own servers, so your data stays with you."
+          }
+        },
+        "footer": "For the Digital Personal Data Protection Act, 2023"
+      }
     },
     "signOut": "Sign out"
   },
@@ -101,7 +123,9 @@
     "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up.",
     "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed.",
     "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
-    "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use."
+    "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use.",
+    "CONNECTION_FAILED": "{reason, select, sign_in {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.} subscription {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.} other {Azure could not be reached. Try again in a moment.}}",
+    "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
   },
   "comingSoon": {
     "title": "On its way",
@@ -123,10 +147,6 @@
     "dataMap": {
       "title": "Data map",
       "description": "The list of personal data kept, why, for how long, and who receives it."
-    },
-    "connections": {
-      "title": "Connections",
-      "description": "Collects proof from cloud accounts and the code repository without manual uploads."
     },
     "noticeAndConsent": {
       "title": "Notice and consent",
@@ -231,10 +251,14 @@
       "WEBSITE_CHECKED": "Website checked",
       "LOGO_CHANGED": "Company logo changed",
       "LOGO_REMOVED": "Company logo removed",
+      "CONNECTION_ADDED": "Connection added",
+      "CONNECTION_REMOVED": "Connection removed",
+      "CONNECTION_CHECKED": "Connection checked",
       "API_KEY_CREATED": "API key created",
       "API_KEY_REVOKED": "API key revoked",
       "ORGANIZATION_CREATED": "Organisation created",
       "ONBOARDING_COMPLETED": "Set-up finished",
+      "ORGANIZATION_CLOSED": "Organisation closed",
       "READINESS_CHECKED": "Readiness check taken"
     },
     "actions": {
@@ -293,10 +317,14 @@
       "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed",
       "LOGO_CHANGED": "Changed the company logo to {fileName}",
       "LOGO_REMOVED": "Removed the company logo {fileName}",
+      "CONNECTION_ADDED": "Connected {name} ({provider})",
+      "CONNECTION_REMOVED": "Removed the connection {name}",
+      "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
       "API_KEY_CREATED": "Created the API key {name} with {role} access",
       "API_KEY_REVOKED": "Revoked the API key {name}",
       "ORGANIZATION_CREATED": "Created the organisation {name}",
       "ONBOARDING_COMPLETED": "Finished setting up the organisation",
+      "ORGANIZATION_CLOSED": "Closed the organisation {name}",
       "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100"
     },
     "emptyValue": "empty",
@@ -330,7 +358,7 @@
     },
     "addEntry": "Add entry",
     "addTitle": "Add your own entry",
-    "addDescription": "For anything a policy should mention that is not asked here, such as your office address.",
+    "addDescription": "For anything a policy should mention that is not asked here, such as your office address. Once added, it appears in the list when you type '{{' in a policy.",
     "labelLabel": "Question",
     "valueLabel": "Answer",
     "add": "Add",
@@ -349,6 +377,10 @@
         "website": {
           "hint": "Include https:// in the address."
         }
+      },
+      "identity": {
+        "title": "Organisation",
+        "description": "How your organisation appears on policies, the privacy notice and auditor reports."
       },
       "save": "Save"
     },
@@ -466,6 +498,8 @@
       "alt": "The company logo",
       "drop": "Drag a logo here",
       "choose": "Choose file",
+      "upload": "Upload logo",
+      "replace": "Replace logo",
       "uploading": "Uploading",
       "off": "File storage is not set up, so a logo cannot be uploaded. Ask whoever runs this app to set it up.",
       "remove": "Remove logo",
@@ -906,7 +940,7 @@
     "document": {
       "title": "Policy text",
       "description": "Your company’s answers are filled in for readers. Answers in orange are not filled in yet.",
-      "editingHint": "Company answers show as {{name}} while you edit, and are filled in for readers. Use the list on the right of the toolbar to add one.",
+      "editingHint": "Company answers show as '{{'name'}}' while you edit, and are filled in for readers. Type '{{' to pick one, or use the button on the right of the toolbar.",
       "edit": "Edit text",
       "save": "Save draft",
       "cancel": "Cancel",
@@ -1635,6 +1669,216 @@
       "body": "Send the key in the x-api-key header of each request. It needs no sign-in and no organisation header, because a key belongs to one organisation."
     }
   },
+  "connections": {
+    "title": "Connections",
+    "description": "Connect the systems that hold your data, such as an Azure subscription, and check how they are set up against what the DPDP Act expects. DPDP Kit only reads: it never changes anything in them.",
+    "secretsOff": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY, then reload this page.",
+    "provider": {
+      "azure": "Microsoft Azure and Entra ID"
+    },
+    "card": {
+      "tenant": "Tenant",
+      "subscription": "Subscription",
+      "neverChecked": "Not checked yet.",
+      "lastChecked": "Last checked {when}",
+      "passed": "{count} passed",
+      "warned": "{count} to review",
+      "failed": "{count} failed",
+      "run": "Run checks",
+      "running": "Checking",
+      "wait": "Reading your subscription. This can take up to half a minute."
+    },
+    "status": {
+      "pass": "Passed",
+      "warn": "Review",
+      "fail": "Failed",
+      "skipped": "Not checked"
+    },
+    "results": {
+      "checked": "Checked {when} by {name}",
+      "passed": "Passed",
+      "warned": "To review",
+      "failed": "Failed",
+      "skipped": "Not checked"
+    },
+    "groups": {
+      "needsWork": "{count} to look at",
+      "identity": {
+        "title": "Sign-in and access",
+        "about": "Who can get in, and whether a stolen password is enough. The Act asks for reasonable security safeguards."
+      },
+      "data": {
+        "title": "Where the data is kept",
+        "about": "Storage, databases and key vaults: how they are protected, and where they are."
+      },
+      "network": {
+        "title": "Network",
+        "about": "What can be reached from the internet."
+      }
+    },
+    "skipped": {
+      "none": "Nothing of this kind was found, so there was nothing to check.",
+      "access": "The app registration is not allowed to read this. Give it the Reader role, or the Microsoft Graph permissions in the setup steps.",
+      "error": "This check could not finish. Try again in a moment."
+    },
+    "checks": {
+      "entra_mfa_registered": {
+        "name": "Everyone has a second sign-in step",
+        "about": "Members of your organisation have registered multi-factor authentication.",
+        "pass": "All {total} members have registered a second sign-in step.",
+        "problem": "{count} of {total} members have not registered a second sign-in step. Find them in Entra ID, under Authentication methods."
+      },
+      "entra_mfa_enforced": {
+        "name": "A second step is required at sign-in",
+        "about": "Security defaults or a conditional access policy makes everyone use multi-factor authentication.",
+        "pass": "Multi-factor authentication is required for everyone.",
+        "problem": "Nothing requires everyone to use multi-factor authentication. Turn on security defaults, or add a conditional access policy for all users."
+      },
+      "entra_admin_count": {
+        "name": "A sensible number of global administrators",
+        "about": "Two to five people hold the most powerful role.",
+        "pass": "{count} people are global administrators.",
+        "problem": "{count, plural, one {# person is} other {# people are}} global administrators. Aim for two to five: one leaves a single point of failure, and many is a lot of power."
+      },
+      "storage_secure_transfer": {
+        "name": "Storage requires HTTPS and TLS 1.2",
+        "about": "Storage accounts refuse plain HTTP and old versions of TLS.",
+        "pass": "All {total} storage accounts require HTTPS and TLS 1.2 or newer.",
+        "problem": "{count} of {total} storage accounts allow plain HTTP or old TLS: {names}."
+      },
+      "storage_public_access": {
+        "name": "Storage has no public access",
+        "about": "Nobody who only has an address can read a container.",
+        "pass": "None of the {total} storage accounts allow public access to containers.",
+        "problem": "{count} of {total} storage accounts allow public access to containers: {names}."
+      },
+      "keyvault_protection": {
+        "name": "Key vaults can recover deleted keys",
+        "about": "Soft delete and purge protection are on, so a key cannot be lost for good by mistake.",
+        "pass": "All {total} key vaults have soft delete and purge protection.",
+        "problem": "{count} of {total} key vaults lack soft delete or purge protection: {names}."
+      },
+      "sql_tls": {
+        "name": "SQL servers require TLS 1.2",
+        "about": "Database connections use TLS 1.2 or newer.",
+        "pass": "All {total} SQL servers require TLS 1.2 or newer.",
+        "problem": "{count} of {total} SQL servers accept older TLS: {names}."
+      },
+      "sql_public_access": {
+        "name": "SQL servers are not open to the internet",
+        "about": "Public network access is off, or kept in check by firewall rules.",
+        "pass": "None of the {total} SQL servers allow public network access.",
+        "problem": "{count} of {total} SQL servers allow public network access: {names}. Check their firewall rules."
+      },
+      "sql_auditing": {
+        "name": "SQL auditing is on",
+        "about": "Access to the data is recorded, which helps when a breach is investigated.",
+        "pass": "Auditing is on for all {total} SQL servers.",
+        "problem": "Auditing is off for {count} of {total} SQL servers: {names}."
+      },
+      "data_in_india": {
+        "name": "Data stores are in India",
+        "about": "Where your storage, databases and key vaults are. The Act allows data to go abroad unless a country is restricted, but you should know where it is.",
+        "pass": "All {total} data stores are in India.",
+        "problem": "{count} of {total} data stores are outside India: {names}."
+      },
+      "nsg_open_ports": {
+        "name": "No remote login or database port is open to the internet",
+        "about": "Network security groups do not let anyone reach SSH, remote desktop or database ports.",
+        "pass": "None of the {total} network security groups opens these ports to the internet.",
+        "problem": "{count} of {total} network security groups open a remote login or database port to the internet: {names}."
+      }
+    },
+    "history": {
+      "title": "Earlier checks",
+      "checked": "Checked",
+      "by": "By",
+      "result": "Result",
+      "view": "View",
+      "passed": "{count} passed",
+      "warned": "{count} to review",
+      "failed": "{count} failed"
+    },
+    "form": {
+      "title": "Connect Azure",
+      "description": "DPDP Kit signs in with an app registration that can only read. The details are tried first, and kept encrypted.",
+      "name": "Name",
+      "namePlaceholder": "Production tenant",
+      "fields": {
+        "tenantId": "Tenant ID",
+        "clientId": "Client ID (application ID)",
+        "subscriptionId": "Subscription ID",
+        "clientSecret": "Client secret"
+      },
+      "wait": "Trying the details with Azure. This can take a few seconds.",
+      "cancel": "Cancel",
+      "submit": "Connect",
+      "help": "How to set this up in Azure"
+    },
+    "setup": {
+      "title": "How to set this up in Azure",
+      "intro": "You need an app registration that can only read. This takes about five minutes in the Azure portal.",
+      "steps": {
+        "register": "In Microsoft Entra ID, open App registrations and choose New registration. Name it DPDP Kit and keep it single tenant.",
+        "ids": "On its Overview page, copy the Application (client) ID and the Directory (tenant) ID.",
+        "secret": "Under Certificates and secrets, make a new client secret and copy its value now. It is shown only once.",
+        "reader": "On your subscription, open Access control (IAM) and add the Reader role for the app. Copy the Subscription ID from the subscription’s Overview.",
+        "graph": "On the app, open API permissions, add Microsoft Graph application permissions Reports.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
+      },
+      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run.",
+      "back": "Back to the form"
+    },
+    "remove": {
+      "action": "Remove {name}",
+      "title": "Remove {name}?",
+      "body": "The credentials are forgotten and the connection stops being checked. Its earlier results are kept. To check it again, connect it again.",
+      "confirm": "Remove connection"
+    },
+    "catalog": {
+      "title": "Available connections",
+      "description": "Choose a system to connect. DPDP Kit only reads from it, and never changes anything.",
+      "setUp": "Set up",
+      "addAnother": "Add another",
+      "adminOnly": "An admin sets this up.",
+      "soon": "Coming soon",
+      "connected": "{count, plural, one {# connection} other {# connections}}",
+      "checks": "What it checks",
+      "more": "+{count} more",
+      "providers": {
+        "azure": {
+          "name": "Microsoft Azure",
+          "category": "Cloud and identity",
+          "about": "Read-only checks of sign-in, storage, databases and the network in Azure and Entra ID."
+        },
+        "google_workspace": {
+          "name": "Google Workspace",
+          "category": "Identity and access",
+          "about": "Check sign-in security and keep your list of people in step with who has an account."
+        },
+        "aws": {
+          "name": "Amazon Web Services",
+          "category": "Cloud",
+          "about": "Read-only checks of storage, databases and logging across your AWS accounts."
+        },
+        "github": {
+          "name": "GitHub",
+          "category": "Development",
+          "about": "Check code review and access settings on the repositories that hold your code."
+        }
+      },
+      "tags": {
+        "mfa": "Multi-factor sign-in",
+        "encryption": "Encryption and TLS",
+        "publicAccess": "No public access",
+        "dataLocation": "Data location",
+        "network": "Network exposure",
+        "logging": "Audit logging",
+        "people": "People and leavers",
+        "codeReview": "Code review",
+        "access": "Access control"
+      }
+    }
+  },
   "websiteCheck": {
     "title": "Website check",
     "description": "Visit your public website the way a visitor does and check what DPDP expects to see. It reads the page the server sends, so a cookie banner or tracker added by a script is not seen.",
@@ -1774,6 +2018,17 @@
       "placeholder": "Acme Pvt Ltd",
       "submit": "Create organisation",
       "cancel": "Cancel"
+    },
+    "close": {
+      "zone": "Danger zone",
+      "title": "Close this organisation",
+      "description": "Nobody will be able to open it, and its API keys stop working. Nothing is erased: its records and activity log are kept. You can still make a new organisation afterwards.",
+      "action": "Close organisation",
+      "dialogTitle": "Close {name}?",
+      "body": "This hides the organisation from everyone in it. It cannot be reopened from the app.",
+      "label": "Type {name} to confirm",
+      "cancel": "Cancel",
+      "confirm": "Close organisation"
     }
   },
   "readiness": {

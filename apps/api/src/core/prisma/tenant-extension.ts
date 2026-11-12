@@ -22,6 +22,8 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   'WebsiteCheck',
   'ReadinessCheck',
   'CompanyLogo',
+  'Connection',
+  'ConnectionRun',
 ]);
 
 /** Reads, changes and deletes that find rows by a filter. */

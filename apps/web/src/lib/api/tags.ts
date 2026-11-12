@@ -13,6 +13,7 @@ export const TAG_TYPES = [
   'CompanyLogo',
   'Readiness',
   'ApiKey',
+  'Connection',
 ] as const;
 
 /**
@@ -52,4 +53,6 @@ export const CHANGES = {
   readiness: ['Readiness', 'Activity'],
   // Keys show on the API keys page only.
   apiKey: ['ApiKey', 'Activity'],
+  // Connections and their runs show on the Connections page only.
+  connection: ['Connection', 'Activity'],
 } as const;

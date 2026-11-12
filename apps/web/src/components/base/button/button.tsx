@@ -1,8 +1,9 @@
 'use client';
 
-import { IconLoader2, type Icon } from '@tabler/icons-react';
+import type { Icon } from '@tabler/icons-react';
 import type { ReactNode } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
+import { Spinner } from '@/components/base/spinner/spinner';
 import { cx } from '@/lib/utils/cx';
 
 type Size = 'sm' | 'md' | 'lg';
@@ -39,7 +40,8 @@ const colors: Record<Color, string> = {
 function buttonClasses({ size = 'md', color = 'primary', isIconOnly, className }: ButtonProps) {
   return cx(
     'inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full font-semibold whitespace-nowrap',
-    'transition-colors focus-visible:focus-ring',
+    'transition-[color,background-color,box-shadow,opacity,transform] duration-150 active:scale-[0.97] motion-reduce:active:scale-100',
+    'focus-visible:focus-ring',
     'disabled:cursor-not-allowed disabled:opacity-60',
     isIconOnly ? iconOnlySizes[size] : sizes[size],
     colors[color],
@@ -48,9 +50,8 @@ function buttonClasses({ size = 'md', color = 'primary', isIconOnly, className }
 }
 
 function LeadingIcon({ icon: LeadIcon, isLoading }: { icon?: Icon; isLoading: boolean }) {
-  const ShownIcon = isLoading ? IconLoader2 : LeadIcon;
-  if (!ShownIcon) return null;
-  return <ShownIcon className={cx('size-4 shrink-0', isLoading && 'animate-spin')} />;
+  if (isLoading) return <Spinner />;
+  return LeadIcon ? <LeadIcon className="size-4 shrink-0" /> : null;
 }
 
 export function Button(props: ButtonProps) {

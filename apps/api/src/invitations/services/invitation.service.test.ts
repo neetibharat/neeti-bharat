@@ -24,6 +24,7 @@ function build({
   const invitations = {
     create: vi.fn().mockImplementation(async (data) => ({ id: 'inv-1', ...data })),
     findOpenByEmail: vi.fn().mockResolvedValue(openInvitation ? { id: 'old' } : null),
+    organizationName: vi.fn().mockResolvedValue('Acme Pvt Ltd'),
     revoke: vi.fn().mockResolvedValue(revoked),
     findLatestPendingByEmail: vi
       .fn()
@@ -56,6 +57,19 @@ describe('InvitationService.create', () => {
     const [data] = vi.mocked(invitations.create).mock.calls[0] as [{ expiresAt: Date }];
     expect(data.expiresAt.getTime()).toBeGreaterThan(Date.now());
     expect(mail.send).toHaveBeenCalledWith(expect.objectContaining({ to: 'a@company.in' }));
+  });
+
+  it('says in the email which organisation it is, who invited the person, and in which role', async () => {
+    const { service, mail } = build({});
+    await service.create({ email: 'a@company.in', role: 'auditor' }, actor);
+    const [sent] = vi.mocked(mail.send).mock.calls[0] as [
+      { subject: string; text: string; html: string },
+    ];
+    expect(sent.subject).toContain('Acme Pvt Ltd');
+    for (const body of [sent.text, sent.html]) {
+      expect(body).toContain('Asha');
+      expect(body).toContain('read-only');
+    }
   });
 
   it('records who invited whom', async () => {

@@ -2,6 +2,9 @@ import {
   ACCESS_LEVELS,
   APP_ROLES,
   ACTIVITY_ACTIONS,
+  AZURE_CHECK_GROUPS,
+  AZURE_CHECK_IDS,
+  SKIPPED_REASONS,
   EXPORT_DATASETS,
   READINESS_ANSWERS,
   READINESS_BANDS,
@@ -54,6 +57,22 @@ describe('message catalogs', () => {
     const { actions, actionNames } = catalogs.en.activity as { actions: Tree; actionNames: Tree };
     expect(Object.keys(actions).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
     expect(Object.keys(actionNames).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
+  });
+
+  it('words every Azure check: its name, what it looks at, a pass and a problem', () => {
+    const { checks, groups, skipped } = catalogs.en.connections as {
+      checks: Record<string, Tree>;
+      groups: Tree;
+      skipped: Tree;
+    };
+    expect(Object.keys(checks).sort()).toEqual([...AZURE_CHECK_IDS].sort());
+    for (const id of AZURE_CHECK_IDS) {
+      expect(Object.keys(checks[id]!).sort(), id).toEqual(['about', 'name', 'pass', 'problem']);
+    }
+    for (const group of AZURE_CHECK_GROUPS) {
+      expect(Object.keys(groups[group.id] as Tree).sort(), group.id).toEqual(['about', 'title']);
+    }
+    expect(Object.keys(skipped).sort()).toEqual([...SKIPPED_REASONS].sort());
   });
 
   it('words every download on the exports page', () => {

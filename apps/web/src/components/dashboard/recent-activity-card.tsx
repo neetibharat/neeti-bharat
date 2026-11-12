@@ -2,6 +2,7 @@
 
 import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
+import { Skeleton } from '@/components/base/skeleton/skeleton';
 import { useActivitySentence } from '@/components/activity/use-activity-sentence';
 import { Link } from '@/i18n/navigation';
 import { useListActivityQuery } from '@/lib/api/activity-api';
@@ -14,7 +15,7 @@ export function RecentActivityCard() {
   const format = useFormatter();
   const sentence = useActivitySentence();
   const { data } = useListActivityQuery({ page: 1, limit: MAX_ROWS });
-  if (!data) return null;
+  if (!data) return <Skeleton className="h-56 rounded-card" />;
   const events = data.items;
 
   return (

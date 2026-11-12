@@ -107,7 +107,7 @@ export const NAV_AREAS: NavArea[] = [
       {
         items: [
           { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
-          { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'soon' },
+          { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'live' },
           { id: 'websiteCheck', href: '/website-check', icon: IconWorldSearch, status: 'live' },
         ],
       },

@@ -50,7 +50,7 @@ export function TableRow<T extends object>(props: RowProps<T>) {
     <AriaRow
       {...props}
       className={cx(
-        'border-t border-line outline-none data-hovered:bg-surface-muted data-selected:bg-brand-soft data-focus-visible:focus-ring',
+        'border-t border-line outline-none transition-colors data-hovered:bg-surface-muted data-selected:bg-brand-soft data-focus-visible:focus-ring',
         props.className as string | undefined,
       )}
     />

@@ -13,7 +13,7 @@ export interface DownloadOptions {
 
 /**
  * Where uploaded files are kept. Services depend on this, never on a provider's SDK, so another driver
- * (for example Azure Blob) can be added without touching them. Objects are private: they are only reachable
+ * (S3-compatible services and Azure Blob today) can be added without touching them. Objects are private: they are only reachable
  * through a short-lived link from `signedDownloadUrl`.
  */
 export abstract class FileStorage {

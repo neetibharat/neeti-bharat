@@ -3,6 +3,7 @@ export * from './api-keys.js';
 export * from './auth.js';
 export * from './breaches.js';
 export * from './company-logo.js';
+export * from './connections.js';
 export * from './duration.js';
 export * from './error-codes.js';
 export * from './exports.js';

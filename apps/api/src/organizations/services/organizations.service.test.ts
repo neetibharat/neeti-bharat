@@ -7,12 +7,14 @@ import { OrganizationsService } from './organizations.service';
 
 const actor = { id: 'u1', label: 'Asha' };
 
-function build(changed = true, open: unknown[] = []) {
+function build(changed = true, open: unknown[] = [], name: string | null = 'Acme') {
   const memberships = {
     findOpen: vi.fn().mockResolvedValue(open),
   } as unknown as MembershipRepository;
   const organizations = {
     markOnboarded: vi.fn().mockResolvedValue(changed),
+    findName: vi.fn().mockResolvedValue(name),
+    close: vi.fn().mockResolvedValue(undefined),
   } as unknown as OrganizationRepository;
   const activity = { record: vi.fn().mockResolvedValue(undefined) } as unknown as ActivityService;
   return {
@@ -53,6 +55,30 @@ describe('OrganizationsService.completeOnboarding', () => {
   it('writes nothing when set-up was already over', async () => {
     const { service, activity } = build(false);
     await runInOrganization('o1', () => service.completeOnboarding(actor));
+    expect(activity.record).not.toHaveBeenCalled();
+  });
+});
+
+describe('OrganizationsService.close', () => {
+  it('closes the organisation when its name is typed, and writes it to the log first', async () => {
+    const { service, organizations, activity } = build();
+    await runInOrganization('o1', () => service.close('  Acme ', actor));
+    expect(organizations.close).toHaveBeenCalledWith('o1', expect.any(Date));
+    expect(activity.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'ORGANIZATION_CLOSED',
+        subject: { type: 'organization', id: 'o1' },
+        details: { name: 'Acme' },
+      }),
+    );
+  });
+
+  it.each(['acme', 'Acme Pvt', ''])('refuses when the name typed is %j', async (typed) => {
+    const { service, organizations, activity } = build();
+    await expect(runInOrganization('o1', () => service.close(typed, actor))).rejects.toMatchObject({
+      code: 'CONFIRMATION_REQUIRED',
+    });
+    expect(organizations.close).not.toHaveBeenCalled();
     expect(activity.record).not.toHaveBeenCalled();
   });
 });

@@ -26,7 +26,11 @@ export function SocialButtons({ providers }: { providers: AuthProvidersResponse 
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-center text-label text-fg-subtle">{t('or')}</p>
+      <div className="my-1 flex items-center gap-3 text-label text-fg-subtle" role="separator">
+        <span className="h-px flex-1 bg-line" />
+        {t('or')}
+        <span className="h-px flex-1 bg-line" />
+      </div>
       {enabled.map(({ id, icon, label }) => (
         <Button
           key={id}

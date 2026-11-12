@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isValidSecretKey } from '../secrets/secret-box';
 
 /** A blank line in .env means "not set". */
 const optionalText = z.preprocess(
@@ -28,9 +29,25 @@ const storageFields = {
   STORAGE_ENDPOINT: z.preprocess((v) => (v === '' ? undefined : v), z.url().optional()),
   STORAGE_ACCESS_KEY_ID: optionalText,
   STORAGE_SECRET_ACCESS_KEY: optionalText,
+  // Azure Blob Storage, instead of the S3 settings above. The three are set together.
+  AZURE_STORAGE_ACCOUNT: optionalText,
+  AZURE_STORAGE_KEY: optionalText,
+  AZURE_STORAGE_CONTAINER: optionalText,
+  AZURE_STORAGE_ENDPOINT: z.preprocess((v) => (v === '' ? undefined : v), z.url().optional()),
   STORAGE_FORCE_PATH_STYLE: z
     .preprocess((v) => (v === '' ? undefined : v), z.stringbool())
     .default(false),
+};
+
+/** The key that seals secrets the app must read back, such as the credentials of a connection. */
+const secretsFields = {
+  SECRETS_ENCRYPTION_KEY: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z
+      .string()
+      .refine(isValidSecretKey, 'Use 32 random bytes in base64: openssl rand -base64 32')
+      .optional(),
+  ),
 };
 
 const envSchema = z
@@ -44,6 +61,7 @@ const envSchema = z
     ...smtpFields,
     ...oauthFields,
     ...storageFields,
+    ...secretsFields,
   })
   .refine((env) => env.NODE_ENV !== 'production' || Boolean(env.SMTP_HOST), {
     message: 'SMTP_HOST is required in production, so sign-in links can be emailed',
@@ -66,6 +84,25 @@ const envSchema = z
     message:
       'Set both STORAGE_ACCESS_KEY_ID and STORAGE_SECRET_ACCESS_KEY, or neither to use the default AWS credentials',
     path: ['STORAGE_ACCESS_KEY_ID'],
+  })
+  .refine(
+    (env) => {
+      const set = [
+        env.AZURE_STORAGE_ACCOUNT,
+        env.AZURE_STORAGE_KEY,
+        env.AZURE_STORAGE_CONTAINER,
+      ].filter(Boolean).length;
+      return set === 0 || set === 3;
+    },
+    {
+      message:
+        'Set AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_KEY and AZURE_STORAGE_CONTAINER together, or none of them',
+      path: ['AZURE_STORAGE_ACCOUNT'],
+    },
+  )
+  .refine((env) => !(env.AZURE_STORAGE_ACCOUNT && env.STORAGE_BUCKET), {
+    message: 'Use either Azure Blob Storage (AZURE_STORAGE_*) or S3 (STORAGE_BUCKET), not both',
+    path: ['AZURE_STORAGE_ACCOUNT'],
   })
   .refine((env) => !env.SMTP_HOST || Boolean(env.SMTP_FROM), {
     message: 'SMTP_FROM is required when SMTP_HOST is set',
