@@ -1,11 +1,11 @@
 'use client';
 
-import type { MeResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { Avatar } from '@/components/base/avatar/avatar';
+import type { SessionUser } from '@/lib/session-user';
 
-export function UserFooter({ user }: { user: MeResponse }) {
+export function UserFooter({ user }: { user: SessionUser }) {
   const t = useTranslations('roles');
   const displayName = user.name || user.email;
 

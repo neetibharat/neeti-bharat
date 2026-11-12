@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { PolicyDocument } from '@dpdp-kit/shared';
+import { orgKey, orgOwned } from '../../core/org/keys';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Policy, PolicyApproval, PolicyStatus } from '../../generated/prisma/client';
 
@@ -43,7 +45,7 @@ export class PolicyRepository {
 
   findOne(id: string): Promise<PolicyWithDetail | null> {
     return this.prisma.db.policy.findUnique({
-      where: { id },
+      where: orgKey(id),
       include: {
         ...SUMMARY,
         controls: {
@@ -59,13 +61,19 @@ export class PolicyRepository {
 
   findVersion(id: string, version: number): Promise<PolicyApproval | null> {
     return this.prisma.db.policyApproval.findUnique({
-      where: { policyId_version: { policyId: id, version } },
+      where: {
+        organizationId_policyId_version: {
+          organizationId: currentOrganizationId(),
+          policyId: id,
+          version,
+        },
+      },
     });
   }
 
   saveContent(id: string, content: PolicyDocument, editedByName: string): Promise<Policy> {
     return this.prisma.db.policy.update({
-      where: { id },
+      where: orgKey(id),
       data: {
         content: content as object,
         contentEditedAt: new Date(),
@@ -75,7 +83,7 @@ export class PolicyRepository {
   }
 
   setApprover(id: string, approverId: string | null): Promise<Policy> {
-    return this.prisma.db.policy.update({ where: { id }, data: { approverId } });
+    return this.prisma.db.policy.update({ where: orgKey(id), data: { approverId } });
   }
 
   /**
@@ -108,8 +116,8 @@ export class PolicyRepository {
   ): Promise<number | null> {
     return this.prisma.transact(async (tx) => {
       // Two approvals of one policy take turns, so each gets its own version number.
-      await tx.$queryRaw`SELECT id FROM policies WHERE id = ${id} FOR UPDATE`;
-      const current = await tx.policy.findUnique({ where: { id }, select: { status: true } });
+      await tx.$queryRaw`SELECT id FROM policies WHERE id = ${id} AND "organizationId" = ${currentOrganizationId()} FOR UPDATE`;
+      const current = await tx.policy.findUnique({ where: orgKey(id), select: { status: true } });
       if (current?.status !== from) return null;
       const last = await tx.policyApproval.aggregate({
         where: { policyId: id },
@@ -118,11 +126,12 @@ export class PolicyRepository {
       const version = (last._max.version ?? 0) + 1;
       const approvedAt = new Date();
       await tx.policy.update({
-        where: { id },
+        where: orgKey(id),
         data: { status: 'approved', approvedAt, approvedByName: approver.name, changelog: null },
       });
       await tx.policyApproval.create({
         data: {
+          ...orgOwned(),
           policyId: id,
           approvedAt,
           approvedById: approver.id,

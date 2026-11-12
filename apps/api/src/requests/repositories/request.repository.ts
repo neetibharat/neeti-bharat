@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import type { RequestSource, RequestStatus, RequestType, TaskOutcome } from '@dpdp-kit/shared';
+import { orgOwned } from '../../core/org/keys';
+import { currentOrganizationId } from '../../core/org/org-context';
+import { OrganizationRepository } from '../../organizations/repositories/organization.repository';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { listOrder, listWhere, type RequestListQuery } from '../utils/request-list';
 import type { RequestBoardQuery } from '../utils/request-board';
@@ -43,7 +46,10 @@ const OPEN = { status: { not: 'done' } } as const;
 
 @Injectable()
 export class RequestRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly organizations: OrganizationRepository,
+  ) {}
 
   /** One page of the requests a tab, type and search match, with only what the list shows. */
   findPage(query: RequestListQuery): Promise<RequestSummaryRow[]> {
@@ -124,8 +130,14 @@ export class RequestRepository {
     return this.prisma.db.dataRequest.findUnique({ where: { id }, include: fullInclude });
   }
 
-  create(data: NewRequest): Promise<RequestRow> {
-    return this.prisma.db.dataRequest.create({ data, include: fullInclude });
+  /** Logs the request under the organisation's next REQ number. */
+  async create(data: NewRequest): Promise<RequestRow> {
+    const organizationId = currentOrganizationId();
+    const number = await this.organizations.nextRequestNumber(organizationId);
+    return this.prisma.db.dataRequest.create({
+      data: { ...data, organizationId, number },
+      include: fullInclude,
+    });
   }
 
   async update(id: string, data: RequestDetails): Promise<void> {
@@ -160,7 +172,9 @@ export class RequestRepository {
   }
 
   async addTask(requestId: string, system: string): Promise<void> {
-    await this.prisma.db.dataRequestTask.create({ data: { requestId, system } });
+    await this.prisma.db.dataRequestTask.create({
+      data: { requestId, system, ...orgOwned() },
+    });
   }
 
   async updateTask(

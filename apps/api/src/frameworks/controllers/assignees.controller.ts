@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { AssigneesResponse } from '@dpdp-kit/shared';
-import { Roles } from '@thallesp/nestjs-better-auth';
+import { Roles } from '../../core/org/roles.decorator';
 import { ControlEditService } from '../services/control-edit.service';
 
 @ApiTags('Frameworks')

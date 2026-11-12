@@ -6,14 +6,14 @@ Everything is set with environment variables in one `.env` file at the repo root
 
 ## 1. Required settings
 
-| Variable              | What it is                                                                                     |
-| --------------------- | ---------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`        | PostgreSQL connection string                                                                   |
-| `WEB_ORIGIN`          | The address people open in the browser, for example `https://dpdp.yourcompany.in`              |
-| `API_PORT`            | The port the API listens on (default `3201`)                                                   |
-| `API_URL`             | Where the web server reaches the API (default `http://localhost:3201`)                         |
-| `INITIAL_ADMIN_EMAIL` | The only email that may claim a new install and become its first admin. Required in production |
-| `BETTER_AUTH_SECRET`  | A random string of at least 32 characters. Make one with `openssl rand -base64 32`             |
+| Variable              | What it is                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`        | PostgreSQL connection string                                                                        |
+| `WEB_ORIGIN`          | The address people open in the browser, for example `https://dpdp.yourcompany.in`                   |
+| `API_PORT`            | The port the API listens on (default `3201`)                                                        |
+| `API_URL`             | Where the web server reaches the API (default `http://localhost:3201`)                              |
+| `INITIAL_ADMIN_EMAIL` | The only email that may claim a new install and make its first organisation. Required in production |
+| `BETTER_AUTH_SECRET`  | A random string of at least 32 characters. Make one with `openssl rand -base64 32`                  |
 
 Keep `BETTER_AUTH_SECRET` private and never change it later, or everyone is signed out.
 
@@ -33,8 +33,8 @@ With `SMTP_HOST` empty, links are printed to the API log. That works for develop
 
 ## 3. Who can sign in
 
-- The first person to sign in becomes the **admin**. Set `INITIAL_ADMIN_EMAIL` to the address that may do this: it is required in production, so nobody else can claim a new install. Without it (development only), anyone can.
-- After that, only people an admin has given a login can sign in: add them under Settings, People, which sends the invitation. An invitation is valid for 7 days. **Resend invitation** on the person's row sends a fresh link for another 7 days, also after the first one has run out.
+- The first person to sign in makes the first organisation and becomes its **admin**. Set `INITIAL_ADMIN_EMAIL` to the address that may do this: it is required in production, so nobody else can claim a new install. Without it (development only), anyone can.
+- After that, only people an admin has given a login can sign in: add them under Settings, People, which sends the invitation. See [organisations](organizations.md) for how one install holds several. An invitation is valid for 7 days. **Resend invitation** on the person's row sends a fresh link for another 7 days, also after the first one has run out.
 - Sign-in methods: an email link (always on), plus Google and Microsoft if you set them up below.
 
 ## 4. Microsoft sign-in (optional)
@@ -113,10 +113,12 @@ STORAGE_SECRET_ACCESS_KEY=...
 
 Without `STORAGE_BUCKET`, the app runs as before: proof can be links and notes, the drop-zone shows "File storage is not set up" and stays off, and an upload sent to the API directly is refused with `STORAGE_NOT_CONFIGURED` (503). Setting only one of the two keys stops the API from starting.
 
+The same bucket holds the company logo, under `logo/`. An admin uploads it in Settings, General: a PNG, JPG or WebP up to 2 MB (an SVG is refused because it can carry scripts). A new logo replaces the old one, and the old picture is deleted from the bucket. `GET /v1/company-logo` returns a link that works for 5 minutes, or `null` when no logo is set or storage is off; `PUT` and `DELETE` are for admins only. Each change is written to the activity log.
+
 ## 7. Check it works
 
 1. Restart the API after changing `.env`.
 2. Open `WEB_ORIGIN`. Google and Microsoft buttons show only when set up.
-3. Sign in. The first person becomes the admin, then invite everyone else.
+3. Sign in. The first person makes the organisation and becomes its admin, then invites everyone else.
 
 If a provider says the redirect does not match, the redirect URI in its console must be exactly `<WEB_ORIGIN>/api/auth/callback/<provider>`, including `http` or `https`.

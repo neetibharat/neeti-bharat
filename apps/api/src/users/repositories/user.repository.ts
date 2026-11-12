@@ -1,67 +1,117 @@
 import { Injectable } from '@nestjs/common';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { AppRole } from '../../generated/prisma/client';
 
-/** The parts of an account the rest of the app needs. */
+/** Someone with an account, as they are in the organisation the request works in. */
 export interface Account {
   id: string;
   email: string;
   role: AppRole;
+  /** Set when they have left this organisation. */
   disabledAt: Date | null;
 }
 
-const ACCOUNT = { id: true, email: true, role: true, disabledAt: true } as const;
+interface MemberRow {
+  role: AppRole;
+  disabledAt: Date | null;
+  user: { id: string; email: string };
+}
 
+const MEMBER = {
+  role: true,
+  disabledAt: true,
+  user: { select: { id: true, email: true } },
+} as const;
+
+const toAccount = (row: MemberRow): Account => ({
+  id: row.user.id,
+  email: row.user.email,
+  role: row.role,
+  disabledAt: row.disabledAt,
+});
+
+/**
+ * Accounts belong to the whole install, but what someone may do belongs to an organisation. Everything here that
+ * speaks of a role, or of being switched off, is about the organisation the request works in.
+ */
 @Injectable()
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  count(): Promise<number> {
+  /** Every account in the install, in every organisation. */
+  countAll(): Promise<number> {
     return this.prisma.db.user.count();
   }
 
-  async existsByEmail(email: string): Promise<boolean> {
-    return (await this.prisma.db.user.count({ where: { email } })) > 0;
+  findAnywhere(email: string): Promise<{ id: string; email: string } | null> {
+    return this.prisma.db.user.findUnique({ where: { email }, select: { id: true, email: true } });
   }
 
-  findByEmail(email: string): Promise<Account | null> {
-    return this.prisma.db.user.findUnique({ where: { email }, select: ACCOUNT });
-  }
-
-  findByEmails(emails: string[]): Promise<Account[]> {
-    return this.prisma.db.user.findMany({ where: { email: { in: emails } }, select: ACCOUNT });
-  }
-
-  async isDisabled(id: string): Promise<boolean> {
-    const user = await this.prisma.db.user.findUnique({
+  findById(id: string): Promise<{ id: string; email: string; name: string } | null> {
+    return this.prisma.db.user.findUnique({
       where: { id },
-      select: { disabledAt: true },
+      select: { id: true, email: true, name: true },
     });
-    return Boolean(user?.disabledAt);
   }
 
-  /** Admins who can still sign in. The last one must never be removed or demoted. */
+  async existsByEmail(email: string): Promise<boolean> {
+    return (await this.findByEmail(email)) !== null;
+  }
+
+  async findByEmail(email: string): Promise<Account | null> {
+    const row = await this.prisma.db.membership.findFirst({
+      where: { organizationId: currentOrganizationId(), user: { email } },
+      select: MEMBER,
+    });
+    return row && toAccount(row);
+  }
+
+  async findByEmails(emails: string[]): Promise<Account[]> {
+    const rows = await this.prisma.db.membership.findMany({
+      where: { organizationId: currentOrganizationId(), user: { email: { in: emails } } },
+      select: MEMBER,
+    });
+    return rows.map(toAccount);
+  }
+
+  /** How many members can open this organisation. */
   countActive(): Promise<number> {
-    return this.prisma.db.user.count({ where: { disabledAt: null } });
+    return this.prisma.db.membership.count({
+      where: { organizationId: currentOrganizationId(), disabledAt: null },
+    });
   }
 
-  /** How many admins can sign in. The rows stay locked until the request ends, so two cannot remove each other. */
+  /** How many admins can open this organisation. The rows stay locked until the request ends, so two cannot remove each other. */
   async countActiveAdmins(): Promise<number> {
     const admins = await this.prisma.db.$queryRaw<{ id: string }[]>`
-      SELECT id FROM users WHERE role = 'admin' AND "disabledAt" IS NULL FOR UPDATE`;
+      SELECT id FROM memberships
+      WHERE "organizationId" = ${currentOrganizationId()} AND role = 'admin' AND "disabledAt" IS NULL
+      FOR UPDATE`;
     return admins.length;
   }
 
-  /** Changes what someone may do, and lets them sign in again if they had been disabled. */
-  async setRole(id: string, role: AppRole): Promise<void> {
-    await this.prisma.db.user.update({ where: { id }, data: { role, disabledAt: null } });
+  /** Changes what someone may do here, and lets them back in if they had left. */
+  async setRole(userId: string, role: AppRole): Promise<void> {
+    await this.prisma.db.membership.update({
+      where: { organizationId_userId: { organizationId: currentOrganizationId(), userId } },
+      data: { role, disabledAt: null },
+    });
   }
 
-  /** Blocks sign-in, and ends every session they have right now, so access stops at once. */
-  async disable(id: string, now: Date): Promise<void> {
+  /**
+   * Stops someone opening this organisation. Their sessions end too, but only when this was the last organisation
+   * they could open, so leaving one does not sign them out of another.
+   */
+  async disable(userId: string, now: Date): Promise<void> {
+    const organizationId = currentOrganizationId();
     await this.prisma.transact(async (db) => {
-      await db.user.update({ where: { id }, data: { disabledAt: now } });
-      await db.session.deleteMany({ where: { userId: id } });
+      await db.membership.update({
+        where: { organizationId_userId: { organizationId, userId } },
+        data: { disabledAt: now },
+      });
+      const stillOpen = await db.membership.count({ where: { userId, disabledAt: null } });
+      if (stillOpen === 0) await db.session.deleteMany({ where: { userId } });
     });
   }
 }

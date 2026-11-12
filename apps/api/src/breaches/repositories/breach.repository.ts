@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { BreachStep } from '@dpdp-kit/shared';
+import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { BreachRow, BreachSummaryRow } from '../utils/breach-view';
 
@@ -69,7 +70,12 @@ export class BreachRepository {
   create(details: BreachDetails, found: NewStep, reportedByName: string): Promise<BreachRow> {
     const { step, ...rest } = found;
     return this.prisma.db.breach.create({
-      data: { ...details, reportedByName, steps: { create: { step, ...rest } } },
+      data: {
+        ...details,
+        reportedByName,
+        ...orgOwned(),
+        steps: { create: { step, ...rest, ...orgOwned() } },
+      },
       include: fullInclude,
     });
   }
@@ -87,6 +93,8 @@ export class BreachRepository {
   }
 
   async addStep(breachId: string, step: NewStep): Promise<void> {
-    await this.prisma.db.breachStepRecord.create({ data: { breachId, ...step } });
+    await this.prisma.db.breachStepRecord.create({
+      data: { breachId, ...step, ...orgOwned() },
+    });
   }
 }

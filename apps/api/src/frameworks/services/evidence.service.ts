@@ -10,6 +10,7 @@ import {
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';
+import { currentOrganizationId } from '../../core/org/org-context';
 import { FileStorage } from '../../core/storage/file-storage';
 import type { AddEvidenceFileInput, AddEvidenceInput } from '../dto/evidence.dto';
 import { ControlRepository, type ControlWithLinks } from '../repositories/control.repository';
@@ -100,7 +101,7 @@ export class EvidenceService {
     }
     if (!file) throw new AppException('FILE_REQUIRED', HttpStatus.BAD_REQUEST);
     const checked = checkEvidenceFile(file);
-    const key = evidenceFileKey(controlId, randomUUID(), checked.fileName);
+    const key = evidenceFileKey(currentOrganizationId(), controlId, randomUUID(), checked.fileName);
     await this.storage.put(key, file.buffer, {
       contentType: checked.contentType,
       sha256: checked.sha256,

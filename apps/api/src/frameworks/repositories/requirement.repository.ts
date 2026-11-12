@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { orgKey, orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Requirement } from '../../generated/prisma/client';
 import { nextSortOrder } from '../utils/sort-order';
@@ -36,7 +37,7 @@ export class RequirementRepository {
   }
 
   findOne(id: string): Promise<Requirement | null> {
-    return this.prisma.db.requirement.findUnique({ where: { id } });
+    return this.prisma.db.requirement.findUnique({ where: orgKey(id) });
   }
 
   /** Adds a rule at the end of its framework's list. */
@@ -48,15 +49,15 @@ export class RequirementRepository {
       }),
     );
     return this.prisma.db.requirement.create({
-      data: { ...data, sortOrder },
+      data: { ...data, ...orgOwned(), sortOrder },
     });
   }
 
   update(id: string, data: RequirementDetails): Promise<Requirement> {
-    return this.prisma.db.requirement.update({ where: { id }, data });
+    return this.prisma.db.requirement.update({ where: orgKey(id), data });
   }
 
   setArchived(id: string, archivedAt: Date | null): Promise<Requirement> {
-    return this.prisma.db.requirement.update({ where: { id }, data: { archivedAt } });
+    return this.prisma.db.requirement.update({ where: orgKey(id), data: { archivedAt } });
   }
 }

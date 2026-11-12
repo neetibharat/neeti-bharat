@@ -6,7 +6,15 @@ import type { ActivityService } from '../../activity/services/activity.service';
 import type { ControlRepository, ControlWithLinks } from '../repositories/control.repository';
 import type { EvidenceRepository } from '../repositories/evidence.repository';
 import type { ProofRequirementRepository } from '../repositories/proof-requirement.repository';
+import { runInOrganization } from '../../core/org/org-context';
 import { EvidenceService } from './evidence.service';
+
+/** Uploading names the file under the organisation, so the service is called as one organisation's request. */
+function inOrganization(service: EvidenceService): EvidenceService {
+  const addFile = service.addFile.bind(service);
+  service.addFile = (...args) => runInOrganization('org-1', () => addFile(...args));
+  return service;
+}
 
 const actor = { id: 'u1', label: 'Asha' };
 
@@ -73,7 +81,9 @@ function build(
   } as unknown as ProofRequirementRepository;
   const activity = { record: vi.fn().mockResolvedValue(undefined) } as unknown as ActivityService;
   return {
-    service: new EvidenceService(controls, evidence, requirementRepo, activity, storage),
+    service: inOrganization(
+      new EvidenceService(controls, evidence, requirementRepo, activity, storage),
+    ),
     evidence,
     activity,
   };
@@ -201,7 +211,7 @@ describe('EvidenceService.addFile', () => {
     const result = await service.addFile('DPDP-R6-01', { title: 'Pen test' }, pdf(), actor);
 
     const key = [...memory.objects.keys()][0]!;
-    expect(key).toMatch(/^evidence\/DPDP-R6-01\/[0-9a-f-]{36}\/scan\.pdf$/);
+    expect(key).toMatch(/^organizations\/org-1\/evidence\/DPDP-R6-01\/[0-9a-f-]{36}\/scan\.pdf$/);
     expect(memory.objects.get(key)!.options.contentType).toBe('application/pdf');
     expect(evidence.create).toHaveBeenCalledWith(
       expect.objectContaining({

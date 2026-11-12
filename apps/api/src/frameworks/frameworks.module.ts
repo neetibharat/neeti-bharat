@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ActivityModule } from '../activity/activity.module';
 import { BreachesModule } from '../breaches/breaches.module';
 import { StorageModule } from '../core/storage/storage.module';
+import { OrganizationsModule } from '../organizations/organizations.module';
 import { RequestsModule } from '../requests/requests.module';
 import { PeopleModule } from '../people/people.module';
 import { ProfileModule } from '../profile/profile.module';
@@ -34,6 +35,7 @@ import { ProofService } from './services/proof.service';
   imports: [
     ActivityModule,
     BreachesModule,
+    OrganizationsModule,
     PeopleModule,
     ProfileModule,
     RequestsModule,
@@ -67,6 +69,6 @@ import { ProofService } from './services/proof.service';
     FrameworkRepository,
     FrameworkSeedRepository,
   ],
-  exports: [FrameworksService],
+  exports: [FrameworksService, FrameworkSeedService],
 })
 export class FrameworksModule {}

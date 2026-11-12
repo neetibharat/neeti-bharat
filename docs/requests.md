@@ -12,7 +12,7 @@ People ask to see, fix or erase their data, to name someone to act for them, or 
 | `nomination` | To name someone to exercise their rights for them |
 | `complaint`  | A grievance about how their data is handled       |
 
-Each request has a short number that counts up from 1 and is never reused. It is shown as `REQ-12` (no zero padding) on the board, in the list and on the request's page, and searching for `REQ-12` or `12` finds it.
+Each request has a short number that counts up from 1 within its organisation and is never reused. It is shown as `REQ-12` (no zero padding) on the board, in the list and on the request's page, and searching for `REQ-12` or `12` finds it.
 
 A request also records where it came from (`source`: `email`, `website` or `manual`). The form offers only email and added by hand, because the public page that would send `website` requests is not built.
 

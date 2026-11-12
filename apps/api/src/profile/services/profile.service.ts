@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
+  ORGANIZATION_NAME_MAX_LENGTH,
   PROFILE_FIELDS,
   isValidProfileValue,
   requiresConfirmation,
@@ -7,6 +8,8 @@ import {
   type ProfileResponse,
 } from '@dpdp-kit/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
+import { currentOrganizationId } from '../../core/org/org-context';
+import { OrganizationRepository } from '../../organizations/repositories/organization.repository';
 import { AppException } from '../../core/common/app.exception';
 import type { AddProfileEntryInput, UpdateProfileEntryInput } from '../dto/profile.dto';
 import {
@@ -27,6 +30,7 @@ export class ProfileService {
     private readonly repository: ProfileRepository,
     private readonly activity: ActivityService,
     private readonly roleHolders: RoleHolderReader,
+    private readonly organizations: OrganizationRepository,
   ) {}
 
   async list(): Promise<ProfileResponse> {
@@ -51,6 +55,7 @@ export class ProfileService {
 
     if (input.value !== target.current) {
       await this.repository.upsert(key, input.value);
+      await this.keepOrganizationName(key, input.value);
       await this.activity.record({
         actor,
         action: 'PROFILE_UPDATED',
@@ -61,6 +66,17 @@ export class ProfileService {
       });
     }
     return this.entry(key);
+  }
+
+  /** The company name answer is also what the organisation is called wherever it is listed. */
+  private async keepOrganizationName(key: string, value: string): Promise<void> {
+    const name = value.trim();
+    if (key === 'companyName' && name) {
+      await this.organizations.rename(
+        currentOrganizationId(),
+        name.slice(0, ORGANIZATION_NAME_MAX_LENGTH),
+      );
+    }
   }
 
   async addCustom(

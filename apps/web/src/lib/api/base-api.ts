@@ -1,4 +1,4 @@
-import type { ApiErrorBody, ErrorCode } from '@dpdp-kit/shared';
+import { ORGANIZATION_HEADER, type ApiErrorBody, type ErrorCode } from '@dpdp-kit/shared';
 import {
   createApi,
   fetchBaseQuery,
@@ -6,6 +6,7 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
+import { getActiveOrganizationId } from '../active-organization';
 import { TAG_TYPES } from './tags';
 
 /** What a failed call looks like to the UI: a code to translate, never prose. */
@@ -14,7 +15,16 @@ export interface ApiError {
   code: ErrorCode;
 }
 
-const rawBaseQuery = fetchBaseQuery({ baseUrl: '/v1', credentials: 'same-origin' });
+// Every call says which organisation it is for, so one person can work in several.
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: '/v1',
+  credentials: 'same-origin',
+  prepareHeaders: (headers) => {
+    const organizationId = getActiveOrganizationId();
+    if (organizationId) headers.set(ORGANIZATION_HEADER, organizationId);
+    return headers;
+  },
+});
 
 /** Reads the code the API sent; anything else, such as a network failure or an HTML error page, is INTERNAL. */
 export function toApiError(error: FetchBaseQueryError): ApiError {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { MyWorkItem, MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
-import { isAdmin } from '../../auth/utils/is-admin';
+import { currentRole } from '../../core/org/org-context';
 import { OpenBreachReader } from '../../breaches/services/open-breach-reader';
 import { OpenRequestReader } from '../../requests/services/open-request-reader';
 import { PersonDirectory } from '../../people/services/person-directory';
@@ -19,10 +19,10 @@ export class MyWorkService {
     private readonly requests: OpenRequestReader,
   ) {}
 
-  async forUser(user: { email: string; role?: string | string[] | null }): Promise<MyWorkResponse> {
+  async forUser(user: { email: string }): Promise<MyWorkResponse> {
     const me = await this.directory.findByEmail(user.email);
     if (!me) return { items: [] };
-    return { items: await this.itemsFor(me.id, isAdmin(user.role)) };
+    return { items: await this.itemsFor(me.id, currentRole() === 'admin') };
   }
 
   /** What is waiting on someone else, for an admin who wants to see how work is split. */

@@ -53,24 +53,22 @@ function newUserHooks(access: AccessPolicyService) {
           code: 'INVITATION_REQUIRED',
         });
       }
-      return { data: { ...user, role: decision.role } };
+      return { data: user };
     },
-    after: (user: { id: string; email: string; name?: string; role?: unknown }) =>
-      access.onUserCreated({
-        id: user.id,
-        email: user.email,
-        name: user.name ?? '',
-        role: String(user.role ?? 'member'),
-      }),
   };
 }
 
-/** Someone who has left cannot start a session, whether they use the email link, Google or Microsoft. */
-function blockDisabled(access: AccessPolicyService) {
+/**
+ * Takes up the invitations a person has each time a session of theirs starts, so an organisation that invited them
+ * appears the next time they sign in. A failure here is logged and must not stop them signing in.
+ */
+function sessionHooks(access: AccessPolicyService) {
   return {
-    before: async (session: { userId: string }) => {
-      if (await access.isDisabled(session.userId)) {
-        throw new APIError('FORBIDDEN', { message: 'FORBIDDEN', code: 'FORBIDDEN' });
+    after: async (session: { userId: string }) => {
+      try {
+        await access.joinInvitedFor(session.userId);
+      } catch (error) {
+        logger.error(`Could not take up invitations: ${String(error)}`);
       }
     },
   };
@@ -89,9 +87,6 @@ export function createAuth({ settings, prisma, mail, access }: AuthDeps) {
     },
     // Same email, different method: one person, one account.
     account: { accountLinking: { enabled: true, trustedProviders: linkableProviders(settings) } },
-    user: {
-      additionalFields: { role: { type: 'string', defaultValue: 'member', input: false } },
-    },
     plugins: [
       magicLink({
         expiresIn: MAGIC_LINK_MINUTES * 60,
@@ -108,7 +103,7 @@ export function createAuth({ settings, prisma, mail, access }: AuthDeps) {
     ],
     databaseHooks: {
       user: { create: newUserHooks(access) },
-      session: { create: blockDisabled(access) },
+      session: { create: sessionHooks(access) },
     },
   });
 }

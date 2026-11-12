@@ -49,9 +49,14 @@ export class InvitationService {
     return this.invitations.countOpen(new Date());
   }
 
-  /** Closes the open invitations of someone who has just created their account. */
-  markAccepted(email: string): Promise<void> {
-    return this.invitations.markAccepted(email, new Date());
+  /** Every open invitation to this email, from any organisation. Used at sign-in, before anyone has an organisation. */
+  findOpenAnywhere(email: string): Promise<Invitation[]> {
+    return this.invitations.findOpenAnywhere(email, new Date());
+  }
+
+  /** Closes an invitation once the person has joined. */
+  markAccepted(id: string): Promise<void> {
+    return this.invitations.markAccepted(id, new Date());
   }
 
   async create(input: InviteInput, actor: Actor): Promise<Invitation> {

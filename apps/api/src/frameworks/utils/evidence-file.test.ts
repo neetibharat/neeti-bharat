@@ -179,15 +179,15 @@ describe('extensionOf', () => {
 });
 
 describe('evidenceFileKey', () => {
-  it('builds evidence/<control>/<id>/<name>', () => {
-    expect(evidenceFileKey('DPDP-R6-01', 'u-1', 'scan.pdf')).toBe(
-      'evidence/DPDP-R6-01/u-1/scan.pdf',
+  it('builds organizations/<organisation>/evidence/<control>/<id>/<name>', () => {
+    expect(evidenceFileKey('o-1', 'DPDP-R6-01', 'u-1', 'scan.pdf')).toBe(
+      'organizations/o-1/evidence/DPDP-R6-01/u-1/scan.pdf',
     );
   });
 
   it('makes the name safe for any provider, so spaces and odd characters never reach the key', () => {
-    expect(evidenceFileKey('c', 'u', 'Q1 audit (final) é.pdf')).toBe(
-      'evidence/c/u/Q1-audit-final-.pdf',
+    expect(evidenceFileKey('o', 'c', 'u', 'Q1 audit (final) é.pdf')).toBe(
+      'organizations/o/evidence/c/u/Q1-audit-final-.pdf',
     );
   });
 });

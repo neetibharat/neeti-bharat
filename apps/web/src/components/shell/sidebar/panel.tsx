@@ -9,17 +9,20 @@ import { NavItem } from './nav-item';
 export interface PanelProps {
   area: NavArea;
   pathname: string;
+  /** Shown at the top, above the area's name. */
+  header: ReactNode;
   /** Shown at the bottom, for example the signed-in person. */
   footer: ReactNode;
 }
 
 /** The pages of the selected area, under its name. */
-export function Panel({ area, pathname, footer }: PanelProps) {
+export function Panel({ area, pathname, header, footer }: PanelProps) {
   const t = useTranslations('nav');
 
   return (
     <div className="flex min-w-0 flex-1 flex-col">
-      <h2 className="flex h-16 shrink-0 items-center px-5 text-subtitle font-semibold text-brand">
+      {header}
+      <h2 className="flex h-12 shrink-0 items-center px-5 text-label font-semibold tracking-wide text-fg-subtle uppercase">
         {t(`areas.${area.id}`)}
       </h2>
       <motion.nav

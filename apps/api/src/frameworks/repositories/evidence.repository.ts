@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Evidence, EvidenceKind } from '../../generated/prisma/client';
 
@@ -42,7 +43,7 @@ export class EvidenceRepository {
       fileType: file.type,
       fileSha256: file.sha256,
     };
-    return this.prisma.db.evidence.create({ data: { ...data, ...fileColumns } });
+    return this.prisma.db.evidence.create({ data: { ...data, ...fileColumns, ...orgOwned() } });
   }
 
   delete(id: string): Promise<Evidence> {
