@@ -1,4 +1,4 @@
-import type { AppRole } from '@dpdp-kit/shared';
+import type { AppRole, NotificationKind, NotificationState } from '@dpdp-kit/shared';
 import { renderHtml, renderText, type EmailContent } from './email-layout';
 
 export type MailLocale = 'en';
@@ -13,6 +13,16 @@ interface TemplateParams {
     inviter: string;
     role: AppRole;
   };
+  notice: {
+    url: string;
+    organization: string;
+    kind: NotificationKind;
+    state: NotificationState;
+    /** What it is about, such as the name of the person who made a request. */
+    title: string;
+    /** The due date as YYYY-MM-DD. */
+    dueOn: string;
+  };
 }
 
 type MailKey = keyof TemplateParams;
@@ -25,6 +35,13 @@ const ROLE_PHRASE: Record<AppRole, string> = {
   admin: 'as an admin',
   member: 'as a member',
   auditor: 'as an auditor, with read-only access',
+};
+
+const NOTICE_SUBJECT: Record<NotificationKind, (title: string) => string> = {
+  breach: (title) => `The breach “${title}”`,
+  request: (title) => `The request from ${title}`,
+  proof: (title) => `The proof “${title}”`,
+  review: (title) => `The review of the policy “${title}”`,
 };
 
 /** Every word of every email lives here, keyed by locale. Only English is written so far. */
@@ -56,6 +73,24 @@ const TEMPLATES: Record<MailLocale, { [K in MailKey]: Template<K> }> = {
         footer: 'DPDP Kit. You are receiving this because someone added you to their team.',
       },
     }),
+    notice: ({ url, organization, kind, state, title, dueOn }) => {
+      const what = NOTICE_SUBJECT[kind](title);
+      const late = state === 'overdue';
+      return {
+        subject: `${late ? 'Late' : 'Due soon'}: ${what} (${organization})`,
+        content: {
+          preheader: `${what} ${late ? 'was due on' : 'is due on'} ${dueOn}.`,
+          heading: late ? 'Something is late' : 'Something is due soon',
+          paragraphs: [
+            `${what} in ${organization} ${late ? `was due on ${dueOn} and is late` : `is due on ${dueOn}`}.`,
+            'It is on your list in DPDP Kit.',
+          ],
+          button: { label: 'Open my work', url },
+          footer:
+            'DPDP Kit. You choose which notices you get by email in your notification settings.',
+        },
+      };
+    },
   },
 };
 

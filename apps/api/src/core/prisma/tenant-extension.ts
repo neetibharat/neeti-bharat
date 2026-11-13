@@ -24,6 +24,9 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   'CompanyLogo',
   'Connection',
   'ConnectionRun',
+  'Notification',
+  'NotificationPreference',
+  'NotificationRoleDefault',
 ]);
 
 /** Reads, changes and deletes that find rows by a filter. */

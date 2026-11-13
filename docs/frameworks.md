@@ -176,7 +176,7 @@ Lists send only what their screen shows, and long ones are paged (`page`, `limit
 ## Not decided yet
 
 - **Which rules apply to a company.** Each rule says what switches it on (`appliesWhen`: always, children's data, data abroad, significant data fiduciary). The company answers that decide it come with the set-up wizard.
-- **Proof reminders.** Owners and reminders for proof come with Notifications.
+- **Proof reminders.** A person who collects proof is told when it is due soon or late. See [notifications.md](notifications.md).
 - **ISO 27001 and SOC 2.** Not decided yet, and not shown in the product. The mapping needs legal review.
 
 ## Review

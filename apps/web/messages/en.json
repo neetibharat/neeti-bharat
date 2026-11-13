@@ -161,10 +161,6 @@
       "title": "Breaches",
       "description": "Walks the team through a personal data breach against the clock."
     },
-    "notifications": {
-      "title": "Notifications",
-      "description": "Emails and in-app notices that keep the work moving."
-    },
     "secrets": {
       "title": "Secrets",
       "description": "Passwords and keys DPDP Kit uses to reach your other systems."
@@ -260,7 +256,8 @@
       "ORGANIZATION_CREATED": "Organisation created",
       "ONBOARDING_COMPLETED": "Set-up finished",
       "ORGANIZATION_CLOSED": "Organisation closed",
-      "READINESS_CHECKED": "Readiness check taken"
+      "READINESS_CHECKED": "Readiness check taken",
+      "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -326,7 +323,8 @@
       "ORGANIZATION_CREATED": "Created the organisation {name}",
       "ONBOARDING_COMPLETED": "Finished setting up the organisation",
       "ORGANIZATION_CLOSED": "Closed the organisation {name}",
-      "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100"
+      "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100",
+      "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about"
     },
     "emptyValue": "empty",
     "values": {
@@ -2807,6 +2805,80 @@
         "why": "These are Microsoft’s own findings about your resources.",
         "fix": "Under Defender for Cloud, Recommendations, work through them by severity. Each has steps or a Remediate button."
       }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Work of yours that is due within three days, or late.",
+    "bell": "{count, plural, =0 {Notifications, none unread} one {Notifications, # unread} other {Notifications, # unread}}",
+    "markAll": "Mark all as read",
+    "settingsLink": "Choose what you get",
+    "unread": "Unread",
+    "empty": {
+      "title": "Nothing needs your attention",
+      "body": "A notice appears here when something of yours is due within three days, or late."
+    },
+    "kinds": {
+      "breach": "Breach",
+      "request": "Request",
+      "proof": "Proof",
+      "review": "Policy review"
+    },
+    "text": {
+      "breach": {
+        "due_soon": "The Board report for the breach “{title}” is due on {date}.",
+        "overdue": "The Board report for the breach “{title}” was due on {date} and is late."
+      },
+      "request": {
+        "due_soon": "The request from {title} is due on {date}.",
+        "overdue": "The request from {title} was due on {date} and is late."
+      },
+      "proof": {
+        "due_soon": "Proof for “{title}” is due on {date}.",
+        "overdue": "Proof for “{title}” was due on {date} and is late."
+      },
+      "review": {
+        "due_soon": "The policy “{title}” is due for review on {date}.",
+        "overdue": "The policy “{title}” was due for review on {date} and is late."
+      }
+    },
+    "settings": {
+      "title": "Notifications",
+      "description": "Your own choices. They apply only to you.",
+      "inApp": "In the app",
+      "email": "By email",
+      "note": "Choose how you hear about work of yours that is due soon or late. Notices are made once a day, from 9:00 India time, once for each thing and again if its due date moves. Until you change a box, your role’s default applies.",
+      "kinds": {
+        "breach": {
+          "name": "Breaches",
+          "about": "When the Board report for a breach you look after is close or late."
+        },
+        "request": {
+          "name": "Requests",
+          "about": "When a request from a person that is yours to deal with is close to its reply date, or past it."
+        },
+        "proof": {
+          "name": "Proof",
+          "about": "When proof you collect is due, or old enough to need collecting again."
+        },
+        "review": {
+          "name": "Policy reviews",
+          "about": "When a policy you own is coming up for its yearly review."
+        }
+      },
+      "tabs": {
+        "mine": "My notifications",
+        "roles": "Defaults by role"
+      },
+      "kind": "Notification"
+    },
+    "roleDefaults": {
+      "title": "Defaults by role",
+      "about": "What each role is notified about until a person chooses for themselves. People can still switch off anything they do not want.",
+      "role": "Role",
+      "inApp": "In the app",
+      "email": "By email",
+      "save": "Save changes"
     }
   }
 }

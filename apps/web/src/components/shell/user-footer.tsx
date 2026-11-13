@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { Avatar } from '@/components/base/avatar/avatar';
+import { NotificationBell } from '@/components/notifications/notification-bell';
 import type { SessionUser } from '@/lib/session-user';
 
 export function UserFooter({ user }: { user: SessionUser }) {
@@ -16,6 +17,7 @@ export function UserFooter({ user }: { user: SessionUser }) {
         <p className="truncate text-label font-medium text-fg">{displayName}</p>
         <p className="truncate text-caption text-fg-subtle">{t(user.role)}</p>
       </div>
+      <NotificationBell />
       <SignOutButton />
     </div>
   );

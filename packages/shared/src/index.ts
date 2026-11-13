@@ -19,6 +19,7 @@ export * from './frameworks/dpdp/policy-status.js';
 export * from './frameworks/dpdp/policy-text.js';
 export * from './health.js';
 export * from './locales.js';
+export * from './notifications.js';
 export * from './organizations.js';
 export * from './people.js';
 export * from './profile.js';

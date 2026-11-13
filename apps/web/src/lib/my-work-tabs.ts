@@ -19,5 +19,7 @@ const FOLDER: Record<MyWorkItem['kind'], string> = {
   draft: 'policies',
 };
 
-/** Where an item opens: a breach, a request, a proof requirement or a policy. */
-export const myWorkHref = (item: MyWorkItem): string => `/${FOLDER[item.kind]}/${item.id}`;
+/** Where something opens: a breach, a request, a proof requirement or a policy. */
+export const workHref = (kind: MyWorkItem['kind'], id: string): string => `/${FOLDER[kind]}/${id}`;
+
+export const myWorkHref = (item: MyWorkItem): string => workHref(item.kind, item.id);

@@ -16,6 +16,7 @@ import { CompanyLogoModule } from './company-logo/company-logo.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { ExportsModule } from './exports/exports.module';
 import { FrameworksModule } from './frameworks/frameworks.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { PeopleModule } from './people/people.module';
 import { ProfileModule } from './profile/profile.module';
 import { OrganizationSetupModule } from './organization-setup/organization-setup.module';
@@ -46,6 +47,7 @@ import { StorageModule } from './core/storage/storage.module';
     ConnectionsModule,
     ExportsModule,
     FrameworksModule,
+    NotificationsModule,
     PeopleModule,
     ProfileModule,
     WebsiteChecksModule,

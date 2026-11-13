@@ -7,6 +7,7 @@ import { AzureConnector } from '../../src/connections/providers/azure/azure-api'
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
+import { NotificationScanner } from '../../src/notifications/services/notification-scanner';
 import { azureConnector } from './fake-azure-connector';
 import { createTestDatabase, type TestDatabase } from './test-database';
 
@@ -97,6 +98,10 @@ export interface TestApp {
   anonymous: Client;
   /** A script or agent calling with an API key and nothing else. */
   withKey: (key: string) => Client;
+  /** Makes the day's notices now, as the daily check would, as of `now`. */
+  scanNotices: (now?: Date) => Promise<void>;
+  /** Every email the app has sent, oldest first. */
+  mailSent: () => MailMessage[];
   /** Every path of the API that is a GET and takes no parameters, for sweeping. */
   readRoutes: () => string[];
   stop: () => Promise<void>;
@@ -206,6 +211,8 @@ export async function startTestApp(): Promise<TestApp> {
     signIn: (email) => signInAs(base, inbox, email),
     anonymous: new Client(base, ''),
     withKey: (key) => new Client(base, '', key),
+    scanNotices: (now = new Date()) => moduleRef.get(NotificationScanner).scanAll(now),
+    mailSent: () => inbox,
     readRoutes: () => readRoutesOf(app),
     stop: async () => {
       await app.close();

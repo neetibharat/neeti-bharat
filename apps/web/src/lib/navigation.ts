@@ -160,7 +160,7 @@ export const NAV_AREAS: NavArea[] = [
       {
         id: 'alerts',
         items: [
-          { id: 'notifications', href: '/settings/notifications', icon: IconBell, status: 'soon' },
+          { id: 'notifications', href: '/settings/notifications', icon: IconBell, status: 'live' },
         ],
       },
       {
