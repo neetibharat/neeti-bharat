@@ -16,6 +16,8 @@ import {
   POLICY_STATUSES,
   ERROR_CODES,
   JOB_ROLES,
+  NOTIFICATION_KINDS,
+  NOTIFICATION_STATES,
   LOCALES,
   PROFILE_FIELDS,
   PROFILE_GROUPS,
@@ -80,6 +82,21 @@ describe('message catalogs', () => {
     expect(Object.keys(details).sort()).toEqual([...AZURE_CHECK_IDS].sort());
     for (const id of AZURE_CHECK_IDS) {
       expect(Object.keys(details[id]!).sort(), id).toEqual(['failRule', 'fix', 'passRule', 'why']);
+    }
+  });
+
+  it('words every kind and state of notice, and how to choose each kind', () => {
+    const { kinds, text, settings } = catalogs.en.notifications as {
+      kinds: Tree;
+      text: Record<string, Tree>;
+      settings: { kinds: Record<string, Tree> };
+    };
+    expect(Object.keys(kinds).sort()).toEqual([...NOTIFICATION_KINDS].sort());
+    expect(Object.keys(text).sort()).toEqual([...NOTIFICATION_KINDS].sort());
+    expect(Object.keys(settings.kinds).sort()).toEqual([...NOTIFICATION_KINDS].sort());
+    for (const kind of NOTIFICATION_KINDS) {
+      expect(Object.keys(text[kind]!).sort(), kind).toEqual([...NOTIFICATION_STATES].sort());
+      expect(Object.keys(settings.kinds[kind]!).sort(), kind).toEqual(['about', 'name']);
     }
   });
 

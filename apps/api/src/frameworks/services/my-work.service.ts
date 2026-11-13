@@ -30,6 +30,22 @@ export class MyWorkService {
     return { items: await this.itemsFor(personId, false) };
   }
 
+  /** What is waiting on each of these people, read once for all of them. For the daily notices. */
+  async forPeople(
+    people: { personId: string; isAdmin: boolean }[],
+  ): Promise<Map<string, MyWorkItem[]>> {
+    const [rolesOf, snapshot] = await Promise.all([
+      this.directory.rolesByPerson(),
+      this.snapshot(),
+    ]);
+    return new Map(
+      people.map(({ personId, isAdmin }) => [
+        personId,
+        this.itemsOf(snapshot, personId, rolesOf.get(personId) ?? new Set(), isAdmin),
+      ]),
+    );
+  }
+
   /** How much is waiting on each person who has not left. Everything is read once, then worked out per person. */
   async team(): Promise<MyWorkTeamResponse> {
     const [people, rolesOf, snapshot] = await Promise.all([

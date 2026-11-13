@@ -49,6 +49,39 @@ describe('renderMail', () => {
   });
 });
 
+describe('the notice email', () => {
+  const base = { url: 'https://x.in/en/my-work', organization: 'Alpha', dueOn: '2026-11-12' };
+
+  it('says what is late, or what is due soon, and when', () => {
+    const late = renderMail('en', 'notice', {
+      ...base,
+      kind: 'request',
+      state: 'overdue',
+      title: 'Asha',
+    });
+    expect(late.subject).toBe('Late: The request from Asha (Alpha)');
+    expect(late.text).toContain('was due on 2026-11-12 and is late');
+    const soon = renderMail('en', 'notice', {
+      ...base,
+      kind: 'proof',
+      state: 'due_soon',
+      title: 'TLS scan',
+    });
+    expect(soon.subject).toBe('Due soon: The proof “TLS scan” (Alpha)');
+    expect(soon.text).toContain('is due on 2026-11-12');
+  });
+
+  it('keeps a name that came from a person from becoming markup', () => {
+    const { html } = renderMail('en', 'notice', {
+      ...base,
+      kind: 'request',
+      state: 'overdue',
+      title: '<b>x</b>',
+    });
+    expect(html).not.toContain('<b>x</b>');
+  });
+});
+
 describe('the email layout', () => {
   const content: EmailContent = {
     preheader: 'Hidden line',

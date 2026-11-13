@@ -4,6 +4,8 @@ import {
   EVIDENCE_KINDS,
   INVITATION_STATUSES,
   JOB_ROLES,
+  NOTIFICATION_KINDS,
+  NOTIFICATION_STATES,
   PERSON_STATUSES,
   POLICY_STATUSES,
   PROOF_FREQUENCIES,
@@ -20,6 +22,8 @@ import {
   EvidenceKind,
   InvitationStatus,
   JobRole,
+  NotificationKind,
+  NotificationState,
   PersonStatus,
   PolicyStatus,
   ProofFrequency,
@@ -46,6 +50,8 @@ describe('database enums match packages/shared', () => {
     ['RequestStatus', RequestStatus, REQUEST_STATUSES],
     ['RequestSource', RequestSource, REQUEST_SOURCES],
     ['TaskOutcome', TaskOutcome, TASK_OUTCOMES],
+    ['NotificationKind', NotificationKind, NOTIFICATION_KINDS],
+    ['NotificationState', NotificationState, NOTIFICATION_STATES],
   ])('%s', (_name, prismaEnum, shared) => {
     expect(Object.values(prismaEnum)).toEqual([...shared]);
   });

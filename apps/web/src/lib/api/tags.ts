@@ -14,6 +14,9 @@ export const TAG_TYPES = [
   'Readiness',
   'ApiKey',
   'Connection',
+  'Notification',
+  'NotificationPreference',
+  'NotificationRoleDefault',
 ] as const;
 
 /**
@@ -55,4 +58,6 @@ export const CHANGES = {
   apiKey: ['ApiKey', 'Activity'],
   // Connections and their runs show on the Connections page only.
   connection: ['Connection', 'Activity'],
+  // Notices show in the inbox and on the bell, and are a person's own, so they are not in the activity log.
+  notification: ['Notification'],
 } as const;

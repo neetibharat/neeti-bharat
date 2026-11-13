@@ -43,18 +43,20 @@ enum InvitationStatus {
 
 // The next four models are the tables Better Auth reads and writes. Keep their fields as it expects.
 model User {
-  id            String       @id
-  name          String
-  email         String       @unique
-  emailVerified Boolean      @default(false)
-  image         String?
-  createdAt     DateTime     @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime     @updatedAt @db.Timestamptz(3)
-  sessions      Session[]
-  accounts      Account[]
-  invitations   Invitation[]
-  memberships   Membership[]
-  apiKeys       ApiKey[]
+  id                      String                   @id
+  name                    String
+  email                   String                   @unique
+  emailVerified           Boolean                  @default(false)
+  image                   String?
+  createdAt               DateTime                 @default(now()) @db.Timestamptz(3)
+  updatedAt               DateTime                 @updatedAt @db.Timestamptz(3)
+  sessions                Session[]
+  accounts                Account[]
+  invitations             Invitation[]
+  memberships             Membership[]
+  apiKeys                 ApiKey[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
 
   @@map("users")
 }
@@ -109,41 +111,44 @@ model Verification {
 // One company that uses the app. Everything a company records carries its id, and a person's role belongs to their
 // membership, so one account can belong to several organisations.
 model Organization {
-  id                 String              @id @default(uuid(7))
-  name               String
+  id                       String                    @id @default(uuid(7))
+  name                     String
   /// The last REQ number handed out in this organisation, so each organisation counts its own from 1.
-  requestCounter     Int                 @default(0)
+  requestCounter           Int                       @default(0)
   /// Set when an admin finishes, or skips, the set-up that follows creating an organisation.
-  onboardedAt        DateTime?           @db.Timestamptz(3)
+  onboardedAt              DateTime?                 @db.Timestamptz(3)
   /// Set when an admin closes the organisation. Nobody can open it after that, and nothing in it is erased.
-  closedAt           DateTime?           @db.Timestamptz(3)
-  createdAt          DateTime            @default(now()) @db.Timestamptz(3)
-  updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
-  memberships        Membership[]
-  profileEntries     ProfileEntry[]
-  frameworks         Framework[]
-  requirements       Requirement[]
-  controls           Control[]
-  proofRequirements  ProofRequirement[]
-  evidence           Evidence[]
-  policies           Policy[]
-  controlPolicyLinks ControlPolicyLink[]
-  policyApprovals    PolicyApproval[]
-  people             Person[]
-  roleAssignments    RoleAssignment[]
-  activityEvents     ActivityEvent[]
-  breaches           Breach[]
-  breachSteps        BreachStepRecord[]
-  dataRequests       DataRequest[]
-  dataRequestTasks   DataRequestTask[]
-  readinessChecks    ReadinessCheck[]
-  websiteChecks      WebsiteCheck[]
-  invitations        Invitation[]
-  activityAnchor     ActivityAnchor?
-  companyLogo        CompanyLogo?
-  apiKeys            ApiKey[]
-  connections        Connection[]
-  connectionRuns     ConnectionRun[]
+  closedAt                 DateTime?                 @db.Timestamptz(3)
+  createdAt                DateTime                  @default(now()) @db.Timestamptz(3)
+  updatedAt                DateTime                  @updatedAt @db.Timestamptz(3)
+  memberships              Membership[]
+  profileEntries           ProfileEntry[]
+  frameworks               Framework[]
+  requirements             Requirement[]
+  controls                 Control[]
+  proofRequirements        ProofRequirement[]
+  evidence                 Evidence[]
+  policies                 Policy[]
+  controlPolicyLinks       ControlPolicyLink[]
+  policyApprovals          PolicyApproval[]
+  people                   Person[]
+  roleAssignments          RoleAssignment[]
+  activityEvents           ActivityEvent[]
+  breaches                 Breach[]
+  breachSteps              BreachStepRecord[]
+  dataRequests             DataRequest[]
+  dataRequestTasks         DataRequestTask[]
+  readinessChecks          ReadinessCheck[]
+  websiteChecks            WebsiteCheck[]
+  invitations              Invitation[]
+  activityAnchor           ActivityAnchor?
+  companyLogo              CompanyLogo?
+  apiKeys                  ApiKey[]
+  notifications            Notification[]
+  notificationPreferences  NotificationPreference[]
+  connections              Connection[]
+  connectionRuns           ConnectionRun[]
+  notificationRoleDefaults NotificationRoleDefault[]
 
   @@map("organizations")
 }
@@ -815,4 +820,72 @@ model ConnectionRun {
 
   @@index([connectionId, ranAt])
   @@map("connection_runs")
+}
+
+// Keep in step with NOTIFICATION_KINDS in packages/shared (a test checks).
+enum NotificationKind {
+  breach
+  request
+  proof
+  review
+}
+
+// Keep in step with NOTIFICATION_STATES in packages/shared (a test checks).
+enum NotificationState {
+  due_soon
+  overdue
+}
+
+// A notice for one person: something they are responsible for is due soon, or late. The text is made on screen.
+model Notification {
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id])
+  id             String            @id @default(uuid(7))
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           NotificationKind
+  state          NotificationState
+  /// The request, breach, proof requirement or policy it is about.
+  subjectId      String
+  title          String
+  /// The due date as YYYY-MM-DD.
+  dueOn          String?
+  /// Says "this notice was already made", so the daily check never makes it twice.
+  dedupeKey      String
+  readAt         DateTime?         @db.Timestamptz(3)
+  emailedAt      DateTime?         @db.Timestamptz(3)
+  createdAt      DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@unique([organizationId, userId, dedupeKey])
+  @@index([organizationId, userId, createdAt])
+  @@map("notifications")
+}
+
+// What a role gets for one kind of notice until a person chooses otherwise. Set by admins.
+model NotificationRoleDefault {
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  role           AppRole
+  kind           NotificationKind
+  inApp          Boolean          @default(true)
+  email          Boolean          @default(true)
+  updatedAt      DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, role, kind])
+  @@map("notification_role_defaults")
+}
+
+// How one person wants to hear about one kind of notice. A kind with no row is on in both ways.
+model NotificationPreference {
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           NotificationKind
+  inApp          Boolean          @default(true)
+  email          Boolean          @default(true)
+  updatedAt      DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, userId, kind])
+  @@map("notification_preferences")
 }

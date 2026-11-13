@@ -21,6 +21,8 @@ export interface IconLinkRowProps {
   subtitle: string;
   /** Something to show before the arrow, such as a due date. */
   trailing?: ReactNode;
+  /** Called when the row is opened, for example to note that it was seen. */
+  onOpen?: () => void;
 }
 
 /** A list item that opens something: a coloured icon, a title with a line under it, and an arrow. */
@@ -31,12 +33,14 @@ export function IconLinkRow({
   title,
   subtitle,
   trailing,
+  onOpen,
 }: IconLinkRowProps) {
   return (
     <li>
       <Link
         href={href}
-        className="group flex items-center gap-3 rounded-control border border-line px-3 py-2.5 transition hover:border-line-strong hover:bg-surface-muted/60"
+        onClick={onOpen}
+        className="group flex items-center gap-3 rounded-control border border-line bg-surface px-3 py-2.5 transition hover:border-line-strong hover:bg-surface-muted/60"
       >
         <span className={cx('grid size-9 shrink-0 place-items-center rounded-lg', TILES[tone])}>
           <RowIcon className="size-4.5" />
