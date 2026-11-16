@@ -1,6 +1,6 @@
 'use client';
 
-import type { RequirementControlResponse } from '@dpdp-kit/shared';
+import { policyLabel, type RequirementControlResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';
@@ -38,7 +38,7 @@ export function RequirementMappings({ control }: { control: RequirementControlRe
             {control.policies.map((policy) => (
               <li key={policy.id} className="px-3 py-2.5 text-body">
                 <Link href={`/policies/${policy.id}`} className="text-brand hover:underline">
-                  {policy.id} · {policy.title}
+                  {policyLabel(policy)}
                 </Link>
               </li>
             ))}

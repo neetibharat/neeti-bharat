@@ -1,5 +1,6 @@
-import type {
-  BreachListItem,
+import {
+  policyLabel,
+  type BreachListItem,
   FrameworkSummaryResponse,
   PolicyResponse,
   ProofItemResponse,
@@ -119,7 +120,7 @@ export function dashboardAttention(
     key: `policy:${item.policy.id}`,
     reason: item.reason,
     href: `/policies/${item.policy.id}`,
-    title: `${item.policy.id} · ${item.policy.title}`,
+    title: policyLabel(item.policy),
     days: item.days,
     approver: approverOf(item.policy),
   }));

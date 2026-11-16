@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyResponse, RuleResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyResponse, type RuleResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import {
   Table,
@@ -58,7 +58,7 @@ function PolicyRow({ rule, policy }: { rule: RuleResponse; policy: PolicyRespons
     <TableRow id={policy.id}>
       <TableCell className="font-medium">
         <Link href={`/policies/${policy.id}`} className="hover:text-brand hover:underline">
-          {policy.id} · {policy.title}
+          {policyLabel(policy)}
         </Link>
       </TableCell>
       <TableCell>

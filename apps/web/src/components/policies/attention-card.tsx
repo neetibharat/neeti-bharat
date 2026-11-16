@@ -8,7 +8,7 @@ import {
   IconPencil,
   type Icon,
 } from '@tabler/icons-react';
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { AttentionList } from '@/components/base/attention-list/attention-list';
 import type { RowTone } from '@/components/base/icon-link-row/icon-link-row';
@@ -42,7 +42,7 @@ export function AttentionCard({ policies }: { policies: PolicyResponse[] }) {
       items={items.map((item) => ({
         key: item.policy.id,
         href: `/policies/${item.policy.id}`,
-        title: `${item.policy.id} · ${item.policy.title}`,
+        title: policyLabel(item.policy),
         subtitle: t(`reasons.${item.reason}`, {
           days: item.days,
           approver: approverOf(item.policy),
@@ -75,7 +75,7 @@ function Suggestions({ drafts }: { drafts: PolicyResponse[] }) {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-body font-medium text-fg">
-                  {policy.id} · {policy.title}
+                  {policyLabel(policy)}
                 </span>
                 <span className="block truncate text-label text-fg-muted">{policy.summary}</span>
               </span>

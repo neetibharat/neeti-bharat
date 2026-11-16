@@ -28,6 +28,7 @@ import { FrameworkEditService } from './services/framework-edit.service';
 import { FrameworksService } from './services/frameworks.service';
 import { MyWorkService } from './services/my-work.service';
 import { PoliciesService } from './services/policies.service';
+import { PolicyEditService } from './services/policy-edit.service';
 import { RuleReader } from './services/rule-reader';
 import { ProofService } from './services/proof.service';
 
@@ -60,6 +61,7 @@ import { ProofService } from './services/proof.service';
     ProofService,
     MyWorkService,
     PoliciesService,
+    PolicyEditService,
     FrameworkSeedService,
     ControlRepository,
     EvidenceRepository,
