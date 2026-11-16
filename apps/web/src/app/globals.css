@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import '../styles/theme.css';
+@import '../styles/policy-prose.css';
+
+@plugin "tailwindcss-react-aria-components";
+
+html,
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Keep room for the scrollbar, so a page does not jump sideways when it grows tall enough to need one. */
+html {
+  scrollbar-gutter: stable;
+}

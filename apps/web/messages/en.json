@@ -1,11 +1,97 @@
 {
+  "common": {
+    "loading": "Loading"
+  },
   "meta": {
-    "title": "Niti Bharat",
+    "title": "DPDP Kit",
     "description": "An open-source, self-hosted toolkit for complying with India's DPDP law."
   },
   "home": {
     "heading": "DPDP compliance, in one place",
     "tagline": "Know what the law asks, do the work, and keep the proof."
+  },
+  "nav": {
+    "label": "Main",
+    "openMenu": "Open menu",
+    "soon": "Soon",
+    "areas": {
+      "workspace": "Workspace",
+      "data": "Data",
+      "privacy": "Privacy operations",
+      "settings": "Settings"
+    },
+    "sections": {
+      "company": "Company",
+      "alerts": "Alerts",
+      "developers": "Developers",
+      "records": "Records"
+    },
+    "items": {
+      "dashboard": "Dashboard",
+      "frameworks": "Frameworks",
+      "policies": "Policies",
+      "proof": "Proof",
+      "dataMap": "Data map",
+      "connections": "Connections",
+      "cloudTests": "Cloud tests",
+      "noticeAndConsent": "Notice and consent",
+      "requests": "Requests",
+      "breaches": "Breaches",
+      "general": "General",
+      "companyProfile": "Company profile",
+      "people": "People and roles",
+      "notifications": "Notifications",
+      "apiKeys": "API keys",
+      "secrets": "Secrets",
+      "activityLog": "Activity log",
+      "aiHelp": "AI help",
+      "myWork": "My work",
+      "exports": "Exports",
+      "websiteCheck": "Website check",
+      "readiness": "Readiness check"
+    }
+  },
+  "roles": {
+    "admin": "Admin",
+    "member": "Member",
+    "auditor": "Auditor",
+    "staff": "No login yet"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in to DPDP Kit",
+      "description": "Enter your work email and we will send you a sign-in link.",
+      "emailLabel": "Work email",
+      "emailPlaceholder": "you@company.in",
+      "submit": "Email me a sign-in link",
+      "sentTitle": "Check your email",
+      "sentBody": "If {email} has access, a sign-in link is on its way. It works once and expires in 5 minutes.",
+      "useAnother": "Use a different email",
+      "or": "or",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithMicrosoft": "Continue with Microsoft",
+      "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation.",
+      "brand": {
+        "headline": "Privacy compliance your auditors can trust",
+        "subline": "Everything the DPDP Act asks of you in one place: a checklist, your policies, the proof, and a record of every change.",
+        "features": {
+          "checklist": {
+            "title": "Built on the DPDP Act",
+            "body": "A ready checklist of the Act's duties, each with an owner and the proof behind it."
+          },
+          "log": {
+            "title": "A record that cannot be rewritten",
+            "body": "Every change is chained to the one before it, so any tampering shows."
+          },
+          "selfHosted": {
+            "title": "Yours to host",
+            "body": "It runs on your own servers, so your data stays with you."
+          }
+        },
+        "footer": "For the Digital Personal Data Protection Act, 2023"
+      }
+    },
+    "signOut": "Sign out"
   },
   "language": {
     "label": "Language",
@@ -21,6 +107,2813 @@
     "FORBIDDEN": "You do not have permission to do this.",
     "NOT_FOUND": "We could not find that.",
     "CONFLICT": "That already exists or is in use somewhere else.",
-    "RATE_LIMITED": "Too many requests. Please wait a moment and try again."
+    "RATE_LIMITED": "Too many requests. Please wait a moment and try again.",
+    "INVITATION_REQUIRED": "You need an invitation to sign in. Ask your admin to invite you.",
+    "CONFIRMATION_REQUIRED": "Please confirm this change first.",
+    "LAST_ADMIN": "There must always be at least one admin.",
+    "BUILT_IN": "This is built in and cannot be changed.",
+    "HAS_CONTROLS": "It still has controls. Archive them first.",
+    "STEP_ORDER": "That step cannot be done yet. Steps go in order, and the Board and the affected people must be told before a breach is closed.",
+    "BREACH_CLOSED": "This breach is closed and can no longer be changed.",
+    "REQUEST_CLOSED": "This request is closed and can no longer be changed.",
+    "REQUEST_NOT_READY": "The request cannot be closed yet. Check the identity, give every task an outcome and write the reply.",
+    "IDENTITY_NOT_VERIFIED": "Check the person's identity first. Nothing is shared or erased before that.",
+    "FILE_REQUIRED": "Choose a file that is not empty.",
+    "FILE_TOO_LARGE": "That file is larger than the allowed size.",
+    "FILE_TYPE_NOT_ALLOWED": "That type of file is not accepted, or its contents do not match its type.",
+    "STORAGE_NOT_CONFIGURED": "File storage is not set up. Ask whoever runs this app to set it up.",
+    "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed.",
+    "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
+    "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use.",
+    "CONNECTION_FAILED": "{reason, select, sign_in {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.} subscription {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.} other {Azure could not be reached. Try again in a moment.}}",
+    "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
+  },
+  "comingSoon": {
+    "title": "On its way",
+    "body": "This part of DPDP Kit has not been built yet."
+  },
+  "pages": {
+    "frameworks": {
+      "title": "Frameworks",
+      "description": "Turns the law into a list of small jobs, each with one owner and some proof."
+    },
+    "policies": {
+      "title": "Policies",
+      "description": "The policies a company needs under the DPDP Rules, and any it adds, each with an owner, an approver and the proof to keep."
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "Everything the company has to be able to show, and where each stands."
+    },
+    "dataMap": {
+      "title": "Data map",
+      "description": "The list of personal data kept, why, for how long, and who receives it."
+    },
+    "noticeAndConsent": {
+      "title": "Notice and consent",
+      "description": "The public page where people read the notice, give or withdraw consent, and file requests."
+    },
+    "requests": {
+      "title": "Requests",
+      "description": "Handles people asking to see, fix or erase their data, or to complain."
+    },
+    "breaches": {
+      "title": "Breaches",
+      "description": "Walks the team through a personal data breach against the clock."
+    },
+    "secrets": {
+      "title": "Secrets",
+      "description": "Passwords and keys DPDP Kit uses to reach your other systems."
+    },
+    "aiHelp": {
+      "title": "AI help",
+      "description": "Optional help with drafting. A person always decides."
+    },
+    "myWork": {
+      "title": "My work",
+      "description": "Everything waiting on one person, in the order to do it.",
+      "mine": "Me",
+      "viewing": "Whose work to show"
+    }
+  },
+  "activity": {
+    "title": "Activity log",
+    "description": "Every change, with who made it and when. Nothing here can be edited or removed.",
+    "filterLabel": "Show",
+    "allActions": "All changes",
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "what": "What"
+    },
+    "empty": "Nothing has been recorded yet.",
+    "emptyFiltered": "No changes of that kind yet.",
+    "checkIntegrity": "Check integrity",
+    "checking": "Checking",
+    "intact": "No changes found. All {count} events match their fingerprints.",
+    "broken": "An event does not match its fingerprint. It may have been edited or removed.",
+    "actionNames": {
+      "USER_CREATED": "Account created",
+      "INVITATION_CREATED": "Invitation sent",
+      "INVITATION_REVOKED": "Invitation cancelled",
+      "PROFILE_UPDATED": "Profile answer changed",
+      "PROFILE_ENTRY_ADDED": "Profile entry added",
+      "PROFILE_ENTRY_REMOVED": "Profile entry removed",
+      "PERSON_ADDED": "Person added",
+      "PERSON_UPDATED": "Person details changed",
+      "ACCESS_CHANGED": "Access changed",
+      "PERSON_LEFT": "Person left",
+      "ROLE_ASSIGNED": "Role assigned",
+      "ROLE_UNASSIGNED": "Role left vacant",
+      "CONTROL_STATUS_CHANGED": "Control status changed",
+      "CONTROL_OWNER_CHANGED": "Control owner changed",
+      "POLICY_REVIEW_REQUESTED": "Policy sent for approval",
+      "POLICY_APPROVED": "Policy approved",
+      "POLICY_SENT_BACK": "Policy sent back",
+      "POLICY_REOPENED": "Policy reopened",
+      "CONTROL_CREATED": "Control added",
+      "CONTROL_EDITED": "Control edited",
+      "CONTROL_ASSIGNED": "Control assigned",
+      "CONTROL_ARCHIVED": "Control archived",
+      "CONTROL_RESTORED": "Control restored",
+      "POLICY_EDITED": "Policy text edited",
+      "POLICY_APPROVER_CHANGED": "Policy approver changed",
+      "POLICY_CREATED": "Policy added",
+      "POLICY_DETAILS_EDITED": "Policy details edited",
+      "POLICY_ARCHIVED": "Policy archived",
+      "POLICY_RESTORED": "Policy restored",
+      "EVIDENCE_ADDED": "Proof added",
+      "EVIDENCE_REMOVED": "Proof removed",
+      "PROOF_REQUIREMENT_ADDED": "Proof requirement added",
+      "PROOF_REQUIREMENT_EDITED": "Proof requirement changed",
+      "PROOF_REQUIREMENT_ARCHIVED": "Proof requirement archived",
+      "PROOF_REQUIREMENT_RESTORED": "Proof requirement restored",
+      "FRAMEWORK_CREATED": "Framework added",
+      "FRAMEWORK_EDITED": "Framework edited",
+      "FRAMEWORK_ARCHIVED": "Framework archived",
+      "REQUIREMENT_CREATED": "Rule added",
+      "REQUIREMENT_EDITED": "Rule edited",
+      "REQUIREMENT_ARCHIVED": "Rule archived",
+      "BREACH_REPORTED": "Breach reported",
+      "BREACH_EDITED": "Breach edited",
+      "BREACH_ASSIGNED": "Breach assigned",
+      "BREACH_STEP_COMPLETED": "Breach step completed",
+      "BREACH_CLOSED": "Breach closed",
+      "REQUEST_RECEIVED": "Request logged",
+      "REQUEST_EDITED": "Request edited",
+      "REQUEST_ASSIGNED": "Request assigned",
+      "REQUEST_IDENTITY_VERIFIED": "Request identity checked",
+      "REQUEST_TASK_ADDED": "Request task added",
+      "REQUEST_TASK_UPDATED": "Request task changed",
+      "REQUEST_TASK_REMOVED": "Request task removed",
+      "REQUEST_CLOSED": "Request closed",
+      "INVITATION_RESENT": "Invitation sent again",
+      "DATA_EXPORTED": "Data downloaded",
+      "WEBSITE_CHECKED": "Website checked",
+      "LOGO_CHANGED": "Company logo changed",
+      "LOGO_REMOVED": "Company logo removed",
+      "CONNECTION_ADDED": "Connection added",
+      "CONNECTION_REMOVED": "Connection removed",
+      "CONNECTION_CHECKED": "Connection checked",
+      "API_KEY_CREATED": "API key created",
+      "API_KEY_REVOKED": "API key revoked",
+      "ORGANIZATION_CREATED": "Organisation created",
+      "ONBOARDING_COMPLETED": "Set-up finished",
+      "ORGANIZATION_CLOSED": "Organisation closed",
+      "READINESS_CHECKED": "Readiness check taken",
+      "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed"
+    },
+    "actions": {
+      "USER_CREATED": "Account created for {email} as {role}",
+      "INVITATION_CREATED": "Invited {email} as {role}",
+      "INVITATION_REVOKED": "Cancelled the invitation for {email}",
+      "PROFILE_UPDATED": "Changed {entry} from {before} to {after}",
+      "PROFILE_ENTRY_ADDED": "Added the profile entry {label}",
+      "PROFILE_ENTRY_REMOVED": "Removed the profile entry {label}",
+      "PERSON_ADDED": "Added {name} ({email}) with {access} access",
+      "PERSON_UPDATED": "Changed the details of {name}",
+      "ACCESS_CHANGED": "Changed access for {name} from {from} to {to}",
+      "PERSON_LEFT": "Marked {name} as left",
+      "ROLE_ASSIGNED": "Made {name} the {jobRole}",
+      "ROLE_UNASSIGNED": "{name} is no longer the {jobRole}",
+      "CONTROL_STATUS_CHANGED": "Marked {controlId} ({title}) as {after}, was {before}",
+      "CONTROL_OWNER_CHANGED": "Moved {controlId} ({title}) from {before} to {after}",
+      "POLICY_REVIEW_REQUESTED": "Asked for approval of {policyId} ({title})",
+      "POLICY_APPROVED": "Approved {policyId} ({title})",
+      "POLICY_SENT_BACK": "Sent {policyId} ({title}) back to draft",
+      "POLICY_REOPENED": "Reopened {policyId} ({title}) as a draft",
+      "CONTROL_CREATED": "Added the control {controlId} ({title})",
+      "CONTROL_EDITED": "Edited {controlId} ({title})",
+      "CONTROL_ASSIGNED": "Changed the person on {controlId} ({title}) from {before} to {after}",
+      "CONTROL_ARCHIVED": "Archived {controlId} ({title})",
+      "CONTROL_RESTORED": "Restored {controlId} ({title})",
+      "POLICY_EDITED": "Edited the text of {policyId} ({title})",
+      "POLICY_APPROVER_CHANGED": "Changed the approver of {policyId} ({title}) from {before} to {after}",
+      "POLICY_CREATED": "Added the policy {title}",
+      "POLICY_DETAILS_EDITED": "Edited the details of the policy {title}",
+      "POLICY_ARCHIVED": "Archived the policy {title}",
+      "POLICY_RESTORED": "Restored the policy {title}",
+      "EVIDENCE_ADDED": "Added proof {proof} to {controlId} ({title})",
+      "EVIDENCE_REMOVED": "Removed proof {proof} from {controlId} ({title})",
+      "PROOF_REQUIREMENT_ADDED": "Added the proof requirement {proof} to {controlId} ({title})",
+      "PROOF_REQUIREMENT_EDITED": "Changed the proof requirement {proof} on {controlId} ({title})",
+      "PROOF_REQUIREMENT_ARCHIVED": "Archived the proof requirement {proof} on {controlId} ({title})",
+      "PROOF_REQUIREMENT_RESTORED": "Restored the proof requirement {proof} on {controlId} ({title})",
+      "FRAMEWORK_CREATED": "Added the framework {name}",
+      "FRAMEWORK_EDITED": "Edited the framework {name}",
+      "FRAMEWORK_ARCHIVED": "Archived the framework {name}",
+      "REQUIREMENT_CREATED": "Added the rule {reference} ({title}) to {framework}",
+      "REQUIREMENT_EDITED": "Edited the rule {reference} ({title}) in {framework}",
+      "REQUIREMENT_ARCHIVED": "Archived the rule {reference} ({title}) in {framework}",
+      "BREACH_REPORTED": "Reported the breach {title}",
+      "BREACH_EDITED": "Changed the details of the breach {title}",
+      "BREACH_ASSIGNED": "Changed who deals with the breach {title} from {before} to {after}",
+      "BREACH_STEP_COMPLETED": "Completed the step \"{step}\" on the breach {title}",
+      "BREACH_CLOSED": "Closed the breach {title}",
+      "REQUEST_RECEIVED": "Logged a request from {name} ({type})",
+      "REQUEST_EDITED": "Changed the details of the request from {name} ({type})",
+      "REQUEST_ASSIGNED": "Changed who deals with the request from {name} ({type}) from {before} to {after}",
+      "REQUEST_IDENTITY_VERIFIED": "Checked the identity of {name} for the request ({type})",
+      "REQUEST_TASK_ADDED": "Added a task to the request from {name} ({type})",
+      "REQUEST_TASK_UPDATED": "Changed a task on the request from {name} ({type})",
+      "REQUEST_TASK_REMOVED": "Removed a task from the request from {name} ({type})",
+      "REQUEST_CLOSED": "Closed the request from {name} ({type})",
+      "INVITATION_RESENT": "Sent the invitation to {email} again",
+      "DATA_EXPORTED": "Downloaded {what}",
+      "WEBSITE_CHECKED": "Checked the website {url}: {passed} of {total} checks passed",
+      "LOGO_CHANGED": "Changed the company logo to {fileName}",
+      "LOGO_REMOVED": "Removed the company logo {fileName}",
+      "CONNECTION_ADDED": "Connected {name} ({provider})",
+      "CONNECTION_REMOVED": "Removed the connection {name}",
+      "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
+      "API_KEY_CREATED": "Created the API key {name} with {role} access",
+      "API_KEY_REVOKED": "Revoked the API key {name}",
+      "ORGANIZATION_CREATED": "Created the organisation {name}",
+      "ONBOARDING_COMPLETED": "Finished setting up the organisation",
+      "ORGANIZATION_CLOSED": "Closed the organisation {name}",
+      "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100",
+      "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about"
+    },
+    "emptyValue": "empty",
+    "values": {
+      "not_started": "not started",
+      "in_progress": "in progress",
+      "done": "done"
+    }
+  },
+  "profile": {
+    "title": "Company profile",
+    "description": "Plain questions about your company. Policies and the privacy notice use your answers, so one change here updates every document.",
+    "unanswered": "{count, plural, one {# not answered} other {# not answered}}",
+    "allAnswered": "All answered",
+    "groups": {
+      "general": "General",
+      "setup": "Set-up answers",
+      "company": "Company",
+      "contacts": "Contacts",
+      "legalLimits": "Legal limits",
+      "standards": "Your standards",
+      "custom": "Your entries"
+    },
+    "fromRules": "From the Rules",
+    "legalNote": "These limits come from the DPDP Rules as we read them. Confirm them with counsel before you rely on them. Every change is recorded in the activity log.",
+    "notAnswered": "Not answered",
+    "save": "Save",
+    "keepIt": "Keep it",
+    "confirm": {
+      "body": "This limit comes from the DPDP Rules. Change it only if counsel tells you to. The change is recorded in the activity log."
+    },
+    "addEntry": "Add entry",
+    "addTitle": "Add your own entry",
+    "addDescription": "For anything a policy should mention that is not asked here, such as your office address. Once added, it appears in the list when you type '{{' in a policy.",
+    "labelLabel": "Question",
+    "valueLabel": "Answer",
+    "add": "Add",
+    "cancel": "Cancel",
+    "removeEntry": "Remove entry",
+    "removeTitle": "Remove this entry?",
+    "removeBody": "Policies that use it will show it as missing.",
+    "remove": "Remove",
+    "general": {
+      "title": "General",
+      "description": "How your company appears on policies, the privacy notice and auditor reports.",
+      "fields": {
+        "companyName": {
+          "hint": "Use 120 characters at most."
+        },
+        "website": {
+          "hint": "Include https:// in the address."
+        }
+      },
+      "identity": {
+        "title": "Organisation",
+        "description": "How your organisation appears on policies, the privacy notice and auditor reports."
+      },
+      "save": "Save"
+    },
+    "fields": {
+      "companyName": {
+        "label": "Company name",
+        "hint": "Use the legal name. It heads every policy and the notice."
+      },
+      "website": {
+        "label": "Website",
+        "hint": "Where your public privacy notice lives."
+      },
+      "hostingRegion": {
+        "label": "Hosting region",
+        "hint": "Where personal data is stored. Rule 15 cares about this."
+      },
+      "languagesOffered": {
+        "label": "Languages offered",
+        "hint": "The languages your privacy notice is offered in."
+      },
+      "dpoName": {
+        "label": "DPO name",
+        "hint": "The person people contact about their data."
+      },
+      "dpoEmail": {
+        "label": "DPO email",
+        "hint": "Published so people can reach the DPO."
+      },
+      "grievanceEmail": {
+        "label": "Grievance email",
+        "hint": "Where complaints and requests are sent."
+      },
+      "breachContact": {
+        "label": "Breach contact",
+        "hint": "Who the team calls first when a breach is found."
+      },
+      "breachReportWindow": {
+        "label": "Breach report window",
+        "hint": "Time to send the full breach report to the Board (Rule 7)."
+      },
+      "grievanceReplyTime": {
+        "label": "Grievance reply time",
+        "hint": "Time to answer a complaint (Rule 14)."
+      },
+      "logKeepPeriod": {
+        "label": "Log keep-for period",
+        "hint": "How long records of who used personal data are kept (Rule 6)."
+      },
+      "erasureWarning": {
+        "label": "Erasure warning",
+        "hint": "Warning given before inactive accounts are erased (Rule 8)."
+      },
+      "inactivityErasureAfter": {
+        "label": "Inactivity erasure after",
+        "hint": "For the kinds of company the Rules name (Third Schedule)."
+      },
+      "leaverAccessWithin": {
+        "label": "Leavers lose access within",
+        "hint": "How fast access is removed when someone leaves."
+      },
+      "minTls": {
+        "label": "Minimum TLS version",
+        "hint": "The oldest way of securing data in transit that you allow."
+      },
+      "encryptionStandard": {
+        "label": "Encryption standard",
+        "hint": "How stored data is encrypted."
+      },
+      "keyRotation": {
+        "label": "Key rotation",
+        "hint": "How often encryption keys are replaced."
+      },
+      "accessReview": {
+        "label": "Access review",
+        "hint": "How often someone checks who can open what."
+      },
+      "maxDataLoss": {
+        "label": "Most data we can lose",
+        "hint": "Backup target: how much recent work can be lost in a disaster."
+      },
+      "timeToRestore": {
+        "label": "Time to restore",
+        "hint": "Backup target: how long it takes to be running again."
+      },
+      "handlesChildrenData": {
+        "label": "Do you handle data of children or people with disabilities?",
+        "hint": "Switches on Rules 10, 11 and 12."
+      },
+      "sendsDataAbroad": {
+        "label": "Do you send personal data outside India?",
+        "hint": "Switches on Rule 15."
+      },
+      "isSignificantFiduciary": {
+        "label": "Has the government named you a Significant Data Fiduciary?",
+        "hint": "Switches on Rule 13."
+      }
+    },
+    "searchPlaceholder": "Search questions and answers",
+    "columns": {
+      "question": "Question",
+      "answer": "Answer",
+      "actions": "Actions"
+    },
+    "editEntry": "Edit answer",
+    "editTitle": "Edit answer",
+    "legalConfirm": "I have checked this with counsel and I want to change it.",
+    "fromRole": "From the DPO role",
+    "noResults": "Nothing matches your search.",
+    "yes": "Yes",
+    "no": "No",
+    "logo": {
+      "title": "Company logo",
+      "description": "Your logo, for the documents and reports made from this install.",
+      "hint": "{types} up to {max}.",
+      "alt": "The company logo",
+      "drop": "Drag a logo here",
+      "choose": "Choose file",
+      "upload": "Upload logo",
+      "replace": "Replace logo",
+      "uploading": "Uploading",
+      "off": "File storage is not set up, so a logo cannot be uploaded. Ask whoever runs this app to set it up.",
+      "remove": "Remove logo",
+      "removeTitle": "Remove the company logo?",
+      "removeBody": "The picture is deleted. You can upload it again at any time.",
+      "problems": {
+        "empty": "That file is empty.",
+        "tooLarge": "That file is larger than {max}.",
+        "type": "A logo must be one of: {types}."
+      }
+    }
+  },
+  "jobRoles": {
+    "DPO": "DPO",
+    "PRIVACY_LEAD": "Privacy Lead",
+    "SECURITY_LEAD": "Security Lead",
+    "ENGINEERING_LEAD": "Engineering Lead",
+    "PROCUREMENT_LEAD": "Procurement Lead",
+    "HR_LEAD": "HR Lead",
+    "AI_OWNER": "AI Owner",
+    "LEGAL_COUNSEL": "Legal Counsel",
+    "INTERNAL_AUDIT": "Internal Audit"
+  },
+  "people": {
+    "title": "People and roles",
+    "description": "One list of everyone who handles personal data. Access decides what a person can do here. Roles are the named jobs that policies refer to, such as the DPO.",
+    "addPerson": "Add person",
+    "columns": {
+      "person": "Person",
+      "access": "Access",
+      "roles": "Roles held",
+      "status": "Status",
+      "work": "Open work",
+      "actions": "Actions"
+    },
+    "noRoles": "None",
+    "status": {
+      "active": "Active",
+      "left": "Left",
+      "invited": "Invited",
+      "inviteExpired": "Invitation expired"
+    },
+    "leftOn": "Left {date}",
+    "accessLevels": {
+      "title": "Access levels",
+      "admin": "Everything, including people, connections, keys and secrets.",
+      "member": "Does the work: policies, data map, proof, requests and breaches.",
+      "auditor": "Reads everything and changes nothing.",
+      "description": "Choose one for each person. Everyone you add gets an email invitation to sign in."
+    },
+    "form": {
+      "name": "Name",
+      "email": "Work email",
+      "department": "Department",
+      "jobTitle": "Job title",
+      "access": "Access",
+      "accessHint": "They get an email invitation to sign in with this access.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "add": "Add person"
+    },
+    "edit": "Edit details",
+    "editTitle": "Edit details",
+    "leave": {
+      "action": "Mark as left",
+      "title": "Mark {name} as left?",
+      "body": "Their login stops working straight away, any invitation is cancelled, and the roles they hold become vacant. This cannot be undone here.",
+      "confirm": "Mark as left",
+      "doneTitle": "{name} is marked as left",
+      "doneLogin": "Their login has been turned off.",
+      "doneRoles": "These roles are now vacant: {roles}.",
+      "doneChecklist": "Remove their access to your other systems within {time}.",
+      "done": "Done",
+      "doneAssignments": "{count, plural, one {1 item that named them now falls back to its role or an admin.} other {# items that named them now fall back to their role or an admin.}}"
+    },
+    "roleHolders": {
+      "title": "Who holds each role",
+      "description": "Each role has one holder. Policies and controls use these to say who is responsible. A role with no holder falls back to an admin.",
+      "vacant": "Not assigned",
+      "dpoNote": "The DPO's name and email also fill in the DPO answers in Company profile.",
+      "holds": "{count, plural, one {1 item open} other {# items open}}",
+      "nobody": "Nobody yet"
+    },
+    "summary": {
+      "people": "People",
+      "peopleNote": "{count, plural, one {1 has left} other {# have left}}",
+      "login": "Can sign in",
+      "loginNote": "{count, plural, one {1 has no login yet} other {# have no login yet}}",
+      "roles": "Roles filled",
+      "rolesNote": "{count, plural, =0 {Every role has a holder} one {1 role has no holder} other {# roles have no holder}}",
+      "overdue": "Overdue work",
+      "overdueNote": "Across everyone"
+    },
+    "tabs": {
+      "active": "Active ({count})",
+      "left": "Left ({count})"
+    },
+    "search": "Search by name, email or job",
+    "noMatch": "No one matches that search.",
+    "work": {
+      "none": "Nothing open",
+      "open": "{count} open",
+      "overdue": "{count} overdue",
+      "view": "See their work"
+    },
+    "resend": {
+      "action": "Resend invitation",
+      "title": "Resend the invitation to {name}?",
+      "body": "{email} gets a new email with a fresh link, valid for 7 days. Any earlier link stops working once they use the new one.",
+      "confirm": "Resend"
+    }
+  },
+  "frameworks": {
+    "back": "Frameworks",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "appliesWhen": {
+      "children": "Applies if you handle data of children or people with disabilities",
+      "abroad": "Applies if you send data outside India",
+      "sdf": "Applies if you are a Significant Data Fiduciary"
+    },
+    "owner": "Owner",
+    "status": "Status",
+    "nobody": "No one holds this job yet",
+    "coveredBy": "Covered by",
+    "statuses": {
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "ruleStatus": {
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "done": "Done",
+      "off": "Not switched on"
+    },
+    "list": {
+      "framework": "Framework",
+      "readiness": "Readiness",
+      "requirements": "Requirements",
+      "status": "Status",
+      "soon": "Soon",
+      "iso": {
+        "seal": "ISO",
+        "name": "ISO 27001:2022",
+        "about": "Information security standard. Reached through your DPDP controls."
+      },
+      "soc": {
+        "seal": "SOC 2",
+        "name": "SOC 2",
+        "about": "Trust Services Criteria, often asked for by enterprise customers."
+      },
+      "count": "{done} of {total} controls done",
+      "builtIn": "Built in",
+      "custom": "Custom"
+    },
+    "rules": {
+      "rule": "Rule",
+      "readiness": "Readiness",
+      "controls": "Controls",
+      "policies": "Covered by policies",
+      "status": "Status",
+      "count": "{done} of {total}"
+    },
+    "setup": {
+      "title": "Your set-up",
+      "description": "Some rules only apply to some companies. Answer these to switch them on or off. They are also in Company profile."
+    },
+    "control": {
+      "custom": "Custom",
+      "edit": "Edit control",
+      "editHint": "This changes your own copy of the control. The built-in catalogue is not affected.",
+      "add": "Add control",
+      "addHint": "A control of your own, under this rule.",
+      "reviewOn": "Review on {date}",
+      "form": {
+        "title": "Title",
+        "description": "What it asks",
+        "assignee": "Person",
+        "nobody": "Nobody",
+        "reviewDate": "Review date",
+        "policies": "Covered by these policies",
+        "save": "Save",
+        "create": "Add",
+        "cancel": "Cancel",
+        "archive": "Archive this control",
+        "clearDate": "Clear",
+        "openCalendar": "Open calendar",
+        "ownerRole": "Owner job",
+        "ownerRoleHint": "Who is accountable when no one person is named. It starts as the owner of the main policy."
+      },
+      "missing": {
+        "policies": "{approved} of {total} policies approved",
+        "proof": "No proof yet",
+        "proofProgress": "{provided} of {required} proof in"
+      }
+    },
+    "archived": {
+      "title": "Archived controls",
+      "description": "These no longer count. Restore one to bring it back.",
+      "restore": "Restore",
+      "empty": "Nothing is archived."
+    },
+    "evidence": {
+      "remove": "Remove",
+      "addedBy": "Added by {name} on {date}",
+      "kinds": {
+        "link": "Link",
+        "note": "Note",
+        "file": "File"
+      },
+      "download": "Download",
+      "fileMeta": "{name} · {size}",
+      "form": {
+        "kind": "Type",
+        "title": "Title",
+        "url": "Address",
+        "note": "Note",
+        "submit": "Add",
+        "cancel": "Cancel"
+      },
+      "removeTitle": "Remove “{title}”?",
+      "removeBody": "The control may stop counting as done until new proof is added.",
+      "removeConfirm": "Remove"
+    },
+    "tabs": {
+      "rules": "Rules",
+      "setup": "Your set-up",
+      "archived": "Archived ({count})"
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "What this control needs proof of, and what has been given. It is done once its policies are approved and all of it is in.",
+      "progress": "Proof ({provided}/{required})",
+      "count": "Proof ({count})",
+      "none": "Proof",
+      "empty": "Nothing is needed here yet. Add what this control needs proof of.",
+      "edit": "Change requirement",
+      "archive": "Archive requirement",
+      "addRequirement": "Add proof requirement",
+      "general": {
+        "title": "Other proof",
+        "hint": "Proof on this control that is not for one of the requirements above.",
+        "add": "Add other proof"
+      },
+      "status": {
+        "missing": "Missing",
+        "provided": "Provided",
+        "due": "Due again"
+      },
+      "frequencies": {
+        "once": "Only once",
+        "monthly": "Every month",
+        "quarterly": "Every quarter",
+        "yearly": "Every year"
+      },
+      "form": {
+        "title": "What is needed",
+        "description": "What to collect (optional)",
+        "frequency": "How often",
+        "save": "Save",
+        "create": "Add",
+        "cancel": "Cancel",
+        "frequencies": {
+          "once": "Only once",
+          "monthly": "Every month",
+          "quarterly": "Every quarter",
+          "yearly": "Every year"
+        },
+        "assignee": "Who collects it",
+        "controlOwner": "The control's owner",
+        "dueDate": "First due",
+        "clearDate": "Clear",
+        "openCalendar": "Open calendar"
+      },
+      "tabs": {
+        "needed": "Needed ({count})",
+        "archived": "Archived ({count})"
+      },
+      "restore": "Restore",
+      "archivedEmpty": "No archived requirements.",
+      "archivedHint": "Archived requirements do not count towards the control. Proof given for them is kept under \"Other proof\" and returns when you restore them.",
+      "archiveTitle": "Archive “{title}”?",
+      "archiveBody": "It stops counting toward this control. You can bring it back from the Archived tab."
+    },
+    "ownerDefault": "The owner of its main policy",
+    "ownerDefaultTag": "default",
+    "rulePage": {
+      "back": "DPDP",
+      "notApplicable": "This rule does not apply to your company, based on your set-up answers. It is shown for reference and does not count towards your progress.",
+      "pillars": {
+        "count": "{done} of {total}",
+        "none": "None",
+        "controls": {
+          "label": "Controls done",
+          "hint": "What the company does to meet this rule"
+        },
+        "policies": {
+          "label": "Policies approved",
+          "hint": "The written rules behind those controls"
+        },
+        "proof": {
+          "label": "Proof in",
+          "hint": "Evidence that they are followed"
+        }
+      },
+      "tabs": {
+        "controls": "Controls ({count})",
+        "policies": "Policies ({count})",
+        "proof": "Proof ({count})"
+      },
+      "controls": {
+        "hint": "Each control is one thing the company does. It is done when its policies are approved and its proof is in."
+      },
+      "policies": {
+        "title": "Policies",
+        "hint": "The policies that cover this rule. Open one to write it or to approve it.",
+        "empty": "No policy covers this rule yet.",
+        "columns": {
+          "policy": "Policy",
+          "status": "Status",
+          "owner": "Owner",
+          "approver": "Approver",
+          "covers": "Covers"
+        },
+        "coversCount": "{count} of {total} controls"
+      },
+      "proof": {
+        "hint": "The evidence this rule needs, most urgent first. Open one to add proof or to say who collects it.",
+        "empty": "No proof is needed for this rule yet."
+      }
+    },
+    "summary": {
+      "size": "{applying} of {rules} rules apply · {controls} controls",
+      "done": "{done} of {total} done"
+    },
+    "description": "Pick a rule to see its controls. A control is done when its policies are approved and it has proof. Each has an owner, which is a job someone holds in People and roles.",
+    "add": {
+      "button": "Add framework",
+      "title": "Add a framework",
+      "description": "A set of rules your company follows besides the built-in ones, such as a customer’s security review or an internal standard. You add its rules next."
+    },
+    "form": {
+      "name": "Name",
+      "about": "What it is",
+      "aboutHint": "One sentence. It shows on the list.",
+      "seal": "Badge",
+      "sealHint": "A short mark, up to 8 characters.",
+      "create": "Add framework",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "actions": {
+      "edit": "Edit framework",
+      "archive": "Archive",
+      "archiveTitle": "Archive {name}?",
+      "archiveHint": "It disappears from the list. You can only archive it once its controls are archived.",
+      "cancel": "Cancel"
+    },
+    "ruleForm": {
+      "reference": "Reference",
+      "referenceHint": "For example 4.2",
+      "title": "Title",
+      "summary": "What it asks",
+      "create": "Add rule",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "ruleActions": {
+      "add": "Add rule",
+      "addHint": "A rule is one requirement of this framework. Controls go under it.",
+      "edit": "Edit rule",
+      "archive": "Archive",
+      "archiveTitle": "Archive {title}?",
+      "archiveHint": "It disappears from the framework. You can only archive it once its controls are archived.",
+      "cancel": "Cancel"
+    },
+    "rulesTab": {
+      "emptyTitle": "No rules yet",
+      "emptyText": "Add the first rule of this framework. Then add the controls that meet it, and link the policies that back them."
+    }
+  },
+  "policies": {
+    "search": "Search policies",
+    "empty": "No policy matches your search.",
+    "back": "Policies",
+    "add": {
+      "button": "Add policy",
+      "title": "Add a policy",
+      "hint": "A policy of your own starts as a draft. Write its text on the next page, then link it to the controls it covers."
+    },
+    "edit": {
+      "button": "Edit details",
+      "title": "Edit policy details",
+      "hint": "The title, what it is for, who owns it and who approves it. The text and its approval are changed on this page."
+    },
+    "form": {
+      "title": "Title",
+      "summary": "What it is for",
+      "owner": "Owner",
+      "approverTitle": "Approver’s title",
+      "framework": "Framework",
+      "frameworkHint": "Where the policy is filed. It can cover controls in any framework.",
+      "create": "Add policy",
+      "save": "Save",
+      "cancel": "Cancel",
+      "archive": "Archive"
+    },
+    "archived": {
+      "title": "Archived policies",
+      "description": "These do not count until they are restored.",
+      "restore": "Restore"
+    },
+    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "columns": {
+      "policy": "Policy",
+      "owner": "Owner",
+      "approver": "Approver",
+      "review": "Review",
+      "controls": "Controls",
+      "status": "Status"
+    },
+    "reviewEvery": {
+      "annual": "Every year"
+    },
+    "details": {
+      "owner": "Owner",
+      "approver": "Approver",
+      "review": "Review",
+      "legal": "Legal references",
+      "useTitle": "{title}"
+    },
+    "evidence": {
+      "title": "Proof to keep",
+      "description": "What a company keeps to show this policy is followed."
+    },
+    "covers": {
+      "title": "Controls it covers",
+      "description": "Open a rule in Frameworks to change a control’s owner or status.",
+      "empty": "No control points to this policy yet."
+    },
+    "status": {
+      "draft": "Draft",
+      "in_review": "In review",
+      "approved": "Approved"
+    },
+    "actions": {
+      "request": "Request approval",
+      "approve": "Approve",
+      "sendBack": "Send back",
+      "reopen": "Reopen as draft"
+    },
+    "approval": {
+      "title": "Approval",
+      "notApproved": "Not approved yet.",
+      "waiting": "Waiting for an admin to approve it.",
+      "approvedBy": "Approved by {name} on {date}.",
+      "reviewDue": "Next review due {date}.",
+      "overdue": "Review overdue since {date}.",
+      "history": "Approval history",
+      "version": "Version {version}",
+      "view": "View",
+      "versionTitle": "Version {version}",
+      "changelog": "What changed: {text}"
+    },
+    "document": {
+      "title": "Policy text",
+      "description": "Your company’s answers are filled in for readers. Answers in orange are not filled in yet.",
+      "editingHint": "Company answers show as '{{'name'}}' while you edit, and are filled in for readers. Type '{{' to pick one, or use the button on the right of the toolbar.",
+      "edit": "Edit text",
+      "save": "Save draft",
+      "cancel": "Cancel",
+      "locked": "To change the text, send the policy back to draft first.",
+      "insert": "Insert company answer",
+      "fillIn": "Answers shown in orange are not filled in yet.",
+      "openProfile": "Add them in Company profile",
+      "toolbar": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "heading": "Heading",
+        "subheading": "Subheading",
+        "bullets": "Bulleted list",
+        "numbers": "Numbered list",
+        "undo": "Undo",
+        "redo": "Redo"
+      },
+      "meta": {
+        "status": "Status",
+        "version": "Version",
+        "edited": "Last edited",
+        "review": "Next review",
+        "neverApproved": "Not approved yet",
+        "current": "Version {version}",
+        "draftOf": "Draft of version {version}",
+        "editedBy": "{date} by {name}",
+        "startingText": "Not edited yet",
+        "none": "Not set"
+      }
+    },
+    "requestApproval": {
+      "open": "Request approval",
+      "title": "Request approval",
+      "description": "Tell the approver what changed. This is optional.",
+      "changelog": "What changed",
+      "cancel": "Cancel",
+      "submit": "Send for approval"
+    },
+    "tabs": {
+      "text": "Text",
+      "approval": "Approval",
+      "coverage": "Proof and controls"
+    },
+    "properties": {
+      "title": "Properties"
+    },
+    "overview": {
+      "status": {
+        "title": "Where the policies stand",
+        "description": "How many are signed off, waiting for approval, or still being written.",
+        "approved": "approved",
+        "summary": "{approved} of {total} policies approved"
+      },
+      "owner": {
+        "title": "Who owns them",
+        "description": "Each job with the policies it looks after, by status.",
+        "summary": "Policies by owner, across {count} jobs"
+      }
+    },
+    "summary": "{total} policies · {approved} approved · {review} in review · {draft} draft",
+    "flow": {
+      "law": {
+        "label": "The law",
+        "title": "{rules} DPDP rules",
+        "text": "From the Act and its Rules"
+      },
+      "controls": {
+        "label": "Controls",
+        "title": "{controls} controls",
+        "text": "Each names the policy that covers it"
+      },
+      "templates": {
+        "label": "Templates",
+        "title": "{policies} ready-made policies",
+        "text": "Ship with the Kit, in plain English"
+      },
+      "copy": {
+        "label": "Your copy",
+        "title": "Filled from your profile",
+        "text": "Your answers fill every blank"
+      },
+      "proof": {
+        "label": "Approval",
+        "title": "Approved and signed",
+        "text": "Proof then shows it is followed"
+      }
+    },
+    "whereFrom": {
+      "button": "Where do these come from?",
+      "title": "Where this comes from",
+      "description": "Everything here is a starting point that your company can change.",
+      "rules": {
+        "title": "The rules and controls",
+        "text": "They follow the Digital Personal Data Protection Act and its Rules, written up from the prototype framework this project started with."
+      },
+      "policies": {
+        "title": "The policies",
+        "text": "The 18 policies are templates written in plain English from the same source. On first start each is copied to your company, so editing yours never changes the original."
+      },
+      "proof": {
+        "title": "The proof",
+        "text": "The suggested proof comes from what each policy says to keep. Each item was placed under the control whose wording fits best, by matching words, so some may need moving."
+      },
+      "review": {
+        "title": "Not legal advice",
+        "text": "A lawyer has not yet reviewed any of this. Have counsel check the rules, policies and proof before you rely on them."
+      },
+      "close": "Close"
+    },
+    "filters": {
+      "all": "All ({count})",
+      "draft": "Draft ({count})",
+      "in_review": "In review ({count})",
+      "approved": "Approved ({count})"
+    },
+    "readiness": {
+      "tag": "Policy readiness",
+      "title": "Signed off",
+      "text": "{approved} of {total} policies are approved. The rest still need writing or sign-off.",
+      "summary": "{approved} of {total} policies approved"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "description": "What to act on first.",
+      "next": "Suggested next",
+      "clear": "Nothing needs attention right now.",
+      "more": "{count, plural, one {1 more item} other {# more items}} not shown.",
+      "reasons": {
+        "review_overdue": "{days, plural, one {Review was due 1 day ago} other {Review was due # days ago}}",
+        "awaiting_approval": "Waiting for approval from {approver}",
+        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}"
+      }
+    },
+    "allOwners": "All owners",
+    "allApprovers": "All approvers",
+    "clearFilters": "Clear"
+  },
+  "proofPage": {
+    "summary": {
+      "missing": "Missing",
+      "due": "Due again",
+      "provided": "Provided",
+      "overdue": "Overdue"
+    },
+    "tabs": {
+      "all": "All ({count})",
+      "missing": "Missing ({count})",
+      "due": "Due again ({count})",
+      "provided": "Provided ({count})",
+      "overdue": "Overdue ({count})",
+      "overview": "Overview",
+      "mappings": "Mappings"
+    },
+    "columns": {
+      "proof": "Proof",
+      "control": "Control",
+      "owner": "Owner",
+      "frequency": "How often",
+      "status": "Status",
+      "last": "Last provided",
+      "assignee": "Assignee",
+      "due": "Due"
+    },
+    "open": "Open",
+    "never": "Never",
+    "nobody": "No one holds this job yet",
+    "empty": "Nothing here.",
+    "back": "Evidence",
+    "overdueBadge": "Overdue",
+    "noDate": "No date",
+    "everyone": "Everyone",
+    "allRules": "All rules",
+    "filterRule": "Rule",
+    "search": "Search evidence",
+    "files": {
+      "title": "Drag and drop files here",
+      "hint": "Accepted: {types}. Up to {max} each.",
+      "choose": "Choose files",
+      "uploading": "Uploading…",
+      "off": "File storage is not set up",
+      "offHint": "Ask whoever runs this app to set it up. The steps are under Storage in docs/self-hosting.md. Until then, add a link or a note.",
+      "problems": {
+        "empty": "“{name}” is empty.",
+        "tooLarge": "“{name}” is larger than {max}.",
+        "type": "“{name}” is not an accepted type. Accepted: {types}."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Who collects this, how often, and by when. Changes save as you make them.",
+      "status": "Status",
+      "overdue": "Overdue",
+      "nextDue": "Next due: {date}",
+      "noDate": "no date set"
+    },
+    "proof": {
+      "title": "Proof",
+      "description": "What has been given for this, newest first.",
+      "add": "Add proof",
+      "empty": "Nothing has been given yet."
+    },
+    "mappings": {
+      "control": "Control",
+      "controlHint": "The control this proof is for.",
+      "policies": "Policies",
+      "policiesHint": "The policies that control answers to.",
+      "noPolicies": "No policy covers this control yet."
+    },
+    "control": {
+      "showing": "Proof asked for by this control. Add what an auditor would want to see.",
+      "fallback": "Control",
+      "back": "All proof",
+      "tabs": {
+        "requirements": "Requirements ({count})",
+        "other": "Other proof ({count})",
+        "archived": "Archived ({count})"
+      }
+    }
+  },
+  "dashboard": {
+    "work": {
+      "title": "My work",
+      "description": "Open the earliest first. Tabs split it by the kind of work.",
+      "tabs": {
+        "all": "All ({count})",
+        "proof": "Proof ({count})",
+        "approve": "To approve ({count})",
+        "policies": "Policies ({count})",
+        "breach": "Breaches ({count})",
+        "request": "Requests ({count})"
+      },
+      "kinds": {
+        "proof": "Proof to collect",
+        "approve": "Waiting for your approval",
+        "review": "Policy review",
+        "draft": "Policy to write",
+        "breach": "Breach to handle",
+        "request": "Request to answer"
+      },
+      "due": "Due {date}",
+      "overdue": "Overdue · {date}",
+      "nothingHere": "Nothing here.",
+      "empty": {
+        "title": "Nothing is waiting on you",
+        "text": "When proof, an approval or a policy is assigned to you, it shows up here.",
+        "textOther": "Nothing is assigned to this person right now."
+      },
+      "summary": {
+        "overdue": "Overdue",
+        "approve": "To approve",
+        "proof": "Proof to collect",
+        "policies": "Policies to look after",
+        "breach": "Open breaches",
+        "request": "Open requests"
+      },
+      "groups": {
+        "overdue": "Overdue",
+        "week": "Due in the next 7 days",
+        "later": "Due later",
+        "undated": "Waiting on you, no date"
+      }
+    },
+    "hero": {
+      "tag": "Readiness",
+      "title": "How ready you are",
+      "text": "{done} of {total} controls are done across {count, plural, one {1 framework} other {# frameworks}}.",
+      "summary": "{done} of {total} controls done",
+      "policies": "Policies approved",
+      "proof": "Proof in",
+      "overdue": "Proof overdue"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "description": "What to look at first.",
+      "clear": "Nothing needs attention right now.",
+      "more": "{count, plural, one {1 more item} other {# more items}} not shown.",
+      "reasons": {
+        "proof_overdue": "{days, plural, =0 {Proof is due today} one {Proof was due 1 day ago} other {Proof was due # days ago}}",
+        "review_overdue": "{days, plural, one {Review was due 1 day ago} other {Review was due # days ago}}",
+        "awaiting_approval": "Waiting for approval from {approver}",
+        "review_soon": "{days, plural, =0 {Review is due today} one {Review due in 1 day} other {Review due in # days}}",
+        "breach_overdue": "The report to the Board is overdue",
+        "breach_open": "An open breach: the report clock is running",
+        "request_overdue": "{days, plural, =0 {Request was due today} one {Request was due 1 day ago} other {Request was due # days ago}}",
+        "request_due_soon": "{days, plural, =0 {Request is due today} one {Request due in 1 day} other {Request due in # days}}"
+      }
+    },
+    "frameworks": {
+      "title": "Frameworks",
+      "description": "How far along each one is.",
+      "count": "{done} of {total} controls done"
+    },
+    "preview": {
+      "title": "Your work",
+      "description": "The most urgent things waiting on you.",
+      "all": "See all",
+      "clear": "Nothing is waiting on you.",
+      "more": "{count, plural, one {1 more item} other {# more items}} on your work page."
+    },
+    "team": {
+      "title": "Open work by person",
+      "description": "Who is carrying the most. Red is overdue.",
+      "clear": "No one has open work.",
+      "open": "{open} open",
+      "openOverdue": "{open} open, {overdue} late"
+    },
+    "activity": {
+      "title": "Recent changes",
+      "description": "The latest things anyone changed.",
+      "all": "Activity log",
+      "empty": "Nothing has changed yet."
+    }
+  },
+  "pagination": {
+    "label": "Pagination",
+    "showing": "{from}–{to} of {total}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "confirm": {
+    "cancel": "Cancel"
+  },
+  "breaches": {
+    "report": "Report a breach",
+    "edit": "Edit",
+    "editTitle": "Edit breach",
+    "back": "Breaches",
+    "search": "Search breaches",
+    "summary": {
+      "open": "Open",
+      "overdue": "Overdue",
+      "closed": "Closed",
+      "openNote": "Not closed yet",
+      "overdueNote": "The Board has not been told in time",
+      "closedNote": "All five steps done"
+    },
+    "tabs": {
+      "open": "Open ({count})",
+      "closed": "Closed ({count})"
+    },
+    "columns": {
+      "title": "Breach",
+      "found": "Found",
+      "people": "People affected",
+      "step": "Step",
+      "clock": "Board report",
+      "assignee": "Assigned to"
+    },
+    "empty": {
+      "openTitle": "No open breaches",
+      "openText": "When a breach is found, report it here to start the clock.",
+      "closedTitle": "No closed breaches",
+      "closedText": "A breach moves here once all five steps are done.",
+      "noMatch": "No breach matches your search."
+    },
+    "unknownPeople": "Not known",
+    "unassigned": "Unassigned",
+    "steps": {
+      "found": "Found",
+      "assess": "Assess",
+      "tell_board": "Tell the Board",
+      "tell_people": "Tell people",
+      "close": "Close"
+    },
+    "stepHints": {
+      "found": "The breach is on record and the clock is running.",
+      "assess": "Find out what happened, which systems and data were affected, and how many people. Write what you learn in the note.",
+      "tell_board": "Send the full report to the Data Protection Board of India within the report window. Write in the note what you sent and when. This app records it; it does not send it.",
+      "tell_people": "Tell each affected person without delay, in plain language: what happened, what data, what you are doing, and what they can do. Write in the note how and when you told them. This app records it; it does not send it.",
+      "close": "Close the breach once the Board and the affected people have been told and the work is done. A closed breach can no longer be changed."
+    },
+    "clock": {
+      "title": "Board report clock",
+      "description": "The Board needs a full report within the breach report window in Company profile. The clock starts when the breach is found.",
+      "due": "Report due {date}",
+      "left": "Time left",
+      "pastDue": "Time past due",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "overdue": "Overdue",
+      "boardTold": "The Board was told on {date}. The clock has stopped."
+    },
+    "badge": {
+      "left": "{unit, select, days {{days}d {hours}h left} hours {{hours}h {minutes}m left} other {{minutes}m left}}",
+      "overdue": "Overdue by {unit, select, days {{days}d {hours}h} hours {{hours}h {minutes}m} other {{minutes}m}}",
+      "boardTold": "Board told",
+      "closed": "Closed"
+    },
+    "detail": {
+      "stepTitle": "Next step: {step}",
+      "notes": "Note",
+      "notesHint": "Optional. Saved with the step as proof.",
+      "markDone": "Mark \"{step}\" done",
+      "closeTitle": "Close this breach?",
+      "closeText": "A closed breach can no longer be changed. Its steps stay on record.",
+      "closedTitle": "This breach is closed",
+      "closedText": "It was closed on {date}. Every step is on record below.",
+      "detailsTitle": "What happened",
+      "description": "What happened",
+      "systems": "Systems affected",
+      "data": "Personal data affected",
+      "people": "People affected",
+      "found": "Found",
+      "assignee": "Assigned to",
+      "unassigned": "Unassigned",
+      "unassignedHint": "Nobody is named, so it is the DPO's to deal with.",
+      "reportedBy": "Reported by {name}",
+      "historyTitle": "Steps done",
+      "historyEmpty": "No step has been done yet.",
+      "doneBy": "{name} · {date}",
+      "noNote": "No note.",
+      "trackerLabel": "Steps of the breach",
+      "stateDone": "Done",
+      "stateCurrent": "Now",
+      "stateUpcoming": "To do"
+    },
+    "form": {
+      "title": "Title",
+      "description": "What happened",
+      "descriptionHint": "In plain words. This is what the Board report starts from.",
+      "foundDate": "Date found",
+      "foundTime": "Time found",
+      "foundHint": "The report clock starts from this time.",
+      "systems": "Systems affected",
+      "data": "Personal data affected",
+      "people": "People affected",
+      "peopleHint": "A number, or leave it empty if not known yet.",
+      "assignee": "Assigned to",
+      "assigneeNone": "Nobody: the DPO",
+      "assigneeHint": "Leave it as nobody and it is the DPO's to deal with.",
+      "openCalendar": "Open calendar",
+      "clearDate": "Clear date",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Report breach"
+    }
+  },
+  "requests": {
+    "log": "Log a request",
+    "edit": "Edit",
+    "editTitle": "Edit request",
+    "back": "Requests",
+    "search": "Search requests",
+    "filterType": "Filter by type",
+    "allTypes": "All types",
+    "noTasks": "No tasks",
+    "unassigned": "Unassigned",
+    "progress": "{done} of {total}",
+    "types": {
+      "access": "Copy of data",
+      "correction": "Correction",
+      "erasure": "Erasure",
+      "nomination": "Nomination",
+      "complaint": "Complaint"
+    },
+    "sources": {
+      "email": "Email",
+      "website": "Website",
+      "manual": "Added by hand"
+    },
+    "statuses": {
+      "new": "New",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "outcomes": {
+      "todo": "To do",
+      "done": "Done",
+      "erased": "Erased",
+      "kept_by_law": "Kept by law"
+    },
+    "summary": {
+      "new": "New",
+      "inProgress": "In progress",
+      "overdue": "Overdue",
+      "done": "Done",
+      "newNote": "Identity not checked yet",
+      "inProgressNote": "Identity checked, not closed",
+      "overdueNote": "Past the reply time",
+      "doneNote": "Replied and closed"
+    },
+    "tabs": {
+      "new": "New ({count})",
+      "in_progress": "In progress ({count})",
+      "done": "Done ({count})"
+    },
+    "view": {
+      "label": "View",
+      "board": "Board",
+      "list": "List"
+    },
+    "board": {
+      "empty": "Nothing here",
+      "showMore": "Show more",
+      "seeAllClosed": "See all closed"
+    },
+    "card": {
+      "meta": "{ref} · {type}",
+      "left": "Due in {unit, select, days {{days, plural, one {# day} other {# days}}} hours {{hours, plural, one {# hour} other {# hours}}} other {{minutes, plural, one {# minute} other {# minutes}}}}",
+      "late": "{unit, select, days {{days, plural, one {# day} other {# days}}} hours {{hours, plural, one {# hour} other {# hours}}} other {{minutes, plural, one {# minute} other {# minutes}}}} late",
+      "closedOnTime": "Closed on time",
+      "closedLate": "Closed late"
+    },
+    "columns": {
+      "ref": "Number",
+      "person": "Person",
+      "type": "Request",
+      "received": "Received",
+      "due": "Reply due",
+      "tasks": "Tasks done",
+      "assignee": "Assigned to"
+    },
+    "empty": {
+      "new": {
+        "title": "No new requests",
+        "text": "When someone asks to see, fix or erase their data, or complains, log it here to start the clock."
+      },
+      "in_progress": {
+        "title": "No requests in progress",
+        "text": "A request moves here once its identity is checked."
+      },
+      "done": {
+        "title": "No closed requests",
+        "text": "A request moves here once it is replied to and closed."
+      },
+      "noMatch": "No request matches your search."
+    },
+    "badge": {
+      "left": "{unit, select, days {{days}d {hours}h left} hours {{hours}h {minutes}m left} other {{minutes}m left}}",
+      "overdue": "Overdue by {unit, select, days {{days}d {hours}h} hours {{hours}h {minutes}m} other {{minutes}m}}",
+      "done": "Done"
+    },
+    "clock": {
+      "title": "Reply clock",
+      "description": "The reply is due within the grievance reply time in Company profile, counted from the day the request was received.",
+      "due": "Reply due {date}",
+      "left": "Time left",
+      "pastDue": "Time past due",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "overdue": "Overdue",
+      "closed": "The request was closed on {date}. The clock has stopped."
+    },
+    "detail": {
+      "loggedBy": "Logged by {name}",
+      "detailsTitle": "The request",
+      "details": "What the person asks",
+      "email": "Email",
+      "received": "Received",
+      "source": "Came by",
+      "assignee": "Assigned to",
+      "unassigned": "Unassigned",
+      "unassignedHint": "Nobody is named, so it is the DPO's to deal with.",
+      "closedTitle": "This request is closed",
+      "closedText": "It was closed by {name} on {date}. It can no longer be changed."
+    },
+    "identity": {
+      "title": "Identity check",
+      "description": "Check that the person is who they say they are, in a way that fits the request. Nothing is shared or erased before this is done.",
+      "note": "How it was checked",
+      "noteHint": "Optional. Say what you checked, not the documents themselves.",
+      "verify": "Mark identity verified",
+      "notDone": "The identity has not been checked yet.",
+      "doneBy": "Identity checked by {name} on {date}",
+      "noNote": "No note."
+    },
+    "tasks": {
+      "title": "Tasks",
+      "description": "Each system that holds the person's data. Mark it done, erased, or kept by law with the reason.",
+      "needsIdentity": "You can list the systems now, but outcomes can be set only after the identity is checked.",
+      "empty": "No system has been added yet.",
+      "system": "Add a system",
+      "systemPlaceholder": "For example: Billing, CRM, Email list",
+      "add": "Add",
+      "outcome": "What came of {system}",
+      "remove": "Remove {system}",
+      "reason": "Why the law keeps it",
+      "reasonHint": "Required. Name the law or rule that says to keep the data.",
+      "save": "Save"
+    },
+    "reply": {
+      "title": "Reply",
+      "description": "Write the reply to the person. Closing records it with the request, its tasks and its history. This app does not send it.",
+      "label": "Reply to the person",
+      "hint": "Required to close.",
+      "close": "Close request",
+      "confirmTitle": "Close this request?",
+      "confirmText": "A closed request can no longer be changed. The reply, the tasks and the history stay on record.",
+      "closedBy": "Closed by {name} on {date}",
+      "blocked": {
+        "identity": "Check the identity before closing.",
+        "tasks": "Give every task an outcome before closing."
+      }
+    },
+    "form": {
+      "type": "What the person asks for",
+      "personName": "Name",
+      "personEmail": "Email",
+      "details": "What they ask",
+      "detailsHint": "In their own words, as far as you can.",
+      "source": "How it came",
+      "receivedDate": "Date received",
+      "receivedTime": "Time received",
+      "receivedHint": "The reply clock starts from this time.",
+      "assignee": "Assigned to",
+      "assigneeNone": "Nobody: the DPO",
+      "assigneeHint": "Leave it as nobody and it is the DPO's to deal with.",
+      "openCalendar": "Open calendar",
+      "clearDate": "Clear date",
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Log request"
+    }
+  },
+  "exports": {
+    "title": "Exports",
+    "description": "Take the records out of the app: everything in one zip for an auditor, or one list at a time as a spreadsheet. Every download is written to the activity log.",
+    "pack": {
+      "title": "Audit pack",
+      "description": "One zip with every list below, the newest approved text of each policy, every file uploaded as proof, and the result of the activity log's integrity check.",
+      "download": "Download audit pack"
+    },
+    "lists": {
+      "title": "Lists",
+      "description": "The whole list, not just the page you are looking at. They open in Excel.",
+      "download": "Download CSV"
+    },
+    "datasets": {
+      "checklist": {
+        "name": "Checklist",
+        "about": "Every control with its status, owner, policies and proof."
+      },
+      "proof_requirements": {
+        "name": "Proof requirements",
+        "about": "What each control must prove, how often, who collects it and when it was last given."
+      },
+      "evidence": {
+        "name": "Proof",
+        "about": "Every file, link and note attached as proof, with who added it and when."
+      },
+      "policies": {
+        "name": "Policies",
+        "about": "Each policy with its status, approver and approved version."
+      },
+      "breaches": {
+        "name": "Breaches",
+        "about": "Every breach with the date of each step, from found to closed."
+      },
+      "requests": {
+        "name": "Requests",
+        "about": "Every request with its due date, identity check, systems handled and outcome."
+      },
+      "people": {
+        "name": "People and roles",
+        "about": "Everyone on record, the jobs they hold and their access."
+      },
+      "activity": {
+        "name": "Activity log",
+        "about": "Every change, oldest first, with the fingerprints that link them."
+      }
+    }
+  },
+  "apiKeys": {
+    "title": "API keys",
+    "description": "Let a script or an AI agent work in this organisation. A key acts as the person who made it, with the access you choose, and everything it changes shows in the activity log.",
+    "create": "Create key",
+    "empty": {
+      "title": "No API keys yet",
+      "body": "Create one to let a script or an AI agent, such as Claude Code, read or change things here."
+    },
+    "columns": {
+      "table": "API keys",
+      "name": "Name",
+      "access": "Access",
+      "createdBy": "Created by",
+      "lastUsed": "Last used",
+      "expires": "Expires",
+      "status": "Status"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "auditor": "Auditor"
+    },
+    "roleHelp": {
+      "admin": "Can do everything an admin can, including managing people. It still cannot make or revoke keys. Keep it as safe as a password.",
+      "member": "Can read and change things, like a team member. It cannot manage people.",
+      "auditor": "Can only read."
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "revoked": "Revoked"
+    },
+    "neverUsed": "Never used",
+    "neverExpires": "Never",
+    "form": {
+      "title": "Create an API key",
+      "description": "The key works in this organisation only. It stops working if you revoke it, if it expires, or if you leave the organisation.",
+      "name": "Name",
+      "namePlaceholder": "Claude Code",
+      "access": "Access",
+      "expires": "Expires",
+      "expiryNever": "Never",
+      "expiryDays": "In {days} days",
+      "cancel": "Cancel",
+      "submit": "Create key"
+    },
+    "created": {
+      "title": "Your new key",
+      "warning": "Copy the key now. It is shown only once and cannot be read again.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "done": "Done"
+    },
+    "revoke": {
+      "action": "Revoke {name}",
+      "title": "Revoke {name}?",
+      "body": "Anything using this key stops working at once. This cannot be undone.",
+      "confirm": "Revoke key"
+    },
+    "usage": {
+      "title": "Using a key",
+      "body": "Send the key in the x-api-key header of each request. It needs no sign-in and no organisation header, because a key belongs to one organisation."
+    }
+  },
+  "connections": {
+    "title": "Connections",
+    "description": "Connect the systems that hold your data, such as an Azure subscription, and check how they are set up against what the DPDP Act expects. DPDP Kit only reads: it never changes anything in them.",
+    "secretsOff": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY, then reload this page.",
+    "provider": {
+      "azure": "Microsoft Azure and Entra ID"
+    },
+    "card": {
+      "tenant": "Tenant",
+      "subscription": "Subscription",
+      "neverChecked": "Not checked yet.",
+      "lastChecked": "Last checked {when}",
+      "passed": "{count} passed",
+      "warned": "{count} to review",
+      "failed": "{count} failed",
+      "run": "Run checks",
+      "running": "Checking",
+      "wait": "Reading your subscription. This can take up to half a minute."
+    },
+    "status": {
+      "pass": "Passed",
+      "warn": "Review",
+      "fail": "Failed",
+      "skipped": "Not checked"
+    },
+    "results": {
+      "checked": "Checked {when} by {name}",
+      "passed": "Passed",
+      "warned": "To review",
+      "failed": "Failed",
+      "skipped": "Not checked",
+      "view": {
+        "label": "Which checks to show",
+        "attention": "Needs attention ({count})",
+        "all": "All checks ({count})"
+      },
+      "allClear": "Nothing needs attention. Choose All checks to see what passed."
+    },
+    "groups": {
+      "needsWork": "{count} to look at",
+      "identity": {
+        "title": "Sign-in and access",
+        "about": "Who can get in, and whether a stolen password is enough. The Act asks for reasonable security safeguards."
+      },
+      "data": {
+        "title": "Where the data is kept",
+        "about": "Storage, encryption and key vaults: how they are protected, and where they are."
+      },
+      "databases": {
+        "title": "Databases",
+        "about": "SQL, PostgreSQL, MySQL, MongoDB, Redis and Cosmos DB: who can reach them, and how."
+      },
+      "apps": {
+        "title": "Apps and servers",
+        "about": "Web apps, function apps and virtual machines: how they accept connections and sign in."
+      },
+      "containers": {
+        "title": "Containers",
+        "about": "Kubernetes clusters and container registries."
+      },
+      "network": {
+        "title": "Network",
+        "about": "What can be reached from the internet."
+      },
+      "governance": {
+        "title": "Monitoring and governance",
+        "about": "Whether changes are watched, logs are kept, policies are enforced, and production is kept apart."
+      }
+    },
+    "skipped": {
+      "none": "Nothing of this kind was found, so there was nothing to check.",
+      "access": "The app registration is not allowed to read this. Give it the Reader role, or the Microsoft Graph permissions in the setup steps.",
+      "error": "This check could not finish. Try again in a moment."
+    },
+    "checks": {
+      "entra_mfa_registered": {
+        "name": "Everyone has a second sign-in step",
+        "about": "Members of your organisation have registered multi-factor authentication.",
+        "pass": "All {total} members have registered a second sign-in step.",
+        "problem": "{count} of {total} members have not registered a second sign-in step. Find them in Entra ID, under Authentication methods."
+      },
+      "entra_mfa_enforced": {
+        "name": "A second step is required at sign-in",
+        "about": "Security defaults or a conditional access policy makes everyone use multi-factor authentication.",
+        "pass": "Multi-factor authentication is required for everyone.",
+        "problem": "Nothing requires everyone to use multi-factor authentication. Turn on security defaults, or add a conditional access policy for all users."
+      },
+      "entra_admin_count": {
+        "name": "A sensible number of global administrators",
+        "about": "Two to five people hold the most powerful role.",
+        "pass": "{count} people are global administrators.",
+        "problem": "{count, plural, one {# person is} other {# people are}} global administrators. Aim for two to five: one leaves a single point of failure, and many is a lot of power."
+      },
+      "rbac_privileged": {
+        "name": "Few accounts can do everything in Azure",
+        "about": "Only a handful of accounts hold Owner or User Access Administrator over the whole subscription.",
+        "pass": "{count} accounts hold Owner or User Access Administrator over the whole subscription, within the limit of {limit}.",
+        "problem": "{count} accounts hold Owner or User Access Administrator over the whole subscription. Aim for {limit} or fewer: an account that is broken into can do all that it can."
+      },
+      "rbac_wildcard_roles": {
+        "name": "No custom role allows everything",
+        "about": "A custom role that allows every action is Owner under another name.",
+        "pass": "None of the {total} custom roles allows every action.",
+        "problem": "{count} of {total} custom roles allow every action: {names}."
+      },
+      "rbac_service_principals": {
+        "name": "No app holds broad power over the subscription",
+        "about": "Apps that hold Owner, User Access Administrator or Contributor over the whole subscription can change anything in it.",
+        "pass": "No app holds Owner, User Access Administrator or Contributor over the whole subscription.",
+        "problem": "{count} apps hold Owner, User Access Administrator or Contributor over the whole subscription. Whoever has an app’s secret has that power."
+      },
+      "storage_secure_transfer": {
+        "name": "Storage requires HTTPS and TLS 1.2",
+        "about": "Storage accounts refuse plain HTTP and old versions of TLS.",
+        "pass": "All {total} storage accounts require HTTPS and TLS 1.2 or newer.",
+        "problem": "{count} of {total} storage accounts allow plain HTTP or old TLS: {names}."
+      },
+      "storage_public_access": {
+        "name": "Storage has no public containers",
+        "about": "Nobody who only has an address can read a container.",
+        "pass": "None of the {total} storage accounts allow public access to containers.",
+        "problem": "{count} of {total} storage accounts allow public access to containers: {names}."
+      },
+      "storage_network_access": {
+        "name": "Storage is not open to every network",
+        "about": "Storage accounts accept connections only from the networks that need them.",
+        "pass": "None of the {total} storage accounts accept connections from every network.",
+        "problem": "{count} of {total} storage accounts accept connections from every network: {names}. This is Azure’s default, and a key is still needed, but a firewall rule narrows who can try."
+      },
+      "encryption_at_rest": {
+        "name": "Data is encrypted at rest",
+        "about": "Storage accounts, managed disks and SQL databases encrypt what they hold when it is not in use.",
+        "pass": "All {total} storage accounts, disks and SQL databases are encrypted at rest.",
+        "problem": "{count} of {total} storage accounts, disks and SQL databases are not encrypted at rest: {names}."
+      },
+      "keyvault_soft_delete": {
+        "name": "Key vaults can recover what is deleted",
+        "about": "Soft delete is on, so a deleted vault or key can be brought back.",
+        "pass": "Soft delete is on for all {total} key vaults.",
+        "problem": "Soft delete is off for {count} of {total} key vaults: {names}."
+      },
+      "keyvault_purge_protection": {
+        "name": "Key vaults cannot be destroyed early",
+        "about": "Purge protection stops a deleted vault or key being destroyed for good before its time.",
+        "pass": "Purge protection is on for all {total} key vaults.",
+        "problem": "Purge protection is off for {count} of {total} key vaults: {names}."
+      },
+      "keyvault_public_access": {
+        "name": "Key vaults are not open to the internet",
+        "about": "Public network access is off, or limited by the vault’s firewall.",
+        "pass": "None of the {total} key vaults are open to every network.",
+        "problem": "{count} of {total} key vaults are open to every network: {names}."
+      },
+      "keyvault_rbac": {
+        "name": "Key vault access is given by roles",
+        "about": "Access is given through Azure roles, which are reviewed in one place, and not through policies kept on each vault.",
+        "pass": "All {total} key vaults use Azure roles for access.",
+        "problem": "{count} of {total} key vaults still use access policies kept on the vault: {names}."
+      },
+      "data_in_india": {
+        "name": "Data stores are in India",
+        "about": "Where your storage, databases, caches, disks and key vaults are. The Act allows data to go abroad unless a country is restricted, but you should know where it is.",
+        "pass": "All {total} data stores are in India.",
+        "problem": "{count} of {total} data stores are outside India: {names}."
+      },
+      "sql_tls": {
+        "name": "SQL servers require TLS 1.2",
+        "about": "Database connections use TLS 1.2 or newer.",
+        "pass": "All {total} SQL servers require TLS 1.2 or newer.",
+        "problem": "{count} of {total} SQL servers accept older TLS: {names}."
+      },
+      "sql_public_access": {
+        "name": "SQL servers are not open to the internet",
+        "about": "Public network access is off, or kept in check by firewall rules.",
+        "pass": "None of the {total} SQL servers allow public network access.",
+        "problem": "{count} of {total} SQL servers allow public network access: {names}. Check their firewall rules."
+      },
+      "sql_firewall": {
+        "name": "SQL firewalls do not let everyone in",
+        "about": "No firewall rule opens a server to every address, or to every Azure service, which includes other people’s.",
+        "pass": "None of the {total} SQL servers has a rule that opens it widely.",
+        "problem": "{count} of {total} SQL servers have a firewall rule that opens them to every address, or to every Azure service: {names}."
+      },
+      "sql_auditing": {
+        "name": "SQL auditing is on",
+        "about": "Access to the data is recorded, which helps when a breach is investigated.",
+        "pass": "Auditing is on for all {total} SQL servers.",
+        "problem": "Auditing is off for {count} of {total} SQL servers: {names}."
+      },
+      "flexible_servers_tls": {
+        "name": "PostgreSQL and MySQL require TLS 1.2",
+        "about": "Flexible servers insist on encrypted connections, using TLS 1.2 or newer.",
+        "pass": "All {total} PostgreSQL and MySQL servers require encrypted connections with TLS 1.2 or newer.",
+        "problem": "{count} of {total} PostgreSQL and MySQL servers allow unencrypted connections or older TLS: {names}."
+      },
+      "datastores_public_access": {
+        "name": "Databases and caches are not open to the internet",
+        "about": "PostgreSQL, MySQL, MongoDB, Redis and Cosmos DB have public network access off, or kept in check by firewall rules.",
+        "pass": "None of the {total} databases and caches allow public network access.",
+        "problem": "{count} of {total} databases and caches allow public network access: {names}. Check their firewall rules."
+      },
+      "cosmos_key_access": {
+        "name": "Cosmos DB does not rely on shared keys",
+        "about": "Sign-in with an account replaces keys that can be copied and cannot be taken back from one person.",
+        "pass": "None of the {total} Cosmos DB accounts allow access by key.",
+        "problem": "{count} of {total} Cosmos DB accounts allow access by key: {names}."
+      },
+      "cosmos_failover": {
+        "name": "Cosmos DB fails over by itself",
+        "about": "An account in several regions moves to another when one fails.",
+        "pass": "All {total} Cosmos DB accounts fail over by themselves, or have only one region.",
+        "problem": "{count} of {total} Cosmos DB accounts in several regions do not fail over by themselves: {names}."
+      },
+      "cosmos_backup": {
+        "name": "Cosmos DB keeps a week of backups",
+        "about": "Backups are continuous, or kept for at least a week.",
+        "pass": "All {total} Cosmos DB accounts keep backups for a week or more.",
+        "problem": "{count} of {total} Cosmos DB accounts keep backups for less than a week: {names}."
+      },
+      "webapp_https": {
+        "name": "Web apps only accept HTTPS",
+        "about": "Web apps and function apps turn plain HTTP away, so what travels to them is encrypted.",
+        "pass": "All {total} web apps only accept HTTPS.",
+        "problem": "{count} of {total} web apps also accept plain HTTP: {names}."
+      },
+      "webapp_tls": {
+        "name": "Web apps require TLS 1.2",
+        "about": "Web apps refuse connections that use TLS older than 1.2.",
+        "pass": "All {total} web apps require TLS 1.2 or newer.",
+        "problem": "{count} of {total} web apps accept older TLS: {names}."
+      },
+      "webapp_remote_debugging": {
+        "name": "Web apps have remote debugging off",
+        "about": "A debugger that can be attached from outside is a way in.",
+        "pass": "Remote debugging is off for all {total} web apps.",
+        "problem": "Remote debugging is on for {count} of {total} web apps: {names}."
+      },
+      "webapp_ftp": {
+        "name": "Web apps do not allow plain FTP",
+        "about": "Files are sent over FTPS, or not at all, because plain FTP sends passwords in the clear.",
+        "pass": "None of the {total} web apps allows plain FTP.",
+        "problem": "{count} of {total} web apps allow plain FTP: {names}."
+      },
+      "webapp_identity": {
+        "name": "Web apps have an identity of their own",
+        "about": "An identity lets the app reach other services without a password kept in its settings.",
+        "pass": "All {total} web apps have a managed identity.",
+        "problem": "{count} of {total} web apps have no managed identity: {names}."
+      },
+      "vm_identity": {
+        "name": "Virtual machines have an identity of their own",
+        "about": "An identity lets a machine reach other services without a password kept on it.",
+        "pass": "All {total} virtual machines have a managed identity.",
+        "problem": "{count} of {total} virtual machines have no managed identity: {names}."
+      },
+      "vm_ssh_password": {
+        "name": "Linux machines do not accept passwords",
+        "about": "A Linux machine that accepts a password can be guessed at, so keys are used instead.",
+        "pass": "None of the {total} Linux machines accepts a password to sign in.",
+        "problem": "{count} of {total} Linux machines accept a password to sign in: {names}."
+      },
+      "vm_secure_boot": {
+        "name": "Virtual machines use secure boot",
+        "about": "Secure boot stops software that has been tampered with from starting.",
+        "pass": "None of the {total} virtual machines has secure boot turned off.",
+        "problem": "{count} of {total} virtual machines have secure boot turned off: {names}."
+      },
+      "aks_rbac": {
+        "name": "Kubernetes clusters use role-based access",
+        "about": "What each person and service may do in a cluster is decided by roles.",
+        "pass": "All {total} clusters use role-based access control.",
+        "problem": "{count} of {total} clusters do not use role-based access control: {names}."
+      },
+      "aks_aad": {
+        "name": "Kubernetes clusters use work accounts",
+        "about": "People sign in to a cluster with their work account, which the organisation can switch off.",
+        "pass": "All {total} clusters use Microsoft Entra ID to sign people in.",
+        "problem": "{count} of {total} clusters do not use Microsoft Entra ID to sign people in: {names}."
+      },
+      "aks_network_policy": {
+        "name": "Kubernetes clusters limit traffic between workloads",
+        "about": "A network policy stops any workload from talking to any other.",
+        "pass": "All {total} clusters have a network policy.",
+        "problem": "{count} of {total} clusters have no network policy: {names}."
+      },
+      "aks_private_api": {
+        "name": "Kubernetes control points are not open to everyone",
+        "about": "A cluster’s control point is private, or open only to listed addresses.",
+        "pass": "All {total} clusters have a private or restricted control point.",
+        "problem": "{count} of {total} clusters have a control point open to every address: {names}."
+      },
+      "aks_policy_addon": {
+        "name": "Kubernetes clusters enforce Azure Policy",
+        "about": "The Azure Policy add-on checks what runs in a cluster against your rules.",
+        "pass": "All {total} clusters have the Azure Policy add-on.",
+        "problem": "{count} of {total} clusters lack the Azure Policy add-on: {names}."
+      },
+      "aks_auto_upgrade": {
+        "name": "Kubernetes clusters upgrade themselves",
+        "about": "An upgrade channel keeps a cluster on a supported version.",
+        "pass": "All {total} clusters have an upgrade channel.",
+        "problem": "{count} of {total} clusters have no upgrade channel: {names}."
+      },
+      "aks_monitoring": {
+        "name": "Kubernetes clusters are monitored",
+        "about": "Container monitoring records what a cluster is doing.",
+        "pass": "All {total} clusters are monitored.",
+        "problem": "{count} of {total} clusters are not monitored: {names}."
+      },
+      "acr_admin_user": {
+        "name": "Container registries have no shared admin login",
+        "about": "A shared login cannot be tied to a person, so each person or service signs in as themselves.",
+        "pass": "None of the {total} container registries has the admin user on.",
+        "problem": "The admin user is on for {count} of {total} container registries: {names}."
+      },
+      "acr_public_access": {
+        "name": "Container registries are not open to the internet",
+        "about": "Public network access is off, or limited by firewall rules.",
+        "pass": "None of the {total} container registries is open to the public network.",
+        "problem": "{count} of {total} container registries are open to the public network: {names}."
+      },
+      "acr_anonymous_pull": {
+        "name": "Container registries need a sign-in to pull images",
+        "about": "Nobody can pull an image without signing in.",
+        "pass": "None of the {total} container registries allows anonymous pulls.",
+        "problem": "{count} of {total} container registries allow anonymous pulls: {names}."
+      },
+      "acr_content_trust": {
+        "name": "Container registries use signed images",
+        "about": "Content trust lets only signed images be used. It is a Premium feature, so smaller registries are not marked down.",
+        "pass": "All Premium container registries use content trust.",
+        "problem": "{count} of {total} registries have content trust off: {names}."
+      },
+      "acr_retention": {
+        "name": "Container registries clear out old images",
+        "about": "A retention policy removes untagged images that are no longer needed. It is a Premium feature, so smaller registries are not marked down.",
+        "pass": "All Premium container registries have a retention policy.",
+        "problem": "{count} of {total} registries have no retention policy: {names}."
+      },
+      "nsg_open_ports": {
+        "name": "No remote login or database port is open to the internet",
+        "about": "Network security groups do not let anyone reach SSH, remote desktop or database ports.",
+        "pass": "None of the {total} network security groups opens these ports to the internet.",
+        "problem": "{count} of {total} network security groups open a remote login or database port to the internet: {names}."
+      },
+      "environment_separation": {
+        "name": "Production is kept apart from other environments",
+        "about": "Production and non-production sit in separate resource groups, told apart by an environment tag or by the name.",
+        "pass": "Production ({production} resource groups) is kept apart from non-production ({nonProduction}) by resource group.",
+        "problem": "Production and non-production could not both be found among the {total} resource groups, by tag or by name: {production} production, {nonProduction} non-production. Tag each group with its environment, or use separate subscriptions."
+      },
+      "monitor_alerts": {
+        "name": "Alerts watch the changes that open a way in",
+        "about": "Someone is told when a policy, a security setting, a network rule or a SQL firewall rule is changed.",
+        "pass": "Alerts exist for all {total} of the watched changes.",
+        "problem": "{count} of {total} watched changes have no alert: {names}."
+      },
+      "monitor_log_export": {
+        "name": "The activity log is kept somewhere",
+        "about": "The subscription’s activity log is exported to a workspace or storage account, because Azure keeps it only for 90 days.",
+        "pass": "The activity log is exported to {count, plural, one {# place} other {# places}}.",
+        "problem": "The activity log is not exported anywhere, so Azure keeps it for only 90 days."
+      },
+      "policy_assignments": {
+        "name": "Azure Policy is in use",
+        "about": "At least one policy is assigned, so something checks resources against rules.",
+        "pass": "{count, plural, one {# policy is} other {# policies are}} assigned.",
+        "problem": "No Azure policy is assigned, so nothing checks resources against rules."
+      },
+      "defender_plans": {
+        "name": "Defender for Cloud plans are on",
+        "about": "Defender for Cloud plans watch each kind of resource for threats and weaknesses. Each plan is paid, so this is a choice to make.",
+        "pass": "All {total} Defender for Cloud plans are on.",
+        "problem": "{count} of {total} Defender for Cloud plans are off: {names}."
+      },
+      "defender_recommendations": {
+        "name": "Defender for Cloud has nothing to fix",
+        "about": "What Defender for Cloud itself recommends fixing: high severity counts as a failure.",
+        "pass": "None of the {total} items Defender for Cloud assessed needs attention.",
+        "problem": "{count} of {total} items Defender for Cloud assessed need attention: {names}."
+      }
+    },
+    "history": {
+      "title": "Earlier checks",
+      "checked": "Checked",
+      "by": "By",
+      "result": "Result",
+      "view": "View",
+      "passed": "{count} passed",
+      "warned": "{count} to review",
+      "failed": "{count} failed"
+    },
+    "form": {
+      "title": "Connect Azure",
+      "description": "DPDP Kit signs in with an app registration that can only read. The details are tried first, and kept encrypted.",
+      "name": "Name",
+      "namePlaceholder": "Production tenant",
+      "fields": {
+        "tenantId": "Tenant ID",
+        "clientId": "Client ID (application ID)",
+        "subscriptionId": "Subscription ID",
+        "clientSecret": "Client secret"
+      },
+      "wait": "Trying the details with Azure. This can take a few seconds.",
+      "cancel": "Cancel",
+      "submit": "Connect",
+      "help": "How to set this up in Azure"
+    },
+    "setup": {
+      "title": "How to set this up in Azure",
+      "intro": "You need an app registration that can only read. This takes about five minutes in the Azure portal.",
+      "steps": {
+        "register": "In Microsoft Entra ID, open App registrations and choose New registration. Name it DPDP Kit and keep it single tenant.",
+        "ids": "On its Overview page, copy the Application (client) ID and the Directory (tenant) ID.",
+        "secret": "Under Certificates and secrets, make a new client secret and copy its value now. It is shown only once.",
+        "reader": "On your subscription, open Access control (IAM) and add the Reader role for the app. Copy the Subscription ID from the subscription’s Overview.",
+        "graph": "On the app, open API permissions, add Microsoft Graph application permissions AuditLog.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
+      },
+      "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run. The multi-factor report also needs a Microsoft Entra ID P1 or P2 licence.",
+      "back": "Back to the form"
+    },
+    "remove": {
+      "action": "Remove {name}",
+      "title": "Remove {name}?",
+      "body": "The credentials are forgotten and the connection stops being checked. Its earlier results are kept. To check it again, connect it again.",
+      "confirm": "Remove connection"
+    },
+    "catalog": {
+      "title": "Available connections",
+      "description": "Choose a system to connect. DPDP Kit only reads from it, and never changes anything.",
+      "setUp": "Set up",
+      "addAnother": "Add another",
+      "adminOnly": "An admin sets this up.",
+      "soon": "Coming soon",
+      "connected": "{count, plural, one {# connection} other {# connections}}",
+      "checks": "What it checks",
+      "more": "+{count} more",
+      "providers": {
+        "azure": {
+          "name": "Microsoft Azure",
+          "category": "Cloud and identity",
+          "about": "Read-only checks of sign-in, storage, databases, apps, containers and the network in Azure and Entra ID."
+        },
+        "google_workspace": {
+          "name": "Google Workspace",
+          "category": "Identity and access",
+          "about": "Check sign-in security and keep your list of people in step with who has an account."
+        },
+        "aws": {
+          "name": "Amazon Web Services",
+          "category": "Cloud",
+          "about": "Read-only checks of storage, databases and logging across your AWS accounts."
+        },
+        "github": {
+          "name": "GitHub",
+          "category": "Development",
+          "about": "Check code review and access settings on the repositories that hold your code."
+        }
+      },
+      "tags": {
+        "mfa": "Multi-factor sign-in",
+        "encryption": "Encryption and TLS",
+        "publicAccess": "No public access",
+        "dataLocation": "Data location",
+        "network": "Network exposure",
+        "logging": "Audit logging",
+        "people": "People and leavers",
+        "codeReview": "Code review",
+        "access": "Access control",
+        "apps": "Apps and servers",
+        "containers": "Containers",
+        "governance": "Monitoring and policy"
+      }
+    }
+  },
+  "websiteCheck": {
+    "title": "Website check",
+    "description": "Visit your public website the way a visitor does and check what DPDP expects to see. It reads the page the server sends, so a cookie banner or tracker added by a script is not seen.",
+    "form": {
+      "title": "Check a website",
+      "description": "Enter the address of your public website or app. The check takes about ten seconds.",
+      "label": "Website address",
+      "placeholder": "www.example.in",
+      "submit": "Check now",
+      "running": "Checking",
+      "wait": "Visiting the site and its privacy notice. This can take about ten seconds."
+    },
+    "empty": {
+      "title": "No checks yet",
+      "canRun": "Enter your website address above and run the first check.",
+      "readOnly": "Nobody has run a check yet."
+    },
+    "results": {
+      "passed": "Passed",
+      "warned": "Warnings",
+      "failed": "Failed",
+      "checked": "Checked {when} by {name}"
+    },
+    "status": {
+      "pass": "Passed",
+      "warn": "Warning",
+      "fail": "Failed"
+    },
+    "history": {
+      "title": "Earlier checks",
+      "address": "Address",
+      "checked": "Checked",
+      "by": "By",
+      "result": "Result",
+      "view": "View",
+      "passed": "{count} passed",
+      "warned": "{count, plural, one {# warning} other {# warnings}}",
+      "failed": "{count} failed"
+    },
+    "checks": {
+      "reachable": {
+        "name": "The site answers",
+        "pass": "The site answers (status {status}).",
+        "fail": "The site answered with an error (status {status}).",
+        "failReason": "The site could not be reached because {reason, select, dns {the address does not exist} refused {the server refused the connection} timeout {it took too long to answer} certificate {its security certificate is not trusted} too_many_redirects {it redirects in a loop} not_allowed {the address is not a public website} other {of an unknown problem}}."
+      },
+      "https": {
+        "name": "Served over HTTPS",
+        "pass": "The site is served over HTTPS.",
+        "fail": "The site is served over plain HTTP, so what visitors send to it can be read on the way."
+      },
+      "http_redirect": {
+        "name": "Plain HTTP leads to HTTPS",
+        "pass": "The plain HTTP address either redirects to HTTPS or is closed.",
+        "warn": "Could not tell what the plain HTTP address does.",
+        "fail": "The plain HTTP address serves the site without sending visitors to HTTPS."
+      },
+      "certificate": {
+        "name": "Security certificate",
+        "pass": "The certificate is valid for {days, plural, one {# more day} other {# more days}}, over {protocol}.",
+        "passNoDate": "The certificate is valid, over {protocol}.",
+        "warn": "The certificate runs out in {days, plural, one {# day} other {# days}}. Renew it soon.",
+        "fail": "The site has no certificate, because it is not served over HTTPS.",
+        "failProtocol": "The site still allows {protocol}, which is out of date. Allow TLS 1.2 or newer only."
+      },
+      "hsts": {
+        "name": "HTTPS-only instruction (HSTS)",
+        "pass": "The site tells browsers to use HTTPS only, for {days, plural, one {# day} other {# days}}.",
+        "warn": "The HTTPS-only instruction lasts only {days, plural, one {# day} other {# days}}. Six months or more is recommended.",
+        "fail": "The site does not tell browsers to use HTTPS only."
+      },
+      "csp": {
+        "name": "Content security policy",
+        "pass": "A content security policy limits what the page can load.",
+        "warn": "No content security policy is enforced."
+      },
+      "content_type_options": {
+        "name": "Content type protection",
+        "pass": "Browsers are told not to guess file types.",
+        "warn": "The X-Content-Type-Options header is not set to nosniff."
+      },
+      "referrer_policy": {
+        "name": "Referrer policy",
+        "pass": "A referrer policy limits what other sites learn about where visitors came from.",
+        "warn": "No referrer policy is set."
+      },
+      "frame_options": {
+        "name": "Protection from framing",
+        "pass": "Other sites cannot show this site inside a frame.",
+        "warn": "Other sites can show this site inside a frame."
+      },
+      "privacy_notice": {
+        "name": "Privacy notice",
+        "pass": "A privacy notice is linked from the home page and loads: {url}",
+        "fail": "No link to a privacy notice was found on the home page.",
+        "failBroken": "The privacy notice link {url} did not load ({why})."
+      },
+      "grievance_contact": {
+        "name": "Grievance contact",
+        "pass": "The grievance email {email} from your company profile is on the site.",
+        "warn": "The site shows {email}, but your company profile has no grievance email. Add it in Company profile.",
+        "fail": "No grievance contact was found on the site. Add an email address to your notice or footer.",
+        "failMissing": "Your company profile gives {email} as the grievance email, but it is not on the site."
+      },
+      "cookies": {
+        "name": "Cookies before consent",
+        "pass": "No cookies are set when the home page loads.",
+        "warn": "{count, plural, one {# cookie is} other {# cookies are}} set before anyone agrees: {names}. Only cookies the site needs to work are allowed without consent."
+      }
+    },
+    "groups": {
+      "needsWork": "{count, plural, one {# to fix} other {# to fix}}",
+      "privacy": {
+        "title": "What DPDP expects to see",
+        "about": "A privacy notice, a way to complain, and no cookies before consent."
+      },
+      "connection": {
+        "title": "Secure connection",
+        "about": "Whether visitors reach the site safely."
+      },
+      "browser": {
+        "title": "Browser protections",
+        "about": "Headers that stop other sites from misusing yours."
+      }
+    }
+  },
+  "organization": {
+    "switcher": {
+      "label": "Organisation",
+      "create": "Create an organisation"
+    },
+    "create": {
+      "title": "Set up your organisation",
+      "titleAnother": "Create another organisation",
+      "description": "Each organisation has its own people, records, files and activity log. You become its admin.",
+      "label": "Organisation name",
+      "placeholder": "Acme Pvt Ltd",
+      "submit": "Create organisation",
+      "cancel": "Cancel"
+    },
+    "close": {
+      "zone": "Danger zone",
+      "title": "Close this organisation",
+      "description": "Nobody will be able to open it, and its API keys stop working. Nothing is erased: its records and activity log are kept. You can still make a new organisation afterwards.",
+      "action": "Close organisation",
+      "dialogTitle": "Close {name}?",
+      "body": "This hides the organisation from everyone in it. It cannot be reopened from the app.",
+      "label": "Type {name} to confirm",
+      "cancel": "Cancel",
+      "confirm": "Close organisation"
+    }
+  },
+  "readiness": {
+    "title": "Readiness check",
+    "description": "Twenty-five short questions to see where you stand on the DPDP Act today. Answer honestly: the score is for you, and you can take the check again whenever things change.",
+    "progress": "Progress",
+    "answered": "{answered} of {total} answered",
+    "area": "Area {current} of {total}",
+    "points": "{points} points",
+    "reference": "Section {section} of the DPDP Act",
+    "next": "Next",
+    "back": "Back",
+    "seeScore": "See my score",
+    "retake": "Take it again",
+    "answers": {
+      "yes": "Yes",
+      "partly": "Partly",
+      "no": "No",
+      "not_applicable": "Not applicable"
+    },
+    "domains": {
+      "governance": {
+        "title": "Who is responsible",
+        "about": "Someone owns data protection, and people know who to contact."
+      },
+      "consent_notice": {
+        "title": "Notice and consent",
+        "about": "People are told what you collect, and agree to it."
+      },
+      "rights": {
+        "title": "People's rights",
+        "about": "People can see, fix and delete the data you hold about them."
+      },
+      "inventory": {
+        "title": "Knowing your data",
+        "about": "You know what you hold, why you hold it, and where."
+      },
+      "security": {
+        "title": "Security",
+        "about": "Your systems keep personal data safe."
+      },
+      "vendors": {
+        "title": "Vendors and partners",
+        "about": "Companies that handle data for you are bound by agreement and checked."
+      },
+      "breach_retention": {
+        "title": "Breaches and keeping data",
+        "about": "You can respond to a breach, and you do not keep data longer than you need it."
+      },
+      "children_special": {
+        "title": "Children and sensitive data",
+        "about": "Extra care where the law asks for it."
+      }
+    },
+    "questions": {
+      "responsible_person": "A named person or team is responsible for data protection in your company.",
+      "written_policy": "You have a written privacy policy that senior management has approved.",
+      "grievance_officer": "You have named someone to handle complaints, and published how to reach them.",
+      "consent_before_collecting": "You ask for clear, specific consent before you collect personal data.",
+      "notice_when_collecting": "You tell people what you collect and why, in plain language, at the moment you collect it.",
+      "withdraw_consent": "People can withdraw their consent as easily as they gave it, and the steps are written down.",
+      "access_to_data": "People can ask for a copy of the personal data you hold about them.",
+      "correct_data": "People can ask you to correct their data when it is wrong or out of date.",
+      "erase_data": "People can ask you to delete their data, and you have a way to do it.",
+      "data_inventory": "You keep a list of the personal data your company collects and uses.",
+      "purposes_written_down": "For each kind of data on that list, the reason you collect it is written down.",
+      "know_where_data_lives": "You know where personal data is stored and who can reach it.",
+      "access_controls": "The systems that hold personal data are protected by logins and access controls.",
+      "encryption": "Personal data is encrypted when it is stored and when it is sent.",
+      "security_reviews": "You check the security of those systems on a regular schedule.",
+      "processor_agreements": "Every company that handles personal data for you has signed a data agreement.",
+      "vendor_reviews": "You review how those vendors protect data at least once a year.",
+      "transfers_abroad": "You know which vendors send personal data outside India, and you disclose it.",
+      "breach_procedure": "You have a written plan for what to do if personal data is breached.",
+      "report_within_window": "You could tell the Data Protection Board and the people affected within the legal time.",
+      "retention_schedule": "You have a retention schedule, and you delete data once its purpose is done.",
+      "age_check": "You check whether the people whose data you collect are under 18.",
+      "parental_consent": "Where you handle children's data, you get verifiable consent from a parent.",
+      "harm_scenarios": "You have listed the ways your use of data could seriously harm someone.",
+      "sensitive_data_consent": "You do not use sensitive data, such as financial, health or location data, without clear consent."
+    },
+    "result": {
+      "title": "Your readiness score",
+      "outOf": "out of 100",
+      "taken": "Taken {when} by {name}",
+      "byArea": "How each area did",
+      "earned": "{earned} of {points} points",
+      "startTitle": "Where to start",
+      "startAbout": "The areas with the most room to improve. Each links to where it is worked on in the app."
+    },
+    "bands": {
+      "starting": {
+        "name": "Just starting",
+        "text": "Most of the groundwork is still ahead of you. That is normal for a new programme, and the checklist in this app is the way through it."
+      },
+      "building": {
+        "name": "Building up",
+        "text": "Some of the important pieces are in place. Close the gaps below, starting with the lowest areas."
+      },
+      "good": {
+        "name": "Well on the way",
+        "text": "You are covering most of what the law asks. A few areas still need attention before an audit."
+      },
+      "strong": {
+        "name": "Strong",
+        "text": "You are in good shape. Keep your proof current and take the check again when things change."
+      }
+    },
+    "actions": {
+      "governance": "Name your Data Protection Officer and the other owners under People and roles.",
+      "consent_notice": "Write and approve your notice and consent policies.",
+      "rights": "Set up how requests from people are received and answered.",
+      "inventory": "Work through the checklist to record what you hold and why.",
+      "security": "Collect proof of your security safeguards.",
+      "vendors": "Cover vendors in your policies and keep their agreements as proof.",
+      "breach_retention": "Know the breach steps, and set how long you keep data.",
+      "children_special": "Review the set-up answers about children's data."
+    },
+    "history": {
+      "title": "Earlier checks",
+      "score": "{score} out of 100"
+    },
+    "empty": {
+      "title": "No check taken yet",
+      "readOnly": "Nobody has taken the readiness check yet."
+    }
+  },
+  "onboarding": {
+    "title": "Set up your organisation",
+    "skip": "Skip for now",
+    "finish": "Go to my dashboard",
+    "steps": {
+      "company": "Your company",
+      "scope": "Scope",
+      "readiness": "Readiness",
+      "result": "Your score"
+    },
+    "company": {
+      "title": "Tell us about your company",
+      "description": "This fills your policies, notices and reports. You can change any of it later in Settings.",
+      "logo": "Company logo",
+      "next": "Continue"
+    },
+    "scope": {
+      "title": "Your framework and scope",
+      "description": "Some rules only apply to some companies. Your answers switch them on or off.",
+      "framework": {
+        "name": "DPDP Act 2023 and Rules 2025",
+        "about": "India's data protection law. It is switched on for you.",
+        "more": "More frameworks are on the way."
+      },
+      "back": "Back",
+      "next": "Continue"
+    },
+    "readiness": {
+      "title": "Check where you stand",
+      "description": "Twenty-five short questions in eight areas, about five minutes. There are no wrong answers, and you can skip this and come back to it from the sidebar."
+    }
+  },
+  "cloudTests": {
+    "title": "Cloud tests",
+    "description": "How your connected cloud accounts compare with what the DPDP Act expects. Each check says what it looks at, why it matters, what your account shows, and how to fix it.",
+    "account": "Account",
+    "empty": {
+      "title": "No cloud account is connected",
+      "body": "Connect an Azure subscription to see its results here.",
+      "link": "Go to Connections"
+    },
+    "tabs": {
+      "results": "Results",
+      "history": "History"
+    },
+    "notRunYet": {
+      "title": "Not checked yet",
+      "canRun": "Run the checks to see how this account looks.",
+      "readOnly": "No one has run the checks yet."
+    },
+    "filters": {
+      "severity": "Severity",
+      "all": "All ({count})",
+      "high": "High ({count})",
+      "medium": "Medium ({count})",
+      "low": "Low ({count})",
+      "search": "Search results",
+      "noMatches": "No check matches."
+    },
+    "severity": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "finding": {
+      "about": "About this check",
+      "whatItChecks": "What it checks",
+      "passRule": "Passes when",
+      "failRule": "Needs attention when",
+      "why": "Why it matters",
+      "result": "This account’s result",
+      "resources": "Resources that need attention ({count})",
+      "resourceFail": "Failed",
+      "resourceWarn": "Review",
+      "shown": "Showing {shown} of {count}.",
+      "fix": "How to fix",
+      "attentionCount": "{count} to fix"
+    },
+    "details": {
+      "entra_mfa_registered": {
+        "passRule": "Every member of your organisation has registered at least one multi-factor method.",
+        "failRule": "At least one member has not.",
+        "why": "A stolen password alone should not be enough to sign in. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "In Entra ID, open Protection, then Authentication methods, then Activity, then User registration details. Filter to users who have not registered, and ask them to register at aka.ms/mfasetup. A registration campaign can nudge them."
+      },
+      "entra_mfa_enforced": {
+        "passRule": "Security defaults are on, or an enabled conditional access policy requires multi-factor authentication for all users.",
+        "failRule": "Neither is true.",
+        "why": "Registering a second step does nothing if signing in never asks for it.",
+        "fix": "Turn on security defaults under Entra ID, Properties, Manage security defaults. Or create a conditional access policy for All users that grants access only with multi-factor authentication."
+      },
+      "entra_admin_count": {
+        "passRule": "Between two and five people hold the Global Administrator role.",
+        "failRule": "One person holds it, or more than five.",
+        "why": "One administrator is a single point of failure, and many is a lot of power in the accounts attackers aim for.",
+        "fix": "Under Entra ID, Roles and administrators, Global Administrator: add a second account, or remove people who do not need it and give them a narrower role."
+      },
+      "rbac_privileged": {
+        "passRule": "At most five accounts hold Owner or User Access Administrator over the whole subscription.",
+        "failRule": "More accounts do.",
+        "why": "These roles can change anything, or hand that power to others.",
+        "fix": "Under the subscription’s Access control (IAM), Role assignments: remove the ones that are not needed, move them to a resource group, or use time-limited access with Privileged Identity Management."
+      },
+      "rbac_wildcard_roles": {
+        "passRule": "No custom role lists * (every action) in its permissions.",
+        "failRule": "A custom role does.",
+        "why": "A role that allows everything is Owner under another name, and is easy to miss in a review.",
+        "fix": "Under the subscription’s Access control (IAM), Roles: edit the custom role so that it lists only the actions it needs."
+      },
+      "rbac_service_principals": {
+        "passRule": "No app holds Owner, User Access Administrator or Contributor over the whole subscription.",
+        "failRule": "An app does.",
+        "why": "Whoever holds an app’s secret has its power, and secrets are copied and leaked more easily than people’s sign-ins.",
+        "fix": "Under the subscription’s Access control (IAM), Role assignments: filter by Service principal and replace broad roles with narrower ones, scoped to the resource group the app needs."
+      },
+      "storage_secure_transfer": {
+        "passRule": "Every storage account requires HTTPS and a minimum TLS version of 1.2 or newer.",
+        "failRule": "An account allows plain HTTP, or an older TLS version.",
+        "why": "Personal data sent without encryption can be read by anyone on the path. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Open the storage account, then Settings, Configuration. Set Secure transfer required to Enabled and Minimum TLS version to 1.2."
+      },
+      "storage_public_access": {
+        "passRule": "No storage account allows anonymous public access to blobs.",
+        "failRule": "An account allows it.",
+        "why": "A public container can be read by anyone who has the address, with no sign-in.",
+        "fix": "Open the storage account, then Settings, Configuration. Set Allow Blob anonymous access to Disabled, and check that each container’s access level is Private."
+      },
+      "storage_network_access": {
+        "passRule": "Every storage account accepts connections only from selected networks, or has public network access off.",
+        "failRule": "An account accepts connections from every network.",
+        "why": "A firewall narrows who can even try to reach the data, which limits the damage of a leaked key.",
+        "fix": "Open the storage account, then Security and networking, Networking. Choose Enabled from selected virtual networks and IP addresses, or Disabled, and add the networks that need access."
+      },
+      "encryption_at_rest": {
+        "passRule": "Storage accounts, managed disks and SQL databases are encrypted at rest.",
+        "failRule": "One is not.",
+        "why": "Encryption at rest protects the data if a disk or a backup is taken. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Azure encrypts by default, so something was turned off on purpose. Turn it back on: on a storage account under Encryption, and on a SQL database under Transparent data encryption."
+      },
+      "keyvault_soft_delete": {
+        "passRule": "Soft delete is on for every key vault.",
+        "failRule": "It is off for a vault.",
+        "why": "Without it, a deleted vault or key is gone for good.",
+        "fix": "Soft delete cannot be switched off on new vaults. Recreate an old vault that lacks it, after copying its contents."
+      },
+      "keyvault_purge_protection": {
+        "passRule": "Purge protection is on for every key vault.",
+        "failRule": "It is not for a vault.",
+        "why": "Without it, someone with access can destroy a deleted vault or key before its retention ends.",
+        "fix": "Open the key vault, then Properties, and set Purge protection to Enable. It cannot be turned off afterwards, so choose the retention period first."
+      },
+      "keyvault_public_access": {
+        "passRule": "Every key vault has public network access disabled, or a firewall that denies by default.",
+        "failRule": "A vault is open to every network.",
+        "why": "Keys and secrets should be reachable only from the networks that use them.",
+        "fix": "Open the key vault, then Networking. Choose Enabled from selected virtual networks and IP addresses, or Disabled with a private endpoint, and add the networks that need access."
+      },
+      "keyvault_rbac": {
+        "passRule": "Every key vault uses Azure role-based access control.",
+        "failRule": "A vault still uses access policies kept on the vault.",
+        "why": "Roles are reviewed in one place with the rest of your access, instead of on each vault separately.",
+        "fix": "Open the key vault, then Access configuration. Switch the permission model to Azure role-based access control, after copying each access policy to a role assignment."
+      },
+      "data_in_india": {
+        "passRule": "Every data store is in an Indian region.",
+        "failRule": "A data store is in another region.",
+        "why": "The Act lets personal data go abroad unless the government restricts a country, but you should know where it is, for your records of processing and for your notice.",
+        "fix": "Review each store listed. If its data should stay in India, move or recreate it in Central India, South India or West India. If abroad is intended, record it in your transfer register."
+      },
+      "sql_tls": {
+        "passRule": "Every SQL server’s minimum TLS version is 1.2 or newer.",
+        "failRule": "A server accepts an older version.",
+        "why": "Older TLS versions have known weaknesses.",
+        "fix": "Open the SQL server, then Security, Networking, Connectivity. Set Minimum TLS version to 1.2."
+      },
+      "sql_public_access": {
+        "passRule": "Every SQL server has public network access disabled.",
+        "failRule": "A server allows it.",
+        "why": "A database on the public internet can be attacked by anyone, and its firewall rules and logins are the only defence.",
+        "fix": "Open the SQL server, then Security, Networking. Set Public network access to Disable and use private endpoints, or keep it on with tight firewall rules."
+      },
+      "sql_firewall": {
+        "passRule": "No SQL server has a firewall rule that opens it to every address or to every Azure service.",
+        "failRule": "A server has a rule from 0.0.0.0 to 255.255.255.255 (every address, a failure) or from 0.0.0.0 to 0.0.0.0 (every Azure service, a warning).",
+        "why": "A rule open to everyone makes the database reachable from anywhere, and every Azure service includes other people’s subscriptions.",
+        "fix": "Open the SQL server, then Security, Networking, Firewall rules. Delete the open rule and add rules for the addresses that need access."
+      },
+      "sql_auditing": {
+        "passRule": "Auditing is on for every SQL server.",
+        "failRule": "It is off for a server.",
+        "why": "An audit log is how a breach is investigated afterwards, and the Act’s breach duties depend on knowing what happened.",
+        "fix": "Open the SQL server, then Security, Auditing. Switch on Azure SQL auditing and send it to a storage account or a Log Analytics workspace."
+      },
+      "flexible_servers_tls": {
+        "passRule": "Every PostgreSQL and MySQL flexible server requires encrypted connections with TLS 1.2 or newer.",
+        "failRule": "A server allows unencrypted connections or older TLS.",
+        "why": "Database traffic should not travel in the clear. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Open the server, then Settings, Server parameters. Set require_secure_transport to ON, and set ssl_min_protocol_version (PostgreSQL) or tls_version (MySQL) to TLS 1.2 or newer."
+      },
+      "datastores_public_access": {
+        "passRule": "No PostgreSQL, MySQL, MongoDB, Redis or Cosmos DB service allows public network access.",
+        "failRule": "One does.",
+        "why": "As with SQL, a database on the public internet depends only on its firewall and logins.",
+        "fix": "Open each service’s Networking page and use private access, or restrict public access to the addresses that need it."
+      },
+      "cosmos_key_access": {
+        "passRule": "Every Cosmos DB account disables key-based access (local authentication).",
+        "failRule": "An account allows keys.",
+        "why": "Keys can be copied and cannot be tied to a person, while sign-in with Entra ID can be taken back.",
+        "fix": "Open the Cosmos DB account, then Keys, and set Local authentication to Disabled, after moving apps to Entra ID sign-in."
+      },
+      "cosmos_failover": {
+        "passRule": "Every Cosmos DB account with more than one region fails over automatically.",
+        "failRule": "An account with several regions does not.",
+        "why": "Without it, a regional failure means someone must act before the data is available again.",
+        "fix": "Open the Cosmos DB account, then Replicate data globally, and turn on Automatic failover."
+      },
+      "cosmos_backup": {
+        "passRule": "Every Cosmos DB account keeps continuous backups, or periodic backups for a week or more.",
+        "failRule": "An account keeps periodic backups for less than a week.",
+        "why": "A short backup window leaves little time to notice a problem and restore.",
+        "fix": "Open the Cosmos DB account, then Backup and restore. Raise the retention, or switch to continuous backup."
+      },
+      "webapp_https": {
+        "passRule": "Every web app and function app accepts only HTTPS.",
+        "failRule": "An app also accepts plain HTTP.",
+        "why": "Anything sent over plain HTTP, including sign-ins, can be read on the way.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set HTTPS Only to On."
+      },
+      "webapp_tls": {
+        "passRule": "Every web app’s minimum TLS version is 1.2 or newer.",
+        "failRule": "An app accepts an older version.",
+        "why": "Older TLS versions have known weaknesses.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set Minimum inbound TLS version to 1.2."
+      },
+      "webapp_remote_debugging": {
+        "passRule": "Remote debugging is off for every web app.",
+        "failRule": "It is on for an app.",
+        "why": "A debugger that can be attached from outside is a way in to the code and its data.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set Remote debugging to Off."
+      },
+      "webapp_ftp": {
+        "passRule": "No web app allows plain FTP.",
+        "failRule": "An app allows it.",
+        "why": "Plain FTP sends the deployment password and the files in the clear.",
+        "fix": "Open the app, then Settings, Configuration, General settings. Set FTP state to FTPS only, or Disabled."
+      },
+      "webapp_identity": {
+        "passRule": "Every web app has a managed identity.",
+        "failRule": "An app has none.",
+        "why": "An identity lets the app reach other services without a password kept in its settings, which could leak.",
+        "fix": "Open the app, then Settings, Identity. Switch on a system-assigned managed identity and give it only the roles it needs."
+      },
+      "vm_identity": {
+        "passRule": "Every virtual machine has a managed identity.",
+        "failRule": "A machine has none.",
+        "why": "An identity lets a machine reach other services without a password kept on it.",
+        "fix": "Open the virtual machine, then Security, Identity. Switch on a system-assigned managed identity and give it only the roles it needs."
+      },
+      "vm_ssh_password": {
+        "passRule": "No Linux virtual machine accepts password sign-in.",
+        "failRule": "A Linux machine does.",
+        "why": "A password on a machine reachable from the internet is guessed at all day.",
+        "fix": "Use SSH keys. Set PasswordAuthentication no in the machine’s sshd configuration, or recreate it with key-only sign-in."
+      },
+      "vm_secure_boot": {
+        "passRule": "No virtual machine has secure boot turned off.",
+        "failRule": "A machine does.",
+        "why": "Secure boot stops tampered start-up software from running.",
+        "fix": "Open the virtual machine’s Configuration and enable Trusted launch with Secure boot, on a size that supports it."
+      },
+      "aks_rbac": {
+        "passRule": "Every Kubernetes cluster uses role-based access control.",
+        "failRule": "A cluster does not.",
+        "why": "Without it, any credential can do anything in the cluster.",
+        "fix": "Role-based access cannot be turned off on new clusters. Recreate an old cluster with it enabled."
+      },
+      "aks_aad": {
+        "passRule": "Every cluster signs people in with Microsoft Entra ID.",
+        "failRule": "A cluster does not.",
+        "why": "Sign-in with work accounts can be switched off when someone leaves, unlike a shared credential.",
+        "fix": "Open the cluster, then Settings, Cluster configuration. Enable Microsoft Entra authentication with Azure RBAC."
+      },
+      "aks_network_policy": {
+        "passRule": "Every cluster has a network policy.",
+        "failRule": "A cluster has none.",
+        "why": "Without one, any workload can talk to any other, so one break-in spreads.",
+        "fix": "Create the cluster with a network policy (Azure or Calico), or add one to an existing cluster."
+      },
+      "aks_private_api": {
+        "passRule": "Every cluster’s control point is private, or limited to listed addresses.",
+        "failRule": "A cluster’s control point is open to every address.",
+        "why": "The control point is the most powerful door into a cluster.",
+        "fix": "Open the cluster, then Networking. Enable a private cluster, or set Authorized IP ranges."
+      },
+      "aks_policy_addon": {
+        "passRule": "Every cluster has the Azure Policy add-on.",
+        "failRule": "A cluster lacks it.",
+        "why": "It checks what runs in a cluster against your rules.",
+        "fix": "Open the cluster, then Settings, Policies, and enable the Azure Policy add-on."
+      },
+      "aks_auto_upgrade": {
+        "passRule": "Every cluster has an automatic upgrade channel.",
+        "failRule": "A cluster has none.",
+        "why": "A cluster that is not upgraded falls behind on security fixes.",
+        "fix": "Open the cluster, then Settings, Cluster configuration. Set an Automatic upgrade channel such as Stable or Patch."
+      },
+      "aks_monitoring": {
+        "passRule": "Every cluster is monitored.",
+        "failRule": "A cluster is not.",
+        "why": "Monitoring records what a cluster is doing, which an investigation needs.",
+        "fix": "Open the cluster, then Monitoring. Enable Container insights or Azure Monitor managed metrics."
+      },
+      "acr_admin_user": {
+        "passRule": "No container registry has the admin user on.",
+        "failRule": "A registry does.",
+        "why": "A shared login cannot be tied to a person, and its password is usually copied around.",
+        "fix": "Open the registry, then Settings, Access keys. Turn Admin user off, and sign in with Entra ID or a service principal with a role such as AcrPull."
+      },
+      "acr_public_access": {
+        "passRule": "No container registry allows public network access.",
+        "failRule": "A registry does.",
+        "why": "Images can hold secrets and show how your systems are built.",
+        "fix": "Open the registry, then Settings, Networking. Disable public access and use a private endpoint, or restrict it to selected addresses (Premium)."
+      },
+      "acr_anonymous_pull": {
+        "passRule": "No container registry allows anonymous pulls.",
+        "failRule": "A registry does.",
+        "why": "Anyone could pull your images without signing in.",
+        "fix": "Open the registry, then Settings, Properties, and turn off Anonymous pull access."
+      },
+      "acr_content_trust": {
+        "passRule": "Every Premium container registry uses content trust.",
+        "failRule": "A Premium registry does not.",
+        "why": "Signed images stop a tampered image from being used.",
+        "fix": "Open the registry, then Policies, Content trust, and enable it. It is a Premium feature."
+      },
+      "acr_retention": {
+        "passRule": "Every Premium container registry has a retention policy.",
+        "failRule": "A Premium registry has none.",
+        "why": "Old untagged images pile up and may hold weaknesses and data nobody needs.",
+        "fix": "Open the registry, then Policies, Retention. Enable it and choose how many days to keep untagged images."
+      },
+      "nsg_open_ports": {
+        "passRule": "No network security group allows inbound traffic from anywhere to SSH, remote desktop, database ports or all ports.",
+        "failRule": "A group does.",
+        "why": "Login and database ports facing the internet are attacked constantly.",
+        "fix": "Open the network security group, then Inbound security rules. Change the source from Any (or Internet) to your own addresses or a service tag, or delete the rule."
+      },
+      "environment_separation": {
+        "passRule": "Resource groups for production and for non-production both exist, told apart by an environment tag or by name.",
+        "failRule": "Both could not be found.",
+        "why": "Keeping production apart limits what a mistake or a test can reach.",
+        "fix": "Tag each resource group with environment set to production, staging or dev, or name it that way. For stronger separation use separate subscriptions."
+      },
+      "monitor_alerts": {
+        "passRule": "Alerts exist for changes to policy assignments, security solutions, network security groups and SQL firewall rules.",
+        "failRule": "One or more of them has no alert.",
+        "why": "Someone should be told when the rules that protect the environment change.",
+        "fix": "Under Azure Monitor, Alerts, create an Activity log alert for each missing change listed, with an action group that notifies the right people."
+      },
+      "monitor_log_export": {
+        "passRule": "The subscription’s activity log is exported to a workspace, a storage account or an event hub.",
+        "failRule": "It is not exported.",
+        "why": "Azure keeps the activity log for only 90 days, and the Act’s breach duties may need older records.",
+        "fix": "Under Monitor, Activity log, Export activity logs, add a diagnostic setting that sends it to a Log Analytics workspace or a storage account."
+      },
+      "policy_assignments": {
+        "passRule": "At least one Azure Policy is assigned to the subscription.",
+        "failRule": "None is.",
+        "why": "Policies enforce your rules on every new resource, instead of relying on people remembering.",
+        "fix": "Under Policy, Assignments, assign a built-in initiative such as the Microsoft cloud security benchmark."
+      },
+      "defender_plans": {
+        "passRule": "Every Defender for Cloud plan is on.",
+        "failRule": "Some plans are off.",
+        "why": "Each plan watches one kind of resource for threats and weaknesses. They cost money, so turning on all of them is a choice to make.",
+        "fix": "Under Defender for Cloud, Environment settings, your subscription: switch on the plans for the kinds of resource you use."
+      },
+      "defender_recommendations": {
+        "passRule": "Defender for Cloud has no unhealthy recommendations.",
+        "failRule": "It has some. High severity counts as a failure.",
+        "why": "These are Microsoft’s own findings about your resources.",
+        "fix": "Under Defender for Cloud, Recommendations, work through them by severity. Each has steps or a Remediate button."
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Work of yours that is due within three days, or late.",
+    "bell": "{count, plural, =0 {Notifications, none unread} one {Notifications, # unread} other {Notifications, # unread}}",
+    "markAll": "Mark all as read",
+    "settingsLink": "Choose what you get",
+    "unread": "Unread",
+    "empty": {
+      "title": "Nothing needs your attention",
+      "body": "A notice appears here when something of yours is due within three days, or late."
+    },
+    "kinds": {
+      "breach": "Breach",
+      "request": "Request",
+      "proof": "Proof",
+      "review": "Policy review"
+    },
+    "text": {
+      "breach": {
+        "due_soon": "The Board report for the breach “{title}” is due on {date}.",
+        "overdue": "The Board report for the breach “{title}” was due on {date} and is late."
+      },
+      "request": {
+        "due_soon": "The request from {title} is due on {date}.",
+        "overdue": "The request from {title} was due on {date} and is late."
+      },
+      "proof": {
+        "due_soon": "Proof for “{title}” is due on {date}.",
+        "overdue": "Proof for “{title}” was due on {date} and is late."
+      },
+      "review": {
+        "due_soon": "The policy “{title}” is due for review on {date}.",
+        "overdue": "The policy “{title}” was due for review on {date} and is late."
+      }
+    },
+    "settings": {
+      "title": "Notifications",
+      "description": "Your own choices. They apply only to you.",
+      "inApp": "In the app",
+      "email": "By email",
+      "note": "Choose how you hear about work of yours that is due soon or late. Notices are made once a day, from 9:00 India time, once for each thing and again if its due date moves. Until you change a box, your role’s default applies.",
+      "kinds": {
+        "breach": {
+          "name": "Breaches",
+          "about": "When the Board report for a breach you look after is close or late."
+        },
+        "request": {
+          "name": "Requests",
+          "about": "When a request from a person that is yours to deal with is close to its reply date, or past it."
+        },
+        "proof": {
+          "name": "Proof",
+          "about": "When proof you collect is due, or old enough to need collecting again."
+        },
+        "review": {
+          "name": "Policy reviews",
+          "about": "When a policy you own is coming up for its yearly review."
+        }
+      },
+      "tabs": {
+        "mine": "My notifications",
+        "roles": "Defaults by role"
+      },
+      "kind": "Notification"
+    },
+    "roleDefaults": {
+      "title": "Defaults by role",
+      "about": "What each role is notified about until a person chooses for themselves. People can still switch off anything they do not want.",
+      "role": "Role",
+      "inApp": "In the app",
+      "email": "By email",
+      "save": "Save changes"
+    }
   }
 }

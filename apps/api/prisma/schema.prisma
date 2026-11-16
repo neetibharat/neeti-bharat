@@ -10,3 +10,882 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum AppRole {
+  admin
+  member
+  auditor
+}
+
+// The named jobs policies and controls refer to. Keep in step with JOB_ROLES in packages/shared (a test checks).
+enum JobRole {
+  DPO
+  PRIVACY_LEAD
+  SECURITY_LEAD
+  ENGINEERING_LEAD
+  PROCUREMENT_LEAD
+  HR_LEAD
+  AI_OWNER
+  LEGAL_COUNSEL
+  INTERNAL_AUDIT
+}
+
+enum PersonStatus {
+  active
+  left
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  revoked
+}
+
+// The next four models are the tables Better Auth reads and writes. Keep their fields as it expects.
+model User {
+  id                      String                   @id
+  name                    String
+  email                   String                   @unique
+  emailVerified           Boolean                  @default(false)
+  image                   String?
+  createdAt               DateTime                 @default(now()) @db.Timestamptz(3)
+  updatedAt               DateTime                 @updatedAt @db.Timestamptz(3)
+  sessions                Session[]
+  accounts                Account[]
+  invitations             Invitation[]
+  memberships             Membership[]
+  apiKeys                 ApiKey[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  token     String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(3)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime  @updatedAt @db.Timestamptz(3)
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@map("verifications")
+}
+
+// One company that uses the app. Everything a company records carries its id, and a person's role belongs to their
+// membership, so one account can belong to several organisations.
+model Organization {
+  id                       String                    @id @default(uuid(7))
+  name                     String
+  /// The last REQ number handed out in this organisation, so each organisation counts its own from 1.
+  requestCounter           Int                       @default(0)
+  /// Set when an admin finishes, or skips, the set-up that follows creating an organisation.
+  onboardedAt              DateTime?                 @db.Timestamptz(3)
+  /// Set when an admin closes the organisation. Nobody can open it after that, and nothing in it is erased.
+  closedAt                 DateTime?                 @db.Timestamptz(3)
+  createdAt                DateTime                  @default(now()) @db.Timestamptz(3)
+  updatedAt                DateTime                  @updatedAt @db.Timestamptz(3)
+  memberships              Membership[]
+  profileEntries           ProfileEntry[]
+  frameworks               Framework[]
+  requirements             Requirement[]
+  controls                 Control[]
+  proofRequirements        ProofRequirement[]
+  evidence                 Evidence[]
+  policies                 Policy[]
+  controlPolicyLinks       ControlPolicyLink[]
+  policyApprovals          PolicyApproval[]
+  people                   Person[]
+  roleAssignments          RoleAssignment[]
+  activityEvents           ActivityEvent[]
+  breaches                 Breach[]
+  breachSteps              BreachStepRecord[]
+  dataRequests             DataRequest[]
+  dataRequestTasks         DataRequestTask[]
+  readinessChecks          ReadinessCheck[]
+  websiteChecks            WebsiteCheck[]
+  invitations              Invitation[]
+  activityAnchor           ActivityAnchor?
+  companyLogo              CompanyLogo?
+  apiKeys                  ApiKey[]
+  notifications            Notification[]
+  notificationPreferences  NotificationPreference[]
+  connections              Connection[]
+  connectionRuns           ConnectionRun[]
+  notificationRoleDefaults NotificationRoleDefault[]
+
+  @@map("organizations")
+}
+
+// A person's place in an organisation, and the role they have there. Someone who has left keeps the row, switched off.
+model Membership {
+  id             String       @id @default(uuid(7))
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           AppRole      @default(member)
+  /// Set when the person has left this organisation: they can no longer open it.
+  disabledAt     DateTime?    @db.Timestamptz(3)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@map("memberships")
+}
+
+model Invitation {
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  id             String           @id @default(uuid(7))
+  email          String
+  role           AppRole          @default(member)
+  status         InvitationStatus @default(pending)
+  invitedById    String
+  /// Restrict on purpose: an account that invited people cannot be deleted, so who invited whom stays on record.
+  invitedBy      User             @relation(fields: [invitedById], references: [id], onDelete: Restrict)
+  expiresAt      DateTime         @db.Timestamptz(3)
+  acceptedAt     DateTime?        @db.Timestamptz(3)
+  createdAt      DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime         @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@index([email, status])
+  @@map("invitations")
+}
+
+// The record of every change, as a chain: each event holds the fingerprint of the one before it, so an
+// edit or a missing row is detectable. A database trigger refuses updates and deletes; only the
+// retention job may delete, and only rows past the legal keep-for period.
+// There is deliberately no foreign key to users, so the record outlives anyone who is removed.
+model ActivityEvent {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  /// The order of the chain. A row's id says nothing about order: two ids made in one millisecond can swap.
+  seq            BigInt       @unique @default(autoincrement())
+  occurredAt     DateTime     @db.Timestamptz(3)
+  actorId        String?
+  actorLabel     String
+  action         String
+  subjectType    String?
+  subjectId      String?
+  details        Json?
+  before         Json?
+  after          Json?
+  prevHash       String?
+  hash           String       @unique
+
+  @@index([organizationId, seq])
+  @@index([organizationId, action, seq])
+  @@index([occurredAt])
+  @@map("activity_events")
+}
+
+// The newest event of the chain, kept in step with it by every write. A chain that ends anywhere else has lost
+// events from its end, which the chain alone could not show. One row, id 1.
+model ActivityAnchor {
+  organizationId String       @id
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  lastSeq        BigInt
+  lastHash       String
+  updatedAt      DateTime     @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@map("activity_anchor")
+}
+
+// Answers about the company. A built-in answer has no row until someone changes it: its default lives in
+// code (packages/shared), so correcting a default reaches everyone who never touched it.
+model ProfileEntry {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  key            String
+  value          String
+  /// Only for answers people added themselves.
+  label          String?
+  isCustom       Boolean      @default(false)
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, key])
+  @@map("profile_entries")
+}
+
+// A set of rules a company follows, such as DPDP. A built-in framework is copied from the catalogue; a company can
+// also make its own. A policy belongs to the company: the framework it names is only where it was copied from, and
+// one policy can back controls in several frameworks.
+model Framework {
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  /// A built-in framework keeps its catalogue id, such as dpdp. One the company adds gets a generated id.
+  id             String
+  name           String
+  /// One sentence on what it is.
+  about          String
+  /// The short mark shown on its badge, such as DPDP.
+  seal           String
+  isBuiltIn      Boolean       @default(false)
+  sortOrder      Int           @default(0)
+  archivedAt     DateTime?     @db.Timestamptz(3)
+  createdAt      DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime      @updatedAt @db.Timestamptz(3)
+  requirements   Requirement[]
+  controls       Control[]
+  policies       Policy[]
+
+  @@id([organizationId, id])
+  @@map("frameworks")
+}
+
+enum RequirementCondition {
+  always
+  children
+  abroad
+  sdf
+}
+
+// One rule of a framework, such as "Rule 6 · Security safeguards". A built-in rule is copied from the catalogue
+// (packages/shared) like controls and policies, so it can be switched on or off by the company's set-up answers.
+model Requirement {
+  organizationId String
+  organization   Organization         @relation(fields: [organizationId], references: [id])
+  /// A built-in rule keeps its catalogue id, such as R6 or ORG. One the company adds gets a generated id.
+  id             String
+  frameworkId    String
+  framework      Framework            @relation(fields: [organizationId, frameworkId], references: [organizationId, id], onDelete: Restrict)
+  /// The catalogue id this was copied from. Empty for a rule the company added.
+  templateId     String?
+  /// How the law names it, such as "Rule 6".
+  reference      String
+  title          String
+  summary        String
+  /// The set-up answer that switches this rule on. Always means it applies to everyone.
+  appliesWhen    RequirementCondition @default(always)
+  sortOrder      Int                  @default(0)
+  archivedAt     DateTime?            @db.Timestamptz(3)
+  createdAt      DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime             @updatedAt @db.Timestamptz(3)
+  controls       Control[]
+
+  @@id([organizationId, id])
+  @@unique([organizationId, frameworkId, templateId])
+  @@index([frameworkId, sortOrder])
+  @@map("requirements")
+}
+
+// The company's own controls. A built-in control is copied from the framework catalogue (packages/shared) when
+// its framework is switched on, so the company can edit, archive or add to them without touching the catalogue.
+model Control {
+  organizationId    String
+  organization      Organization        @relation(fields: [organizationId], references: [id])
+  /// A built-in control keeps its catalogue code, such as DPDP-R6-01. One the company adds gets a generated id.
+  id                String
+  frameworkId       String
+  framework         Framework           @relation(fields: [organizationId, frameworkId], references: [organizationId, id], onDelete: Restrict)
+  /// The catalogue code this was copied from. Empty for a control the company added.
+  templateId        String?
+  /// The rule or group the control sits under, such as R6 or ORG.
+  requirementId     String
+  requirement       Requirement         @relation(fields: [organizationId, requirementId], references: [organizationId, id], onDelete: Restrict)
+  title             String
+  description       String
+  /// Empty while the control keeps its default owner.
+  ownerRole         JobRole?
+  /// A named person on the control, shown alongside the job's owner. Cleared if they are removed.
+  assigneeId        String?
+  assignee          Person?             @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  /// When the control is next due a look. Only noted for now; reminders come later.
+  reviewDate        DateTime?           @db.Timestamptz(3)
+  /// Where it sits in its list. Built-in controls follow the catalogue's order.
+  sortOrder         Int                 @default(0)
+  archivedAt        DateTime?           @db.Timestamptz(3)
+  createdAt         DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+  policies          ControlPolicyLink[]
+  evidence          Evidence[]
+  proofRequirements ProofRequirement[]
+
+  @@id([organizationId, id])
+  @@unique([organizationId, frameworkId, templateId])
+  @@index([frameworkId, requirementId])
+  @@index([requirementId])
+  @@index([assigneeId])
+  @@map("controls")
+}
+
+enum ProofFrequency {
+  once
+  monthly
+  quarterly
+  yearly
+}
+
+// Something a control needs proof of, such as "TLS configuration scan for public endpoints". Built-in ones are
+// copied from the catalogue (packages/shared) like controls and policies, so the company can edit, add and archive them.
+model ProofRequirement {
+  organizationId String
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  /// A built-in requirement keeps its catalogue id, such as PR-P05-02. One the company adds gets a generated id.
+  id             String
+  controlId      String
+  control        Control        @relation(fields: [organizationId, controlId], references: [organizationId, id], onDelete: Cascade)
+  /// The catalogue id this was copied from. Empty for a requirement the company added.
+  templateId     String?
+  title          String
+  /// What to collect, in a sentence or two.
+  description    String         @default("")
+  /// How often proof has to be provided again. Proof older than this stops counting.
+  frequency      ProofFrequency @default(yearly)
+  /// Who collects it. Empty means the control's own owner does.
+  assigneeId     String?
+  assignee       Person?        @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  /// When the first proof is due. Once proof is given, the frequency sets the next date.
+  dueDate        DateTime?      @db.Timestamptz(3)
+  sortOrder      Int            @default(0)
+  archivedAt     DateTime?      @db.Timestamptz(3)
+  createdAt      DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime       @updatedAt @db.Timestamptz(3)
+  evidence       Evidence[]
+
+  @@id([organizationId, id])
+  @@index([controlId])
+  @@index([assigneeId])
+  @@map("proof_requirements")
+}
+
+enum EvidenceKind {
+  link
+  note
+  file
+}
+
+// Proof that a control is in place: a link to where it lives, a note that is the proof itself, or a file in storage.
+model Evidence {
+  organizationId     String
+  organization       Organization      @relation(fields: [organizationId], references: [id])
+  id                 String            @id @default(uuid(7))
+  controlId          String
+  control            Control           @relation(fields: [organizationId, controlId], references: [organizationId, id], onDelete: Cascade)
+  kind               EvidenceKind
+  title              String
+  /// For a link.
+  url                String?
+  /// For a note.
+  note               String?
+  /// For a file: where it is kept in storage. Never sent to the web.
+  fileKey            String?
+  fileName           String?
+  /// Bytes.
+  fileSize           Int?
+  /// The type the file was checked to be, such as application/pdf.
+  fileType           String?
+  /// Hex SHA-256 of the contents, to show the file has not changed.
+  fileSha256         String?
+  /// The requirement this is proof of. Empty for general proof on the control.
+  proofRequirementId String?
+  proofRequirement   ProofRequirement? @relation(fields: [organizationId, proofRequirementId], references: [organizationId, id], onDelete: Restrict)
+  /// No foreign key on purpose: the name is copied here, so the proof stays attributed after the person leaves.
+  addedById          String
+  addedByName        String
+  createdAt          DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@index([controlId, createdAt])
+  @@index([proofRequirementId, createdAt])
+  @@map("evidence")
+}
+
+enum PolicyStatus {
+  draft
+  in_review
+  approved
+}
+
+// The company's own policies, copied from the catalogue in the same way as controls.
+model Policy {
+  organizationId      String
+  organization        Organization        @relation(fields: [organizationId], references: [id])
+  /// A built-in policy keeps its catalogue code, such as P08. One the company adds gets a generated id.
+  id                  String
+  /// The framework this policy was copied from. Controls in any framework may still point at it.
+  frameworkId         String
+  framework           Framework           @relation(fields: [organizationId, frameworkId], references: [organizationId, id], onDelete: Restrict)
+  templateId          String?
+  title               String
+  summary             String
+  ownerRole           JobRole
+  /// A plain title such as "General Counsel". It becomes a real person in a later step.
+  approverTitle       String
+  reviewEvery         String              @default("annual")
+  legalReferences     String[]
+  /// What the company keeps to show the policy is followed.
+  evidence            String[]
+  status              PolicyStatus        @default(draft)
+  /// Set while approved, and cleared when the policy goes back to draft.
+  approvedAt          DateTime?           @db.Timestamptz(3)
+  approvedByName      String?
+  /// The working text, in the editor's JSON. Empty until someone edits it: until then the text is built from the controls.
+  content             Json?
+  /// When and by whom the working text was last saved. Empty until someone edits it.
+  contentEditedAt     DateTime?           @db.Timestamptz(3)
+  contentEditedByName String?
+  /// What changed, written when approval is asked for.
+  changelog           String?
+  /// The person who must approve it. Empty means the plain title in approverTitle.
+  approverId          String?
+  approver            Person?             @relation(fields: [approverId], references: [id], onDelete: SetNull)
+  sortOrder           Int                 @default(0)
+  archivedAt          DateTime?           @db.Timestamptz(3)
+  createdAt           DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime            @updatedAt @db.Timestamptz(3)
+  controls            ControlPolicyLink[]
+  approvals           PolicyApproval[]
+
+  @@id([organizationId, id])
+  @@unique([organizationId, frameworkId, templateId])
+  @@index([approverId])
+  @@map("policies")
+}
+
+// Which policies cover which controls. Stored once; both screens read it from here.
+model ControlPolicyLink {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  controlId      String
+  control        Control      @relation(fields: [organizationId, controlId], references: [organizationId, id], onDelete: Cascade)
+  policyId       String
+  policy         Policy       @relation(fields: [organizationId, policyId], references: [organizationId, id], onDelete: Cascade)
+  /// 0 is the primary policy. Its owner is the control's default owner.
+  position       Int          @default(0)
+
+  @@id([organizationId, controlId, policyId])
+  @@index([policyId])
+  @@map("control_policy_links")
+}
+
+// Every approval a policy has had, kept even after it is reopened. This is the policy's history.
+model PolicyApproval {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  policyId       String
+  policy         Policy       @relation(fields: [organizationId, policyId], references: [organizationId, id], onDelete: Cascade)
+  approvedAt     DateTime     @default(now()) @db.Timestamptz(3)
+  /// No foreign key on purpose: the name is copied here, so the approval stays attributed after the person leaves.
+  approvedById   String
+  approvedByName String
+  /// 1 for the first approval, then counting up. Each approval keeps the text it approved.
+  version        Int
+  content        Json
+  changelog      String?
+
+  @@unique([organizationId, policyId, version])
+  @@index([policyId, approvedAt])
+  @@map("policy_approvals")
+}
+
+// Everyone who works at the company, with or without a login. A person's access is not stored here:
+// it is read from their account (User) or open invitation, matched by email, so there is one source of truth.
+model Person {
+  organizationId    String
+  organization      Organization       @relation(fields: [organizationId], references: [id])
+  id                String             @id @default(uuid(7))
+  name              String
+  email             String
+  department        String?
+  jobTitle          String?
+  status            PersonStatus       @default(active)
+  leftAt            DateTime?          @db.Timestamptz(3)
+  createdAt         DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime           @updatedAt @db.Timestamptz(3)
+  roles             RoleAssignment[]
+  controls          Control[]
+  proofRequirements ProofRequirement[]
+  policies          Policy[]
+  breaches          Breach[]
+  requests          DataRequest[]
+
+  @@unique([organizationId, email])
+  @@map("persons")
+}
+
+// Who holds each named job (DPO, Security Lead ...). The role code is the key, so a job has at most one holder.
+model RoleAssignment {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  role           JobRole
+  personId       String
+  person         Person       @relation(fields: [personId], references: [id], onDelete: Restrict)
+  /// When the job last changed hands: the time of the latest change, not of the first assignment.
+  since          DateTime     @default(now()) @db.Timestamptz(3)
+
+  @@id([organizationId, role])
+  @@index([personId])
+  @@map("role_assignments")
+}
+
+// Keep in step with BREACH_STEPS in packages/shared (a test checks).
+enum BreachStep {
+  found
+  assess
+  tell_board
+  tell_people
+  close
+}
+
+// A personal data breach. It is open until its close step exists.
+model Breach {
+  organizationId  String
+  organization    Organization       @relation(fields: [organizationId], references: [id])
+  id              String             @id @default(uuid(7))
+  title           String
+  description     String
+  /// When the breach was found: the report clock starts here.
+  foundAt         DateTime           @db.Timestamptz(3)
+  affectedSystems String
+  affectedData    String
+  peopleAffected  Int?
+  /// The name is copied here, so the record stays attributed after the person leaves.
+  reportedByName  String
+  /// Who deals with it. Empty means the DPO does. Cleared if they are removed.
+  assigneeId      String?
+  assignee        Person?            @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt       DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime           @updatedAt @db.Timestamptz(3)
+  steps           BreachStepRecord[]
+
+  @@index([assigneeId])
+  @@map("breaches")
+}
+
+// A step of a breach that has been done. A step that has no row is still to do.
+model BreachStepRecord {
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  id              String       @id @default(uuid(7))
+  breachId        String
+  breach          Breach       @relation(fields: [breachId], references: [id], onDelete: Cascade)
+  step            BreachStep
+  completedAt     DateTime     @db.Timestamptz(3)
+  completedByName String
+  note            String?
+
+  @@unique([breachId, step])
+  @@index([breachId])
+  @@map("breach_steps")
+}
+
+// Keep in step with REQUEST_TYPES in packages/shared (a test checks).
+enum RequestType {
+  access
+  correction
+  erasure
+  nomination
+  complaint
+}
+
+// Keep in step with REQUEST_STATUSES in packages/shared (a test checks).
+enum RequestStatus {
+  new
+  in_progress
+  done
+}
+
+// Keep in step with REQUEST_SOURCES in packages/shared (a test checks).
+enum RequestSource {
+  email
+  website
+  manual
+}
+
+// Keep in step with TASK_OUTCOMES in packages/shared (a test checks).
+enum TaskOutcome {
+  todo
+  done
+  erased
+  kept_by_law
+}
+
+// A request or complaint from a person about their data. It is open until it is done.
+model DataRequest {
+  organizationId         String
+  organization           Organization      @relation(fields: [organizationId], references: [id])
+  id                     String            @id @default(uuid(7))
+  /// The short number people say, shown as REQ-<number>. It follows a sequence, so it is never reused.
+  number                 Int
+  type                   RequestType
+  source                 RequestSource     @default(manual)
+  status                 RequestStatus     @default(new)
+  personName             String
+  personEmail            String
+  details                String
+  receivedAt             DateTime          @db.Timestamptz(3)
+  /// Worked out when the request is logged (received plus the grievance reply time) and kept, so a later change to the profile does not move it.
+  dueAt                  DateTime          @db.Timestamptz(3)
+  identityVerifiedAt     DateTime?         @db.Timestamptz(3)
+  /// The names are copied here, so the record stays attributed after the person leaves.
+  identityVerifiedByName String?
+  identityNote           String?
+  replyNote              String?
+  closedAt               DateTime?         @db.Timestamptz(3)
+  closedByName           String?
+  loggedByName           String
+  /// Who deals with it. Empty means the DPO does. Cleared if they are removed.
+  assigneeId             String?
+  assignee               Person?           @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt              DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime          @updatedAt @db.Timestamptz(3)
+  tasks                  DataRequestTask[]
+
+  @@unique([organizationId, number])
+  @@index([status, dueAt])
+  @@index([assigneeId])
+  @@map("data_requests")
+}
+
+// A system that holds the person's data, and what was done about it.
+model DataRequestTask {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  requestId      String
+  request        DataRequest  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  system         String
+  outcome        TaskOutcome  @default(todo)
+  /// Why the law says to keep the data. Only set when the outcome is kept_by_law.
+  reason         String?
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@index([requestId])
+  @@map("data_request_tasks")
+}
+
+// One run of the website check: what was looked at, and what was found. Kept so earlier runs can be compared.
+model WebsiteCheck {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  /// The address that was checked, as it was entered.
+  url            String
+  checkedAt      DateTime     @default(now()) @db.Timestamptz(3)
+  /// The name is copied here, so the run stays attributed after the person leaves.
+  checkedByName  String
+  /// The list of results, in the shape of WebsiteCheckResult in packages/shared.
+  results        Json
+  /// How many results passed, warned and failed, kept so the list needs no results.
+  passed         Int
+  warned         Int
+  failed         Int
+
+  @@index([checkedAt])
+  @@map("website_checks")
+}
+
+// The company logo: one row, id 1. The picture is in file storage; this row says where.
+model CompanyLogo {
+  organizationId String       @id
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  /// Where the picture is kept in storage. Never sent to the web.
+  fileKey        String
+  fileName       String
+  /// The type the file was checked to be, such as image/png.
+  fileType       String
+  /// Bytes.
+  fileSize       Int
+  /// Hex SHA-256 of the contents, to show the file has not changed.
+  fileSha256     String
+  /// The name is copied here, so the change stays attributed after the person leaves.
+  updatedByName  String
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@map("company_logo")
+}
+
+// One go at the readiness check: the answers, and the score worked out from them when it was taken.
+model ReadinessCheck {
+  id             String       @id @default(uuid(7))
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  takenAt        DateTime     @default(now()) @db.Timestamptz(3)
+  /// The name is copied here, so the check stays attributed after the person leaves.
+  takenByName    String
+  /// Every question's answer, by question id. See READINESS_DOMAINS in packages/shared.
+  answers        Json
+  /// Out of 100.
+  score          Int
+
+  @@index([organizationId, takenAt])
+  @@map("readiness_checks")
+}
+
+// A key a script or an AI agent signs in with. It works in one organisation, as a member or an auditor, for as long as the
+// person who made it is still a member there. Only a hash of the key is kept; the key itself is shown once, when made.
+model ApiKey {
+  id             String       @id @default(uuid(7))
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  role           AppRole
+  /// The start of the key, kept so keys can be told apart in a list.
+  prefix         String
+  /// SHA-256 of the key. The key is 32 random bytes, so it needs no salt.
+  keyHash        String       @unique
+  createdById    String
+  createdBy      User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  /// Copied here, so the list still says who made it after they leave.
+  createdByName  String
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  expiresAt      DateTime?    @db.Timestamptz(3)
+  lastUsedAt     DateTime?    @db.Timestamptz(3)
+  revokedAt      DateTime?    @db.Timestamptz(3)
+
+  @@index([organizationId, createdAt])
+  @@map("api_keys")
+}
+
+// A link to an outside system that DPDP Kit reads from to check it, such as an Azure subscription. The credentials are
+// kept encrypted and are never sent back. A connection that is removed keeps its row and its runs, and loses the credentials.
+model Connection {
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  id             String          @id @default(uuid(7))
+  provider       String
+  name           String
+  /// What identifies the system without being a secret, such as the tenant and subscription ids. Shown in the list.
+  identifiers    Json
+  /// The credentials as JSON, sealed by the secret box. Empty once the connection is removed.
+  credentials    String
+  createdByName  String
+  createdAt      DateTime        @default(now()) @db.Timestamptz(3)
+  removedAt      DateTime?       @db.Timestamptz(3)
+  runs           ConnectionRun[]
+
+  @@index([organizationId, createdAt])
+  @@map("connections")
+}
+
+// One time the checks were run against a connection, and what they found.
+model ConnectionRun {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  connectionId   String
+  connection     Connection   @relation(fields: [connectionId], references: [id])
+  ranAt          DateTime     @default(now()) @db.Timestamptz(3)
+  /// The name is copied here, so the run stays attributed after the person leaves.
+  ranByName      String
+  /// The list of results, in the shape of ConnectionCheckResult in packages/shared.
+  results        Json
+  passed         Int
+  warned         Int
+  failed         Int
+  skipped        Int
+
+  @@index([connectionId, ranAt])
+  @@map("connection_runs")
+}
+
+// Keep in step with NOTIFICATION_KINDS in packages/shared (a test checks).
+enum NotificationKind {
+  breach
+  request
+  proof
+  review
+}
+
+// Keep in step with NOTIFICATION_STATES in packages/shared (a test checks).
+enum NotificationState {
+  due_soon
+  overdue
+}
+
+// A notice for one person: something they are responsible for is due soon, or late. The text is made on screen.
+model Notification {
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id])
+  id             String            @id @default(uuid(7))
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           NotificationKind
+  state          NotificationState
+  /// The request, breach, proof requirement or policy it is about.
+  subjectId      String
+  title          String
+  /// The due date as YYYY-MM-DD.
+  dueOn          String?
+  /// Says "this notice was already made", so the daily check never makes it twice.
+  dedupeKey      String
+  readAt         DateTime?         @db.Timestamptz(3)
+  emailedAt      DateTime?         @db.Timestamptz(3)
+  createdAt      DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@unique([organizationId, userId, dedupeKey])
+  @@index([organizationId, userId, createdAt])
+  @@map("notifications")
+}
+
+// What a role gets for one kind of notice until a person chooses otherwise. Set by admins.
+model NotificationRoleDefault {
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  role           AppRole
+  kind           NotificationKind
+  inApp          Boolean          @default(true)
+  email          Boolean          @default(true)
+  updatedAt      DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, role, kind])
+  @@map("notification_role_defaults")
+}
+
+// How one person wants to hear about one kind of notice. A kind with no row is on in both ways.
+model NotificationPreference {
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           NotificationKind
+  inApp          Boolean          @default(true)
+  email          Boolean          @default(true)
+  updatedAt      DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@id([organizationId, userId, kind])
+  @@map("notification_preferences")
+}

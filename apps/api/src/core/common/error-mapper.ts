@@ -1,5 +1,5 @@
 import { HttpException } from '@nestjs/common';
-import type { ApiErrorBody, ErrorCode } from '@niti-bharat/shared';
+import type { ApiErrorBody, ErrorCode } from '@dpdp-kit/shared';
 import { Prisma } from '../../generated/prisma/client';
 import { AppException } from './app.exception';
 
@@ -9,6 +9,9 @@ const CODE_BY_STATUS: Record<number, ErrorCode> = {
   403: 'FORBIDDEN',
   404: 'NOT_FOUND',
   409: 'CONFLICT',
+  // Multer's size limit reaches us as a 413.
+  413: 'FILE_TOO_LARGE',
+  415: 'FILE_TYPE_NOT_ALLOWED',
   429: 'RATE_LIMITED',
 };
 

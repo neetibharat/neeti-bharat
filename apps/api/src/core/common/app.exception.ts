@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import type { ApiErrorBody, ErrorCode } from '@niti-bharat/shared';
+import type { ApiErrorBody, ErrorCode } from '@dpdp-kit/shared';
 
 /** Throw this for expected failures; the client translates `code` into prose. */
 export class AppException extends HttpException {
