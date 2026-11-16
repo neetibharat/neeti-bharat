@@ -106,15 +106,9 @@ export class ControlRepository {
     const sortOrder = await nextSortOrder(() =>
       this.prisma.db.control.aggregate({ _max: { sortOrder: true } }),
     );
-    await this.prisma.db.control.create({
-      data: {
-        ...data,
-        ...orgOwned(),
-        sortOrder,
-        policies: {
-          create: policyIds.map((policyId, position) => ({ ...orgOwned(), policyId, position })),
-        },
-      },
+    await this.prisma.transact(async (db) => {
+      await db.control.create({ data: { ...data, ...orgOwned(), sortOrder } });
+      await db.controlPolicyLink.createMany({ data: linksOf(data.id, policyIds) });
     });
   }
 

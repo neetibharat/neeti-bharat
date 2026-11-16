@@ -139,7 +139,7 @@
     },
     "policies": {
       "title": "Policies",
-      "description": "The 18 policies a company needs under the DPDP Rules, each with an owner, an approver and the proof to keep."
+      "description": "The policies a company needs under the DPDP Rules, and any it adds, each with an owner, an approver and the proof to keep."
     },
     "proof": {
       "title": "Proof",
@@ -218,6 +218,10 @@
       "CONTROL_RESTORED": "Control restored",
       "POLICY_EDITED": "Policy text edited",
       "POLICY_APPROVER_CHANGED": "Policy approver changed",
+      "POLICY_CREATED": "Policy added",
+      "POLICY_DETAILS_EDITED": "Policy details edited",
+      "POLICY_ARCHIVED": "Policy archived",
+      "POLICY_RESTORED": "Policy restored",
       "EVIDENCE_ADDED": "Proof added",
       "EVIDENCE_REMOVED": "Proof removed",
       "PROOF_REQUIREMENT_ADDED": "Proof requirement added",
@@ -285,6 +289,10 @@
       "CONTROL_RESTORED": "Restored {controlId} ({title})",
       "POLICY_EDITED": "Edited the text of {policyId} ({title})",
       "POLICY_APPROVER_CHANGED": "Changed the approver of {policyId} ({title}) from {before} to {after}",
+      "POLICY_CREATED": "Added the policy {title}",
+      "POLICY_DETAILS_EDITED": "Edited the details of the policy {title}",
+      "POLICY_ARCHIVED": "Archived the policy {title}",
+      "POLICY_RESTORED": "Restored the policy {title}",
       "EVIDENCE_ADDED": "Added proof {proof} to {controlId} ({title})",
       "EVIDENCE_REMOVED": "Removed proof {proof} from {controlId} ({title})",
       "PROOF_REQUIREMENT_ADDED": "Added the proof requirement {proof} to {controlId} ({title})",
@@ -884,6 +892,33 @@
     "search": "Search policies",
     "empty": "No policy matches your search.",
     "back": "Policies",
+    "add": {
+      "button": "Add policy",
+      "title": "Add a policy",
+      "hint": "A policy of your own starts as a draft. Write its text on the next page, then link it to the controls it covers."
+    },
+    "edit": {
+      "button": "Edit details",
+      "title": "Edit policy details",
+      "hint": "The title, what it is for, who owns it and who approves it. The text and its approval are changed on this page."
+    },
+    "form": {
+      "title": "Title",
+      "summary": "What it is for",
+      "owner": "Owner",
+      "approverTitle": "Approver’s title",
+      "framework": "Framework",
+      "frameworkHint": "Where the policy is filed. It can cover controls in any framework.",
+      "create": "Add policy",
+      "save": "Save",
+      "cancel": "Cancel",
+      "archive": "Archive"
+    },
+    "archived": {
+      "title": "Archived policies",
+      "description": "These do not count until they are restored.",
+      "restore": "Restore"
+    },
     "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
     "columns": {
       "policy": "Policy",

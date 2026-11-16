@@ -6,7 +6,7 @@ The DPDP checklist: what the law asks of a company, broken into jobs people can 
 
 - **Rule.** A part of the DPDP Rules, for example "Rule 7: report a data breach". There are 13, plus a group for controls that support every rule.
 - **Control.** One job that follows from a rule, for example "Have a written breach process". There are 47.
-- **Policy.** A document that covers one or more controls. There are 18. Each names an owner job, an approver, and the proof a company keeps to show it is followed.
+- **Policy.** A document that covers one or more controls. The catalogue has 18, and a company can add its own. Each names an owner job, an approver, and the proof a company keeps to show it is followed.
 
 A control can be covered by several policies, and a policy covers several controls. The link is stored once, on the control (`policyIds`). The policy's list of controls is worked out from it, so the two can never disagree.
 
@@ -33,7 +33,18 @@ A company can follow more than the built-in framework: a customer's security rev
 
 ## Policies
 
-`/policies` lists the 18 policies, and a policy page (`/policies/P05`) shows its owner, approver, status, text, the proof to keep, and the controls it covers. Each covered control links to its rule in Frameworks (`/frameworks/dpdp/rules/R6` is that rule's page, built from the framework id and the rule id; `/frameworks/dpdp?rule=R6` redirects to it), and each control in Frameworks links back to its policies.
+`/policies` lists the policies (the 18 built-in ones and any the company added), and a policy page (`/policies/P05`) shows its owner, approver, status, text, the proof to keep, and the controls it covers. Each covered control links to its rule in Frameworks (`/frameworks/dpdp/rules/R6` is that rule's page, built from the framework id and the rule id; `/frameworks/dpdp?rule=R6` redirects to it), and each control in Frameworks links back to its policies.
+
+### Your own policies
+
+Admins and members can add, edit and archive policies. Auditors can only read.
+
+- **Add.** "Add policy" asks for a title, what the policy is for, the owner job, the approver’s title and the framework it is filed under. It is created as a draft with a generated id, marked Custom, and its page opens so the text can be written. It starts from the same starting text as any policy, and goes through the same approval.
+- **Edit details.** "Edit details" on a policy changes its title, summary, owner job and approver title. The text, the named approver and the status keep their own controls, so a change to details never rewrites approved text.
+- **Cover controls.** A control picks its policies in its own edit dialog, and a policy of the company’s own is in that list like any other.
+- **Archive and restore.** An archived policy stops counting: it leaves the list and the controls it covered no longer wait on it. It is kept and listed under "Archived policies" so it can be restored.
+
+Every change is written to the activity log: `POLICY_CREATED`, `POLICY_DETAILS_EDITED`, `POLICY_ARCHIVED`, `POLICY_RESTORED`.
 
 ### The text
 
@@ -153,6 +164,10 @@ Ownership flows down and is only set where it differs. A policy has an owner job
 | `POST /v1/controls/:id/archive`                        | admin, member          | Archive a control. `/restore` brings it back.                                                                                                                       |
 | `GET /v1/assignees`                                    | admin, member          | The people work can be given to.                                                                                                                                    |
 | `GET /v1/policies`                                     | admin, member, auditor | Every policy with its standing: only what the list shows.                                                                                                           |
+| `GET /v1/policies/archived`                            | admin, member, auditor | Policies that were archived.                                                                                                                                        |
+| `POST /v1/policies`                                    | admin, member          | Add a policy of your own, as a draft, under a framework.                                                                                                            |
+| `PUT /v1/policies/:id/details`                         | admin, member          | Edit a policy’s title, summary, owner job and approver title.                                                                                                       |
+| `POST /v1/policies/:id/archive`                        | admin, member          | Archive a policy. `/restore` brings it back.                                                                                                                        |
 | `GET /v1/policies/:id`                                 | admin, member, auditor | One policy with its text, history and whether you may decide.                                                                                                       |
 | `GET /v1/policies/:id/coverage`                        | admin, member, auditor | Every control a policy covers, across all frameworks.                                                                                                               |
 | `GET /v1/policies/:id/versions/:n`                     | admin, member, auditor | The text of one approved version.                                                                                                                                   |

@@ -4,6 +4,7 @@ import {
   CONTROL_DESCRIPTION_MAX_LENGTH,
   CONTROL_TITLE_MAX_LENGTH,
   JOB_ROLES,
+  policyLabel,
   type ControlDetailsRequest,
   type JobRole,
 } from '@dpdp-kit/shared';
@@ -145,9 +146,7 @@ function PolicyChoices(props: { selected: string[]; onChange: (ids: string[]) =>
             isSelected={props.selected.includes(policy.id)}
             onChange={(isOn) => toggle(policy.id, isOn)}
           >
-            <span className="text-label">
-              {policy.id} · {policy.title}
-            </span>
+            <span className="text-label">{policyLabel(policy)}</span>
           </Checkbox>
         ))}
       </div>

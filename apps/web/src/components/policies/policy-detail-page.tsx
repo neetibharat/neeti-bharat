@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
-import type { PolicyDetailResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyDetailResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';
@@ -11,6 +11,7 @@ import { Link } from '@/i18n/navigation';
 import { useGetPolicyQuery } from '@/lib/api/frameworks-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { CoveredControls } from './covered-controls';
+import { EditPolicyButton } from './edit-policy-button';
 import { PolicyActions } from './policy-actions';
 import { PolicyApprovalCard } from './policy-approval-card';
 import { PolicyDocumentCard } from './policy-document-card';
@@ -43,20 +44,27 @@ export function PolicyDetailPage({ policyId }: { policyId: string }) {
     );
   }
   if (!policy) return null;
-  const actions = (
-    <PolicyActions policyId={policy.id} status={policy.status} canDecide={policy.canDecide} />
-  );
 
   return (
     <>
       <BackLink />
       <PageHeader
-        title={`${policy.id} · ${policy.title}`}
+        title={policyLabel(policy)}
         description={policy.summary}
-        actions={actions}
+        actions={<Actions policy={policy} />}
       />
       <PolicyBody policy={policy} />
     </>
+  );
+}
+
+/** Edit the details, and the moves open to this person. */
+function Actions({ policy }: { policy: PolicyDetailResponse }) {
+  return (
+    <div className="flex items-start gap-2">
+      <EditPolicyButton policy={policy} />
+      <PolicyActions policyId={policy.id} status={policy.status} canDecide={policy.canDecide} />
+    </div>
   );
 }
 

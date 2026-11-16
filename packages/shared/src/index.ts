@@ -14,6 +14,7 @@ export * from './frameworks/dpdp/framework-edit.js';
 export * from './frameworks/dpdp/my-work.js';
 export * from './frameworks/dpdp/index.js';
 export * from './frameworks/dpdp/policy-document.js';
+export * from './frameworks/dpdp/policy-edit.js';
 export * from './frameworks/dpdp/proof-requirements.js';
 export * from './frameworks/dpdp/policy-status.js';
 export * from './frameworks/dpdp/policy-text.js';

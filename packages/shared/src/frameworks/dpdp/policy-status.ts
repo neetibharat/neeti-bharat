@@ -41,6 +41,8 @@ export interface PolicyResponse {
   /** Set while the policy is approved. */
   reviewDueAt: string | null;
   controlCount: number;
+  /** True for a policy the company added, which is not one of the built-in ones. */
+  isCustom: boolean;
 }
 
 export interface PolicyListResponse {

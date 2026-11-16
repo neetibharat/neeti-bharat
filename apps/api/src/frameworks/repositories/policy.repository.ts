@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import type { PolicyDocument } from '@dpdp-kit/shared';
+import type { JobRole, PolicyDocument } from '@dpdp-kit/shared';
 import { orgKey, orgOwned } from '../../core/org/keys';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Policy, PolicyApproval, PolicyStatus } from '../../generated/prisma/client';
+import { nextSortOrder } from '../utils/sort-order';
 
 export interface ApproverPerson {
   id: string;
@@ -25,6 +26,18 @@ export type PolicyWithDetail = PolicyWithCount & {
   approvals: Omit<PolicyApproval, 'content'>[];
 };
 
+export interface PolicyDetails {
+  title: string;
+  summary: string;
+  ownerRole: JobRole;
+  approverTitle: string;
+}
+
+export interface NewPolicy extends PolicyDetails {
+  id: string;
+  frameworkId: string;
+}
+
 const SUMMARY = {
   approver: { select: { id: true, name: true, email: true } },
   _count: { select: { controls: true, approvals: true } },
@@ -41,6 +54,32 @@ export class PolicyRepository {
       include: SUMMARY,
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
     });
+  }
+
+  findArchived(): Promise<PolicyWithCount[]> {
+    return this.prisma.db.policy.findMany({
+      where: { archivedAt: { not: null } },
+      include: SUMMARY,
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    });
+  }
+
+  /** Adds a draft policy at the end of the list. */
+  async create(data: NewPolicy): Promise<void> {
+    const sortOrder = await nextSortOrder(() =>
+      this.prisma.db.policy.aggregate({ _max: { sortOrder: true } }),
+    );
+    await this.prisma.db.policy.create({
+      data: { ...data, ...orgOwned(), legalReferences: [], evidence: [], sortOrder },
+    });
+  }
+
+  saveDetails(id: string, details: PolicyDetails): Promise<Policy> {
+    return this.prisma.db.policy.update({ where: orgKey(id), data: details });
+  }
+
+  setArchived(id: string, archivedAt: Date | null): Promise<Policy> {
+    return this.prisma.db.policy.update({ where: orgKey(id), data: { archivedAt } });
   }
 
   findOne(id: string): Promise<PolicyWithDetail | null> {

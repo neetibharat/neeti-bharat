@@ -15,6 +15,7 @@ export interface PolicyRow {
   approverTitle: string;
   approver: { id: string; name: string } | null;
   reviewEvery: string;
+  templateId: string | null;
   legalReferences: string[];
   evidence: string[];
   status: PolicyStatus;
@@ -36,6 +37,7 @@ export function policyView(row: PolicyRow): PolicyResponse {
     status: row.status,
     reviewDueAt: row.approvedAt ? reviewDueAt(row.approvedAt).toISOString() : null,
     controlCount: row._count.controls,
+    isCustom: row.templateId === null,
   };
 }
 

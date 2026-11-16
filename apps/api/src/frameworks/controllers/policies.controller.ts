@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type {
   PolicyCoverageResponse,
@@ -14,17 +14,24 @@ import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import {
   versionSchema,
   ChangePolicyStatusDto,
+  CreatePolicyDto,
   SavePolicyContentDto,
+  SavePolicyDto,
   SetPolicyApproverDto,
   changePolicyStatusSchema,
+  createPolicySchema,
   savePolicyContentSchema,
+  savePolicySchema,
   setPolicyApproverSchema,
   type ChangePolicyStatusInput,
+  type CreatePolicyInput,
   type SavePolicyContentInput,
+  type SavePolicyInput,
   type SetPolicyApproverInput,
 } from '../dto/policy.dto';
 import { FrameworksService } from '../services/frameworks.service';
 import { PoliciesService } from '../services/policies.service';
+import { PolicyEditService } from '../services/policy-edit.service';
 
 const viewerOf = ({ user }: UserSession) => ({
   email: user.email,
@@ -42,6 +49,7 @@ export class PoliciesController {
   constructor(
     private readonly service: PoliciesService,
     private readonly frameworks: FrameworksService,
+    private readonly editing: PolicyEditService,
   ) {}
 
   @Get()
@@ -49,6 +57,56 @@ export class PoliciesController {
   @ApiOperation({ summary: 'Every policy, with where it stands' })
   list(): Promise<PolicyListResponse> {
     return this.service.list();
+  }
+
+  @Get('archived')
+  @Roles(['admin', 'member', 'auditor'])
+  @ApiOperation({ summary: 'Policies that were archived, which can be restored' })
+  archived(): Promise<PolicyListResponse> {
+    return this.editing.archived();
+  }
+
+  @Post()
+  @Roles(['admin', 'member'])
+  @ApiOperation({ summary: 'Add a policy of your own, as a draft (admin and member)' })
+  @ApiBody({ type: CreatePolicyDto })
+  create(
+    @Body(new ZodValidationPipe(createPolicySchema)) body: CreatePolicyInput,
+    @Session() session: UserSession,
+  ): Promise<PolicyDetailResponse> {
+    return this.editing.create(body, policyActorOf(session));
+  }
+
+  @Put(':policyId/details')
+  @Roles(['admin', 'member'])
+  @ApiOperation({
+    summary: 'Edit a policy’s title, summary, owner and approver title (admin and member)',
+  })
+  @ApiBody({ type: SavePolicyDto })
+  saveDetails(
+    @Param('policyId') policyId: string,
+    @Body(new ZodValidationPipe(savePolicySchema)) body: SavePolicyInput,
+    @Session() session: UserSession,
+  ): Promise<PolicyDetailResponse> {
+    return this.editing.save(policyId, body, policyActorOf(session));
+  }
+
+  @Post(':policyId/archive')
+  @HttpCode(204)
+  @Roles(['admin', 'member'])
+  @ApiOperation({
+    summary: 'Archive a policy. It stops counting and can be restored (admin and member)',
+  })
+  archive(@Param('policyId') policyId: string, @Session() session: UserSession): Promise<void> {
+    return this.editing.archive(policyId, actorOf(session.user));
+  }
+
+  @Post(':policyId/restore')
+  @HttpCode(204)
+  @Roles(['admin', 'member'])
+  @ApiOperation({ summary: 'Bring an archived policy back (admin and member)' })
+  restore(@Param('policyId') policyId: string, @Session() session: UserSession): Promise<void> {
+    return this.editing.restore(policyId, actorOf(session.user));
   }
 
   @Get(':policyId')

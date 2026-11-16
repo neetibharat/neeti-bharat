@@ -1,6 +1,6 @@
 'use client';
 
-import { POLICY_STATUSES, type PolicyResponse } from '@dpdp-kit/shared';
+import { POLICY_STATUSES, policyLabel, type PolicyResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
@@ -22,6 +22,8 @@ import { useReviewCadence } from '@/lib/hooks/use-review-cadence';
 import { approverOf, filterPolicies, NO_POLICY_FILTERS } from '@/lib/policy-filter';
 import { statusCounts } from '@/lib/policy-stats';
 import { PoliciesOverview } from './policies-overview';
+import { AddPolicyButton } from './add-policy-button';
+import { ArchivedPolicies } from './archived-policies';
 import { PolicyFilterBar } from './policy-filter-bar';
 import { WhereFromButton } from './where-from-button';
 import { PolicyStatusBadge } from './policy-status-badge';
@@ -40,6 +42,7 @@ export function PoliciesPage() {
       <div className="flex flex-col gap-4">
         <PoliciesOverview policies={data.policies} />
         <PolicyList policies={data.policies} />
+        <ArchivedPolicies />
       </div>
     </>
   );
@@ -87,7 +90,12 @@ function PoliciesHeader({ policies }: { policies: PolicyResponse[] }) {
         review: counts.in_review,
         draft: counts.draft,
       })}
-      actions={<WhereFromButton policyCount={policies.length} />}
+      actions={
+        <div className="flex items-center gap-2">
+          <AddPolicyButton />
+          <WhereFromButton policyCount={policies.length} />
+        </div>
+      }
     />
   );
 }
@@ -125,7 +133,7 @@ function PolicyRow({ policy }: { policy: PolicyResponse }) {
           href={`/policies/${policy.id}`}
           className="font-medium text-fg hover:text-brand hover:underline"
         >
-          {policy.id} · {policy.title}
+          {policyLabel(policy)}
         </Link>
         <p className="mt-0.5 line-clamp-1 text-label text-fg-muted">{policy.summary}</p>
       </TableCell>
