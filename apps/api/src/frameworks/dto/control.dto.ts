@@ -26,10 +26,7 @@ export type ControlDetailsInput = z.output<typeof detailsSchema>;
 export type CreateControlInput = z.output<typeof createControlSchema>;
 
 // Swagger reads the request shapes from these classes; validation uses the schemas above.
-export class SaveControlDto {
-  @ApiProperty({ enum: JOB_ROLES, description: 'The job accountable when no one person is named' })
-  ownerRole!: string;
-
+class ControlDetailsDto {
   @ApiProperty({ maxLength: CONTROL_TITLE_MAX_LENGTH })
   title!: string;
 
@@ -49,7 +46,13 @@ export class SaveControlDto {
   policyIds!: string[];
 }
 
-export class CreateControlDto extends SaveControlDto {
+export class SaveControlDto extends ControlDetailsDto {
+  @ApiProperty({ enum: JOB_ROLES, description: 'The job accountable when no one person is named' })
+  ownerRole!: string;
+}
+
+/** A new control has no job of its own: it starts with its main policy’s owner. */
+export class CreateControlDto extends ControlDetailsDto {
   @ApiProperty({ example: 'R6', description: 'A rule id such as R6, or ORG for organisation-wide' })
   requirementId!: string;
 }
