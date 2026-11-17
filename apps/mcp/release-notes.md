@@ -45,7 +45,7 @@ Then try the real work, for example: _"Add a vendor data sharing policy under DP
 ### What to expect
 
 - Claude asks you before it adds or changes anything, and it speaks in plain words.
-- It saves policies as **drafts**. It cannot approve, send back or reopen a policy. Open **Policies** in DPDP Kit to read a draft and send it for approval.
+- It saves policies as **drafts**. It approves, sends back or reopens a policy only when you ask, and only if your key may decide that policy: the named approver, or an admin when nobody is named.
 - Claude asks before it archives or removes anything.
 
 ### Updating

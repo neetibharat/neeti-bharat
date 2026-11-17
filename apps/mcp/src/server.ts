@@ -9,7 +9,7 @@ import { frameworkTools } from './tools/frameworks.js';
 import { policyTools } from './tools/policies.js';
 import { proofTools } from './tools/proof.js';
 
-/** Every tool, in the order Claude is shown them. There is no tool to approve a policy: a person does that in the app. */
+/** Every tool, in the order Claude is shown them. Nothing touches API keys, sign-in or the AI settings. */
 export const TOOLS: Registration[] = [
   ...contextTools,
   ...frameworkTools,

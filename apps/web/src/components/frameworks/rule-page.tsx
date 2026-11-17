@@ -1,7 +1,13 @@
 'use client';
 
 import { IconChevronLeft } from '@tabler/icons-react';
-import type { PolicyResponse, ProofCounts, RuleResponse } from '@dpdp-kit/shared';
+import {
+  DPDP_FRAMEWORK_ID,
+  isLocked,
+  type PolicyResponse,
+  type ProofCounts,
+  type RuleResponse,
+} from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';
@@ -95,19 +101,20 @@ function Body({ rule, policies, proof, canEdit }: BodyProps) {
   );
 }
 
-/** What sits beside the title: the condition that switches the rule on, and change or archive for a rule the company added. */
+/** What sits beside the title: the condition that switches the rule on, and change or archive unless the rule is locked. */
 function RuleHeaderActions({ rule, canEdit }: { rule: RuleResponse; canEdit: boolean }) {
   const t = useTranslations('frameworks');
   const condition =
     rule.appliesWhen !== 'always' ? (
       <Badge color="warning">{t(`appliesWhen.${rule.appliesWhen}`)}</Badge>
     ) : null;
-  if (!condition && !(canEdit && rule.isCustom)) return undefined;
+  const canChange = canEdit && !isLocked(rule.frameworkId === DPDP_FRAMEWORK_ID);
+  if (!condition && !canChange) return undefined;
 
   return (
     <div className="flex items-center gap-3">
       {condition}
-      {canEdit && rule.isCustom && <RuleActions rule={rule} />}
+      {canChange && <RuleActions rule={rule} />}
     </div>
   );
 }

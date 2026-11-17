@@ -54,7 +54,7 @@ export function PolicyProperties({ policy }: { policy: PolicyDetailResponse }) {
         </Row>
         <Row label={tMeta('version')}>{facts.version}</Row>
         <Row label={t('details.owner')}>{tJobs(policy.ownerRole)}</Row>
-        <Row label={t('details.approver')}>
+        <Row label={t('details.approver')} stacked={isAdmin}>
           {isAdmin ? <ApproverPicker policy={policy} /> : approverName(policy)}
         </Row>
         <Row label={tMeta('edited')}>{facts.edited}</Row>
@@ -83,12 +83,29 @@ function LegalReferences({ references }: { references: string[] }) {
   );
 }
 
-/** A label on the left, its value on the right, so every property lines up the same way. */
-function Row({ label, children }: { label: string; children: ReactNode }) {
+/**
+ * A label on the left, its value on the right, so every property lines up the same way. A value that needs room, such
+ * as a dropdown with a note under it, is `stacked` beneath its label instead.
+ */
+function Row(props: { label: string; children: ReactNode; stacked?: boolean }) {
+  const { label, children, stacked } = props;
+
   return (
-    <div className="flex items-center justify-between gap-4 py-3">
+    <div
+      className={
+        stacked ? 'flex flex-col gap-2 py-3' : 'flex items-center justify-between gap-4 py-3'
+      }
+    >
       <dt className="shrink-0 text-label text-fg-muted">{label}</dt>
-      <dd className="min-w-0 text-right text-label font-medium text-fg">{children}</dd>
+      <dd
+        className={
+          stacked
+            ? 'min-w-0 text-label font-medium text-fg'
+            : 'min-w-0 text-right text-label font-medium text-fg'
+        }
+      >
+        {children}
+      </dd>
     </div>
   );
 }

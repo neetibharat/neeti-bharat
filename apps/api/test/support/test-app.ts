@@ -3,11 +3,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Test } from '@nestjs/testing';
 import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@dpdp-kit/shared';
 import type { AddressInfo } from 'node:net';
+import { AiClient } from '../../src/ai/providers/ai-client';
 import { AzureConnector } from '../../src/connections/providers/azure/azure-api';
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
 import { NotificationScanner } from '../../src/notifications/services/notification-scanner';
+import { fakeAi } from './fake-ai-client';
 import { azureConnector } from './fake-azure-connector';
 import { createTestDatabase, type TestDatabase } from './test-database';
 
@@ -56,21 +58,26 @@ export class Client {
     private readonly apiKey = '',
   ) {}
 
+  /** The headers and body of a call: JSON for most, and the form as it is when a file goes up. */
+  private requestInit(method: string, options: { organization?: string; body?: unknown }) {
+    const headers: Record<string, string> = { origin: WEB_ORIGIN };
+    if (this.cookie) headers.cookie = this.cookie;
+    if (this.apiKey) headers[API_KEY_HEADER] = this.apiKey;
+    if (options.organization) headers[ORGANIZATION_HEADER] = options.organization;
+    const { body } = options;
+    if (body === undefined || body instanceof FormData) {
+      return { method, headers, body: body as FormData | undefined };
+    }
+    headers['content-type'] = 'application/json';
+    return { method, headers, body: JSON.stringify(body) };
+  }
+
   async call<T = unknown>(
     method: string,
     path: string,
     options: { organization?: string; body?: unknown } = {},
   ): Promise<Reply<T>> {
-    const headers: Record<string, string> = { origin: WEB_ORIGIN };
-    if (this.cookie) headers.cookie = this.cookie;
-    if (this.apiKey) headers[API_KEY_HEADER] = this.apiKey;
-    if (options.organization) headers[ORGANIZATION_HEADER] = options.organization;
-    if (options.body !== undefined) headers['content-type'] = 'application/json';
-    const response = await fetch(`${this.base}${path}`, {
-      method,
-      headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    });
+    const response = await fetch(`${this.base}${path}`, this.requestInit(method, options));
     const text = await response.text();
     let body: unknown = text;
     try {
@@ -87,6 +94,9 @@ export class Client {
     this.call<T>('POST', path, { organization, body });
   put = <T = unknown>(path: string, body: unknown, organization?: string) =>
     this.call<T>('PUT', path, { organization, body });
+  /** Sends a file as a form, the way a browser does. */
+  upload = <T = unknown>(path: string, form: FormData, organization?: string) =>
+    this.call<T>('POST', path, { organization, body: form });
   delete = <T = unknown>(path: string, organization?: string) =>
     this.call<T>('DELETE', path, { organization });
 }
@@ -121,6 +131,9 @@ async function compileApp(inbox: MailMessage[]) {
       // Microsoft is replaced by a fake that answers from a table, so no test leaves the machine.
       .overrideProvider(AzureConnector)
       .useValue(azureConnector)
+      // The AI services are replaced by a fake that answers from a table, so no test leaves the machine.
+      .overrideProvider(AiClient)
+      .useValue(fakeAi)
       .overrideProvider(MailService)
       .useValue({
         send: (message: MailMessage) => {

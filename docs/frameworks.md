@@ -24,9 +24,9 @@ A rule's status comes from its controls: done when all are done, in progress onc
 
 A company can follow more than the built-in framework: a customer's security review, an internal standard, another law. **Add framework** on the Frameworks page asks for a name, one sentence on what it is and a short badge, then opens it.
 
-- **Rules.** On a framework you made, **Add rule** adds a rule with a reference (such as `4.2`), a title and what it asks. Each rule has its own page, with the same Controls, Policies and Proof tabs as a DPDP rule, and a pencil and archive for the rule itself.
+- **Rules.** On a framework, **Add rule** adds a rule with a reference (such as `4.2`), a title and what it asks. Each rule has its own page, with the same Controls, Policies and Proof tabs as a DPDP rule, and a pencil and archive for the rule itself.
 - **Controls.** "Add control" on a rule works as it does for DPDP, and the control belongs to that rule's framework. Policies are company-wide, so one policy can back controls in several frameworks, and a policy's page lists all of them.
-- **Built-in is fixed.** DPDP and its rules cannot be renamed, edited or archived. You can still add controls under them.
+- **Built-in can change.** DPDP and its rules can be renamed, edited, added to and archived like any other, because `BUILT_IN_LOCKED` in `packages/shared` is `false`. Set it to `true` and they are closed (`BUILT_IN`); controls, policies and proof stay open either way. The catalogue only adds rows a company does not have, so an edited or archived built-in rule is not put back on restart.
 - **Archiving.** A rule or framework can only be archived once its controls are archived, so nothing is left hidden.
 - **Activity log.** `FRAMEWORK_CREATED`, `FRAMEWORK_EDITED`, `FRAMEWORK_ARCHIVED`, `REQUIREMENT_CREATED`, `REQUIREMENT_EDITED`, `REQUIREMENT_ARCHIVED`.
 - **Limits.** A custom rule is always on (no set-up answer switches it off), there is no "restore" for an archived framework or rule, and the Your set-up tab is DPDP's only.
@@ -39,7 +39,7 @@ A company can follow more than the built-in framework: a customer's security rev
 
 Admins and members can add, edit and archive policies. Auditors can only read.
 
-- **Add.** "Add policy" asks for a title, what the policy is for, the owner job, the approver’s title and the framework it is filed under. It is created as a draft with a generated id, marked Custom, and its page opens so the text can be written. It starts from the same starting text as any policy, and goes through the same approval.
+- **Add.** "Add policy" asks for a title, what the policy is for, the owner job, the approver’s title and the framework it is filed under. It is created as a draft with a generated id, marked Custom, and its page opens so the text can be written. Where [AI help](ai-help.md) is set up, the dialog can instead start from a PDF, Word or PowerPoint file, which fills in the details and the text for the person to check. It starts from the same starting text as any policy, and goes through the same approval.
 - **Edit details.** "Edit details" on a policy changes its title, summary, owner job and approver title. The text, the named approver and the status keep their own controls, so a change to details never rewrites approved text.
 - **Cover controls.** A control picks its policies in its own edit dialog, and a policy of the company’s own is in that list like any other.
 - **Archive and restore.** An archived policy stops counting: it leaves the list and the controls it covered no longer wait on it. It is kept and listed under "Archived policies" so it can be restored.

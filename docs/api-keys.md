@@ -5,7 +5,7 @@ An API key lets a script or an AI agent, such as Claude Code, call the API witho
 ## What a key is
 
 - A key belongs to one organisation. It cannot reach another, and a request that names a different organisation in `x-organization-id` is still answered for the key's own.
-- A key has a role: **admin** (everything an admin can do, including people), **member** (reads and changes things) or **auditor** (only reads). Whatever the role, a key cannot make, list or revoke keys, or start an organisation: those are for people, so a leaked key cannot make more keys.
+- A key has a role: **admin** (everything an admin can do, including people), **member** (reads and changes things) or **auditor** (only reads). Whatever the role, a key cannot make, list or revoke keys, or start an organisation, set up AI help, or read a policy from a file with the company’s AI key: those are for people, so a leaked key cannot make more keys.
 - A key acts as the person who made it. The activity log names that person on everything the key changes. If that person's role is lowered, the key gets the lower of the two roles. If they leave the organisation, the key stops working.
 - A key can expire after 30, 90 or 365 days, or never. An admin can revoke it at any time, and it stops working at once.
 - An organisation can have 25 keys that have not been revoked or run out.

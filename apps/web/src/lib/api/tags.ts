@@ -14,6 +14,7 @@ export const TAG_TYPES = [
   'Readiness',
   'ApiKey',
   'Connection',
+  'Ai',
   'Notification',
   'NotificationPreference',
   'NotificationRoleDefault',
@@ -58,6 +59,8 @@ export const CHANGES = {
   apiKey: ['ApiKey', 'Activity'],
   // Connections and their runs show on the Connections page only.
   connection: ['Connection', 'Activity'],
+  // The AI setting shows on the AI help page and decides whether Add policy offers a file.
+  ai: ['Ai', 'Activity'],
   // Notices show in the inbox and on the bell, and are a person's own, so they are not in the activity log.
   notification: ['Notification'],
 } as const;

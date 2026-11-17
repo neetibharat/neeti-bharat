@@ -88,7 +88,7 @@ function Fields({ values, onChange }: FieldsProps) {
         value={values.summary}
         onChange={(summary) => onChange({ summary })}
         maxLength={POLICY_SUMMARY_MAX_LENGTH}
-        rows={3}
+        rows={6}
       />
       <div className="grid gap-4 sm:grid-cols-2">
         <OwnerField value={values.ownerRole} onChange={(ownerRole) => onChange({ ownerRole })} />

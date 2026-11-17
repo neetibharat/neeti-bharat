@@ -13,4 +13,6 @@ body {
 /* Keep room for the scrollbar, so a page does not jump sideways when it grows tall enough to need one. */
 html {
   scrollbar-gutter: stable;
+  /* Every size is in rem, so this scales the whole app: text, spacing and the gauges. 90% of the browser's size. */
+  font-size: 90%;
 }

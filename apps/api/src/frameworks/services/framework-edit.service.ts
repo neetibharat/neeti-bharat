@@ -1,4 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { isLocked } from '@dpdp-kit/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';
@@ -10,7 +11,7 @@ import { ControlRepository } from '../repositories/control.repository';
 import { FrameworkRepository } from '../repositories/framework.repository';
 import { RequirementRepository } from '../repositories/requirement.repository';
 
-/** A company's own frameworks and the rules in them. Built-in frameworks are read-only. */
+/** A company's frameworks and the rules in them. Built-in ones are open to change unless `BUILT_IN_LOCKED` is set. */
 @Injectable()
 export class FrameworkEditService {
   constructor(
@@ -97,10 +98,10 @@ export class FrameworkEditService {
     });
   }
 
-  /** A framework the company made. One that is missing or archived is not found, and a built-in one cannot change. */
+  /** A framework that can change. One that is missing or archived is not found, and a locked built-in one is refused. */
   private async ownFramework(id: string): Promise<Framework> {
     const framework = activeOrNotFound(await this.frameworks.findOne(id));
-    if (framework.isBuiltIn) throw new AppException('BUILT_IN', HttpStatus.CONFLICT);
+    if (isLocked(framework.isBuiltIn)) throw new AppException('BUILT_IN', HttpStatus.CONFLICT);
     return framework;
   }
 

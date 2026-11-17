@@ -56,10 +56,18 @@ describe('PolicyEditService.create', () => {
         frameworkId: 'dpdp',
         title: 'Vendor policy',
       }),
+      'Asha',
     );
     expect(activity.record).toHaveBeenCalledWith(
       expect.objectContaining({ action: 'POLICY_CREATED' }),
     );
+  });
+
+  it('passes the starting text on, with the name of whoever added it', async () => {
+    const { service, policies } = build();
+    const content = { type: 'doc' as const, content: [{ type: 'paragraph' }] };
+    await service.create({ ...input(), frameworkId: 'dpdp', content }, actor);
+    expect(policies.create).toHaveBeenCalledWith(expect.objectContaining({ content }), 'Asha');
   });
 
   it('refuses a framework that does not exist', async () => {
