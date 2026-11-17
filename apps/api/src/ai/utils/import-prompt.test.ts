@@ -74,4 +74,19 @@ describe('importPrompt', () => {
     expect(prompt.user).toContain('The policy text');
     expect(prompt.system).not.toContain('The policy text');
   });
+
+  it('lists the company answers as keys to write, and leaves out ones too short to match safely', () => {
+    const { system } = importPrompt('p.pdf', 'Text', [
+      { key: 'companyName', value: 'Acme Pvt Ltd' },
+      { key: 'reviewMonths', value: '12' },
+      { key: 'website', value: '' },
+    ]);
+    expect(system).toContain('{{companyName}} = "Acme Pvt Ltd"');
+    expect(system).not.toContain('reviewMonths');
+    expect(system).not.toContain('website');
+  });
+
+  it('adds no section when there are no usable answers', () => {
+    expect(importPrompt('p.pdf', 'Text', []).system).not.toContain('Company answers');
+  });
 });
