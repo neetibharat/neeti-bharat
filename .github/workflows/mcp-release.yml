@@ -43,5 +43,5 @@ jobs:
           gh release create "mcp-v$MCP_VERSION" apps/mcp/dpdp-kit.mcpb \
             --target "$GITHUB_SHA" \
             --title "DPDP Kit for Claude $MCP_VERSION" \
-            --generate-notes \
+            --notes-file apps/mcp/release-notes.md \
             --latest
