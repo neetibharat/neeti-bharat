@@ -4,7 +4,13 @@ import { AppException } from '../../core/common/app.exception';
 import type { UploadedFile } from '../../frameworks/utils/evidence-file';
 import { AiClient, AiProviderError, type AiTarget } from '../providers/ai-client';
 import { readDocumentText } from '../utils/document-text';
-import { UnusableReply, importPrompt, toImportResponse } from '../utils/import-prompt';
+import { ProfileService } from '../../profile/services/profile.service';
+import {
+  UnusableReply,
+  importPrompt,
+  toImportResponse,
+  type CompanyAnswer,
+} from '../utils/import-prompt';
 import { AiSettingsService } from './ai-settings.service';
 
 /**
@@ -16,18 +22,25 @@ export class PolicyImportService {
   constructor(
     private readonly settings: AiSettingsService,
     private readonly client: AiClient,
+    private readonly profile: ProfileService,
   ) {}
 
   async read(file: UploadedFile | undefined): Promise<PolicyImportResponse> {
     if (!file) throw new AppException('FILE_REQUIRED', HttpStatus.BAD_REQUEST);
     const target = await this.settings.target();
     const text = await readDocumentText(file);
-    return this.parse(await this.ask(target, file.originalname, text));
+    const { entries } = await this.profile.list();
+    return this.parse(await this.ask(target, file.originalname, text, entries));
   }
 
-  private async ask(target: AiTarget, fileName: string, text: string): Promise<string> {
+  private async ask(
+    target: AiTarget,
+    fileName: string,
+    text: string,
+    answers: CompanyAnswer[],
+  ): Promise<string> {
     try {
-      return await this.client.completeJson(target, importPrompt(fileName, text));
+      return await this.client.completeJson(target, importPrompt(fileName, text, answers));
     } catch (error) {
       if (!(error instanceof AiProviderError)) throw error;
       throw new AppException('AI_FAILED', HttpStatus.BAD_GATEWAY, {

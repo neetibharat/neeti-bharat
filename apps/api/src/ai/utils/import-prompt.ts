@@ -31,6 +31,25 @@ Rules for "text":
 - Turn each row of a table into one bullet that reads "Column one: value; Column two: value".
 - Do not write "text" as a code block.`;
 
+/** A fact the company has already answered, which a policy quotes as {{key}} so it stays right when the answer changes. */
+export interface CompanyAnswer {
+  key: string;
+  value: string;
+}
+
+const MIN_MATCHABLE_LENGTH = 3;
+
+/** Tells the AI which facts to write as {{key}}. Answers too short to recognise safely, such as "5", are left out. */
+function answersSection(answers: CompanyAnswer[]): string {
+  const usable = answers.filter((a) => a.value.trim().length >= MIN_MATCHABLE_LENGTH);
+  if (usable.length === 0) return '';
+  const lines = usable.map((a) => `- {{${a.key}}} = ${JSON.stringify(a.value)}`);
+  return `
+
+Company answers. Where the document states one of these facts about the company itself, such as its name, its Data Protection Officer or a contact address, write the {{key}} in "text" in place of the value. Do not hard-code it. Replace a value only when the document means the same fact, not when the same word appears for another reason. Never invent a key: use only these, and write anything else as the document has it.
+${lines.join('\n')}`;
+}
+
 const replySchema = z.object({
   title: z.string(),
   titleFromFile: z.boolean(),
@@ -41,8 +60,15 @@ const replySchema = z.object({
   text: z.string(),
 });
 
-export function importPrompt(fileName: string, text: string): AiPrompt {
-  return { system: SYSTEM, user: `File name: ${fileName}\n\nDocument:\n${text}` };
+export function importPrompt(
+  fileName: string,
+  text: string,
+  answers: CompanyAnswer[] = [],
+): AiPrompt {
+  return {
+    system: SYSTEM + answersSection(answers),
+    user: `File name: ${fileName}\n\nDocument:\n${text}`,
+  };
 }
 
 /** A reply that could not be used. The text of it is never shown. */

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { docx } from '../../../test/support/office-files';
 import { AppException } from '../../core/common/app.exception';
 import { AiProviderError, type AiClient } from '../providers/ai-client';
+import type { ProfileService } from '../../profile/services/profile.service';
 import type { AiSettingsService } from './ai-settings.service';
 import { PolicyImportService } from './policy-import.service';
 
@@ -33,9 +34,13 @@ function build(complete: () => Promise<string>, configured = true) {
       ),
   };
   const client = { completeJson: vi.fn(complete) };
+  const profile = {
+    list: vi.fn().mockResolvedValue({ entries: [{ key: 'companyName', value: 'Acme Pvt Ltd' }] }),
+  };
   const service = new PolicyImportService(
     settings as unknown as AiSettingsService,
     client as unknown as AiClient,
+    profile as unknown as ProfileService,
   );
   return { service, client };
 }
@@ -48,6 +53,15 @@ describe('PolicyImportService', () => {
     expect(client.completeJson).toHaveBeenCalledWith(
       target,
       expect.objectContaining({ user: expect.stringContaining(TEXT) }),
+    );
+  });
+
+  it('tells the AI the company answers, so it writes the key and not the value', async () => {
+    const { service, client } = build(() => Promise.resolve(GOOD));
+    await service.read(upload());
+    expect(client.completeJson).toHaveBeenCalledWith(
+      target,
+      expect.objectContaining({ system: expect.stringContaining('{{companyName}}') }),
     );
   });
 
