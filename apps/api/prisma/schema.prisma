@@ -143,6 +143,7 @@ model Organization {
   invitations              Invitation[]
   activityAnchor           ActivityAnchor?
   companyLogo              CompanyLogo?
+  aiSetting                AiSetting?
   apiKeys                  ApiKey[]
   notifications            Notification[]
   notificationPreferences  NotificationPreference[]
@@ -736,6 +737,24 @@ model CompanyLogo {
   updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
 
   @@map("company_logo")
+}
+
+// The AI service a company has chosen to read documents with, and its key. There is at most one a company.
+model AiSetting {
+  organizationId String       @id
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  /// One of AI_PROVIDERS in packages/shared.
+  provider       String
+  model          String
+  /// The API key, sealed by the secret box. Never sent to the web.
+  apiKey         String
+  /// The last four characters of the key, so people can tell which one is set.
+  keyHint        String
+  /// The name is copied here, so the change stays attributed after the person leaves.
+  updatedByName  String
+  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@map("ai_settings")
 }
 
 // One go at the readiness check: the answers, and the score worked out from them when it was taken.

@@ -1,3 +1,12 @@
-import { comingSoon } from '@/components/shell/coming-soon';
+import { setRequestLocale } from 'next-intl/server';
+import { AiHelpPage } from '@/components/ai/ai-help-page';
+import { requireLocale } from '@/i18n/require-locale';
+import { requireAdmin } from '@/lib/server-session';
 
-export default comingSoon('aiHelp');
+export default async function AiHelpRoute({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = requireLocale((await params).locale);
+  setRequestLocale(locale);
+  await requireAdmin(locale);
+
+  return <AiHelpPage />;
+}

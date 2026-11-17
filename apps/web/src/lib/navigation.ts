@@ -174,7 +174,7 @@ export const NAV_AREAS: NavArea[] = [
         id: 'records',
         items: [
           { id: 'activityLog', href: '/settings/activity-log', icon: IconHistory, status: 'live' },
-          { id: 'aiHelp', href: '/settings/ai', icon: IconSparkles, status: 'soon' },
+          { id: 'aiHelp', href: '/settings/ai', icon: IconSparkles, status: 'live' },
         ],
       },
     ],

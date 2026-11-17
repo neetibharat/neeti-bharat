@@ -22,6 +22,7 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   'WebsiteCheck',
   'ReadinessCheck',
   'CompanyLogo',
+  'AiSetting',
   'Connection',
   'ConnectionRun',
   'Notification',

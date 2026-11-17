@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { DocNode, PolicyDocument } from '@dpdp-kit/shared';
-import { documentToMarkdown, markdownToDocument } from './markdown.js';
+import type { DocNode, PolicyDocument } from './policy-document.js';
+import { documentToMarkdown, markdownToDocument } from './policy-markdown.js';
 
 // The API refuses a text node with no text.
 function policyDocumentIsValid(document: PolicyDocument): boolean {

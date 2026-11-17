@@ -63,15 +63,15 @@ Leaving `MICROSOFT_TENANT_ID` as `common` lets any Microsoft account try to sign
 3. Add the authorised redirect URI `<WEB_ORIGIN>/api/auth/callback/google`.
 4. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-## 6. Secrets for connections (optional)
+## 6. Secrets for connections and AI help (optional)
 
-Connections to outside systems, such as an Azure subscription, need credentials that DPDP Kit can read back. They are sealed with a key you hold. Set `SECRETS_ENCRYPTION_KEY` to 32 random bytes in base64:
+Connections to outside systems, such as an Azure subscription, and the key for [AI help](ai-help.md) need secrets that DPDP Kit can read back. They are sealed with a key you hold. Set `SECRETS_ENCRYPTION_KEY` to 32 random bytes in base64:
 
 ```
 openssl rand -base64 32
 ```
 
-Without it, the Connections page says it cannot keep credentials. Keep the key safe and do not change it once connections exist: values sealed with the old key cannot be opened with a new one, and those connections would have to be added again. See [connections.md](connections.md).
+Without it, the Connections and AI help pages say they cannot keep a secret. Keep the key safe and do not change it once connections or an AI key exist: values sealed with the old key cannot be opened with a new one, and they would have to be added again. See [connections.md](connections.md).
 
 ## 7. Storage for proof files (optional)
 

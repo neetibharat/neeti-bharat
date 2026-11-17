@@ -126,7 +126,11 @@
     "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
     "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use.",
     "CONNECTION_FAILED": "{reason, select, sign_in {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.} subscription {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.} other {Azure could not be reached. Try again in a moment.}}",
-    "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
+    "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY.",
+    "AI_NOT_CONFIGURED": "AI help is not set up yet. An admin can set it up under Settings, AI help.",
+    "AI_FAILED": "{reason, select, key {The AI service did not accept the key. Check that it is right and has not been revoked.} busy {The AI service is busy, or the key has reached its limit. Try again in a moment.} timeout {The AI service did not answer in time. Try again, or try a shorter file.} empty {The AI service sent back nothing. Try again.} unusable {The AI service answered, but not in a form that can be used. Try again.} other {The AI service refused the request. {detail}}}",
+    "FILE_UNREADABLE": "No text could be read from this file. A scan is a picture, so it has no text to read. Try a copy saved from the original document.",
+    "FILE_TOO_LONG": "This file has far more text than a policy does. Check that it is the right file."
   },
   "comingSoon": {
     "title": "On its way",
@@ -167,7 +171,7 @@
     },
     "aiHelp": {
       "title": "AI help",
-      "description": "Optional help with drafting. A person always decides."
+      "description": "Connect an AI service so DPDP Kit can read a policy from a file. Optional, and a person always decides."
     },
     "myWork": {
       "title": "My work",
@@ -261,7 +265,9 @@
       "ONBOARDING_COMPLETED": "Set-up finished",
       "ORGANIZATION_CLOSED": "Organisation closed",
       "READINESS_CHECKED": "Readiness check taken",
-      "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed"
+      "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed",
+      "AI_CONFIGURED": "AI help set up",
+      "AI_REMOVED": "AI help removed"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -332,7 +338,9 @@
       "ONBOARDING_COMPLETED": "Finished setting up the organisation",
       "ORGANIZATION_CLOSED": "Closed the organisation {name}",
       "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100",
-      "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about"
+      "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about",
+      "AI_CONFIGURED": "Set up AI help with {provider} ({model})",
+      "AI_REMOVED": "Removed AI help ({provider})"
     },
     "emptyValue": "empty",
     "values": {
@@ -1110,7 +1118,34 @@
     },
     "allOwners": "All owners",
     "allApprovers": "All approvers",
-    "clearFilters": "Clear"
+    "clearFilters": "Clear",
+    "import": {
+      "drop": "Drop a PDF, Word or PowerPoint file here",
+      "another": "Use a different file",
+      "hint": "It is read by your AI service. Nothing from the file is kept.",
+      "choose": "Choose a file",
+      "reading": "Reading the file… this can take up to a minute",
+      "notSetUp": "Already have this policy in a file? Set up AI help and it can be read for you.",
+      "setUp": "Set up AI help",
+      "askAdmin": "Already have this policy in a file? Ask an admin to set up AI help under Settings, and it can be read for you.",
+      "done": "Read from {file}. Check everything before adding the policy.",
+      "textReady": "The policy text is ready and is added with it. You can edit it on the next page.",
+      "suggestedTitle": "The file had no title, so this one is a suggestion.",
+      "suggestedSummary": "The file had no short summary, so this one is a suggestion.",
+      "ownerUnknown": "The file does not say who owns the policy. Pick an owner.",
+      "approverUnknown": "The file does not say who approves it. Fill in the approver’s title.",
+      "problems": {
+        "empty": "That file is empty.",
+        "type": "Only PDF, Word (.docx) and PowerPoint (.pptx) files can be read.",
+        "size": "That file is larger than {max}."
+      },
+      "panelTitle": "Start from a file",
+      "panelTitleEdit": "Update from a file",
+      "doneEdit": "Read from {file}. The details are filled in: check them before saving.",
+      "replaceText": "Replace the policy text with the text from the file",
+      "replaceTextHint": "The text now in the editor is replaced. You can still edit the new text on the policy page.",
+      "replaceBlocked": "The text can only be replaced while the policy is a draft. Send it back or reopen it first. The details can still be updated from the file."
+    }
   },
   "proofPage": {
     "summary": {
@@ -2915,5 +2950,46 @@
       "email": "By email",
       "save": "Save changes"
     }
+  },
+  "ai": {
+    "card": {
+      "title": "AI service",
+      "description": "Used to read policies from PDF, Word and PowerPoint files when you add a policy."
+    },
+    "status": {
+      "on": "Connected",
+      "off": "Not set up"
+    },
+    "providers": {
+      "openai": "OpenAI",
+      "anthropic": "Anthropic (Claude)",
+      "deepseek": "DeepSeek"
+    },
+    "current": {
+      "provider": "Service",
+      "model": "Model",
+      "key": "Key",
+      "keyEnding": "Ending in {hint}",
+      "setBy": "Set up by {name}",
+      "change": "Change"
+    },
+    "form": {
+      "provider": "AI service",
+      "model": "Model",
+      "modelHint": "The model that reads your files, named as the service names it.",
+      "apiKey": "API key",
+      "apiKeyHint": "Your own key from that service. It is tried first, then kept encrypted, and it is never shown again.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "wait": "Trying the key…"
+    },
+    "remove": {
+      "button": "Remove",
+      "title": "Remove the AI service?",
+      "body": "The key is forgotten. Files cannot be read until it is set up again.",
+      "confirm": "Remove"
+    },
+    "privacy": "When you add a policy from a file, its text is sent to the service you choose, with your key, to be read. DPDP Kit does not keep the file. A person always checks and approves what it suggests.",
+    "noSecrets": "AI help cannot keep a key yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
   }
 }

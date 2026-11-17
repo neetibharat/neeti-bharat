@@ -1,4 +1,4 @@
-import type { DocNode, PolicyDocument } from '@dpdp-kit/shared';
+import type { DocNode, PolicyDocument } from './policy-document.js';
 
 type Mark = { type: 'bold' | 'italic' };
 
