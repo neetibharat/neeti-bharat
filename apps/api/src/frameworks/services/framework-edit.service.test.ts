@@ -58,12 +58,12 @@ describe('FrameworkEditService frameworks', () => {
     expect(frameworks.setArchived).toHaveBeenCalledWith('custom-f1', expect.any(Date));
   });
 
-  it('leaves a built-in framework alone', async () => {
-    const { service } = build({ found: builtIn });
-    await expect(service.update('dpdp', framework, actor)).rejects.toMatchObject({
-      code: 'BUILT_IN',
-    });
-    await expect(service.archive('dpdp', actor)).rejects.toMatchObject({ code: 'BUILT_IN' });
+  it('changes a built-in framework while built-in ones are open', async () => {
+    const { service, frameworks } = build({ found: builtIn });
+    await service.update('dpdp', framework, actor);
+    expect(frameworks.update).toHaveBeenCalledWith('dpdp', framework);
+    await service.archive('dpdp', actor);
+    expect(frameworks.setArchived).toHaveBeenCalledWith('dpdp', expect.any(Date));
   });
 
   it('does not find a framework that is missing or archived', async () => {
@@ -98,14 +98,14 @@ describe('FrameworkEditService rules', () => {
     );
   });
 
-  it('refuses to add, change or archive a rule of a built-in framework', async () => {
-    const { service } = build({ found: builtIn });
-    await expect(service.createRequirement('dpdp', rule, actor)).rejects.toMatchObject({
-      code: 'BUILT_IN',
-    });
-    await expect(service.updateRequirement('custom-r1', rule, actor)).rejects.toMatchObject({
-      code: 'BUILT_IN',
-    });
+  it('adds, changes and archives a rule of a built-in framework while built-in ones are open', async () => {
+    const { service, requirements } = build({ found: builtIn });
+    await service.createRequirement('dpdp', rule, actor);
+    await service.updateRequirement('custom-r1', rule, actor);
+    await service.archiveRequirement('custom-r1', actor);
+    expect(requirements.create).toHaveBeenCalled();
+    expect(requirements.update).toHaveBeenCalledWith('custom-r1', rule);
+    expect(requirements.setArchived).toHaveBeenCalled();
   });
 
   it('changes a rule, and will not archive one that still has controls', async () => {

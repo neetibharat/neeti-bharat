@@ -69,12 +69,12 @@ const RULE_PAGE = {
 };
 
 describe('the tools Claude is given', () => {
-  it('offers no way to approve, and marks reads and removals so Claude is careful', async () => {
+  it('offers nothing for API keys, and marks reads and removals so Claude is careful', async () => {
     const { client } = await connect({});
     const { tools } = await client.listTools();
     const names = tools.map((tool) => tool.name);
     expect(new Set(names).size).toBe(names.length);
-    expect(names.filter((name) => /approve|decide|reopen|api_key/.test(name))).toEqual([]);
+    expect(names.filter((name) => /api_key|ai_setting|sign_in|secret/.test(name))).toEqual([]);
     const byName = Object.fromEntries(tools.map((tool) => [tool.name, tool.annotations]));
     expect(byName['list_policies']?.readOnlyHint).toBe(true);
     expect(byName['archive_policy']?.destructiveHint).toBe(true);
@@ -136,10 +136,75 @@ describe('the tools Claude is given', () => {
     expect(JSON.stringify(sent)).not.toContain('**');
   });
 
-  it('asks for review only, and never sets another status', async () => {
+  it('moves a policy through review, approval, back to draft and reopening', async () => {
     const { client, calls } = await connect({ 'PUT /policies/custom-1/status': { json: {} } });
-    await client.callTool({ name: 'request_policy_review', arguments: { policyId: 'custom-1' } });
-    expect(calls[0]?.body).toEqual({ status: 'in_review' });
+    for (const name of [
+      'request_policy_review',
+      'approve_policy',
+      'send_policy_back',
+      'reopen_policy',
+    ]) {
+      await client.callTool({ name, arguments: { policyId: 'custom-1' } });
+    }
+    expect(calls.map((call) => call.body)).toEqual([
+      { status: 'in_review' },
+      { status: 'approved' },
+      { status: 'draft' },
+      { status: 'draft' },
+    ]);
+  });
+
+  it('names an approver, or goes back to the title', async () => {
+    const { client, calls } = await connect({ 'PUT /policies/P08/approver': { json: {} } });
+    await client.callTool({
+      name: 'set_policy_approver',
+      arguments: { policyId: 'P08', approverId: 'p1' },
+    });
+    await client.callTool({
+      name: 'set_policy_approver',
+      arguments: { policyId: 'P08', approverId: null },
+    });
+    expect(calls.map((call) => call.body)).toEqual([{ approverId: 'p1' }, { approverId: null }]);
+  });
+
+  it('adds, changes and removes the company answers that policies quote', async () => {
+    const { client, calls } = await connect({
+      'POST /profile/entries': { json: { key: 'custom_office' } },
+      'PUT /profile/entries/breachWindow': { json: {} },
+      'DELETE /profile/entries/custom_office': { status: 204 },
+    });
+    await client.callTool({
+      name: 'add_company_answer',
+      arguments: { label: 'Office', value: 'MG Road' },
+    });
+    await client.callTool({
+      name: 'update_company_answer',
+      arguments: { key: 'breachWindow', value: '72 hours', confirmed: true },
+    });
+    await client.callTool({ name: 'remove_company_answer', arguments: { key: 'custom_office' } });
+    expect(calls.map((call) => `${call.method} ${new URL(call.url).pathname}`)).toEqual([
+      'POST /v1/profile/entries',
+      'PUT /v1/profile/entries/breachWindow',
+      'DELETE /v1/profile/entries/custom_office',
+    ]);
+    expect(calls[1]?.body).toEqual({ value: '72 hours', confirmed: true });
+  });
+
+  it('can change and archive a rule of the built-in framework', async () => {
+    const { client, calls } = await connect({
+      'GET /frameworks/dpdp/rules/R6': {
+        json: { rule: { reference: 'Rule 6', title: 'T', summary: 'S' } },
+      },
+      'PUT /requirements/R6': { status: 204 },
+      'POST /requirements/R6/archive': { status: 204 },
+    });
+    await client.callTool({
+      name: 'update_rule',
+      arguments: { frameworkId: 'dpdp', ruleId: 'R6', title: 'New' },
+    });
+    await client.callTool({ name: 'archive_rule', arguments: { ruleId: 'R6' } });
+    expect(calls[1]?.body).toEqual({ reference: 'Rule 6', title: 'New', summary: 'S' });
+    expect(calls[2]?.method).toBe('POST');
   });
 
   it('refuses an id that could change the path of the request', async () => {
@@ -161,7 +226,7 @@ describe('the tools Claude is given', () => {
       arguments: { policyId: 'P01' },
     });
     expect(result.isError).toBe(true);
-    expect(textOf(result)).toContain('built-in');
+    expect(textOf(result)).toContain('locked');
     expect(textOf(result)).toContain('409 BUILT_IN');
     expect(textOf(result)).not.toContain('secret-key');
   });

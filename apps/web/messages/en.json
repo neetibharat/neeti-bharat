@@ -944,7 +944,8 @@
       "approver": "Approver",
       "review": "Review",
       "legal": "Legal references",
-      "useTitle": "{title}"
+      "useTitle": "{title} (no one named)",
+      "approverHint": "Name a person to make them the only one who can approve. With no one named, any admin can."
     },
     "evidence": {
       "title": "Proof to keep",

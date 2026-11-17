@@ -5,10 +5,13 @@ const MEANINGS: Readonly<Record<string, string>> = {
     'A field is empty, too long, not an allowed value, or points at something that does not exist.',
   FILE_REQUIRED: 'The upload had no file.',
   UNAUTHENTICATED: 'The API key is wrong, revoked or expired. The person needs to make a new one.',
-  FORBIDDEN: 'This key’s role is not allowed to do that. Writing needs an admin or member key.',
+  FORBIDDEN:
+    'This key is not allowed to do that. Writing needs an admin or member key. Company answers and naming an approver need an admin key. Approving, sending back and reopening need the named approver, or an admin when nobody is named.',
   NOT_FOUND: 'That id does not exist, or the thing is archived.',
-  CONFLICT: 'A policy is not a draft, or someone else just changed it. Read it again.',
-  BUILT_IN: 'A built-in framework or rule cannot be changed.',
+  CONFLICT:
+    'The policy is not in a status that allows that, someone else just changed it, or the name is already used. Read it again.',
+  CONFIRMATION_REQUIRED: 'A legal limit needs confirmed: true, once the person has agreed.',
+  BUILT_IN: 'Built-in frameworks and rules are locked on this server.',
   HAS_CONTROLS: 'Its controls have to be archived first.',
   STORAGE_NOT_CONFIGURED: 'File uploads are not set up on this server.',
 };

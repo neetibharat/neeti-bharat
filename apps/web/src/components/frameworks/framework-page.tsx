@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
-import { DPDP_FRAMEWORK_ID, type ChecklistResponse } from '@dpdp-kit/shared';
+import { DPDP_FRAMEWORK_ID, isLocked, type ChecklistResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { PageSkeleton } from '@/components/base/skeleton/skeleton';
@@ -70,7 +70,7 @@ export function FrameworkPage({ frameworkId }: { frameworkId: string }) {
         title={data.framework.name}
         description={t('description')}
         actions={
-          canEdit && !data.framework.isBuiltIn ? (
+          canEdit && !isLocked(data.framework.isBuiltIn) ? (
             <FrameworkActions framework={data.framework} />
           ) : undefined
         }

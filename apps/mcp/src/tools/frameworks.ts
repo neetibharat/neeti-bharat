@@ -64,7 +64,7 @@ export const frameworkTools = [
     name: 'list_frameworks',
     title: 'List frameworks',
     description:
-      'Every framework (a set of rules a company follows) with its progress. DPDP is built in and cannot be changed; the company can add its own.',
+      'Every framework (a set of rules a company follows) with its progress. DPDP is built in; the company can add its own. Built-in ones can be changed too, unless the server has locked them (BUILT_IN).',
     kind: 'read',
     input: {},
     run: (_args, api) => api.get<FrameworkListResponse>('/frameworks'),
@@ -120,7 +120,7 @@ export const frameworkTools = [
     name: 'update_framework',
     title: 'Change a framework',
     description:
-      'Changes a framework the company made. Send only what changes. A built-in framework cannot change (BUILT_IN).',
+      'Changes a framework’s name, description or badge. Send only what changes. Refused with BUILT_IN only if built-in frameworks are locked.',
     kind: 'change',
     input: { frameworkId, name: name.optional(), about: about.optional(), seal: seal.optional() },
     run: async ({ frameworkId: target, ...changes }, api) =>
@@ -133,7 +133,7 @@ export const frameworkTools = [
     name: 'archive_framework',
     title: 'Archive a framework',
     description:
-      'Archives a framework the company made. Only on the person’s say-so. Its controls must be archived first (HAS_CONTROLS). There is no restore.',
+      'Archives a framework. Only on the person’s say-so. Its controls must be archived first (HAS_CONTROLS). There is no restore, so this is final.',
     kind: 'remove',
     input: { frameworkId },
     run: (args, api) => api.post(`/frameworks/${args.frameworkId}/archive`),
@@ -141,7 +141,7 @@ export const frameworkTools = [
   defineTool({
     name: 'create_rule',
     title: 'Add a rule',
-    description: 'Adds a rule to a framework the company made. Replies with its id.',
+    description: 'Adds a rule to a framework, built-in ones included. Replies with its id.',
     kind: 'change',
     input: { frameworkId, reference, title, summary },
     run: ({ frameworkId: target, ...rule }, api) =>
@@ -150,7 +150,8 @@ export const frameworkTools = [
   defineTool({
     name: 'update_rule',
     title: 'Change a rule',
-    description: 'Changes a rule of a framework the company made. Send only what changes.',
+    description:
+      'Changes a rule’s reference, title or summary, in any framework. Send only what changes. Whether a set-up answer switches the rule on or off cannot be changed.',
     kind: 'change',
     input: {
       frameworkId,
@@ -169,7 +170,7 @@ export const frameworkTools = [
     name: 'archive_rule',
     title: 'Archive a rule',
     description:
-      'Archives a rule of a framework the company made. Only on the person’s say-so. Its controls must be archived first (HAS_CONTROLS). There is no restore.',
+      'Archives a rule. Only on the person’s say-so. Its controls must be archived first (HAS_CONTROLS). There is no restore, so this is final.',
     kind: 'remove',
     input: { ruleId },
     run: (args, api) => api.post(`/requirements/${args.ruleId}/archive`),
