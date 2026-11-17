@@ -33,7 +33,10 @@ export const savePolicySchema = z.object({
   ownerRole: z.enum(JOB_ROLES),
   approverTitle: z.string().trim().min(1).max(POLICY_APPROVER_TITLE_MAX_LENGTH),
 });
-export const createPolicySchema = savePolicySchema.extend({ frameworkId: z.string().min(1) });
+export const createPolicySchema = savePolicySchema.extend({
+  frameworkId: z.string().min(1),
+  content: policyDocumentSchema.optional(),
+});
 export type SavePolicyInput = z.output<typeof savePolicySchema>;
 export type CreatePolicyInput = z.output<typeof createPolicySchema>;
 
@@ -58,6 +61,12 @@ export class SavePolicyDto {
 export class CreatePolicyDto extends SavePolicyDto {
   @ApiProperty({ description: 'The framework the policy sits under' })
   frameworkId!: string;
+
+  @ApiPropertyOptional({
+    description:
+      'The text to start with, as the editor’s JSON document. Left out, the policy has no text yet.',
+  })
+  content?: Record<string, unknown>;
 }
 
 export class ChangePolicyStatusDto {

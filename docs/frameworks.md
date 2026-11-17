@@ -39,7 +39,7 @@ A company can follow more than the built-in framework: a customer's security rev
 
 Admins and members can add, edit and archive policies. Auditors can only read.
 
-- **Add.** "Add policy" asks for a title, what the policy is for, the owner job, the approver’s title and the framework it is filed under. It is created as a draft with a generated id, marked Custom, and its page opens so the text can be written. It starts from the same starting text as any policy, and goes through the same approval.
+- **Add.** "Add policy" asks for a title, what the policy is for, the owner job, the approver’s title and the framework it is filed under. It is created as a draft with a generated id, marked Custom, and its page opens so the text can be written. Where [AI help](ai-help.md) is set up, the dialog can instead start from a PDF, Word or PowerPoint file, which fills in the details and the text for the person to check. It starts from the same starting text as any policy, and goes through the same approval.
 - **Edit details.** "Edit details" on a policy changes its title, summary, owner job and approver title. The text, the named approver and the status keep their own controls, so a change to details never rewrites approved text.
 - **Cover controls.** A control picks its policies in its own edit dialog, and a policy of the company’s own is in that list like any other.
 - **Archive and restore.** An archived policy stops counting: it leaves the list and the controls it covered no longer wait on it. It is kept and listed under "Archived policies" so it can be restored.

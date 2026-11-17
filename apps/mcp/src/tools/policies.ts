@@ -4,13 +4,14 @@ import {
   POLICY_SUMMARY_MAX_LENGTH,
   POLICY_TITLE_MAX_LENGTH,
   CHANGELOG_MAX_LENGTH,
+  documentToMarkdown,
+  markdownToDocument,
   type PolicyDetailResponse,
   type PolicyListResponse,
   type SavePolicyRequest,
 } from '@dpdp-kit/shared';
 import { z } from 'zod';
 import { defineTool } from '../tool.js';
-import { documentToMarkdown, markdownToDocument } from '../markdown.js';
 import { defined, id, jobRole } from './fields.js';
 
 const policyId = id('The policy id from list_policies');

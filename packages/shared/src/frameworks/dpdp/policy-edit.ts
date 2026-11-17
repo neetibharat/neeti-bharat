@@ -1,4 +1,5 @@
 import type { JobRole } from '../../people.js';
+import type { PolicyDocument } from './policy-document.js';
 
 /** What the id of anything a company adds starts with, which keeps it apart from catalogue codes such as P05. */
 export const CUSTOM_ID_PREFIX = 'custom-';
@@ -24,4 +25,6 @@ export interface SavePolicyRequest {
 /** A policy the company adds. It sits under one of its frameworks and starts as a draft. */
 export interface CreatePolicyRequest extends SavePolicyRequest {
   frameworkId: string;
+  /** The text to start with, such as one read from a file. Left out, the policy starts with no text. */
+  content?: PolicyDocument;
 }

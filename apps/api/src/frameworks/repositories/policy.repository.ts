@@ -36,6 +36,8 @@ export interface PolicyDetails {
 export interface NewPolicy extends PolicyDetails {
   id: string;
   frameworkId: string;
+  /** The text to start with. */
+  content?: PolicyDocument;
 }
 
 const SUMMARY = {
@@ -65,12 +67,24 @@ export class PolicyRepository {
   }
 
   /** Adds a draft policy at the end of the list. */
-  async create(data: NewPolicy): Promise<void> {
+  async create(data: NewPolicy, editedByName: string): Promise<void> {
     const sortOrder = await nextSortOrder(() =>
       this.prisma.db.policy.aggregate({ _max: { sortOrder: true } }),
     );
+    const { content, ...fields } = data;
     await this.prisma.db.policy.create({
-      data: { ...data, ...orgOwned(), legalReferences: [], evidence: [], sortOrder },
+      data: {
+        ...fields,
+        ...orgOwned(),
+        legalReferences: [],
+        evidence: [],
+        sortOrder,
+        ...(content && {
+          content: content as object,
+          contentEditedAt: new Date(),
+          contentEditedByName: editedByName,
+        }),
+      },
     });
   }
 

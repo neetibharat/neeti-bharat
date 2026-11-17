@@ -28,7 +28,7 @@ export class PolicyEditService {
   async create(input: CreatePolicyInput, actor: PolicyActor): Promise<PolicyDetailResponse> {
     await this.rules.framework(input.frameworkId);
     const id = newCustomId();
-    await this.policies.create({ id, ...input });
+    await this.policies.create({ id, ...input }, actor.label);
     await this.activity.record({
       actor,
       action: 'POLICY_CREATED',

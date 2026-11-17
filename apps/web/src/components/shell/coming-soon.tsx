@@ -5,7 +5,7 @@ import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { requireLocale } from '@/i18n/require-locale';
 
-export type ComingSoonId = 'dataMap' | 'noticeAndConsent' | 'secrets' | 'aiHelp';
+export type ComingSoonId = 'dataMap' | 'noticeAndConsent' | 'secrets';
 
 /**
  * Builds the page for a module that is not built yet: its title and one-line purpose,

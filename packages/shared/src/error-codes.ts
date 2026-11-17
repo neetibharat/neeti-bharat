@@ -29,6 +29,10 @@ export const ERROR_CODES = [
   'API_KEY_LIMIT',
   'CONNECTION_FAILED',
   'SECRETS_NOT_CONFIGURED',
+  'AI_NOT_CONFIGURED',
+  'AI_FAILED',
+  'FILE_UNREADABLE',
+  'FILE_TOO_LONG',
 ] as const;
 
 export type ErrorCode = (typeof ERROR_CODES)[number];
