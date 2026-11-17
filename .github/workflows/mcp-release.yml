@@ -1,0 +1,47 @@
+name: MCP release
+
+# Builds the Claude Desktop extension and publishes it whenever the server, or the shared package it bundles, changes on main.
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/mcp/**
+      - packages/shared/**
+      - pnpm-lock.yaml
+      - .github/workflows/mcp-release.yml
+
+concurrency:
+  group: mcp-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @dpdp-kit/shared build
+      - run: pnpm --filter @dpdp-kit/mcp test
+      # The manifest holds major.minor; the run number makes each release's version unique.
+      - name: Work out the version
+        run: |
+          base=$(node -p "require('./apps/mcp/manifest.json').version.split('.').slice(0, 2).join('.')")
+          echo "MCP_VERSION=$base.${{ github.run_number }}" >> "$GITHUB_ENV"
+      - run: pnpm --filter @dpdp-kit/mcp mcpb
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "mcp-v$MCP_VERSION" apps/mcp/dpdp-kit.mcpb \
+            --target "$GITHUB_SHA" \
+            --title "DPDP Kit for Claude $MCP_VERSION" \
+            --generate-notes \
+            --latest
