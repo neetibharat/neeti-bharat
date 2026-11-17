@@ -1,22 +1,19 @@
-## 📘 PR Documentation
+## What and why
 
-Please select the relevant type and provide documentation links below:
+<!-- What this changes, and the reason. Link the issue: Closes #123 -->
 
-- [ ] **Frontend**
-  - Loom video link demonstrating UI changes: [Paste Loom link here]
+## How to check it
 
-- [ ] **Backend**
-  - Swagger documentation link showing updated API endpoints: [Paste Swagger link here]
+<!-- Steps to try it. For screen changes, add a screenshot or short recording. -->
 
-- [ ] **Both**
-  - Loom video link: [Paste Loom link here]
-  - Swagger documentation link: [Paste Swagger link here]
+## API changes
 
-> 💡 Tip: Please ensure Loom and Swagger links are accessible and clearly demonstrate implemented changes.
+<!-- New or changed routes, with an example request and reply. Write "None" if there are none. -->
 
-## ✅ Checklist
+## Checklist
 
 - [ ] `pnpm check` passes
-- [ ] User-facing text is in `apps/web/messages/*.json`, in every locale
-- [ ] New API errors have a code in `packages/shared` and a message in every locale
-- [ ] Schema changes are one small migration with only agreed models
+- [ ] User-facing text is in `apps/web/messages/en.json`
+- [ ] New API errors have a code in `packages/shared` and a message in `en.json`
+- [ ] A schema change is one small migration, discussed in an issue first
+- [ ] Docs are updated if behaviour changed

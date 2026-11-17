@@ -45,7 +45,7 @@ Build the extension, then give the person `apps/mcp/dpdp-kit.mcpb`:
 pnpm --filter @dpdp-kit/mcp mcpb
 ```
 
-The person opens Claude Desktop, goes to **Settings, Extensions**, and drags the file in. Claude Desktop asks for the address and the key and keeps the key on that computer. No Node, terminal or config file is needed from them.
+The person opens Claude Desktop, goes to **Settings, Desktop app, Extensions, Manage**, drags the file in and clicks **Install**. A box asks for the address and the key and keeps the key on that computer. They save it, switch the extension on, and start a new conversation that is not a Code session. No Node, terminal or config file is needed from them. The release page shows each step with a screenshot (`apps/mcp/release-notes.md`, images in `docs/images/mcp`).
 
 ## Using it in Claude Code
 
@@ -74,12 +74,12 @@ claude mcp add dpdp-kit -e DPDP_API_URL=https://... -e DPDP_API_KEY=... -- node 
 
 ## Releases
 
-The workflow `.github/workflows/mcp-release.yml` publishes the extension on its own. When a push to `main` changes `apps/mcp`, `packages/shared` or the lockfile, it tests the server, builds `dpdp-kit.mcpb` and creates a GitHub release named `mcp-v<major>.<minor>.<run number>`, such as `mcp-v0.1.42`. The major and minor come from `version` in `apps/mcp/manifest.json`; raise them by hand for a bigger change.
+The workflow `.github/workflows/mcp-release.yml` publishes the extension on its own. When a push to `main` changes `apps/mcp`, `packages/shared` or the lockfile, it tests the server, builds `dpdp-kit.mcpb` and creates a GitHub release, with the install steps from `apps/mcp/release-notes.md`, named `mcp-v<major>.<minor>.<run number>`, such as `mcp-v0.1.42`. The major and minor come from `version` in `apps/mcp/manifest.json`; raise them by hand for a bigger change.
 
 The file is always called `dpdp-kit.mcpb`, so this link gives the newest one:
 
 ```
-https://github.com/techdome-io/niti-bharat/releases/latest/download/dpdp-kit.mcpb
+https://github.com/techdome-io/DPDP-Kit/releases/latest/download/dpdp-kit.mcpb
 ```
 
 Claude Desktop does not update an installed extension by itself: a person downloads the new file and drags it in again.
