@@ -19,7 +19,7 @@ export function ApproverPicker({ policy }: { policy: PolicyDetailResponse }) {
   const people = (data?.people ?? []).map((person) => ({ id: person.id, label: person.name }));
 
   return (
-    <div className="w-52 text-left">
+    <div className="w-full text-left">
       <Select
         aria-label={t('approver')}
         options={[{ id: TITLE, label: t('useTitle', { title: policy.approver }) }, ...people]}
@@ -28,6 +28,7 @@ export function ApproverPicker({ policy }: { policy: PolicyDetailResponse }) {
           void setApprover({ policyId: policy.id, approverId: key === TITLE ? null : key })
         }
       />
+      <p className="mt-1.5 text-caption text-fg-muted">{t('approverHint')}</p>
       {error ? (
         <Alert tone="error" className="mt-1">
           {errorMessage(error)}

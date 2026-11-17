@@ -8,7 +8,15 @@ export const REQUIREMENT_REFERENCE_MAX_LENGTH = 24;
 export const REQUIREMENT_TITLE_MAX_LENGTH = 120;
 export const REQUIREMENT_SUMMARY_MAX_LENGTH = 600;
 
-/** What a company can say about a framework of its own. A built-in framework cannot be changed. */
+/** Set to true to close the built-in frameworks and their rules to changes. Controls, policies and proof stay open. */
+export const BUILT_IN_LOCKED = false;
+
+/** Whether a framework or rule can no longer be changed. `locked` is only passed in tests. */
+export function isLocked(isBuiltIn: boolean, locked: boolean = BUILT_IN_LOCKED): boolean {
+  return locked && isBuiltIn;
+}
+
+/** What a company can say about a framework. A built-in one can only change while `BUILT_IN_LOCKED` is false. */
 export interface SaveFrameworkRequest {
   name: string;
   /** One sentence on what it is. */
@@ -17,7 +25,7 @@ export interface SaveFrameworkRequest {
   seal: string;
 }
 
-/** What a company can say about a rule of its own framework. A built-in framework's rules cannot be changed. */
+/** What a company can say about a rule. */
 export interface SaveRequirementRequest {
   /** How it is numbered or named, such as "4.2". */
   reference: string;

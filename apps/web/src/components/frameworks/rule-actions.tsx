@@ -10,7 +10,7 @@ import { useRouter } from '@/i18n/navigation';
 import { useArchiveRuleMutation, useUpdateRuleMutation } from '@/lib/api/framework-edit-api';
 import { RuleForm } from './rule-form';
 
-/** Change or archive a rule the company added. A built-in framework's rules have neither. */
+/** Change or archive a rule. */
 export function RuleActions({ rule }: { rule: RuleResponse }) {
   const t = useTranslations('frameworks.ruleActions');
   const router = useRouter();

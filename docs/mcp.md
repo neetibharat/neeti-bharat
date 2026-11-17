@@ -6,14 +6,14 @@ It adds nothing to the API. Every tool is one or two ordinary API calls, so role
 
 ## What Claude can do
 
-36 tools, in four kinds:
+44 tools, in four kinds:
 
-| Kind      | Tools                                                                                                                                                                                                        |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Look up   | `list_people`, `get_company_answers`, `list_frameworks`, `get_framework`, `get_rule`, `list_policies`, `get_policy`, `get_policy_coverage`, `list_proof`, `get_proof_requirement`, `list_control_evidence`   |
-| Add       | `create_framework`, `create_rule`, `create_control`, `create_policy`, `create_proof_requirement`, `add_evidence_link`, `add_evidence_note`, `add_evidence_file`                                              |
-| Change    | `update_framework`, `update_rule`, `update_control`, `add_policies_to_control`, `update_policy_details`, `write_policy_text`, `request_policy_review`, `update_proof_requirement`, and the `restore_*` tools |
-| Take away | `archive_framework`, `archive_rule`, `archive_control`, `archive_policy`, `archive_proof_requirement`, `remove_evidence`. They are marked destructive, which Claude hosts use to ask the person first.       |
+| Kind      | Tools                                                                                                                                                                                                                                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Look up   | `list_people`, `get_company_answers`, `list_frameworks`, `get_framework`, `get_rule`, `list_policies`, `get_policy`, `get_policy_version`, `get_policy_coverage`, `list_proof`, `get_proof_requirement`, `list_control_evidence`                                                                                    |
+| Add       | `create_framework`, `create_rule`, `create_control`, `create_policy`, `create_proof_requirement`, `add_company_answer`, `add_evidence_link`, `add_evidence_note`, `add_evidence_file`                                                                                                                               |
+| Change    | `update_framework`, `update_rule`, `update_control`, `add_policies_to_control`, `update_policy_details`, `write_policy_text`, `request_policy_review`, `approve_policy`, `send_policy_back`, `reopen_policy`, `set_policy_approver`, `update_company_answer`, `update_proof_requirement`, and the `restore_*` tools |
+| Take away | `archive_framework`, `archive_rule`, `archive_control`, `archive_policy`, `archive_proof_requirement`, `remove_company_answer`, `remove_evidence`. They are marked destructive, which Claude hosts use to ask the person first.                                                                                     |
 
 Things the tools do for Claude:
 
@@ -24,9 +24,14 @@ Things the tools do for Claude:
 
 ## What Claude cannot do
 
-There is no tool to approve, send back or reopen a policy, to name an approver, or to make, list or revoke API keys. A person does those in the app. A key with the auditor role can only look things up.
+There is no tool to make, list or revoke API keys, or to touch sign-in or the AI settings. Everything else in frameworks, rules, controls, policies, proof, evidence and the company's answers can be done, with the same rules as the app:
 
-The server tells Claude how to behave when it connects (see `src/instructions.ts`): draft and never decide, confirm before creating, use the company's own answers and not invented facts, attach only proof the person gave, and speak in plain words to a lawyer rather than a developer.
+- A built-in framework and its rules can be changed and archived like any other, while `BUILT_IN_LOCKED` in `packages/shared` is `false`. Set it to `true` to close them again.
+- Approving, sending back and reopening a policy is for the named approver, or an admin when nobody is named. A key signs in as the person who made it, so it follows that rule too (otherwise `FORBIDDEN`).
+- Naming an approver and changing the company's answers need an admin key. A legal limit also needs `confirmed: true`.
+- A key with the auditor role can only look things up.
+
+The server tells Claude how to behave when it connects (see `src/instructions.ts`): draft first and decide only when told, confirm before creating, use the company's own answers and not invented facts, attach only proof the person gave, and speak in plain words to a lawyer rather than a developer.
 
 ## Settings
 

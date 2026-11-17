@@ -24,9 +24,9 @@ A rule's status comes from its controls: done when all are done, in progress onc
 
 A company can follow more than the built-in framework: a customer's security review, an internal standard, another law. **Add framework** on the Frameworks page asks for a name, one sentence on what it is and a short badge, then opens it.
 
-- **Rules.** On a framework you made, **Add rule** adds a rule with a reference (such as `4.2`), a title and what it asks. Each rule has its own page, with the same Controls, Policies and Proof tabs as a DPDP rule, and a pencil and archive for the rule itself.
+- **Rules.** On a framework, **Add rule** adds a rule with a reference (such as `4.2`), a title and what it asks. Each rule has its own page, with the same Controls, Policies and Proof tabs as a DPDP rule, and a pencil and archive for the rule itself.
 - **Controls.** "Add control" on a rule works as it does for DPDP, and the control belongs to that rule's framework. Policies are company-wide, so one policy can back controls in several frameworks, and a policy's page lists all of them.
-- **Built-in is fixed.** DPDP and its rules cannot be renamed, edited or archived. You can still add controls under them.
+- **Built-in can change.** DPDP and its rules can be renamed, edited, added to and archived like any other, because `BUILT_IN_LOCKED` in `packages/shared` is `false`. Set it to `true` and they are closed (`BUILT_IN`); controls, policies and proof stay open either way. The catalogue only adds rows a company does not have, so an edited or archived built-in rule is not put back on restart.
 - **Archiving.** A rule or framework can only be archived once its controls are archived, so nothing is left hidden.
 - **Activity log.** `FRAMEWORK_CREATED`, `FRAMEWORK_EDITED`, `FRAMEWORK_ARCHIVED`, `REQUIREMENT_CREATED`, `REQUIREMENT_EDITED`, `REQUIREMENT_ARCHIVED`.
 - **Limits.** A custom rule is always on (no set-up answer switches it off), there is no "restore" for an archived framework or rule, and the Your set-up tab is DPDP's only.

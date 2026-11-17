@@ -25,7 +25,7 @@ export function HeroPanel({ tag, percent, gaugeLabel, title, text, children }: H
       <div className="flex items-center gap-6">
         <div role="img" aria-label={gaugeLabel} className="relative size-36 shrink-0">
           <Gauge percent={percent} />
-          <p className="absolute inset-0 grid place-content-center text-stat font-medium tracking-tight tabular-nums">
+          <p className="absolute inset-0 grid place-content-center text-display font-medium tracking-tight tabular-nums">
             {percent}%
           </p>
         </div>
