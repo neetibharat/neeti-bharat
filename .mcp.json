@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "dpdp-kit": {
+      "command": "node",
+      "args": ["apps/mcp/bundle/server.mjs"],
+      "env": {
+        "DPDP_API_URL": "${DPDP_API_URL:-http://localhost:3201}",
+        "DPDP_API_KEY": "${DPDP_API_KEY}"
+      }
+    }
+  }
+}

@@ -14,6 +14,8 @@ export default tseslint.config(
       '**/coverage/**',
       '**/next-env.d.ts',
       'apps/api/src/generated/**',
+      'apps/mcp/bundle/**',
+      'apps/mcp/extension/**',
     ],
   },
   js.configs.recommended,
