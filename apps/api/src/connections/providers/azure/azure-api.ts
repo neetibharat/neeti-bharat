@@ -150,6 +150,16 @@ interface ListPage<T> {
   '@odata.nextLink'?: string;
 }
 
+/** A subscription the app registration can see. Only enabled ones are checkable, so only they are listed. */
+export interface FoundSubscription {
+  subscriptionId: string;
+  displayName?: string;
+  state?: string;
+}
+
+/** The app registration's own sign-in, before a subscription has been chosen. */
+export type AzureApp = Omit<AzureCredentials, 'subscriptionId'>;
+
 /** Answers the same read once per run, however many checks ask, so a list is fetched one time. */
 export function cached(api: AzureApi): AzureApi {
   const wrap = (endpoint: AzureEndpoint, name: string): AzureEndpoint => {
@@ -172,6 +182,8 @@ export abstract class AzureConnector {
   abstract connect(credentials: AzureCredentials): AzureApi;
   /** Throws `AzureSignInError`, `AzureAccessError` or `AzureRequestError` when the details do not work. */
   abstract verify(credentials: AzureCredentials): Promise<void>;
+  /** The enabled subscriptions the app can see. Throws like `verify` when the sign-in does not work. */
+  abstract subscriptions(app: AzureApp): Promise<FoundSubscription[]>;
 }
 
 export class HttpAzureConnector extends AzureConnector {
@@ -181,5 +193,11 @@ export class HttpAzureConnector extends AzureConnector {
 
   verify(credentials: AzureCredentials): Promise<void> {
     return new HttpAzureApi(credentials).verify();
+  }
+
+  async subscriptions(app: AzureApp): Promise<FoundSubscription[]> {
+    const api = new HttpAzureApi({ ...app, subscriptionId: '' });
+    const all = await api.arm.list<FoundSubscription>('/subscriptions?api-version=2022-12-01');
+    return all.filter((subscription) => subscription.state === 'Enabled');
   }
 }

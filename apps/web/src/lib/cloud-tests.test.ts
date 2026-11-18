@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ConnectionCheckResult } from '@dpdp-kit/shared';
-import { attentionBySeverity, visibleResults } from './cloud-tests';
+import { countBySeverity, visibleResults } from './cloud-tests';
 
 const results: ConnectionCheckResult[] = [
   { id: 'sql_tls', status: 'pass' },
@@ -12,9 +12,16 @@ const results: ConnectionCheckResult[] = [
 ];
 const anything = () => true;
 
-describe('attentionBySeverity', () => {
-  it('counts only the checks that need attention, by how serious they are', () => {
-    expect(attentionBySeverity(results)).toEqual({ high: 2, medium: 1, low: 1 });
+describe('countBySeverity', () => {
+  it('counts the results it is given by how serious they are, so a view can pass what it lists', () => {
+    expect(
+      countBySeverity(results.filter((r) => r.status === 'fail' || r.status === 'warn')),
+    ).toEqual({
+      high: 2,
+      medium: 1,
+      low: 1,
+    });
+    expect(countBySeverity(results)).toEqual({ high: 4, medium: 1, low: 1 });
   });
 });
 

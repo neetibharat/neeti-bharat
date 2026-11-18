@@ -3,7 +3,7 @@
 import { IconCircleCheck } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
-import { Skeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { Card } from '@/components/base/card/card';
 import { MyWorkRow } from '@/components/my-work/my-work-row';
 import { Link } from '@/i18n/navigation';
@@ -19,7 +19,7 @@ export function WorkPreview() {
   const { data, error } = useGetMyWorkQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <Skeleton className="h-56 rounded-card" />;
+  if (!data) return <Loading className="h-56" />;
   const rest = data.items.length - MAX_ROWS;
 
   return (

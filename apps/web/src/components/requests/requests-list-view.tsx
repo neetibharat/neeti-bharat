@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { Pagination } from '@/components/base/pagination/pagination';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { useGetRequestsQuery } from '@/lib/api/requests-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -72,7 +72,7 @@ export function RequestsListView({ view }: { view: RequestView }) {
   const { data, error } = useGetRequestsQuery(view.query);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <RequestsFrame counts={data.counts} view={view} mode="list">

@@ -13,6 +13,13 @@ export interface NewConnection {
   createdByName: string;
 }
 
+export interface ConnectionChanges {
+  name: string;
+  /** Both are set together, and only when the details changed. */
+  identifiers?: Record<string, string>;
+  credentials?: string;
+}
+
 /** Connections that have not been removed. A removed one keeps its row and its runs, and loses its credentials. */
 const active = { removedAt: null } satisfies Prisma.ConnectionWhereInput;
 
@@ -42,6 +49,22 @@ export class ConnectionRepository {
     });
   }
 
+  /** Saves the changes and whatever goes with them in a transaction of its own, for the reason `createWith` gives. */
+  updateWith(
+    id: string,
+    data: ConnectionChanges,
+    alongside: (connection: Connection) => Promise<void>,
+  ): Promise<Connection> {
+    return this.prisma.runInTransaction(async () => {
+      await this.prisma.db.connection.updateMany({ where: { id, ...active }, data });
+      const connection = await this.prisma.db.connection.findFirstOrThrow({
+        where: { id, ...active },
+      });
+      await alongside(connection);
+      return connection;
+    });
+  }
+
   findActive(id: string): Promise<Connection | null> {
     return this.prisma.db.connection.findFirst({ where: { id, ...active } });
   }
@@ -57,6 +80,17 @@ export class ConnectionRepository {
       this.prisma.db.connection.count({ where: active }),
     ]);
     return { rows, total };
+  }
+
+  /** How many connections there are of each kind. */
+  async countsByProvider(): Promise<Record<string, number>> {
+    const rows = await this.prisma.db.connection.findMany({
+      where: active,
+      select: { provider: true },
+    });
+    const counts: Record<string, number> = {};
+    for (const { provider } of rows) counts[provider] = (counts[provider] ?? 0) + 1;
+    return counts;
   }
 
   /** The newest run of each of these connections. */

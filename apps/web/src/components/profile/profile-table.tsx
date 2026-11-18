@@ -83,9 +83,10 @@ function EntryRow({ entry }: { entry: ProfileEntryResponse }): ReactElement {
         <AnswerCell entry={entry} />
       </TableCell>
       <TableCell>
+        {/* Each button has a slot of its own, so the pencils line up down the column whether or not a row can be removed. */}
         <div className="flex justify-end gap-1">
-          {!entry.isDerived && <EditEntryButton entry={entry} />}
-          {entry.isCustom && <RemoveEntryButton entry={entry} />}
+          <span className="size-8">{!entry.isDerived && <EditEntryButton entry={entry} />}</span>
+          <span className="size-8">{entry.isCustom && <RemoveEntryButton entry={entry} />}</span>
         </div>
       </TableCell>
     </TableRow>

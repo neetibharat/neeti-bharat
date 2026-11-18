@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { CloseOrganizationCard } from '@/components/organizations/close-organization-card';
 import { useGetProfileQuery } from '@/lib/api/profile-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -16,7 +16,7 @@ export function GeneralSettings() {
   const { data, error } = useGetProfileQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   const name = data.entries.find((entry) => entry.key === 'companyName');
   const website = data.entries.find((entry) => entry.key === 'website');

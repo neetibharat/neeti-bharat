@@ -9,7 +9,7 @@ import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Pagination } from '@/components/base/pagination/pagination';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useGetApiKeysQuery } from '@/lib/api/api-keys-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { ApiKeysTable } from './api-keys-table';
@@ -23,7 +23,7 @@ export function ApiKeysPage() {
   const { data, error } = useGetApiKeysQuery(page);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

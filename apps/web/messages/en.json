@@ -21,10 +21,11 @@
       "settings": "Settings"
     },
     "sections": {
-      "company": "Company",
       "alerts": "Alerts",
       "developers": "Developers",
-      "records": "Records"
+      "records": "Records",
+      "checks": "Compliance checks",
+      "compliance": "Compliance"
     },
     "items": {
       "dashboard": "Dashboard",
@@ -33,7 +34,7 @@
       "proof": "Proof",
       "dataMap": "Data map",
       "connections": "Connections",
-      "cloudTests": "Cloud tests",
+      "cloudTests": "Cloud checks",
       "noticeAndConsent": "Notice and consent",
       "requests": "Requests",
       "breaches": "Breaches",
@@ -47,7 +48,7 @@
       "aiHelp": "AI help",
       "myWork": "My work",
       "exports": "Exports",
-      "websiteCheck": "Website check",
+      "websiteCheck": "Website checks",
       "readiness": "Readiness check"
     }
   },
@@ -125,7 +126,7 @@
     "URL_NOT_ALLOWED": "Enter a public website address, such as www.example.in. Addresses with a port, a password or inside a private network are not allowed.",
     "ORGANIZATION_REQUIRED": "Choose which organisation you are working in.",
     "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use.",
-    "CONNECTION_FAILED": "{reason, select, sign_in {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.} subscription {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.} other {Azure could not be reached. Try again in a moment.}}",
+    "CONNECTION_FAILED": "{reason, select, sign_in {{provider, select, github {GitHub did not accept the App ID and private key. Check that the key is the whole .pem file and that it belongs to this App.} other {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.}}} subscription {{provider, select, github {Signing in worked, but the App cannot see anything. Check that it is installed on the organisation.} other {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.}}} other {{provider, select, github {GitHub could not be reached. Try again in a moment.} other {Azure could not be reached. Try again in a moment.}}}}",
     "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY.",
     "AI_NOT_CONFIGURED": "AI help is not set up yet. An admin can set it up under Settings, AI help.",
     "AI_FAILED": "{reason, select, key {The AI service did not accept the key. Check that it is right and has not been revoked.} busy {The AI service is busy, or the key has reached its limit. Try again in a moment.} timeout {The AI service did not answer in time. Try again, or try a shorter file.} empty {The AI service sent back nothing. Try again.} unusable {The AI service answered, but not in a form that can be used. Try again.} other {The AI service refused the request. {detail}}}",
@@ -257,6 +258,7 @@
       "LOGO_CHANGED": "Company logo changed",
       "LOGO_REMOVED": "Company logo removed",
       "CONNECTION_ADDED": "Connection added",
+      "CONNECTION_UPDATED": "Connection updated",
       "CONNECTION_REMOVED": "Connection removed",
       "CONNECTION_CHECKED": "Connection checked",
       "API_KEY_CREATED": "API key created",
@@ -330,6 +332,7 @@
       "LOGO_CHANGED": "Changed the company logo to {fileName}",
       "LOGO_REMOVED": "Removed the company logo {fileName}",
       "CONNECTION_ADDED": "Connected {name} ({provider})",
+      "CONNECTION_UPDATED": "Updated the connection {name}",
       "CONNECTION_REMOVED": "Removed the connection {name}",
       "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
       "API_KEY_CREATED": "Created the API key {name} with {role} access",
@@ -1741,10 +1744,11 @@
   },
   "connections": {
     "title": "Connections",
-    "description": "Connect the systems that hold your data, such as an Azure subscription, and check how they are set up against what the DPDP Act expects. DPDP Kit only reads: it never changes anything in them.",
+    "description": "Connect the systems that hold your data, such as an Azure subscription or a GitHub organisation, and check how they are set up against what the DPDP Act expects. DPDP Kit only reads: it never changes anything in them.",
     "secretsOff": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY, then reload this page.",
     "provider": {
-      "azure": "Microsoft Azure and Entra ID"
+      "azure": "Microsoft Azure and Entra ID",
+      "github": "GitHub"
     },
     "card": {
       "tenant": "Tenant",
@@ -1756,7 +1760,11 @@
       "failed": "{count} failed",
       "run": "Run checks",
       "running": "Checking",
-      "wait": "Reading your subscription. This can take up to half a minute."
+      "wait": "Reading your subscription. This can take up to half a minute.",
+      "organisation": "Organisation",
+      "repositories": "Repositories",
+      "allRepositories": "All repositories",
+      "selectedRepositories": "{count, plural, one {# repository} other {# repositories}} picked"
     },
     "status": {
       "pass": "Passed",
@@ -1806,11 +1814,23 @@
       "governance": {
         "title": "Monitoring and governance",
         "about": "Whether changes are watched, logs are kept, policies are enforced, and production is kept apart."
+      },
+      "githubAccess": {
+        "title": "Sign-in and access",
+        "about": "Who can get into your organisation, and whether a stolen password is enough."
+      },
+      "githubCode": {
+        "title": "Code review and scanning",
+        "about": "Whether changes are reviewed before they reach your main branch, and whether code is scanned for flaws."
+      },
+      "githubSecurity": {
+        "title": "Secrets and dependencies",
+        "about": "Whether leaked secrets and known weaknesses in libraries are caught."
       }
     },
     "skipped": {
       "none": "Nothing of this kind was found, so there was nothing to check.",
-      "access": "The app registration is not allowed to read this. Give it the Reader role, or the Microsoft Graph permissions in the setup steps.",
+      "access": "The app is not allowed to read this. Check the roles or permissions in the setup steps, and that the plan includes this feature.",
       "error": "This check could not finish. Try again in a moment."
     },
     "checks": {
@@ -2119,6 +2139,42 @@
         "about": "What Defender for Cloud itself recommends fixing: high severity counts as a failure.",
         "pass": "None of the {total} items Defender for Cloud assessed needs attention.",
         "problem": "{count} of {total} items Defender for Cloud assessed need attention: {names}."
+      },
+      "github_two_factor": {
+        "name": "Everyone has two-factor sign-in",
+        "about": "Members of the organisation sign in to GitHub with a second step.",
+        "pass": "Every member of the organisation uses two-factor sign-in.",
+        "problem": "{count, plural, one {# member does} other {# members do}} not use two-factor sign-in. Ask them to turn it on, or require it for the whole organisation."
+      },
+      "github_owner_count": {
+        "name": "A sensible number of organisation owners",
+        "about": "Two to five people own the organisation.",
+        "pass": "{count} people own the organisation.",
+        "problem": "{count, plural, one {# person owns} other {# people own}} the organisation. Aim for {min} to {max}: one leaves a single point of failure, and many is a lot of power."
+      },
+      "github_branch_protection": {
+        "name": "Changes are reviewed before they reach the main branch",
+        "about": "The default branch needs a pull request and at least one approval.",
+        "pass": "All {total} repositories require a review before changes reach the default branch.",
+        "problem": "{count} of {total} repositories do not require a review before changes reach the default branch: {names}."
+      },
+      "github_code_scanning": {
+        "name": "Code is scanned for flaws",
+        "about": "Code scanning, with CodeQL or another tool, is set up on repositories.",
+        "pass": "Code scanning is set up on all {total} repositories.",
+        "problem": "Code scanning is not set up on {count} of {total} repositories: {names}."
+      },
+      "github_secret_scanning": {
+        "name": "Leaked secrets are caught",
+        "about": "Secret scanning is on, and push protection blocks a secret before it is pushed.",
+        "pass": "Secret scanning and push protection are on for all {total} repositories.",
+        "problem": "Secret scanning or push protection is off on {count} of {total} repositories: {names}."
+      },
+      "github_dependabot": {
+        "name": "Known weaknesses in libraries are flagged",
+        "about": "Dependabot alerts are on, so a library with a known security hole is flagged.",
+        "pass": "Dependabot alerts are on for all {total} repositories.",
+        "problem": "Dependabot alerts are off on {count} of {total} repositories: {names}."
       }
     },
     "history": {
@@ -2142,6 +2198,14 @@
         "subscriptionId": "Subscription ID",
         "clientSecret": "Client secret"
       },
+      "subscription": {
+        "find": "Find subscriptions",
+        "findAgain": "Find again",
+        "hint": "Enter the tenant ID, client ID and secret, then find the subscriptions this app can see.",
+        "label": "Subscription",
+        "placeholder": "Choose a subscription",
+        "none": "The app signed in, but it cannot see any subscription. Give it the Reader role on the subscription (step 4 of the guide), wait a few minutes, then find again."
+      },
       "wait": "Trying the details with Azure. This can take a few seconds.",
       "cancel": "Cancel",
       "submit": "Connect",
@@ -2149,16 +2213,57 @@
     },
     "setup": {
       "title": "How to set this up in Azure",
-      "intro": "You need an app registration that can only read. This takes about five minutes in the Azure portal.",
+      "intro": "DPDP Kit signs in as an app that can only read. Someone with admin rights in Azure makes that app once, in about five minutes. Names in bold are what to look for in the Azure portal.",
+      "forIt": "Not an Azure admin? Send these steps to whoever manages your Azure, and ask them to send back the tenant ID, the client ID and the client secret.",
+      "needs": "Needs: {who}",
+      "who": {
+        "reader": "Owner or User Access Administrator on the subscription",
+        "graph": "Global Administrator or Privileged Role Administrator"
+      },
       "steps": {
-        "register": "In Microsoft Entra ID, open App registrations and choose New registration. Name it DPDP Kit and keep it single tenant.",
-        "ids": "On its Overview page, copy the Application (client) ID and the Directory (tenant) ID.",
-        "secret": "Under Certificates and secrets, make a new client secret and copy its value now. It is shown only once.",
-        "reader": "On your subscription, open Access control (IAM) and add the Reader role for the app. Copy the Subscription ID from the subscription’s Overview.",
-        "graph": "On the app, open API permissions, add Microsoft Graph application permissions AuditLog.Read.All, Policy.Read.All and Directory.Read.All, and choose Grant admin consent."
+        "register": {
+          "title": "Create the app",
+          "body": "In the Azure portal, open <b>Microsoft Entra ID</b>, then <b>App registrations</b>, then <b>New registration</b>. Name it <b>DPDP Kit</b>, choose <b>Accounts in this organizational directory only</b>, and select <b>Register</b>."
+        },
+        "ids": {
+          "title": "Copy two IDs",
+          "body": "On the app’s <b>Overview</b> page, copy the <b>Application (client) ID</b> and the <b>Directory (tenant) ID</b>."
+        },
+        "secret": {
+          "title": "Make a secret",
+          "body": "Open <b>Certificates & secrets</b>, then <b>New client secret</b>, and choose how long it lasts. Note the date: when it runs out the checks stop, and a new secret can be entered with Edit. Copy the <b>Value</b>, not the Secret ID, straight away, because Azure shows it only once."
+        },
+        "reader": {
+          "title": "Let it read the subscription",
+          "body": "Open <b>Subscriptions</b>, choose the one to check, then <b>Access control (IAM)</b>, <b>Add</b>, <b>Add role assignment</b>. Pick the <b>Reader</b> role, then <b>Select members</b>, search for <b>DPDP Kit</b>, and choose <b>Review + assign</b>. It can take a few minutes to take effect."
+        },
+        "graph": {
+          "title": "Let it read sign-in settings",
+          "body": "Back on the app, open <b>API permissions</b>, then <b>Add a permission</b>, <b>Microsoft Graph</b>, <b>Application permissions</b>. Add <code>AuditLog.Read.All</code>, <code>Policy.Read.All</code> and <code>Directory.Read.All</code>, then choose <b>Grant admin consent</b>."
+        },
+        "connect": {
+          "title": "Connect it here",
+          "body": "Paste the tenant ID, client ID and secret into the form and choose <b>Find subscriptions</b>. Pick the subscription from the list: there is no subscription ID to copy. If the list is empty, the Reader role in step 4 has not been given yet or has not taken effect."
+        }
       },
       "note": "Only these read permissions are used. Without the Graph permissions, the sign-in checks are skipped and the rest still run. The multi-factor report also needs a Microsoft Entra ID P1 or P2 licence.",
       "back": "Back to the form"
+    },
+    "accounts": {
+      "title": "Connected accounts",
+      "description": "The accounts DPDP Kit reads. Open the results to see how each one was last checked.",
+      "results": "View results"
+    },
+    "edit": {
+      "action": "Edit {name}",
+      "title": "Edit {name}",
+      "description": "Rename it, or change the app registration it signs in with. New details are tried with Azure first, and the old ones are kept if they do not work.",
+      "secretHint": "Leave empty to keep the current secret. Enter a new one when it expires.",
+      "subscriptionHint": "The subscription cannot be changed. Connect the other one as a new connection.",
+      "save": "Save changes",
+      "githubDescription": "Rename it, choose which repositories it reads, or give it a new private key. A new key is tried with GitHub first, and the old one is kept if it does not work.",
+      "privateKeyHint": "Leave empty to keep the current key. Paste a new one if it was replaced.",
+      "installationHint": "The organisation cannot be changed. Connect the other one as a new connection."
     },
     "remove": {
       "action": "Remove {name}",
@@ -2195,7 +2300,7 @@
         "github": {
           "name": "GitHub",
           "category": "Development",
-          "about": "Check code review and access settings on the repositories that hold your code."
+          "about": "Read-only checks of two-factor sign-in, branch protection, secret scanning and dependency alerts across your GitHub organisation."
         }
       },
       "tags": {
@@ -2210,12 +2315,86 @@
         "access": "Access control",
         "apps": "Apps and servers",
         "containers": "Containers",
-        "governance": "Monitoring and policy"
+        "governance": "Monitoring and policy",
+        "secrets": "Secret scanning",
+        "dependencies": "Dependencies"
       }
+    },
+    "githubForm": {
+      "title": "Connect GitHub",
+      "description": "DPDP Kit signs in as a GitHub App that can only read. The details are tried first, and the key is kept encrypted.",
+      "help": "How to set this up in GitHub",
+      "fields": {
+        "appId": "App ID",
+        "privateKey": "Private key"
+      },
+      "privateKeyHint": "Paste the whole .pem file, including the BEGIN and END lines.",
+      "find": "Find repositories",
+      "findAgain": "Find again",
+      "hint": "Enter the App ID and private key, then find where the App is installed.",
+      "none": "The App signed in, but it is not installed anywhere. Install it on your organisation (step 6 of the guide), then find again.",
+      "organisation": "Organisation",
+      "wait": "Trying the App with GitHub. This can take a few seconds.",
+      "submit": "Connect"
+    },
+    "repositories": {
+      "label": "Which repositories to check",
+      "all": "All repositories",
+      "selected": "Only selected",
+      "allHint": "Every repository the App can see, including ones added later.",
+      "pickHint": "Only the repositories ticked here. A new repository is added by ticking it.",
+      "count": "{count} of {total} selected",
+      "selectAll": "Select all",
+      "clear": "Clear",
+      "search": "Search repositories",
+      "private": "Private",
+      "noMatch": "No repository matches.",
+      "loading": "Reading the repositories from GitHub."
+    },
+    "githubSetup": {
+      "title": "How to set this up in GitHub",
+      "intro": "DPDP Kit signs in as a GitHub App that can only read. An owner of your GitHub organisation makes the App once, in about five minutes. Names in bold are what to look for on GitHub.",
+      "forIt": "Not an owner? Send these steps to someone who is, and ask them to send back the App ID and the private key file.",
+      "needs": "Needs: {who}",
+      "who": {
+        "owner": "Organisation owner"
+      },
+      "steps": {
+        "create": {
+          "title": "Create the App",
+          "body": "Open your organisation on GitHub, then <b>Settings</b>, then <b>Developer settings</b> (near the bottom of the left menu), then <b>GitHub Apps</b>, then <b>New GitHub App</b>. Name it <b>DPDP Kit</b> with your company name, give any <b>Homepage URL</b>, and untick <b>Active</b> under Webhook."
+        },
+        "permissions": {
+          "title": "Give it read-only permissions",
+          "body": "Under <b>Repository permissions</b>, set <b>Administration</b>, <b>Code scanning alerts</b>, <b>Dependabot alerts</b> and <b>Secret scanning alerts</b> to <b>Read-only</b>. Under <b>Organization permissions</b>, set <b>Administration</b> and <b>Members</b> to <b>Read-only</b>. Leave everything else at No access."
+        },
+        "where": {
+          "title": "Keep it to your account",
+          "body": "Under <b>Where can this GitHub App be installed?</b> choose <b>Only on this account</b>, then select <b>Create GitHub App</b>."
+        },
+        "appId": {
+          "title": "Copy the App ID",
+          "body": "On the App’s page, copy the <b>App ID</b>, a number near the top. It is not the Client ID."
+        },
+        "key": {
+          "title": "Make the private key",
+          "body": "Scroll to <b>Private keys</b> and choose <b>Generate a private key</b>. A <code>.pem</code> file downloads. GitHub gives it only once, and anyone who has it can read what the App can read, so keep it safe."
+        },
+        "install": {
+          "title": "Install it on the organisation",
+          "body": "In the left menu choose <b>Install App</b>, then <b>Install</b> next to your organisation. Choose <b>All repositories</b>, or <b>Only select repositories</b> and pick them."
+        },
+        "connect": {
+          "title": "Connect it here",
+          "body": "Enter the App ID, paste the whole private key, and choose <b>Find repositories</b>. Choose the organisation, then all repositories or the ones to check. If nothing is found, the App is not installed yet (step 6)."
+        }
+      },
+      "note": "Only read permissions are used. Without a permission, the checks that need it are shown as not checked and the rest still run. Secret scanning, code scanning and push protection on private repositories also need the matching GitHub plan.",
+      "back": "Back to the form"
     }
   },
   "websiteCheck": {
-    "title": "Website check",
+    "title": "Website checks",
     "description": "Visit your public website the way a visitor does and check what DPDP expects to see. It reads the page the server sends, so a cookie banner or tracker added by a script is not seen.",
     "form": {
       "title": "Check a website",
@@ -2524,12 +2703,12 @@
     }
   },
   "cloudTests": {
-    "title": "Cloud tests",
-    "description": "How your connected cloud accounts compare with what the DPDP Act expects. Each check says what it looks at, why it matters, what your account shows, and how to fix it.",
+    "title": "Cloud checks",
+    "description": "How your connected accounts compare with what the DPDP Act expects. Each check says what it looks at, why it matters, what your account shows, and how to fix it.",
     "account": "Account",
     "empty": {
       "title": "No cloud account is connected",
-      "body": "Connect an Azure subscription to see its results here.",
+      "body": "Connect an Azure subscription or a GitHub organisation to see its results here.",
       "link": "Go to Connections"
     },
     "tabs": {
@@ -2543,7 +2722,7 @@
     },
     "filters": {
       "severity": "Severity",
-      "all": "All ({count})",
+      "all": "Any severity ({count})",
       "high": "High ({count})",
       "medium": "Medium ({count})",
       "low": "Low ({count})",
@@ -2875,6 +3054,42 @@
         "failRule": "It has some. High severity counts as a failure.",
         "why": "These are Microsoft’s own findings about your resources.",
         "fix": "Under Defender for Cloud, Recommendations, work through them by severity. Each has steps or a Remediate button."
+      },
+      "github_two_factor": {
+        "passRule": "Every member of the organisation uses two-factor sign-in.",
+        "failRule": "At least one member does not.",
+        "why": "A stolen password alone should not open your code. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "As an organisation owner, open the organisation’s Settings, then Authentication security, and turn on Require two-factor authentication. Members who have not set it up are asked to, or are removed."
+      },
+      "github_owner_count": {
+        "passRule": "Two to five people are owners.",
+        "failRule": "There is one owner, or more than five.",
+        "why": "Owners can change anything, including who can see your code. One owner is a single point of failure, and many is a lot of power. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "Open the organisation, then People, and filter by the Owner role. Change roles until two to five people remain owners."
+      },
+      "github_branch_protection": {
+        "passRule": "The default branch of every repository needs a pull request with at least one approval, by a branch protection rule or a ruleset.",
+        "failRule": "A repository has no rule on its default branch, or its rule needs no approval.",
+        "why": "A change that nobody else reviews can add a flaw or expose personal data. A second pair of eyes is a reasonable safeguard (section 8(5)).",
+        "fix": "In the repository, open Settings, then Rules, then Rulesets (or Branches). Add a rule for the default branch that requires a pull request and at least one approval."
+      },
+      "github_code_scanning": {
+        "passRule": "Code scanning is set up on every repository, by GitHub’s default setup or by a workflow that uploads results.",
+        "failRule": "A repository has no code scanning results.",
+        "why": "Scanning finds common flaws before they ship, such as injection, which can expose personal data. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "In the repository, open Security, then Code scanning, and set up the default scan. Private repositories need GitHub Code Security for this."
+      },
+      "github_secret_scanning": {
+        "passRule": "Secret scanning and push protection are both on for every repository.",
+        "failRule": "Secret scanning is off, or push protection is off.",
+        "why": "A password or key left in code can give a stranger access to personal data. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "In the repository, open Settings, then Advanced Security, and turn on Secret scanning and Push protection. An organisation owner can turn them on for every repository at once. Private repositories need GitHub Secret Protection."
+      },
+      "github_dependabot": {
+        "passRule": "Dependabot alerts are on for every repository.",
+        "failRule": "Dependabot alerts are off on a repository.",
+        "why": "A library with a known weakness is a common way in. The Act asks for reasonable security safeguards (section 8(5)).",
+        "fix": "In the repository, open Settings, then Advanced Security, and turn on Dependabot alerts. Turn on Dependabot security updates too, so fixes are proposed for you."
       }
     }
   },

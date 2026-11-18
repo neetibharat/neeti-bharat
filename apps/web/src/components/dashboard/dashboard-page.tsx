@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { Skeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { DASHBOARD_BREACHES, useGetBreachesQuery } from '@/lib/api/breaches-api';
 import { useGetFrameworksQuery, useGetPoliciesQuery } from '@/lib/api/frameworks-api';
 import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
@@ -44,11 +44,11 @@ export function DashboardPage() {
   );
 }
 
-function TopRowSkeleton() {
+function TopRowLoading() {
   return (
     <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
-      <Skeleton className="h-64 rounded-card" />
-      <Skeleton className="h-64 rounded-card" />
+      <Loading className="h-64" />
+      <Loading className="h-64" />
     </div>
   );
 }
@@ -63,7 +63,7 @@ function TopRow() {
   const error = frameworks.error ?? policies.error ?? proof.error;
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!frameworks.data || !policies.data || !proof.data) return <TopRowSkeleton />;
+  if (!frameworks.data || !policies.data || !proof.data) return <TopRowLoading />;
   const counts = statusCounts(policies.data.policies);
   const total = counts.approved + counts.in_review + counts.draft;
 
@@ -109,14 +109,10 @@ function AttentionPanel() {
   const { error, items } = useAttentionItems();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  return items ? <AttentionCard items={items} /> : <Skeleton className="h-64 rounded-card" />;
+  return items ? <AttentionCard items={items} /> : <Loading className="h-64" />;
 }
 
 function FrameworksRow() {
   const { data } = useGetFrameworksQuery();
-  return data ? (
-    <FrameworksCard frameworks={data.frameworks} />
-  ) : (
-    <Skeleton className="h-56 rounded-card" />
-  );
+  return data ? <FrameworksCard frameworks={data.frameworks} /> : <Loading className="h-56" />;
 }

@@ -5,7 +5,7 @@ import type { ProofRequirementDetailResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { Link } from '@/i18n/navigation';
@@ -42,7 +42,7 @@ export function RequirementPage({ requirementId }: { requirementId: string }) {
       </>
     );
   }
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return <Body data={data} />;
 }

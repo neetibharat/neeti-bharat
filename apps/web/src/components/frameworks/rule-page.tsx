@@ -11,7 +11,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { Link } from '@/i18n/navigation';
@@ -52,7 +52,7 @@ export function RulePage(props: { frameworkId: string; ruleId: string; canEdit: 
   const error = page.error ?? proof.error;
 
   if (error) return <Failure frameworkId={frameworkId} message={errorMessage(error)} />;
-  if (!page.data || !proof.data) return <PageSkeleton />;
+  if (!page.data || !proof.data) return <Loading />;
 
   return (
     <Body

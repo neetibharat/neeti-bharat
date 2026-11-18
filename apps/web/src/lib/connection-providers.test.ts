@@ -10,7 +10,10 @@ const catalog = en.connections.catalog as unknown as {
 describe('the connections catalog', () => {
   it('lists each provider once, and the ones that cannot be connected yet say so', () => {
     expect(CATALOG.map((provider) => provider.id)).toEqual([...CATALOG_PROVIDER_IDS]);
-    expect(CATALOG.filter((provider) => provider.available).map((p) => p.id)).toEqual(['azure']);
+    expect(CATALOG.filter((provider) => provider.available).map((p) => p.id)).toEqual([
+      'azure',
+      'github',
+    ]);
   });
 
   it('words every provider: its name, its kind and what it does', () => {

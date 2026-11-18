@@ -7,7 +7,7 @@ import { Alert } from '@/components/base/alert/alert';
 import { BrandMark } from '@/components/base/brand-mark/brand-mark';
 import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useCurrentUser } from '@/components/providers/user-provider';
 import { ReadinessForm } from '@/components/readiness/readiness-form';
 import { ReadinessResult } from '@/components/readiness/readiness-result';
@@ -134,7 +134,7 @@ export function OnboardingFlow() {
   const check = useGetReadinessQuery().data?.latest ?? null;
   const { finish, isFinishing, error: finishError } = useFinish();
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10">

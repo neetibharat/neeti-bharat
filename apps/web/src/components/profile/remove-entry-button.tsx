@@ -15,7 +15,13 @@ export function RemoveEntryButton({ entry }: { entry: ProfileEntryResponse }) {
   return (
     <ConfirmDialog
       trigger={
-        <Button color="tertiary" isIconOnly iconLeading={IconTrash} aria-label={t('removeEntry')} />
+        <Button
+          color="tertiary"
+          size="sm"
+          isIconOnly
+          iconLeading={IconTrash}
+          aria-label={t('removeEntry')}
+        />
       }
       title={t('removeTitle')}
       description={t('removeBody')}
