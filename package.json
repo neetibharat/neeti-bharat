@@ -2,6 +2,7 @@
   "name": "dpdp-kit",
   "version": "0.1.0",
   "private": true,
+  "license": "AGPL-3.0-only",
   "description": "Open-source, self-hosted DPDP compliance toolkit",
   "packageManager": "pnpm@10.11.0",
   "engines": {
