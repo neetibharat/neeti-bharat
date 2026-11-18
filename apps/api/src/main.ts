@@ -14,7 +14,11 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
   const config = app.get<ConfigService<Env, true>>(ConfigService);
 
-  app.use(helmet({ contentSecurityPolicy: isProduction(config) ? undefined : false }));
+  // Helmet's default policy is enforced in production. Elsewhere it only reports, so the Swagger page, which exists
+  // only there, is never blocked by it.
+  app.use(
+    helmet({ contentSecurityPolicy: { useDefaults: true, reportOnly: !isProduction(config) } }),
+  );
   app.enableCors({ origin: config.get('WEB_ORIGIN', { infer: true }), credentials: true });
   app.setGlobalPrefix('v1');
   app.enableShutdownHooks();
