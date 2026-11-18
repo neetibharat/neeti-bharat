@@ -8,7 +8,7 @@ import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { Tabs, type TabItem } from '@/components/base/tabs/tabs';
 import { ArchivedRequirements } from '@/components/proof/archived-requirements';
 import { useCan } from '@/components/providers/user-provider';
@@ -92,7 +92,7 @@ export function ControlProofPage({ controlId }: { controlId: string }) {
   });
 
   if (proof.error) return <Alert tone="error">{errorMessage(proof.error)}</Alert>;
-  if (!proof.data) return <PageSkeleton />;
+  if (!proof.data) return <Loading />;
   const { control } = proof.data;
 
   return (

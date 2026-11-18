@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type {
   ConnectionListResponse,
   ConnectionRunListResponse,
   ConnectionRunResponse,
   ConnectionSummary,
+  DiscoverGithubResponse,
+  FindSubscriptionsResponse,
+  GithubRepositoriesResponse,
 } from '@dpdp-kit/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
@@ -13,20 +16,33 @@ import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import { NoApiKey, Roles } from '../../core/org/roles.decorator';
 import {
   CreateConnectionDto,
+  DiscoverGithubDto,
+  FindSubscriptionsDto,
+  UpdateConnectionDto,
   createConnectionSchema,
+  discoverGithubSchema,
+  findSubscriptionsSchema,
   listConnectionsSchema,
   listRunsSchema,
+  updateConnectionSchema,
   type CreateConnectionInput,
+  type DiscoverGithubInput,
+  type FindSubscriptionsInput,
   type ListConnectionsQuery,
   type ListRunsQuery,
+  type UpdateConnectionInput,
 } from '../dto/connection.dto';
+import { ConnectionLookupService } from '../services/connection-lookup.service';
 import { ConnectionsService } from '../services/connections.service';
 
 @ApiTags('Connections')
 @ApiCookieAuth()
 @Controller('connections')
 export class ConnectionsController {
-  constructor(private readonly service: ConnectionsService) {}
+  constructor(
+    private readonly service: ConnectionsService,
+    private readonly lookup: ConnectionLookupService,
+  ) {}
 
   @Get()
   @Roles(['admin', 'member', 'auditor'])
@@ -56,6 +72,68 @@ export class ConnectionsController {
     @Session() { user }: UserSession,
   ): Promise<ConnectionSummary> {
     return this.service.create(body, actorOf(user));
+  }
+
+  // A POST only so the secret travels in the body and not the address. It reads from Azure and saves nothing.
+  @Post('subscriptions')
+  @HttpCode(200)
+  @Roles(['admin'])
+  @NoApiKey()
+  @TransactionAfterBody()
+  @ApiOperation({
+    summary:
+      'The subscriptions an app registration can see, to choose one when connecting. Nothing is kept (admin only, never a key)',
+  })
+  @ApiBody({ type: FindSubscriptionsDto })
+  findSubscriptions(
+    @Body(new ZodValidationPipe(findSubscriptionsSchema)) body: FindSubscriptionsInput,
+  ): Promise<FindSubscriptionsResponse> {
+    return this.lookup.findSubscriptions(body);
+  }
+
+  @Post('github/discover')
+  @HttpCode(200)
+  @Roles(['admin'])
+  @NoApiKey()
+  @TransactionAfterBody()
+  @ApiOperation({
+    summary:
+      'The organisations a GitHub App is installed on, with the repositories each can see, to choose from when connecting. Nothing is kept (admin only, never a key)',
+  })
+  @ApiBody({ type: DiscoverGithubDto })
+  discoverGithub(
+    @Body(new ZodValidationPipe(discoverGithubSchema)) body: DiscoverGithubInput,
+  ): Promise<DiscoverGithubResponse> {
+    return this.lookup.discoverGithub(body);
+  }
+
+  @Get(':id/repositories')
+  @Roles(['admin'])
+  @NoApiKey()
+  @TransactionAfterBody()
+  @ApiOperation({
+    summary:
+      'The repositories a GitHub connection can see, to change which it reads. Uses its own stored key (admin only, never a key)',
+  })
+  githubRepositories(@Param('id') id: string): Promise<GithubRepositoriesResponse> {
+    return this.lookup.githubRepositories(id);
+  }
+
+  @Put(':id')
+  @Roles(['admin'])
+  @NoApiKey()
+  @TransactionAfterBody()
+  @ApiOperation({
+    summary:
+      'Rename a connection, replace its Azure tenant, client or secret or its GitHub private key, or change which GitHub repositories it reads. New details are tried first; the subscription or installation cannot change (admin only, never a key)',
+  })
+  @ApiBody({ type: UpdateConnectionDto })
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateConnectionSchema)) body: UpdateConnectionInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionSummary> {
+    return this.service.update(id, body, actorOf(user));
   }
 
   @Delete(':id')

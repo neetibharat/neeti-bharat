@@ -9,7 +9,7 @@ import {
   type Icon,
 } from '@tabler/icons-react';
 import {
-  AZURE_CHECK_SEVERITY,
+  CHECK_SEVERITY,
   CONNECTION_RESOURCES_KEPT,
   type ConnectionCheckResult,
   type ConnectionCheckStatus,
@@ -120,8 +120,8 @@ export function Finding({ result }: { result: ConnectionCheckResult }) {
         <span className="min-w-0 flex-1 text-body font-medium text-fg">
           {check(`checks.${result.id}.name`)}
         </span>
-        <Badge color={SEVERITY_BADGE[AZURE_CHECK_SEVERITY[result.id]]}>
-          {severity(AZURE_CHECK_SEVERITY[result.id])}
+        <Badge color={SEVERITY_BADGE[CHECK_SEVERITY[result.id]]}>
+          {severity(CHECK_SEVERITY[result.id])}
         </Badge>
         <Badge color={badge}>{t(`status.${result.status}`)}</Badge>
         <IconChevronDown

@@ -2,7 +2,7 @@
 
 import { REQUEST_STATUSES, type RequestBoardResponse } from '@dpdp-kit/shared';
 import { Alert } from '@/components/base/alert/alert';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useGetRequestsBoardQuery } from '@/lib/api/requests-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { useNow } from '@/lib/hooks/use-now';
@@ -45,7 +45,7 @@ export function RequestsBoard({ view }: { view: RequestView }) {
   const { data, error, fulfilledTimeStamp } = useGetRequestsBoardQuery(view.boardQuery);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   // A new answer from the board replaces any pages added with "Show more", so a column never repeats a card.
   return (

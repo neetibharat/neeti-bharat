@@ -2,7 +2,7 @@
 
 import { IconSearch } from '@tabler/icons-react';
 import {
-  AZURE_CHECK_GROUPS,
+  CHECK_GROUPS,
   CHECK_SEVERITIES,
   type ConnectionCheckResult,
   type ConnectionRunResponse,
@@ -15,12 +15,15 @@ import { HeroFact, HeroFacts } from '@/components/base/hero-panel/hero-panel';
 import { Input } from '@/components/base/input/input';
 import { SegmentedControl } from '@/components/base/segmented-control/segmented-control';
 import { useGetConnectionRunQuery } from '@/lib/api/connections-api';
-import { attentionBySeverity, visibleResults, type SeverityFilter } from '@/lib/cloud-tests';
-import { needsAttention, type ResultView } from '@/lib/connections';
+import { countBySeverity, visibleResults, type SeverityFilter } from '@/lib/cloud-tests';
+import { inView, needsAttention, type ResultView } from '@/lib/connections';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { Finding } from './finding';
 
 type Words = (key: string, values?: Record<string, string | number>) => string;
+
+/** Every group of every provider. A run holds the results of one, and a group none of them fall in is left out. */
+const ALL_GROUPS = Object.values(CHECK_GROUPS).flat();
 
 /** When the run was made and by whom, and how many checks ended each way. */
 function Summary({ run }: { run: ConnectionRunResponse }) {
@@ -52,7 +55,7 @@ function Summary({ run }: { run: ConnectionRunResponse }) {
 function Groups({ results }: { results: ConnectionCheckResult[] }) {
   const t = useTranslations('connections.groups') as unknown as Words;
   const filters = useTranslations('cloudTests.filters');
-  const groups = AZURE_CHECK_GROUPS.map((group) => ({
+  const groups = ALL_GROUPS.map((group) => ({
     id: group.id,
     found: results.filter((result) => (group.checks as readonly string[]).includes(result.id)),
   })).filter(({ found }) => found.length > 0);
@@ -112,7 +115,7 @@ function SeverityChoice({
   onSeverity: (severity: SeverityFilter) => void;
 }) {
   const t = useTranslations('cloudTests.filters');
-  const counts = attentionBySeverity(results);
+  const counts = countBySeverity(results);
 
   return (
     <SegmentedControl<SeverityFilter>
@@ -120,7 +123,7 @@ function SeverityChoice({
       value={severity}
       onChange={onSeverity}
       options={[
-        { id: 'all', label: t('all', { count: results.filter(needsAttention).length }) },
+        { id: 'all', label: t('all', { count: results.length }) },
         ...CHECK_SEVERITIES.map((level) => ({
           id: level,
           label: t(level, { count: counts[level] }),
@@ -149,7 +152,7 @@ function Filters(props: FiltersProps) {
       <div className="flex flex-wrap items-center gap-3">
         <ViewChoice results={props.results} view={props.view} onView={props.onView} />
         <SeverityChoice
-          results={props.results}
+          results={inView(props.results, props.view)}
           severity={props.severity}
           onSeverity={props.onSeverity}
         />

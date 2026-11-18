@@ -5,12 +5,14 @@ import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@dpdp-kit/shared';
 import type { AddressInfo } from 'node:net';
 import { AiClient } from '../../src/ai/providers/ai-client';
 import { AzureConnector } from '../../src/connections/providers/azure/azure-api';
+import { GithubConnector } from '../../src/connections/providers/github/github-api';
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
 import { NotificationScanner } from '../../src/notifications/services/notification-scanner';
 import { fakeAi } from './fake-ai-client';
 import { azureConnector } from './fake-azure-connector';
+import { githubConnector } from './fake-github-connector';
 import { createTestDatabase, type TestDatabase } from './test-database';
 
 const WEB_ORIGIN = 'http://localhost:3200';
@@ -131,6 +133,8 @@ async function compileApp(inbox: MailMessage[]) {
       // Microsoft is replaced by a fake that answers from a table, so no test leaves the machine.
       .overrideProvider(AzureConnector)
       .useValue(azureConnector)
+      .overrideProvider(GithubConnector)
+      .useValue(githubConnector)
       // The AI services are replaced by a fake that answers from a table, so no test leaves the machine.
       .overrideProvider(AiClient)
       .useValue(fakeAi)

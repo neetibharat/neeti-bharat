@@ -14,7 +14,7 @@ import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { Input } from '@/components/base/input/input';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Pagination } from '@/components/base/pagination/pagination';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { useCan } from '@/components/providers/user-provider';
 import { useGetBreachesQuery } from '@/lib/api/breaches-api';
@@ -89,7 +89,7 @@ export function BreachesPage() {
   const { data, error } = useGetBreachesQuery(view.query);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

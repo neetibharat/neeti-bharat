@@ -6,7 +6,7 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useCan } from '@/components/providers/user-provider';
 import { Link } from '@/i18n/navigation';
 import { useGetRequestQuery } from '@/lib/api/requests-api';
@@ -45,7 +45,7 @@ export function RequestPage({ requestId }: { requestId: string }) {
       </>
     );
   }
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

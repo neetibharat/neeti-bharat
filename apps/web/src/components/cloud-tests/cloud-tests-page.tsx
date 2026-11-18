@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCloudCheck } from '@tabler/icons-react';
-import type { ConnectionSummary } from '@dpdp-kit/shared';
+import { CONNECTION_MAX_PAGE_SIZE, type ConnectionSummary } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -9,13 +9,14 @@ import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { Select } from '@/components/base/select/select';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { useCan } from '@/components/providers/user-provider';
 import { Link } from '@/i18n/navigation';
 import { useGetConnectionsQuery } from '@/lib/api/connections-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { EditConnectionButton } from '@/components/connections/edit-connection-button';
 import { RunButton } from './run-button';
 import { RunHistory } from './run-history';
 import { ScanResults } from './scan-results';
@@ -110,7 +111,7 @@ function Toolbar({
   onRan: (runId: string) => void;
 }) {
   const t = useTranslations('cloudTests');
-  const { canEdit } = useCan();
+  const { canEdit, isAdmin } = useCan();
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -125,7 +126,13 @@ function Toolbar({
       ) : (
         <h2 className="text-subtitle font-semibold text-fg">{connection.name}</h2>
       )}
-      {canEdit && <RunButton id={connection.id} onRan={onRan} />}
+      {canEdit && (
+        <RunButton
+          id={connection.id}
+          onRan={onRan}
+          leading={isAdmin && <EditConnectionButton connection={connection} size="md" />}
+        />
+      )}
     </div>
   );
 }
@@ -173,10 +180,13 @@ function Loaded({ connections }: { connections: ConnectionSummary[] }) {
 /** How the connected cloud accounts compare with what the Act expects, one account at a time. */
 export function CloudTestsPage() {
   const errorMessage = useErrorMessage();
-  const { data, error } = useGetConnectionsQuery(1);
+  const { data, error } = useGetConnectionsQuery({
+    page: 1,
+    limit: CONNECTION_MAX_PAGE_SIZE,
+  });
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return <Loaded connections={data.items} />;
 }

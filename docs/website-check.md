@@ -1,6 +1,6 @@
-# Website check
+# Website checks
 
-The Website check (`/website-check`, in the Data area) visits the company's public website the way a visitor's browser would and reports what DPDP expects to see there. It runs only when someone presses **Check now**. Admins and members run it; auditors read the results.
+The Website checks page (`/website-check`, under Compliance checks in the Data area) visits the company's public website the way a visitor's browser would and reports what DPDP expects to see there. It runs only when someone presses **Check now**. Admins and members run it; auditors read the results.
 
 The check reads what the server sends: the home page's HTML and headers, the plain `http://` address, and the privacy notice the home page links to. A cookie banner or tracker that a script adds after the page loads is not seen.
 

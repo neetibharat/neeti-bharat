@@ -9,7 +9,7 @@ import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { Input } from '@/components/base/input/input';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { useGetProfileQuery } from '@/lib/api/profile-api';
 import { matchesSearch } from '@/lib/filters';
@@ -29,7 +29,7 @@ export function CompanyProfile() {
   const { data, error } = useGetProfileQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   const entries = data.entries.filter((entry) => entry.group !== 'general');
   const shown = entries.filter((entry) => matchesSearch([text.label(entry), entry.value], search));

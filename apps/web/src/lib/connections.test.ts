@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ConnectionCheckResult } from '@dpdp-kit/shared';
-import { inView, outcomeKey } from './connections';
+import { canSaveEdit, changesOf, inView, outcomeKey, type EditValues } from './connections';
 
 describe('outcomeKey', () => {
   it('has a sentence for a pass, and one for any problem, warned or failed', () => {
@@ -56,5 +56,54 @@ describe('inView', () => {
 
   it('is empty when nothing needs attention', () => {
     expect(inView([{ id: 'sql_tls', status: 'pass' }], 'attention')).toEqual([]);
+  });
+});
+
+describe('changesOf', () => {
+  const TENANT = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+  const CLIENT = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+  const initial: EditValues = {
+    name: 'Production',
+    tenantId: TENANT,
+    clientId: CLIENT,
+    clientSecret: '',
+  };
+
+  it('is nothing when nothing differs, so there is nothing to save', () => {
+    expect(changesOf(initial, initial)).toBeNull();
+    expect(changesOf(initial, { ...initial, name: '  Production ' })).toBeNull();
+  });
+
+  it('sends the name alone when only the name changed', () => {
+    expect(changesOf(initial, { ...initial, name: 'Staging' })).toEqual({ name: 'Staging' });
+  });
+
+  it('sends only the details that changed, and keeps the secret out when it is empty', () => {
+    expect(
+      changesOf(initial, { ...initial, clientId: 'cccccccc-cccc-cccc-cccc-cccccccccccc' }),
+    ).toEqual({
+      name: 'Production',
+      credentials: { clientId: 'cccccccc-cccc-cccc-cccc-cccccccccccc' },
+    });
+    expect(changesOf(initial, { ...initial, clientSecret: ' new ' })).toEqual({
+      name: 'Production',
+      credentials: { clientSecret: 'new' },
+    });
+  });
+});
+
+describe('canSaveEdit', () => {
+  const ok: EditValues = {
+    name: 'Production',
+    tenantId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    clientId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    clientSecret: '',
+  };
+
+  it('needs a name and ids of the shape Azure issues, but not a secret', () => {
+    expect(canSaveEdit(ok)).toBe(true);
+    expect(canSaveEdit({ ...ok, name: ' ' })).toBe(false);
+    expect(canSaveEdit({ ...ok, tenantId: 'nope' })).toBe(false);
+    expect(canSaveEdit({ ...ok, clientId: '' })).toBe(false);
   });
 });

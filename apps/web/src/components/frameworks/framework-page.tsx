@@ -4,7 +4,7 @@ import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
 import { DPDP_FRAMEWORK_ID, isLocked, type ChecklistResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs, type TabItem } from '@/components/base/tabs/tabs';
 import { useCan } from '@/components/providers/user-provider';
@@ -55,7 +55,7 @@ export function FrameworkPage({ frameworkId }: { frameworkId: string }) {
   const { data, error } = useGetChecklistQuery(frameworkId);
 
   if (error) return <Failure message={errorMessage(error)} />;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
   const labels = {
     rules: tTabs('rules'),
     setup: tTabs('setup'),

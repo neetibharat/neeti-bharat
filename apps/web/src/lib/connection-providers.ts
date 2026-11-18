@@ -6,7 +6,7 @@ import {
   type Icon,
 } from '@tabler/icons-react';
 
-export const CATALOG_PROVIDER_IDS = ['azure', 'google_workspace', 'aws', 'github'] as const;
+export const CATALOG_PROVIDER_IDS = ['azure', 'github', 'aws', 'google_workspace'] as const;
 export type CatalogProviderId = (typeof CATALOG_PROVIDER_IDS)[number];
 
 export const CATALOG_TAG_IDS = [
@@ -22,6 +22,8 @@ export const CATALOG_TAG_IDS = [
   'apps',
   'containers',
   'governance',
+  'secrets',
+  'dependencies',
 ] as const;
 export type CatalogTagId = (typeof CATALOG_TAG_IDS)[number];
 
@@ -51,14 +53,19 @@ export const CATALOG: readonly CatalogProvider[] = [
       'governance',
     ],
   },
-  { id: 'google_workspace', icon: IconBrandGoogle, available: false, tags: ['mfa', 'people'] },
+  {
+    id: 'github',
+    icon: IconBrandGithub,
+    available: true,
+    tags: ['access', 'codeReview', 'secrets', 'dependencies'],
+  },
   {
     id: 'aws',
     icon: IconBrandAws,
     available: false,
     tags: ['encryption', 'publicAccess', 'dataLocation', 'logging'],
   },
-  { id: 'github', icon: IconBrandGithub, available: false, tags: ['codeReview', 'access'] },
+  { id: 'google_workspace', icon: IconBrandGoogle, available: false, tags: ['mfa', 'people'] },
 ];
 
 /** How many tags a card shows before "+n more". */

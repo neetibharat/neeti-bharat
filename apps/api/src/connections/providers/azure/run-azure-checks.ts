@@ -26,14 +26,4 @@ export async function runAzureChecks(
   );
 }
 
-/** How many checks ended each way. */
-export function tally(results: readonly ConnectionCheckResult[]) {
-  const count = (status: ConnectionCheckResult['status']) =>
-    results.filter((result) => result.status === status).length;
-  return {
-    passed: count('pass'),
-    warned: count('warn'),
-    failed: count('fail'),
-    skipped: count('skipped'),
-  };
-}
+export { tally } from '../outcome';

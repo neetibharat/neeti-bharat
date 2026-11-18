@@ -1,24 +1,49 @@
 # Connections
 
-A connection lets DPDP Kit read a system that holds your data and check how it is set up against what the DPDP Act expects, such as whether storage is encrypted, whether a database is open to the internet, and whether everyone has a second sign-in step. The first provider is Microsoft Azure with Entra ID. Connections are under **Connections** in the sidebar.
+A connection lets DPDP Kit read a system that holds your data and check how it is set up against what the DPDP Act expects, such as whether storage is encrypted, whether a database is open to the internet, and whether everyone has a second sign-in step. There are two providers: Microsoft Azure with Entra ID, and GitHub. Connections are under **Connections** in the sidebar, and their results are under **Compliance checks**.
 
-DPDP Kit only reads. A connection signs in with an app registration that holds read-only roles, and no check changes anything in the system.
+DPDP Kit only reads. An Azure connection signs in with an app registration that holds read-only roles, a GitHub connection with a GitHub App that holds read-only permissions, and no check changes anything in the system.
 
 ## Setting up Azure
 
-An admin connects a subscription with the form on the Connections page, which also shows these steps:
+Someone with admin rights in Azure makes the app once, and any admin of DPDP Kit then connects it with the form on the Connections page. The form's **How to set this up in Azure** guide shows these steps, and says who can do each:
 
 1. In Microsoft Entra ID, open **App registrations** and choose **New registration**. Name it `DPDP Kit` and keep it single tenant.
 2. On its Overview page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
-3. Under **Certificates and secrets**, make a client secret and copy its value. It is shown only once.
-4. On the subscription, open **Access control (IAM)** and add the **Reader** role for the app. Copy the **Subscription ID**.
-5. On the app, open **API permissions**, add the Microsoft Graph **application** permissions `AuditLog.Read.All`, `Policy.Read.All` and `Directory.Read.All`, and choose **Grant admin consent**.
+3. Under **Certificates and secrets**, make a client secret, note when it expires, and copy its value. It is shown only once.
+4. On the subscription, open **Access control (IAM)** and add the **Reader** role for the app. This needs the Owner or User Access Administrator role on the subscription.
+5. On the app, open **API permissions**, add the Microsoft Graph **application** permissions `AuditLog.Read.All`, `Policy.Read.All` and `Directory.Read.All`, and choose **Grant admin consent**. This needs a Global Administrator or Privileged Role Administrator.
+6. In the form, enter the tenant ID, client ID and secret and choose **Find subscriptions**. The subscriptions the app can see are listed, and one is chosen from them, so no subscription ID is copied. A list with only one is picked for you. If it is empty, the Reader role has not been given or has not taken effect yet. Changing any of the three details clears the list and the choice.
+
+Finding subscriptions signs in once with the details to read the list of enabled subscriptions (`POST /v1/connections/subscriptions`, admin only, never an API key). Nothing is saved and nothing is written to the activity log; the secret is used for that one sign-in.
 
 Without the Graph permissions the three sign-in checks are shown as not checked and the rest still run. Without the Reader role the resource checks are shown as not checked. The multi-factor report that the first check reads needs a Microsoft Entra ID P1 or P2 licence; on a tenant without one, that check is shown as not checked.
 
 Adding a connection signs in and reads the subscription first. If Microsoft refuses the details, nothing is kept and the form says whether the sign-in failed or the subscription cannot be seen.
 
-## What is checked
+On a GitHub connection, **Edit** changes the name, which repositories are read (all, or the ticked ones, listed from the connection's own stored key by `GET /v1/connections/:id/repositories`), and the private key. A key that is left empty is kept. The organisation cannot be changed. A new key, or a new choice of repositories, is tried with GitHub first.
+
+## Setting up GitHub
+
+An owner of the GitHub organisation makes a GitHub App once, and any admin of DPDP Kit then connects it with the form on the Connections page. The form's **How to set this up in GitHub** guide shows these steps, and says who can do each:
+
+1. In the organisation's **Settings**, open **Developer settings**, then **GitHub Apps**, then **New GitHub App**. Name it `DPDP Kit` with the company name, give any homepage URL, and untick **Active** under Webhook.
+2. Under **Repository permissions** set **Administration**, **Code scanning alerts**, **Dependabot alerts** and **Secret scanning alerts** to **Read-only**. Under **Organization permissions** set **Administration** and **Members** to **Read-only**. Everything else stays at No access.
+3. Under **Where can this GitHub App be installed?** choose **Only on this account** and create the App.
+4. Copy the **App ID** from the App's page. It is not the Client ID.
+5. Under **Private keys** choose **Generate a private key**. A `.pem` file downloads. GitHub gives it once, and whoever has it can read what the App can read.
+6. Under **Install App** install it on the organisation, on all repositories or on only some.
+7. In the form, enter the App ID, paste the whole private key and choose **Find repositories**. The organisation the App is installed on is listed with the repositories it can see (`POST /v1/connections/github/discover`, admin only, never an API key; nothing is saved). One organisation is chosen for you. Then choose **All repositories**, which also takes in ones added later, or **Only selected** and tick the repositories to check. A list with nothing in it means the App is not installed yet.
+
+Without a permission, the checks that need it are shown as not checked and the rest still run. Secret scanning, code scanning and push protection on private repositories also need the matching GitHub plan, and a repository GitHub will not answer for is left out of a check instead of passing it.
+
+## Managing connected accounts
+
+**Connections** lists every connected account above the catalog, ten to a page. Each row shows its name, the tenant and subscription it reads, when it was last checked and how many checks passed, needed a look or failed, and a link to its results. An admin also gets an edit and a remove button on each row; the edit button is on the Cloud checks page as well, next to the account.
+
+**Edit** changes the name, the tenant ID, the client ID and the client secret. A secret that is left empty is kept, so the usual job is to enter a new secret before the old one expires. The subscription cannot be changed, because another subscription is another connection. A new name is saved at once. New details are tried with Azure first, as when adding, and if Azure refuses them nothing changes and the form says whether the sign-in failed or the subscription cannot be seen.
+
+## What is checked on Azure
 
 There are 51 checks in seven groups. Each is one rule about one kind of resource, read across the whole subscription: every resource group in it. A result says how many resources were looked at, how many are not fine, and names up to five of them.
 
@@ -48,11 +73,24 @@ Notes on specific checks:
 - The multi-factor report needs a Microsoft Entra ID P1 or P2 licence; without one that check is shown as not checked.
 - Reads of one resource at a time, such as the settings of each web app, stop at 100 resources.
 
-## Running the checks
+## What is checked on GitHub
 
-## Cloud tests
+There are 6 checks in 3 groups. The two about the organisation run once, and the four about repositories run on every repository in scope (the ones picked, or all of them, up to 100 and without archived ones). A result names how many repositories were looked at and how many are not fine, and lists them.
 
-The results are on their own page, **Cloud tests**, with one account at a time (a selector appears when there are several; the Connections page links to the right one). It shows the totals, the checks that need attention or all of them, filters by severity (high, medium or low, a fixed judgement about each check) and a search. Findings are grouped by area. Opening one shows what it checks, when it passes and when it needs attention, why it matters, what this account showed with every resource that did not pass (up to 200), and how to fix it. The History tab lists earlier runs.
+| Group                        | What it looks at                                                                                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Sign-in and access**       | Two-factor sign-in is on for every member (people are counted, never named); two to five owners                                                                              |
+| **Code review and scanning** | A review is required before changes reach the default branch, by a branch protection rule or a ruleset; code scanning is set up, by the default setup or by uploaded results |
+| **Secrets and dependencies** | Secret scanning and push protection are on; Dependabot alerts are on                                                                                                         |
+
+- **Fail** is for no rule on the default branch, secret scanning off, or Dependabot alerts off. **Warn** is for a rule that needs no approval, push protection off, no code scanning, or an owner count outside two to five.
+- A repository the App may not read for a check, such as one on a plan without the feature, is left out of that check. When that is every repository, the check is shown as not checked, with the reason.
+- The two-factor check needs the App to see members without it, which GitHub offers to owners. When GitHub does not allow it, that check is shown as not checked.
+- On a personal account, which has no members, the two organisation checks have nothing to check.
+
+## Cloud checks
+
+The results are on their own page, **Cloud checks** (under **Compliance checks** in the Data area, beside Website checks), with one connection at a time, Azure or GitHub (a selector lists up to 100 accounts when there are several; the Connections page links to the right one). **Run checks** always runs the account that is selected, so each account is run on its own. It shows the totals, the checks that need attention or all of them, filters by severity (high, medium or low, a fixed judgement about each check) and a search. Findings are grouped by area. Opening one shows what it checks, when it passes and when it needs attention, why it matters, what this account showed with every resource that did not pass (up to 200), and how to fix it. The History tab lists earlier runs.
 
 **Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it. Checks are run by hand; there is no schedule.
 
@@ -60,16 +98,16 @@ The results are on their own page, **Cloud tests**, with one account at a time (
 
 The credentials are sealed with AES-256-GCM before they are stored, using the key in `SECRETS_ENCRYPTION_KEY` (32 random bytes in base64: `openssl rand -base64 32`). A copy of the database alone does not give them away, and a sealed value is tied to its organisation, so one organisation's cannot be opened as another's. Keep the key safe: values sealed with it cannot be read without it. Without the key, Connections cannot keep credentials and the page says so.
 
-- The client secret is never sent back by the API, never written to the activity log, and not shown after it is entered. The list shows the tenant, client and subscription ids, which are not secret.
-- Only an admin who is signed in as a person can add or remove a connection. An API key cannot.
+- The client secret and the GitHub private key are never sent back by the API, never written to the activity log, and not shown after they are entered. The list shows the tenant, client and subscription ids, or the App ID, installation ID, organisation and chosen repositories, which are not secret.
+- Only an admin who is signed in as a person can add, change or remove a connection. An API key cannot.
 - Removing a connection forgets its credentials. Its earlier results stay.
-- Adding, checking and removing a connection are written to the activity log.
+- Adding, changing, checking and removing a connection are written to the activity log. A change is logged with the name, never the secret.
 
-Only the three Microsoft addresses are ever called: the sign-in service, Azure Resource Manager and Microsoft Graph. Tenant, client and subscription ids must be GUIDs, so nothing else can reach the addresses that are built from them.
+Only these addresses are ever called: for Azure, the Microsoft sign-in service, Azure Resource Manager and Microsoft Graph; for GitHub, `api.github.com`. Tenant, client and subscription ids must be GUIDs, and a GitHub App ID and installation ID must be numbers, so nothing else can reach the addresses that are built from them. A next page of a GitHub list is followed only when its link stays on `api.github.com`. The only request that is not a GET is the one that trades the App's signed message for a short-lived token, which lasts about an hour and is made again for each run.
 
 ## In the code
 
-- `apps/api/src/connections/`: the routes (`/v1/connections`), the service, the repositories and `providers/azure/`: the client (`azure-api.ts`), one file of checks for each area and `run-azure-checks.ts`.
+- `apps/api/src/connections/`: the routes (`/v1/connections`), the services, the repositories and `providers/`. Each provider has a client (`azure/azure-api.ts`, `github/github-api.ts`), its checks and a driver that gives the service one way to try the details and to read the system. `azure/` has one file of checks for each area; `github/checks/` has the organisation checks and the repository checks.
 - `apps/api/src/core/secrets/`: the secret box.
-- `AzureConnector` is the seam for tests: the end-to-end tests replace it with a fake that answers from a table, so no test leaves the machine.
-- The checks, groups and result shape are in `packages/shared/src/connections.ts`. A new check is a function in `providers/azure/checks/`, an id in that list, and its words under `connections.checks` in `apps/web/messages/en.json`. A test fails if any of them is missing.
+- `AzureConnector` and `GithubConnector` are the seams for tests: the end-to-end tests replace them with fakes that answer from a table, so no test leaves the machine.
+- The checks, groups and result shape are in `packages/shared/src/connections.ts`. A new check is a function in the provider's `checks/` folder, an id in that provider's list, and its words under `connections.checks` in `apps/web/messages/en.json`. A test fails if any of them is missing.
