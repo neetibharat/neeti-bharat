@@ -7,7 +7,7 @@ import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useCan } from '@/components/providers/user-provider';
 import { useGetWebsiteChecksQuery } from '@/lib/api/website-check-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -25,7 +25,7 @@ export function WebsiteCheckPage() {
   const latest = useGetWebsiteChecksQuery(1);
 
   if (latest.error) return <Alert tone="error">{errorMessage(latest.error)}</Alert>;
-  if (!latest.data) return <PageSkeleton />;
+  if (!latest.data) return <Loading />;
   const shownId = shown ?? latest.data.items[0]?.id;
 
   return (

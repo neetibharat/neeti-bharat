@@ -1,10 +1,10 @@
 import {
-  AZURE_CHECK_SEVERITY,
+  CHECK_SEVERITY,
   CHECK_SEVERITIES,
   type CheckSeverity,
   type ConnectionCheckResult,
 } from '@dpdp-kit/shared';
-import { inView, needsAttention, type ResultView } from './connections';
+import { inView, type ResultView } from './connections';
 
 export type SeverityFilter = CheckSeverity | 'all';
 
@@ -17,15 +17,15 @@ export interface ResultFilter {
 
 const WEIGHT: Record<CheckSeverity, number> = { high: 0, medium: 1, low: 2 };
 
-/** How many of the checks that need attention are at each severity. */
-export function attentionBySeverity(
+/** How many of these results are at each severity. Pass the ones the current view lists, so the counts match it. */
+export function countBySeverity(
   results: readonly ConnectionCheckResult[],
 ): Record<CheckSeverity, number> {
   const counts = Object.fromEntries(CHECK_SEVERITIES.map((level) => [level, 0])) as Record<
     CheckSeverity,
     number
   >;
-  for (const result of results.filter(needsAttention)) counts[AZURE_CHECK_SEVERITY[result.id]]++;
+  for (const result of results) counts[CHECK_SEVERITY[result.id]]++;
   return counts;
 }
 
@@ -35,14 +35,12 @@ export function visibleResults(
   filter: ResultFilter,
 ): ConnectionCheckResult[] {
   return inView(results, filter.view)
-    .filter(
-      (result) => filter.severity === 'all' || AZURE_CHECK_SEVERITY[result.id] === filter.severity,
-    )
+    .filter((result) => filter.severity === 'all' || CHECK_SEVERITY[result.id] === filter.severity)
     .filter((result) => filter.matches(result.id))
     .sort(
       (a, b) =>
         statusRank(a) - statusRank(b) ||
-        WEIGHT[AZURE_CHECK_SEVERITY[a.id]] - WEIGHT[AZURE_CHECK_SEVERITY[b.id]],
+        WEIGHT[CHECK_SEVERITY[a.id]] - WEIGHT[CHECK_SEVERITY[b.id]],
     );
 }
 

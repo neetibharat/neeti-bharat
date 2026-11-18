@@ -4,7 +4,7 @@ import { PROOF_TABS, type ProofOverviewResponse, type ProofTab } from '@dpdp-kit
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
@@ -30,7 +30,7 @@ function AllProofPage() {
   const tabs = useProofTabs(data, setPage);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

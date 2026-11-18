@@ -143,7 +143,6 @@
   --animate-slide-out-left: slide-out-left 160ms ease-in;
   --animate-pop-in: pop-in 160ms var(--ease-out-soft);
   --animate-spinner: spinner-turn 1.1s linear infinite;
-  --animate-shimmer: shimmer 1.8s ease-in-out infinite;
 
   @keyframes fade-in {
     from {
@@ -168,11 +167,6 @@
   @keyframes spinner-turn {
     to {
       transform: rotate(360deg);
-    }
-  }
-  @keyframes shimmer {
-    to {
-      transform: translateX(100%);
     }
   }
   @keyframes pop-in {

@@ -2,7 +2,9 @@ import {
   AzureConnector,
   AzureSignInError,
   type AzureApi,
+  type AzureApp,
   type AzureCredentials,
+  type FoundSubscription,
 } from '../../src/connections/providers/azure/azure-api';
 import { fakeAzure } from '../../src/connections/providers/azure/checks/fake-azure';
 
@@ -68,6 +70,22 @@ export class FakeAzureConnector extends AzureConnector {
 
   connect(): AzureApi {
     return healthyAzure();
+  }
+
+  async subscriptions(app: AzureApp): Promise<FoundSubscription[]> {
+    if (app.clientSecret === REFUSED_SECRET) throw new AzureSignInError('refused');
+    return [
+      {
+        subscriptionId: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+        displayName: 'Production',
+        state: 'Enabled',
+      },
+      {
+        subscriptionId: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+        displayName: 'Archive',
+        state: 'Enabled',
+      },
+    ];
   }
 
   async verify(credentials: AzureCredentials): Promise<void> {

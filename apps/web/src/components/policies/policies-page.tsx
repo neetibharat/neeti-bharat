@@ -4,7 +4,7 @@ import { POLICY_STATUSES, policyLabel, type PolicyResponse } from '@dpdp-kit/sha
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs, type TabItem } from '@/components/base/tabs/tabs';
 import {
@@ -34,7 +34,7 @@ export function PoliciesPage() {
   const { data, error } = useGetPoliciesQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

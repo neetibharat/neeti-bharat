@@ -9,3 +9,9 @@ onlyBuiltDependencies:
   - prisma
   - sharp
   - unrs-resolver
+
+# Security fixes for dependencies that only development tools pull in. tmp is below 0.2.6 in the MCP packaging tool, and
+# minimatch 10 is in the lint tools.
+overrides:
+  tmp: ^0.2.6
+  minimatch@10: ^11.0.1

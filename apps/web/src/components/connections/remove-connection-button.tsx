@@ -8,7 +8,14 @@ import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';
 import { useRemoveConnectionMutation } from '@/lib/api/connections-api';
 
 /** Asks first: removing forgets the credentials, so the connection would have to be set up again. */
-export function RemoveConnectionButton({ connection }: { connection: ConnectionSummary }) {
+export function RemoveConnectionButton({
+  connection,
+  onRemoved,
+}: {
+  connection: ConnectionSummary;
+  /** Called once it is gone, so a list can step back from a page that is now empty. */
+  onRemoved?: () => void;
+}) {
   const t = useTranslations('connections.remove');
   const [remove] = useRemoveConnectionMutation();
 
@@ -16,7 +23,7 @@ export function RemoveConnectionButton({ connection }: { connection: ConnectionS
     <ConfirmDialog
       trigger={
         <Button
-          color="tertiary"
+          color="secondary"
           size="sm"
           isIconOnly
           iconLeading={IconTrash}
@@ -26,7 +33,11 @@ export function RemoveConnectionButton({ connection }: { connection: ConnectionS
       title={t('title', { name: connection.name })}
       description={t('body')}
       confirmLabel={t('confirm')}
-      onConfirm={() => remove(connection.id)}
+      onConfirm={async () => {
+        const result = await remove(connection.id);
+        if (!('error' in result)) onRemoved?.();
+        return result;
+      }}
     />
   );
 }

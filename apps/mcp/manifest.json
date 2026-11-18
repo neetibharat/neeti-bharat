@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "description": "Lets Claude set up a company's DPDP compliance in DPDP Kit: frameworks, rules, controls, policies and proof.",
   "author": { "name": "Techdome" },
+  "license": "AGPL-3.0-only",
   "server": {
     "type": "node",
     "entry_point": "server.mjs",

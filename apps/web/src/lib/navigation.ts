@@ -37,7 +37,7 @@ export type NavStatus = 'live' | 'soon';
 
 export type AreaId = 'workspace' | 'data' | 'privacy' | 'settings';
 
-export type SectionId = 'company' | 'alerts' | 'developers' | 'records';
+export type SectionId = 'alerts' | 'developers' | 'records' | 'checks' | 'compliance';
 
 export type NavItemId =
   | 'dashboard'
@@ -93,6 +93,11 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dashboard', href: '/', icon: IconLayoutDashboard, status: 'live' },
           { id: 'myWork', href: '/my-work', icon: IconChecklist, status: 'live' },
+        ],
+      },
+      {
+        id: 'compliance',
+        items: [
           { id: 'frameworks', href: '/frameworks', icon: IconScale, status: 'live' },
           { id: 'readiness', href: '/readiness', icon: IconGauge, status: 'live' },
           { id: 'policies', href: '/policies', icon: IconFileText, status: 'live' },
@@ -110,6 +115,11 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'live' },
+        ],
+      },
+      {
+        id: 'checks',
+        items: [
           { id: 'cloudTests', href: '/cloud-tests', icon: IconCloudCheck, status: 'live' },
           { id: 'websiteCheck', href: '/website-check', icon: IconWorldSearch, status: 'live' },
         ],
@@ -140,7 +150,6 @@ export const NAV_AREAS: NavArea[] = [
     adminOnly: true,
     sections: [
       {
-        id: 'company',
         items: [
           {
             id: 'general',
@@ -167,6 +176,7 @@ export const NAV_AREAS: NavArea[] = [
         id: 'developers',
         items: [
           { id: 'apiKeys', href: '/settings/api-keys', icon: IconKey, status: 'live' },
+          { id: 'aiHelp', href: '/settings/ai', icon: IconSparkles, status: 'live' },
           { id: 'secrets', href: '/settings/secrets', icon: IconLock, status: 'soon' },
         ],
       },
@@ -174,7 +184,6 @@ export const NAV_AREAS: NavArea[] = [
         id: 'records',
         items: [
           { id: 'activityLog', href: '/settings/activity-log', icon: IconHistory, status: 'live' },
-          { id: 'aiHelp', href: '/settings/ai', icon: IconSparkles, status: 'live' },
         ],
       },
     ],

@@ -1,3 +1,4 @@
+import { GITHUB_CHECK_IDS } from '@dpdp-kit/shared';
 import type {
   ConnectionListResponse,
   ConnectionRunResponse,
@@ -7,6 +8,7 @@ import type {
 } from '@dpdp-kit/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { REFUSED_SECRET, azureConnector } from './support/fake-azure-connector';
+import { GOOD_KEY, REFUSED_KEY } from './support/fake-github-connector';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 
 const SECRET = 'a-client-secret-that-must-never-come-back';
@@ -55,6 +57,46 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await world.app?.stop();
+});
+
+describe('finding subscriptions', () => {
+  const app = (clientSecret = SECRET) => ({
+    tenantId: credentials().tenantId,
+    clientId: credentials().clientId,
+    clientSecret,
+  });
+
+  it('lists what the app can see, and never sends the secret back', async () => {
+    const found = await world.alice.post<{ items: { id: string; name: string }[] }>(
+      '/v1/connections/subscriptions',
+      app(),
+      world.alpha,
+    );
+    expect(found.status).toBe(200);
+    expect(found.body.items.map((item) => item.name)).toEqual(['Archive', 'Production']);
+    expect(found.text).not.toContain(SECRET);
+  });
+
+  it('says why when Microsoft refuses the sign-in', async () => {
+    const refused = await world.alice.post<{ code: string; params?: { reason: string } }>(
+      '/v1/connections/subscriptions',
+      app(REFUSED_SECRET),
+      world.alpha,
+    );
+    expect([refused.status, refused.body.code, refused.body.params?.reason]).toEqual([
+      400,
+      'CONNECTION_FAILED',
+      'sign_in',
+    ]);
+  });
+
+  it('is for admins who are people: not a member, and not an admin key', async () => {
+    expect((await world.bob.post('/v1/connections/subscriptions', app(), world.alpha)).status).toBe(
+      403,
+    );
+    const adminKey = await makeKey('admin');
+    expect((await adminKey.post('/v1/connections/subscriptions', app())).status).toBe(403);
+  });
 });
 
 describe('adding a connection', () => {
@@ -170,6 +212,187 @@ describe('checking a connection', () => {
     expect(log.text).toContain('CONNECTION_ADDED');
     expect(log.text).toContain('CONNECTION_CHECKED');
     expect(log.text).not.toContain(SECRET);
+  });
+});
+
+describe('changing a connection', () => {
+  const path = () => `/v1/connections/${world.connectionId}`;
+
+  it('renames it without asking Microsoft, and the activity log says so', async () => {
+    const seen = azureConnector.verified.length;
+    const changed = await world.alice.put<ConnectionSummary>(
+      path(),
+      { name: 'Production subscription' },
+      world.alpha,
+    );
+    expect(changed.status).toBe(200);
+    expect(changed.body.name).toBe('Production subscription');
+    expect(azureConnector.verified).toHaveLength(seen);
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_UPDATED');
+  });
+
+  it('keeps the old secret, and says why, when Microsoft refuses a new one', async () => {
+    const refused = await world.alice.put<{ code: string; params?: { reason: string } }>(
+      path(),
+      { name: 'Production subscription', credentials: { clientSecret: REFUSED_SECRET } },
+      world.alpha,
+    );
+    expect([refused.status, refused.body.code, refused.body.params?.reason]).toEqual([
+      400,
+      'CONNECTION_FAILED',
+      'sign_in',
+    ]);
+    const one = await world.alice.get<ConnectionSummary>(path(), world.alpha);
+    expect(one.body.name).toBe('Production subscription');
+  });
+
+  it('replaces the secret once Microsoft accepts it, and never sends it back', async () => {
+    const changed = await world.alice.put<ConnectionSummary>(
+      path(),
+      { name: 'Production subscription', credentials: { clientSecret: 'a-newer-secret' } },
+      world.alpha,
+    );
+    expect(changed.status).toBe(200);
+    expect(changed.text).not.toContain('a-newer-secret');
+    expect(azureConnector.verified.at(-1)).toMatchObject({
+      clientSecret: 'a-newer-secret',
+      subscriptionId: credentials().subscriptionId,
+    });
+  });
+
+  it('cannot move to another subscription', async () => {
+    const moved = await world.alice.put(
+      path(),
+      {
+        name: 'Production',
+        credentials: { subscriptionId: 'dddddddd-dddd-dddd-dddd-dddddddddddd' },
+      },
+      world.alpha,
+    );
+    expect(moved.status).toBe(400);
+  });
+
+  it('is for admins who are people: not a member, an admin key, or another organisation', async () => {
+    const body = { name: 'Taken over' };
+    expect((await world.bob.put(path(), body, world.alpha)).status).toBe(403);
+    const adminKey = await makeKey('admin');
+    expect((await adminKey.put(path(), body)).status).toBe(403);
+    expect((await world.bob.put(path(), body, world.beta)).status).toBe(404);
+  });
+});
+
+describe('a GitHub connection', () => {
+  const credentials = { appId: '123', installationId: '4242', privateKey: GOOD_KEY };
+  const body = (over: object = {}) => ({
+    provider: 'github',
+    name: 'Techdome GitHub',
+    credentials,
+    repositories: { mode: 'all', repositories: [] },
+    ...over,
+  });
+  let id = '';
+
+  it('finds the organisation the App is installed on and its repositories, and never sends the key back', async () => {
+    const found = await world.alice.post<{
+      items: { id: string; account: string; repositories: { name: string }[] }[];
+    }>('/v1/connections/github/discover', { appId: '123', privateKey: GOOD_KEY }, world.alpha);
+    expect(found.status).toBe(200);
+    expect(found.body.items[0]).toMatchObject({ id: '4242', account: 'acme' });
+    expect(found.body.items[0]!.repositories.map((repo) => repo.name)).toEqual([
+      'acme/api',
+      'acme/web',
+    ]);
+    expect(found.text).not.toContain('BEGIN RSA');
+  });
+
+  it('says why when GitHub refuses the App, before anything is kept', async () => {
+    const refused = await world.alice.post<{
+      code: string;
+      params?: { reason: string; provider: string };
+    }>(
+      '/v1/connections',
+      body({ credentials: { ...credentials, privateKey: REFUSED_KEY } }),
+      world.alpha,
+    );
+    expect([refused.status, refused.body.code, refused.body.params]).toEqual([
+      400,
+      'CONNECTION_FAILED',
+      { reason: 'sign_in', provider: 'github' },
+    ]);
+  });
+
+  it('refuses a key that is not a private key, before any call', async () => {
+    const bad = await world.alice.post(
+      '/v1/connections',
+      body({ credentials: { ...credentials, privateKey: 'hello' } }),
+      world.alpha,
+    );
+    expect(bad.status).toBe(400);
+  });
+
+  it('keeps the App and the account, and never sends the key back', async () => {
+    const made = await world.alice.post<ConnectionSummary>('/v1/connections', body(), world.alpha);
+    expect(made.status).toBe(201);
+    expect(made.text).not.toContain('BEGIN RSA');
+    expect(made.body.identifiers).toMatchObject({
+      appId: '123',
+      installationId: '4242',
+      account: 'acme',
+      mode: 'all',
+    });
+    id = made.body.id;
+    const listed = await world.alice.get<ConnectionListResponse>('/v1/connections', world.alpha);
+    expect(listed.body.counts).toMatchObject({ github: 1 });
+  });
+
+  it('checks the repositories and keeps the results, one for each check', async () => {
+    const run = await world.alice.post<ConnectionRunResponse>(
+      `/v1/connections/${id}/run`,
+      undefined,
+      world.alpha,
+    );
+    expect(run.status).toBe(201);
+    expect(run.body.results.map((result) => result.id)).toEqual(GITHUB_CHECK_IDS);
+    expect(run.body.failed).toBe(0);
+    expect(run.text).not.toContain('BEGIN RSA');
+  });
+
+  it('lists the repositories it can see, and reads only the ones picked', async () => {
+    const seen = await world.alice.get<{ items: { name: string }[] }>(
+      `/v1/connections/${id}/repositories`,
+      world.alpha,
+    );
+    expect(seen.body.items.map((repo) => repo.name)).toEqual(['acme/api', 'acme/web']);
+    const changed = await world.alice.put<ConnectionSummary>(
+      `/v1/connections/${id}`,
+      { name: 'Techdome GitHub', repositories: { mode: 'selected', repositories: ['acme/api'] } },
+      world.alpha,
+    );
+    expect(changed.status).toBe(200);
+    expect(changed.body.identifiers).toMatchObject({ mode: 'selected', repositories: 'acme/api' });
+  });
+
+  it('cannot be given an Azure tenant, and is for admins who are people', async () => {
+    const foreign = await world.alice.put(
+      `/v1/connections/${id}`,
+      { name: 'X', credentials: { tenantId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' } },
+      world.alpha,
+    );
+    expect(foreign.status).toBe(400);
+    expect((await world.bob.get(`/v1/connections/${id}/repositories`, world.alpha)).status).toBe(
+      403,
+    );
+    const adminKey = await makeKey('admin');
+    expect((await adminKey.get(`/v1/connections/${id}/repositories`)).status).toBe(403);
+    expect(
+      (await adminKey.post('/v1/connections/github/discover', { appId: '1', privateKey: GOOD_KEY }))
+        .status,
+    ).toBe(403);
+  });
+
+  it('is gone from the list once removed', async () => {
+    expect((await world.alice.delete(`/v1/connections/${id}`, world.alpha)).status).toBe(204);
   });
 });
 

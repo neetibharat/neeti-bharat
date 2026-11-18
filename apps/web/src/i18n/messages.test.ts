@@ -2,8 +2,9 @@ import {
   ACCESS_LEVELS,
   APP_ROLES,
   ACTIVITY_ACTIONS,
-  AZURE_CHECK_GROUPS,
   AZURE_CHECK_IDS,
+  CHECK_GROUPS,
+  GITHUB_CHECK_IDS,
   SKIPPED_REASONS,
   EXPORT_DATASETS,
   READINESS_ANSWERS,
@@ -61,26 +62,29 @@ describe('message catalogs', () => {
     expect(Object.keys(actionNames).sort()).toEqual([...ACTIVITY_ACTIONS].sort());
   });
 
-  it('words every Azure check: its name, what it looks at, a pass and a problem', () => {
+  const CHECK_IDS = [...AZURE_CHECK_IDS, ...GITHUB_CHECK_IDS];
+  const GROUPS = Object.values(CHECK_GROUPS).flat();
+
+  it('words every check of every provider: its name, what it looks at, a pass and a problem', () => {
     const { checks, groups, skipped } = catalogs.en.connections as {
       checks: Record<string, Tree>;
       groups: Tree;
       skipped: Tree;
     };
-    expect(Object.keys(checks).sort()).toEqual([...AZURE_CHECK_IDS].sort());
-    for (const id of AZURE_CHECK_IDS) {
+    expect(Object.keys(checks).sort()).toEqual([...CHECK_IDS].sort());
+    for (const id of CHECK_IDS) {
       expect(Object.keys(checks[id]!).sort(), id).toEqual(['about', 'name', 'pass', 'problem']);
     }
-    for (const group of AZURE_CHECK_GROUPS) {
+    for (const group of GROUPS) {
       expect(Object.keys(groups[group.id] as Tree).sort(), group.id).toEqual(['about', 'title']);
     }
     expect(Object.keys(skipped).sort()).toEqual([...SKIPPED_REASONS].sort());
   });
 
-  it('explains every Azure check on the Cloud tests page', () => {
+  it('explains every check on the Cloud checks page', () => {
     const { details } = catalogs.en.cloudTests as { details: Record<string, Tree> };
-    expect(Object.keys(details).sort()).toEqual([...AZURE_CHECK_IDS].sort());
-    for (const id of AZURE_CHECK_IDS) {
+    expect(Object.keys(details).sort()).toEqual([...CHECK_IDS].sort());
+    for (const id of CHECK_IDS) {
       expect(Object.keys(details[id]!).sort(), id).toEqual(['failRule', 'fix', 'passRule', 'why']);
     }
   });

@@ -9,7 +9,7 @@ import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useCan } from '@/components/providers/user-provider';
 import { useGetReadinessQuery, useTakeReadinessCheckMutation } from '@/lib/api/readiness-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -105,7 +105,7 @@ export function ReadinessPage() {
   const { data, error } = useGetReadinessQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
   const canRetake = canEdit && !taking && data.latest !== null;
 
   return (

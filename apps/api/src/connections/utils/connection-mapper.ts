@@ -13,6 +13,11 @@ import {
   AzureSignInError,
   type AzureCredentials,
 } from '../providers/azure/azure-api';
+import {
+  GithubAccessError,
+  GithubNotFoundError,
+  GithubSignInError,
+} from '../providers/github/github-api';
 
 export const toRunSummary = (row: ConnectionRunSummaryRow): ConnectionRunSummary => ({
   id: row.id,
@@ -53,7 +58,13 @@ export const identifiersOf = ({
 
 /** Why Azure would not let the connection in, in the terms the person can act on. */
 export function failureOf(error: unknown): ConnectionFailure {
-  if (error instanceof AzureSignInError) return 'sign_in';
-  if (error instanceof AzureAccessError) return 'subscription';
+  if (error instanceof AzureSignInError || error instanceof GithubSignInError) return 'sign_in';
+  if (
+    error instanceof AzureAccessError ||
+    error instanceof GithubAccessError ||
+    error instanceof GithubNotFoundError
+  ) {
+    return 'subscription';
+  }
   return 'unreachable';
 }

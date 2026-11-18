@@ -10,7 +10,7 @@ import { Button } from '@/components/base/button/button';
 import { Card } from '@/components/base/card/card';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';
 import { PageHeader } from '@/components/base/page-header/page-header';
-import { PageSkeleton } from '@/components/base/skeleton/skeleton';
+import { Loading } from '@/components/base/loading/loading';
 import { useGetAiSettingsQuery, useRemoveAiSettingsMutation } from '@/lib/api/ai-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { AiSettingsForm } from './ai-settings-form';
@@ -108,7 +108,7 @@ export function AiHelpPage() {
   const { data, error } = useGetAiSettingsQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
-  if (!data) return <PageSkeleton />;
+  if (!data) return <Loading />;
 
   return (
     <>

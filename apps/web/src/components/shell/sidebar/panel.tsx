@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { isActivePath, type NavArea, type NavSection } from '@/lib/navigation';
+import { cx } from '@/lib/utils/cx';
 import { NavItem } from './nav-item';
 
 export interface PanelProps {
@@ -34,7 +35,12 @@ export function Panel({ area, pathname, header, footer }: PanelProps) {
         className="flex flex-1 flex-col gap-4 overflow-y-auto px-3 pb-3"
       >
         {area.sections.map((section, index) => (
-          <PanelSection key={section.id ?? index} section={section} pathname={pathname} />
+          <PanelSection
+            key={section.id ?? index}
+            section={section}
+            pathname={pathname}
+            separated={index > 0}
+          />
         ))}
       </motion.nav>
       {footer}
@@ -42,12 +48,22 @@ export function Panel({ area, pathname, header, footer }: PanelProps) {
   );
 }
 
-function PanelSection({ section, pathname }: { section: NavSection; pathname: string }) {
+function PanelSection({
+  section,
+  pathname,
+  separated,
+}: {
+  section: NavSection;
+  pathname: string;
+  /** A line above it, to set it apart from the run of pages before it. */
+  separated: boolean;
+}) {
   const t = useTranslations('nav');
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className={cx('flex flex-col gap-0.5', separated && 'border-t border-line pt-4')}>
+      {/* The same type as the area's name above, and lined up with it, so both read as headings. */}
       {section.id && (
-        <p className="px-3 pb-1 text-caption font-medium tracking-wide text-fg-subtle uppercase">
+        <p className="px-2 pb-1 text-label font-semibold tracking-wide text-fg-subtle uppercase">
           {t(`sections.${section.id}`)}
         </p>
       )}

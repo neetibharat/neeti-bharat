@@ -1,5 +1,5 @@
 /** The outside systems DPDP Kit can connect to and check. */
-export const CONNECTION_PROVIDERS = ['azure'] as const;
+export const CONNECTION_PROVIDERS = ['azure', 'github'] as const;
 export type ConnectionProvider = (typeof CONNECTION_PROVIDERS)[number];
 
 /**
@@ -221,6 +221,63 @@ export const AZURE_CHECK_SEVERITY: Readonly<Record<AzureCheckId, CheckSeverity>>
   defender_plans: 'low',
 };
 
+/**
+ * What a GitHub connection signs in with: a GitHub App owned by the organisation, with read-only permissions. The App
+ * ID and installation ID are shown afterwards; the private key is kept encrypted and is never sent back.
+ */
+export const GITHUB_ID_PATTERN = /^[0-9]{1,12}$/;
+export const GITHUB_KEY_MAX_LENGTH = 8000;
+/** The most repositories that can be picked by name, and the most that one run reads. */
+export const GITHUB_REPOSITORIES_MAX = 100;
+
+export const GITHUB_CHECK_IDS = [
+  'github_two_factor',
+  'github_owner_count',
+  'github_branch_protection',
+  'github_code_scanning',
+  'github_secret_scanning',
+  'github_dependabot',
+] as const;
+export type GithubCheckId = (typeof GITHUB_CHECK_IDS)[number];
+
+export const GITHUB_CHECK_GROUPS = [
+  { id: 'githubAccess', checks: ['github_two_factor', 'github_owner_count'] },
+  { id: 'githubCode', checks: ['github_branch_protection', 'github_code_scanning'] },
+  { id: 'githubSecurity', checks: ['github_secret_scanning', 'github_dependabot'] },
+] as const satisfies readonly { id: string; checks: readonly GithubCheckId[] }[];
+
+/** Which repositories a GitHub connection reads: every one the App can see, or only these. */
+export const GITHUB_REPOSITORY_MODES = ['all', 'selected'] as const;
+export type GithubRepositoryMode = (typeof GITHUB_REPOSITORY_MODES)[number];
+
+export interface GithubSelection {
+  mode: GithubRepositoryMode;
+  /** Full names such as `acme/api`. Used only when the mode is `selected`. */
+  repositories: string[];
+}
+
+/** Every check of every provider. A result names its check by one of these. */
+export type CheckId = AzureCheckId | GithubCheckId;
+
+/** The checks of each provider in groups, as the results page lists them. */
+export const CHECK_GROUPS: Readonly<
+  Record<ConnectionProvider, readonly { id: string; checks: readonly CheckId[] }[]>
+> = { azure: AZURE_CHECK_GROUPS, github: GITHUB_CHECK_GROUPS };
+
+export const GITHUB_CHECK_SEVERITY: Readonly<Record<GithubCheckId, CheckSeverity>> = {
+  github_two_factor: 'high',
+  github_branch_protection: 'high',
+  github_secret_scanning: 'high',
+  github_owner_count: 'medium',
+  github_code_scanning: 'medium',
+  github_dependabot: 'medium',
+};
+
+export const CHECK_SEVERITY: Readonly<Record<CheckId, CheckSeverity>> = {
+  ...AZURE_CHECK_SEVERITY,
+  ...GITHUB_CHECK_SEVERITY,
+};
+
 /** `skipped` is a check that could not give an answer: see `SKIPPED_REASONS`. */
 export const CONNECTION_CHECK_STATUSES = ['pass', 'warn', 'fail', 'skipped'] as const;
 export type ConnectionCheckStatus = (typeof CONNECTION_CHECK_STATUSES)[number];
@@ -234,13 +291,15 @@ export const CONNECTION_NAMES_SHOWN = 5;
 /** How many of the resources that did not pass one result keeps, to be listed under it. */
 export const CONNECTION_RESOURCES_KEPT = 200;
 export const CONNECTION_PAGE_SIZE = 10;
+/** The most connections one request returns, for a picker that needs them all. */
+export const CONNECTION_MAX_PAGE_SIZE = 100;
 export const CONNECTION_RUN_PAGE_SIZE = 10;
 /** A connection is not checked again within this time, so a button pressed twice does not call Azure twice. */
 export const CONNECTION_RUN_GAP_SECONDS = 30;
 
 /** One thing checked. The words come from the web app; `values` fills in the numbers and names they quote. */
 export interface ConnectionCheckResult {
-  id: AzureCheckId;
+  id: CheckId;
   status: ConnectionCheckStatus;
   reason?: SkippedReason;
   values?: Record<string, string | number>;
@@ -285,6 +344,8 @@ export interface ConnectionListResponse {
   /** False until whoever runs the install has set `SECRETS_ENCRYPTION_KEY`: credentials cannot be kept without it. */
   enabled: boolean;
   items: ConnectionSummary[];
+  /** How many connections there are of each kind, across every page, for the catalog. */
+  counts: Partial<Record<ConnectionProvider, number>>;
   total: number;
   page: number;
   pageSize: number;
@@ -294,6 +355,64 @@ export interface CreateConnectionRequest {
   provider: ConnectionProvider;
   name: string;
   credentials: Record<string, string>;
+  /** GitHub only: which repositories to read. */
+  repositories?: GithubSelection;
+}
+
+/** An app registration's sign-in, to ask which subscriptions it can see. The secret is used once and not kept. */
+export interface FindSubscriptionsRequest {
+  tenantId: string;
+  clientId: string;
+  clientSecret: string;
+}
+
+export interface AzureSubscription {
+  id: string;
+  name: string;
+}
+
+export interface FindSubscriptionsResponse {
+  items: AzureSubscription[];
+}
+
+/** The details of an Azure connection that can be replaced. The subscription cannot: another one is another connection. */
+export const AZURE_EDITABLE_FIELDS = ['tenantId', 'clientId', 'clientSecret'] as const;
+export type AzureEditableField = (typeof AZURE_EDITABLE_FIELDS)[number];
+
+/** A new name, and any of the editable details. A detail that is left out is kept as it is. */
+export interface UpdateConnectionRequest {
+  name: string;
+  /** Azure: tenant, client or secret. GitHub: a new private key. */
+  credentials?: Partial<Record<AzureEditableField | 'privateKey', string>>;
+  /** GitHub only. */
+  repositories?: GithubSelection;
+}
+
+/** The App's own sign-in, to ask which organisations it is installed on and which repositories it can see. */
+export interface DiscoverGithubRequest {
+  appId: string;
+  privateKey: string;
+}
+
+export interface GithubRepositoryOption {
+  name: string;
+  isPrivate: boolean;
+}
+
+export interface GithubInstallation {
+  id: string;
+  /** The organisation or person it is installed on. */
+  account: string;
+  repositories: GithubRepositoryOption[];
+}
+
+export interface DiscoverGithubResponse {
+  items: GithubInstallation[];
+}
+
+/** The repositories an existing GitHub connection can see, to change which it reads. */
+export interface GithubRepositoriesResponse {
+  items: GithubRepositoryOption[];
 }
 
 /** Why Azure would not let the connection in, from the error `CONNECTION_FAILED`. */
