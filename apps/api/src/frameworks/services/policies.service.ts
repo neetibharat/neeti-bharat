@@ -1,5 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
+  markdownToDocument,
+  POLICY_TEXTS,
   POLICY_TRANSITIONS,
   policyTemplate,
   starterDocument,
@@ -180,9 +182,11 @@ export class PoliciesService {
     return named ? named.email.toLowerCase() === who.email.toLowerCase() : who.isAdmin;
   }
 
-  /** The saved text, or the starting text built from the controls until someone edits it. */
+  /** The saved text, or the starting text until someone edits it: counsel's for a built-in policy, else built from the controls. */
   private effectiveContent(policy: PolicyWithDetail): PolicyDocument {
     if (policy.content) return toPolicyDocument(policy.content);
+    const written = policy.templateId ? POLICY_TEXTS[policy.templateId] : undefined;
+    if (written) return markdownToDocument(written);
     const requirements = policy.controls
       .filter((link) => !link.control.archivedAt)
       .map(({ control }) => ({ title: control.title, description: control.description }));

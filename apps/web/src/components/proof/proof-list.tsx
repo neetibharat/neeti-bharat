@@ -13,7 +13,7 @@ export function ProofList(props: {
 
   return (
     <>
-      <ProofTable items={data.items} />
+      <ProofTable items={data.items} showControl={false} />
       <Pagination
         page={data.page}
         pageSize={data.pageSize}

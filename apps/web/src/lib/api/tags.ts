@@ -14,6 +14,9 @@ export const TAG_TYPES = [
   'Readiness',
   'ApiKey',
   'Connection',
+  'Vendor',
+  'Training',
+  'Acceptance',
   'Ai',
   'Notification',
   'NotificationPreference',
@@ -35,6 +38,7 @@ export const CHANGES = {
     'Profile',
     'Breach',
     'Request',
+    'Vendor',
     'Activity',
   ],
   // Answers fill the policy text and decide which rules apply.
@@ -59,6 +63,12 @@ export const CHANGES = {
   apiKey: ['ApiKey', 'Activity'],
   // Connections and their runs show on the Connections page only.
   connection: ['Connection', 'Activity'],
+  // A vendor shows on the Vendors page only.
+  vendor: ['Vendor', 'Activity'],
+  // Trainings and who has taken them show on the Training page only.
+  training: ['Training', 'Activity'],
+  // Who has accepted which policy shows on the Training page and on a person's page.
+  acceptance: ['Acceptance', 'Activity'],
   // The AI setting shows on the AI help page and decides whether Add policy offers a file.
   ai: ['Ai', 'Activity'],
   // Notices show in the inbox and on the bell, and are a person's own, so they are not in the activity log.

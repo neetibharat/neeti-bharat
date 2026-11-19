@@ -62,8 +62,8 @@ describe('planSeed', () => {
     expect(plan.frameworks).toHaveLength(1);
     expect(plan.requirements).toHaveLength(14);
     expect(plan.controls).toHaveLength(47);
-    expect(plan.policies).toHaveLength(18);
-    expect(plan.proofRequirements).toHaveLength(90);
+    expect(plan.policies).toHaveLength(19);
+    expect(plan.proofRequirements).toHaveLength(39);
   });
 
   it('stores nothing when everything is already there', () => {

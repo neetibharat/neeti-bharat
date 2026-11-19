@@ -40,6 +40,11 @@ export class PersonDirectory {
     return byPerson;
   }
 
+  /** One page of the people who have not left, by name. */
+  activePage(query: { q?: string; page: number; limit: number }) {
+    return this.people.activePage(query);
+  }
+
   /** Everyone who has not left, by name. */
   async activePeople(): Promise<DirectoryPerson[]> {
     return this.people.activeOptions();

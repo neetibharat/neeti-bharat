@@ -1,19 +1,20 @@
 'use client';
 
-import { PROOF_TABS, type ProofOverviewResponse, type ProofTab } from '@dpdp-kit/shared';
+import { PROOF_TABS, type ProofByControlResponse, type ProofTab } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
 import { Loading } from '@/components/base/loading/loading';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Tabs } from '@/components/base/tabs/tabs';
-import { useGetProofOverviewQuery } from '@/lib/api/evidence-api';
+import { useGetProofByControlQuery } from '@/lib/api/evidence-api';
 import { useDebouncedValue } from '@/lib/hooks/use-debounced-value';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { ALL } from '@/lib/filters';
 import { NO_FILTERS, toProofQuery, type ProofFilters } from '@/lib/proof-query';
 import { ControlProofPage } from './control-proof-page';
 import { ProofFilterBar } from './proof-filters';
-import { ProofList } from './proof-list';
+import { ProofControls } from './proof-controls';
 import { ProofSummary } from './proof-summary';
 
 /** Everything the company has to be able to show, or, given a control, that control's own page. */
@@ -26,8 +27,8 @@ function AllProofPage() {
   const tPage = useTranslations('pages.proof');
   const errorMessage = useErrorMessage();
   const { filters, setFilters, tab, setTab, setPage, query } = useProofView();
-  const { data, error } = useGetProofOverviewQuery(query);
-  const tabs = useProofTabs(data, setPage);
+  const { data, error } = useGetProofByControlQuery(query);
+  const tabs = useProofTabs(data, isNarrowed(filters), setPage);
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
   if (!data) return <Loading />;
@@ -68,12 +69,20 @@ function useProofView() {
   };
 }
 
-/** One tab per kind of proof, each labelled with how many it holds. Only the open one is on screen. */
-function useProofTabs(data: ProofOverviewResponse | undefined, onPage: (page: number) => void) {
+/** Whether the person is looking for something, in which case the controls open to show it. */
+const isNarrowed = (filters: ProofFilters): boolean =>
+  filters.search.trim() !== '' || filters.assigneeId !== ALL || filters.ruleId !== ALL;
+
+/** One tab per kind of proof, each labelled with how many controls it holds. Only the open one is on screen. */
+function useProofTabs(
+  data: ProofByControlResponse | undefined,
+  defaultOpen: boolean,
+  onPage: (page: number) => void,
+) {
   const t = useTranslations('proofPage');
   return PROOF_TABS.map((id) => ({
     id,
-    label: t(`tabs.${id}`, { count: data?.counts[id] ?? 0 }),
-    content: data ? <ProofList data={data} onPage={onPage} /> : null,
+    label: t(`tabs.${id}`, { count: data?.controlCounts[id] ?? 0 }),
+    content: data ? <ProofControls data={data} defaultOpen={defaultOpen} onPage={onPage} /> : null,
   }));
 }

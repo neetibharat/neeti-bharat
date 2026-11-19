@@ -80,6 +80,7 @@ function Fields(props: {
       />
       <Textarea
         label={t('description')}
+        hint={t('descriptionHint')}
         value={values.description}
         onChange={(description) => onChange({ description })}
         maxLength={PROOF_DESCRIPTION_MAX_LENGTH}

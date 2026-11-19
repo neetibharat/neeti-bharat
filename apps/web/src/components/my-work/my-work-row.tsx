@@ -2,11 +2,13 @@
 
 import {
   IconAlertTriangle,
+  IconBuildingStore,
   IconFileCheck,
   IconFilePencil,
   IconHourglassHigh,
   IconInbox,
   IconPaperclip,
+  IconSchool,
   type Icon,
 } from '@tabler/icons-react';
 import type { MyWorkItem, MyWorkKind } from '@dpdp-kit/shared';
@@ -23,14 +25,20 @@ const LOOK: Record<MyWorkKind, { icon: Icon; tone: RowTone }> = {
   approve: { icon: IconHourglassHigh, tone: 'accent' },
   review: { icon: IconFileCheck, tone: 'success' },
   draft: { icon: IconFilePencil, tone: 'muted' },
+  vendor: { icon: IconBuildingStore, tone: 'accent' },
+  training: { icon: IconSchool, tone: 'accent' },
 };
 
 /** What it belongs to, in words. For a breach that is the step to do next, for a request its type. */
 function useItemContext(item: MyWorkItem): string {
   const tSteps = useTranslations('breaches.steps');
   const tTypes = useTranslations('requests.types');
+  const tVendor = useTranslations('vendors.work');
+  const tTraining = useTranslations('training');
   if (item.kind === 'breach' && isBreachStep(item.context)) return tSteps(item.context);
   if (item.kind === 'request' && isRequestType(item.context)) return tTypes(item.context);
+  if (item.kind === 'vendor') return tVendor('review');
+  if (item.kind === 'training') return tTraining('title');
   return item.context;
 }
 

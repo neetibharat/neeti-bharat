@@ -1,6 +1,6 @@
 import type { ProofItemResponse } from '@dpdp-kit/shared';
 import { describe, expect, it } from 'vitest';
-import { proofList, type ProofListQuery } from './proof-list';
+import { proofByControl, proofList, type ProofListQuery } from './proof-list';
 
 const item = (id: string, over: Partial<ProofItemResponse> = {}): ProofItemResponse => ({
   id,
@@ -68,5 +68,45 @@ describe('proofList', () => {
     expect(second.items).toHaveLength(5);
     expect(second.total).toBe(30);
     expect(second.page).toBe(2);
+  });
+});
+
+describe('proofByControl', () => {
+  it('groups the requirements under their controls, in the order the controls came', () => {
+    const result = proofByControl(items, query());
+    expect(result.groups.map((g) => g.controlId)).toEqual(['c1', 'c2']);
+    expect(result.groups[0]!.items.map((i) => i.id)).toEqual(['b', 'd', 'a']);
+    expect(result.groups[0]!.counts).toEqual({
+      all: 3,
+      overdue: 1,
+      missing: 2,
+      due: 0,
+      provided: 1,
+    });
+    expect(result.total).toBe(2);
+  });
+
+  it('shows only the controls that have something in the open tab, and only that part of each', () => {
+    const result = proofByControl(items, query({ tab: 'missing' }));
+    expect(result.groups.map((g) => g.controlId)).toEqual(['c1']);
+    expect(result.groups[0]!.items.map((i) => i.id)).toEqual(['b', 'd']);
+    // A control's own tally still covers all of its requirements, so its progress stays honest.
+    expect(result.groups[0]!.counts.all).toBe(3);
+  });
+
+  it('counts requirements for the figures and controls for the tabs', () => {
+    const result = proofByControl(items, query());
+    expect(result.counts).toEqual({ all: 4, overdue: 1, missing: 2, due: 1, provided: 1 });
+    expect(result.controlCounts).toEqual({ all: 2, overdue: 1, missing: 1, due: 1, provided: 1 });
+  });
+
+  it('narrows by search and by person, and pages by control', () => {
+    expect(proofByControl(items, query({ q: 'backups' })).groups.map((g) => g.controlId)).toEqual([
+      'c2',
+    ]);
+    expect(proofByControl(items, query({ assigneeId: 'p1' })).groups[0]!.items).toHaveLength(1);
+    const second = proofByControl(items, query({ page: 2, limit: 1 }));
+    expect(second.groups.map((g) => g.controlId)).toEqual(['c2']);
+    expect(second.total).toBe(2);
   });
 });

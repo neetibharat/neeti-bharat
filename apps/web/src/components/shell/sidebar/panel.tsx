@@ -12,12 +12,10 @@ export interface PanelProps {
   pathname: string;
   /** Shown at the top, above the area's name. */
   header: ReactNode;
-  /** Shown at the bottom, for example the signed-in person. */
-  footer: ReactNode;
 }
 
 /** The pages of the selected area, under its name. */
-export function Panel({ area, pathname, header, footer }: PanelProps) {
+export function Panel({ area, pathname, header }: PanelProps) {
   const t = useTranslations('nav');
 
   return (
@@ -43,7 +41,6 @@ export function Panel({ area, pathname, header, footer }: PanelProps) {
           />
         ))}
       </motion.nav>
-      {footer}
     </div>
   );
 }

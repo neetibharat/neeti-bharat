@@ -1,4 +1,4 @@
-import type { PolicyDocument } from '@dpdp-kit/shared';
+import { markdownToDocument, POLICY_TEXTS, type PolicyDocument } from '@dpdp-kit/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { AppException } from '../../core/common/app.exception';
 import type { ActivityService } from '../../activity/services/activity.service';
@@ -27,7 +27,6 @@ const row = (status = 'draft', over: Record<string, unknown> = {}): PolicyWithDe
     approverId: null,
     reviewEvery: 'annual',
     legalReferences: ['Rule 7'],
-    evidence: ['Incident register'],
     status,
     content: null,
     contentEditedAt: null,
@@ -102,17 +101,17 @@ describe('PoliciesService.list and detail', () => {
     expect(policies[0]).not.toHaveProperty('legalReferences');
   });
 
-  it('starts with text built from the controls, and says it has not been edited', async () => {
-    const detail = await build(row(), {
+  it('starts a built-in policy with the text written for it', async () => {
+    const detail = await build(row()).service.detail('P08', admin);
+    expect(detail.content).toEqual(markdownToDocument(POLICY_TEXTS['P08']!));
+  });
+
+  it('starts a policy the company added with text built from its controls', async () => {
+    const detail = await build(row('draft', { templateId: null }), {
       companyName: 'Acme',
-      breachReportWindow: '72 hours',
     }).service.detail('P08', admin);
     expect(JSON.stringify(detail.content)).toContain('Board intimation.');
-    expect(detail.values).toMatchObject({
-      companyName: 'Acme',
-      breachReportWindow: '72 hours',
-      breachContact: '',
-    });
+    expect(detail.values).toMatchObject({ companyName: 'Acme', dpoName: '' });
   });
 
   it('shows the saved text once someone has edited it, with the answers it quotes', async () => {
@@ -250,7 +249,7 @@ describe('PoliciesService.changeStatus', () => {
   });
 
   it('keeps the starting text as the version when nobody edited the policy', async () => {
-    const { service, repository } = build(row('in_review'));
+    const { service, repository } = build(row('in_review', { templateId: null }));
     await service.changeStatus('P08', 'approved', admin);
     const kept = vi.mocked(repository.approve).mock.calls[0]![3];
     expect(JSON.stringify(kept)).toContain('Board intimation.');

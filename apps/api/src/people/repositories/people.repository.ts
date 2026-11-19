@@ -33,6 +33,24 @@ export interface LeaveOutcome {
   assignments: number;
 }
 
+type Db = Parameters<Parameters<PrismaService['transact']>[0]>[0];
+
+/** Takes a person's name off everything that was given to them, and says how many things that was. */
+async function releaseAssignments(db: Db, id: string): Promise<number> {
+  const none = { assigneeId: null };
+  const clears = [
+    () => db.control.updateMany({ where: { assigneeId: id }, data: none }),
+    () => db.proofRequirement.updateMany({ where: { assigneeId: id }, data: none }),
+    () => db.breach.updateMany({ where: { assigneeId: id }, data: none }),
+    () => db.dataRequest.updateMany({ where: { assigneeId: id }, data: none }),
+    () => db.policy.updateMany({ where: { approverId: id }, data: { approverId: null } }),
+    () => db.vendor.updateMany({ where: { ownerId: id }, data: { ownerId: null } }),
+  ];
+  let released = 0;
+  for (const clear of clears) released += (await clear()).count;
+  return released;
+}
+
 @Injectable()
 export class PeopleRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -67,6 +85,36 @@ export class PeopleRepository {
   }
 
   /** Active people, by name, with only what a picker shows. */
+  /** One page of the people who have not left, by name, with a search on name or email. */
+  async activePage(query: {
+    q?: string;
+    page: number;
+    limit: number;
+  }): Promise<{ rows: { id: string; name: string }[]; total: number }> {
+    const where = {
+      status: 'active' as const,
+      ...(query.q
+        ? {
+            OR: [
+              { name: { contains: query.q, mode: 'insensitive' as const } },
+              { email: { contains: query.q, mode: 'insensitive' as const } },
+            ],
+          }
+        : {}),
+    };
+    const [rows, total] = await Promise.all([
+      this.prisma.db.person.findMany({
+        where,
+        select: { id: true, name: true },
+        orderBy: [{ name: 'asc' }, { id: 'asc' }],
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+      }),
+      this.prisma.db.person.count({ where }),
+    ]);
+    return { rows, total };
+  }
+
   activeOptions(): Promise<{ id: string; name: string }[]> {
     return this.prisma.db.person.findMany({
       where: { status: 'active' },
@@ -137,32 +185,9 @@ export class PeopleRepository {
     return this.prisma.transact(async (db) => {
       const held = await db.roleAssignment.findMany({ where: { personId: id } });
       await db.roleAssignment.deleteMany({ where: { personId: id } });
-      const controls = await db.control.updateMany({
-        where: { assigneeId: id },
-        data: { assigneeId: null },
-      });
-      const proofs = await db.proofRequirement.updateMany({
-        where: { assigneeId: id },
-        data: { assigneeId: null },
-      });
-      const breaches = await db.breach.updateMany({
-        where: { assigneeId: id },
-        data: { assigneeId: null },
-      });
-      const requests = await db.dataRequest.updateMany({
-        where: { assigneeId: id },
-        data: { assigneeId: null },
-      });
-      const policies = await db.policy.updateMany({
-        where: { approverId: id },
-        data: { approverId: null },
-      });
+      const assignments = await releaseAssignments(db, id);
       await db.person.update({ where: { id }, data: { status: 'left', leftAt: now } });
-      return {
-        roles: held.map((assignment) => assignment.role),
-        assignments:
-          controls.count + proofs.count + breaches.count + requests.count + policies.count,
-      };
+      return { roles: held.map((assignment) => assignment.role), assignments };
     });
   }
 

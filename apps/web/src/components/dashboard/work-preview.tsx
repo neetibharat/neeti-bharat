@@ -40,7 +40,7 @@ export function WorkPreview() {
       ) : (
         <ul className="flex flex-col gap-2">
           {data.items.slice(0, MAX_ROWS).map((item) => (
-            <MyWorkRow key={`${item.kind}:${item.id}`} item={item} />
+            <MyWorkRow key={`${item.kind}:${item.id}:${item.context}`} item={item} />
           ))}
         </ul>
       )}

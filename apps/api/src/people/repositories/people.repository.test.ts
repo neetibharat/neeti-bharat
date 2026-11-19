@@ -16,6 +16,7 @@ function build() {
     breach: cleared(4),
     dataRequest: cleared(5),
     policy: cleared(6),
+    vendor: cleared(7),
     person: { update: vi.fn().mockResolvedValue({}) },
   };
   const prisma = { transact: (work: (tx: typeof db) => unknown) => work(db) };
@@ -23,7 +24,7 @@ function build() {
 }
 
 describe('PeopleRepository.markLeft', () => {
-  it('takes the person off breaches and requests and counts them with the other assignments', async () => {
+  it('takes the person off breaches, requests and vendors and counts them with the other assignments', async () => {
     const { db, repository } = build();
     const outcome = await repository.markLeft('p1', new Date('2026-11-10T00:00:00Z'));
     expect(db.breach.updateMany).toHaveBeenCalledWith({
@@ -34,6 +35,10 @@ describe('PeopleRepository.markLeft', () => {
       where: { assigneeId: 'p1' },
       data: { assigneeId: null },
     });
-    expect(outcome).toEqual({ roles: ['DPO'], assignments: 2 + 3 + 4 + 5 + 6 });
+    expect(db.vendor.updateMany).toHaveBeenCalledWith({
+      where: { ownerId: 'p1' },
+      data: { ownerId: null },
+    });
+    expect(outcome).toEqual({ roles: ['DPO'], assignments: 2 + 3 + 4 + 5 + 6 + 7 });
   });
 });

@@ -48,7 +48,7 @@ describe('navigation', () => {
 describe('areaForPath', () => {
   it('finds the area a page belongs to', () => {
     expect(areaForPath('/').id).toBe('workspace');
-    expect(areaForPath('/data-map').id).toBe('data');
+    expect(areaForPath('/connections').id).toBe('data');
     expect(areaForPath('/settings/people').id).toBe('settings');
   });
 

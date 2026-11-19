@@ -66,6 +66,16 @@ export const peopleApi = baseApi.injectEndpoints({
   }),
 });
 
+/** One person, for their own page. */
+export const personApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    getPerson: build.query<PersonResponse, string>({
+      query: (id) => `/people/${id}`,
+      providesTags: ['People'],
+    }),
+  }),
+});
+
 export const {
   useGetPeopleQuery,
   useGetPersonOptionsQuery,
@@ -77,3 +87,5 @@ export const {
   useResendInvitationMutation,
   useAssignRoleMutation,
 } = peopleApi;
+
+export const { useGetPersonQuery } = personApi;

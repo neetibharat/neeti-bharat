@@ -44,6 +44,22 @@ export interface WorkRequest {
   assigneeId: string | null;
 }
 
+/** The little of a vendor in use that makes it work for someone. */
+export interface WorkVendor {
+  id: string;
+  name: string;
+  ownerId: string | null;
+  reviewDueOn: Date | null;
+}
+
+/** One training waiting on one person: to take, or to take again. */
+export interface WorkTraining {
+  personId: string;
+  id: string;
+  name: string;
+  dueOn: Date;
+}
+
 export interface MyWorkInput {
   personId: string;
   /** The jobs this person holds. */
@@ -54,12 +70,16 @@ export interface MyWorkInput {
   briefs: PolicyBriefs;
   breaches: WorkBreach[];
   requests: WorkRequest[];
+  vendors: WorkVendor[];
+  training: WorkTraining[];
   now: Date;
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 /** A policy review this close counts as work now. */
 const REVIEW_WINDOW_DAYS = 30;
+/** So does a vendor review. */
+const VENDOR_WINDOW_DAYS = 30;
 
 const RANK: Record<MyWorkKind, number> = {
   breach: 0,
@@ -67,7 +87,9 @@ const RANK: Record<MyWorkKind, number> = {
   approve: 2,
   review: 3,
   proof: 4,
-  draft: 5,
+  vendor: 5,
+  training: 6,
+  draft: 7,
 };
 
 /** Overdue first, then open breaches and requests, what is waiting on a decision, then reviews, proof, and drafts; the earliest date first within each. */
@@ -168,12 +190,52 @@ function requestWork(input: MyWorkInput): MyWorkItem[] {
     }));
 }
 
+/** A vendor's review, when its date is close or has passed. Nothing for a date that is not set or is still far off. */
+function vendorWork(input: MyWorkInput): MyWorkItem[] {
+  return input.vendors
+    .filter((vendor) => isMine(vendor.ownerId, input))
+    .flatMap((vendor) => {
+      if (!vendor.reviewDueOn) return [];
+      const days = (vendor.reviewDueOn.getTime() - input.now.getTime()) / DAY_MS;
+      if (days > VENDOR_WINDOW_DAYS) return [];
+      return [
+        {
+          kind: 'vendor' as const,
+          id: vendor.id,
+          title: vendor.name,
+          context: 'review',
+          dueOn: iso(vendor.reviewDueOn),
+          overdue: days < 0,
+        },
+      ];
+    });
+}
+
+/** A training to take, or to take again. It is late once its day has passed. */
+function trainingWork(input: MyWorkInput): MyWorkItem[] {
+  return input.training
+    .filter((training) => training.personId === input.personId)
+    .map((training) => ({
+      kind: 'training' as const,
+      id: training.id,
+      title: training.name,
+      context: 'training',
+      dueOn: iso(training.dueOn),
+      overdue: training.dueOn < input.now,
+    }));
+}
+
 /** Everything assigned to one person, most urgent first. */
 export function myWorkItems(input: MyWorkInput): MyWorkItem[] {
   const policies = input.policies.flatMap((policy) => policyWork(policy, input) ?? []);
-  return [...breachWork(input), ...requestWork(input), ...proofWork(input), ...policies].sort(
-    byUrgency,
-  );
+  return [
+    ...breachWork(input),
+    ...requestWork(input),
+    ...proofWork(input),
+    ...vendorWork(input),
+    ...trainingWork(input),
+    ...policies,
+  ].sort(byUrgency);
 }
 
 /** The counts for one person's items. */

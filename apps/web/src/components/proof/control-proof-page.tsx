@@ -1,6 +1,5 @@
 'use client';
 
-import { IconChevronLeft } from '@tabler/icons-react';
 import type { EvidenceListResponse, ProofOverviewResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -12,28 +11,44 @@ import { Loading } from '@/components/base/loading/loading';
 import { Tabs, type TabItem } from '@/components/base/tabs/tabs';
 import { ArchivedRequirements } from '@/components/proof/archived-requirements';
 import { useCan } from '@/components/providers/user-provider';
-import { Link } from '@/i18n/navigation';
 import { useGetEvidenceQuery, useGetProofOverviewQuery } from '@/lib/api/evidence-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { NO_FILTERS, toProofQuery } from '@/lib/proof-query';
 import { AddRequirementButton } from './add-requirement-button';
 import { GeneralProof } from './general-proof';
+import { Breadcrumb } from '@/components/base/breadcrumb/breadcrumb';
 import { ProofList } from './proof-list';
 import { ProofSummary } from './proof-summary';
 
 type TabId = 'requirements' | 'other' | 'archived';
 
-function BackLink() {
+/** The breadcrumb and title: the control is named and labelled, so it is not mistaken for one of its requirements. */
+function Header({
+  controlId,
+  control,
+}: {
+  controlId: string;
+  control: ProofOverviewResponse['control'];
+}) {
   const t = useTranslations('proofPage.control');
+  const tPage = useTranslations('proofPage');
+  const { canEdit } = useCan();
+  const title = control?.title ?? t('fallback');
 
   return (
-    <Link
-      href="/proof"
-      className="mb-3 inline-flex items-center gap-1 text-label font-medium text-fg-muted hover:text-fg"
-    >
-      <IconChevronLeft className="size-4" />
-      {t('back')}
-    </Link>
+    <>
+      <Breadcrumb crumbs={[{ label: tPage('back'), href: '/proof' }, { label: title }]} />
+      <PageHeader
+        title={title}
+        description={t('showing')}
+        actions={
+          <div className="flex items-center gap-3">
+            {control && <Badge>{control.ruleId}</Badge>}
+            {canEdit && <AddRequirementButton controlId={controlId} />}
+          </div>
+        }
+      />
+    </>
   );
 }
 
@@ -76,9 +91,7 @@ function useControlTabs(props: {
  * requirements, the proof that is not for any requirement, and the requirements that were archived.
  */
 export function ControlProofPage({ controlId }: { controlId: string }) {
-  const t = useTranslations('proofPage.control');
   const errorMessage = useErrorMessage();
-  const { canEdit } = useCan();
   const [page, setPage] = useState(1);
   const proof = useGetProofOverviewQuery(
     toProofQuery({ filters: NO_FILTERS, tab: 'all', page, controlId }),
@@ -93,21 +106,10 @@ export function ControlProofPage({ controlId }: { controlId: string }) {
 
   if (proof.error) return <Alert tone="error">{errorMessage(proof.error)}</Alert>;
   if (!proof.data) return <Loading />;
-  const { control } = proof.data;
 
   return (
     <>
-      <BackLink />
-      <PageHeader
-        title={control?.title ?? t('fallback')}
-        description={t('showing')}
-        actions={
-          <div className="flex items-center gap-3">
-            {control && <Badge>{control.ruleId}</Badge>}
-            {canEdit && <AddRequirementButton controlId={controlId} />}
-          </div>
-        }
-      />
+      <Header controlId={controlId} control={proof.data.control} />
       <div className="flex flex-col gap-4">
         <ProofSummary counts={proof.data.counts} />
         <Tabs tabs={tabs} />

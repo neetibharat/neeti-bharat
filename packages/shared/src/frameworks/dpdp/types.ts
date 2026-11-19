@@ -52,6 +52,4 @@ export interface DpdpPolicy {
   reviewEvery: 'annual';
   /** The sections and rules of the law this policy answers to. */
   legalReferences: readonly string[];
-  /** What a company keeps to show the policy is followed. */
-  evidence: readonly string[];
 }

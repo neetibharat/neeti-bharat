@@ -12,6 +12,8 @@ Four kinds of dated work:
 | Request       | The reply date                                     | Due within 3 days, or late |
 | Proof         | The next date proof is due                         | Due within 3 days, or late |
 | Policy review | One year after approval                            | Due within 3 days, or late |
+| Vendor        | A vendor's review date                             | Due within 3 days, or late |
+| Training      | The day a training is due, or due again            | Due within 3 days, or late |
 
 Work with no date, such as a policy waiting for approval or a draft, is not notified. Who a notice goes to is the same as in My work: the person an item names; for an item that names nobody, whoever holds the DPO job, and admins. Only people who can sign in are notified, and a person is matched to their login by email, as everywhere else.
 
@@ -24,7 +26,7 @@ The check does not run when `NODE_ENV` is `test`.
 ## Where a person sees them
 
 - **The bell** at the foot of the sidebar shows how many are unread, and opens the inbox at `/notifications`. It asks for the count once a minute.
-- **The inbox** lists a person's notices, newest first, a page at a time. Opening one marks it as read and goes to the breach, request, proof or policy. **Mark all as read** clears the count.
+- **The inbox** lists a person's notices, newest first, a page at a time. Opening one marks it as read and goes to the breach, request, proof, policy or vendor. **Mark all as read** clears the count.
 - **Email** is sent for the same notices, through the SMTP server set up for sign-in links (see [self-hosting.md](self-hosting.md)). Without one, the text is written to the API log in development.
 
 ## Choosing
