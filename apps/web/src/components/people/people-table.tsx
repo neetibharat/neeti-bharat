@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/base/table/table';
+import { Link } from '@/i18n/navigation';
 import { EditPersonButton } from './edit-person-button';
 import { LeavePersonButton } from './leave-person-button';
 import { PersonAccess } from './person-access';
@@ -81,7 +82,12 @@ function PersonCell({ person }: { person: PersonResponse }) {
     <div className="flex items-center gap-3">
       <Avatar name={person.name} />
       <div className="min-w-0">
-        <p className="truncate font-medium text-fg">{person.name}</p>
+        <Link
+          href={`/settings/people/${person.id}`}
+          className="block truncate font-medium text-fg hover:underline"
+        >
+          {person.name}
+        </Link>
         <p className="truncate text-caption text-fg-subtle">{person.email}</p>
         {detail && <p className="truncate text-caption text-fg-subtle">{detail}</p>}
       </div>

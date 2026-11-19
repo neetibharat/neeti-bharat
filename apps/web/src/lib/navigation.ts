@@ -1,12 +1,13 @@
 import {
   IconAdjustmentsHorizontal,
   IconAlertTriangle,
+  IconBuildingStore,
+  IconSchool,
   IconBell,
   IconBuilding,
   IconChecklist,
   IconDatabase,
   IconDownload,
-  IconFileCheck,
   IconFileText,
   IconGauge,
   IconHistory,
@@ -47,13 +48,13 @@ export type NavItemId =
   | 'policies'
   | 'proof'
   | 'exports'
-  | 'dataMap'
   | 'connections'
   | 'cloudTests'
   | 'websiteCheck'
-  | 'noticeAndConsent'
   | 'requests'
   | 'breaches'
+  | 'vendors'
+  | 'training'
   | 'general'
   | 'companyProfile'
   | 'people'
@@ -113,7 +114,6 @@ export const NAV_AREAS: NavArea[] = [
     sections: [
       {
         items: [
-          { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'live' },
         ],
       },
@@ -132,14 +132,10 @@ export const NAV_AREAS: NavArea[] = [
     sections: [
       {
         items: [
-          {
-            id: 'noticeAndConsent',
-            href: '/notice-and-consent',
-            icon: IconFileCheck,
-            status: 'soon',
-          },
           { id: 'requests', href: '/requests', icon: IconInbox, status: 'live' },
           { id: 'breaches', href: '/breaches', icon: IconAlertTriangle, status: 'live' },
+          { id: 'vendors', href: '/vendors', icon: IconBuildingStore, status: 'live' },
+          { id: 'training', href: '/training', icon: IconSchool, status: 'live' },
         ],
       },
     ],

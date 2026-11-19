@@ -1,4 +1,6 @@
 import type {
+  ProofByControlResponse,
+  ProofControlGroup,
   ProofCounts,
   ProofItemResponse,
   ProofOverviewResponse,
@@ -74,5 +76,55 @@ export function proofList(
     counts: countsOf(scope),
     rules: [...new Set(inControl.map((item) => item.ruleId))],
     control,
+  };
+}
+
+const TABS: ProofTab[] = ['all', 'overdue', 'missing', 'due', 'provided'];
+
+/** One control's requirements under the current narrowing, with the ones the open tab shows. */
+function groupOf(items: ProofItemResponse[], tab: ProofTab): ProofControlGroup {
+  const first = items[0]!;
+  return {
+    controlId: first.controlId,
+    controlTitle: first.controlTitle,
+    ruleId: first.ruleId,
+    ownerRole: first.ownerRole,
+    ownerName: first.ownerName,
+    counts: countsOf(items),
+    items: items.filter((item) => inTab(item, tab)).sort(byUrgency),
+  };
+}
+
+/** How many controls each tab would hold: a control is in a tab when any of its requirements is. */
+function controlCountsOf(groups: ProofControlGroup[]): ProofCounts {
+  const counts = Object.fromEntries(
+    TABS.map((tab) => [tab, groups.filter((group) => group.counts[tab] > 0).length]),
+  );
+  return counts as ProofCounts;
+}
+
+/**
+ * One page of controls with their proof. Search and filters narrow the requirements, the counts say what each tab
+ * would hold, and the chosen tab and page cut which controls are sent. Controls keep the order they came in.
+ */
+export function proofByControl(
+  all: ProofItemResponse[],
+  query: ProofListQuery,
+): ProofByControlResponse {
+  const scope = all.filter((item) => matches(item, query));
+  const byControl = new Map<string, ProofItemResponse[]>();
+  for (const item of scope)
+    byControl.set(item.controlId, [...(byControl.get(item.controlId) ?? []), item]);
+  const groups = [...byControl.values()].map((items) => groupOf(items, query.tab));
+  const shown = groups.filter((group) => group.items.length > 0);
+  const start = (query.page - 1) * query.limit;
+  return {
+    groups: shown.slice(start, start + query.limit),
+    total: shown.length,
+    page: query.page,
+    pageSize: query.limit,
+    counts: countsOf(scope),
+    controlCounts: controlCountsOf(groups),
+    rules: [...new Set(all.map((item) => item.ruleId))],
   };
 }

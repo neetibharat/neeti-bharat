@@ -23,11 +23,15 @@ export const listProofSchema = z.object({
   assigneeId: z.string().min(1).optional(),
   ruleId: z.string().min(1).optional(),
   controlId: z.string().min(1).optional(),
+  policyId: z.string().min(1).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(PROOF_PAGE_SIZE),
 });
 
+export const listProofByControlSchema = listProofSchema.omit({ controlId: true, policyId: true });
+
 export type ListProofInput = z.output<typeof listProofSchema>;
+export type ListProofByControlInput = z.output<typeof listProofByControlSchema>;
 
 export type SaveProofRequirementInput = z.output<typeof saveProofRequirementSchema>;
 

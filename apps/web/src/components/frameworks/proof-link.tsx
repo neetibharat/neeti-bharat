@@ -7,7 +7,7 @@ import { Link } from '@/i18n/navigation';
 import { cx } from '@/lib/utils/cx';
 
 /**
- * Takes you to the proof of one control, on the Evidence page. It shows how much of the required proof is in,
+ * Takes you to the proof of one control, on the Proof page. It shows how much of the required proof is in,
  * so a control that still needs some stands out, and goes orange once work has started but the proof is not all there.
  */
 export function ProofLink({ control }: { control: ControlResponse }) {

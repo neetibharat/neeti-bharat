@@ -88,6 +88,14 @@
   --color-chart-gauge-fill: var(--color-brand);
   --color-chart-gauge-track: var(--color-surface-muted);
 
+  /* ---------- Semantic: risk levels ----------
+   * Bright on purpose: they sit on a dark panel and have to be told apart at a glance, from calm to alarming. */
+  --color-risk-very-low: #34d399;
+  --color-risk-low: #a3e635;
+  --color-risk-medium: #fbbf24;
+  --color-risk-high: #fb923c;
+  --color-risk-very-high: #fb4f6d;
+
   /* ---------- Semantic: status ---------- */
   --color-success: var(--color-green-600);
   --color-success-soft: var(--color-green-50);

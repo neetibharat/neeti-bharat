@@ -1,4 +1,4 @@
-// The 18 policies a company needs, with the proof each one calls for. Written from the prototype framework file and not yet reviewed by counsel.
+// The 19 policies a company needs. Counsel's version.
 import type { DpdpPolicy } from './types.js';
 
 export const POLICIES: readonly DpdpPolicy[] = [
@@ -12,12 +12,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'General Counsel',
     reviewEvery: 'annual',
     legalReferences: ['Rule 3', 'Rule 9', 's.5', 's.6'],
-    evidence: [
-      'Published notice snapshot in every language offered',
-      'Consent record sample for each collection channel',
-      'Withdrawal request log with timestamps and resolution',
-      'Policy approval, version history, and publication record',
-    ],
   },
   {
     id: 'P02',
@@ -29,12 +23,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['s.4', 's.8(3)', 'Rule 8'],
-    evidence: [
-      'Approved records of processing activities with owner sign-off',
-      'Data classification register and handling rules',
-      'Data minimisation review for high-risk activities',
-      'Processor and transfer mapping per activity',
-    ],
   },
   {
     id: 'P03',
@@ -46,13 +34,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Chief Technology Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6', 's.8(4)', 's.8(5)'],
-    evidence: [
-      'Approved information security policy set and annual management review',
-      'Annual risk assessment with treatment plan',
-      'Security awareness training completion report',
-      'Change management approval sample',
-      'Vulnerability and patch management report',
-    ],
   },
   {
     id: 'P04',
@@ -64,13 +45,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Chief Technology Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6(1)(b)', 's.8(5)'],
-    evidence: [
-      'Identity inventory with role assignments and MFA status',
-      'Quarterly access review sign-off by system owners',
-      'Privileged access list and approval records',
-      'Leaver deprovisioning evidence within 24 hours',
-      'Service account and secret inventory review',
-    ],
   },
   {
     id: 'P05',
@@ -82,31 +56,17 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Chief Technology Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6(1)(a)', 's.8(5)'],
-    evidence: [
-      'Encryption configuration export for databases, storage, and backups',
-      'TLS configuration scan for public endpoints',
-      'Key inventory with rotation dates and owners',
-      'Secrets inventory and rotation evidence',
-      'Masking and tokenisation configuration for sensitive fields',
-    ],
   },
   {
     id: 'P06',
     slug: 'logging-monitoring',
     title: 'Logging, Monitoring and Audit Trail Standard',
     summary:
-      'Defines what is logged, how logs are protected and reviewed, and how one-year retention and unauthorized-access detection are evidenced.',
+      'Sets what is logged, how logs are protected and monitored, log retention for at least the required retention period, CERT-In log location, and monthly log review.',
     ownerRole: 'SECURITY_LEAD',
     approver: 'Chief Technology Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6(1)(c)', 'Rule 6(1)(e)', 's.8(5)'],
-    evidence: [
-      'Log source inventory and coverage matrix',
-      'Log retention configuration showing at least 365 days',
-      'Alert rule list and sample alert investigations',
-      'Monthly log review sign-off',
-      'Log integrity and access control configuration',
-    ],
   },
   {
     id: 'P07',
@@ -118,50 +78,28 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Chief Technology Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6(1)(d)', 's.8(5)'],
-    evidence: [
-      'Backup configuration and schedule for all personal data systems',
-      'Annual restore test report with recovery time and data integrity results',
-      'Disaster recovery runbook and contact list',
-      'Business continuity exercise report',
-      'Backup access and encryption configuration',
-    ],
   },
   {
     id: 'P08',
     slug: 'incident-response-breach',
     title: 'Incident Response and Breach Notification Policy',
     summary:
-      'Defines breach intake, classification, containment, Board intimation without delay, the 72-hour detailed report, Data Principal notice, and post-incident review.',
+      'Defines breach intake, classification, containment, Board intimation without delay, the detailed breach report within the breach reporting window, Data Principal notice, and post-incident review.',
     ownerRole: 'DPO',
     approver: 'Chief Executive Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 7', 's.8(6)'],
-    evidence: [
-      'Incident register with discovery, containment, and notification timestamps',
-      'Board first intimation copy and acknowledgement',
-      '72-hour detailed breach report',
-      'Data Principal notification copy in required languages',
-      'Post-incident review and remediation evidence',
-      'Annual tabletop exercise report',
-    ],
   },
   {
     id: 'P09',
     slug: 'retention-erasure',
     title: 'Data Retention and Erasure Policy',
     summary:
-      'Defines retention periods by purpose, one-year log retention, 48-hour pre-erasure notice, processor deletion, Third Schedule rules, and deletion evidence.',
+      'Sets the retention schedule, erasure when the purpose ends or consent is withdrawn, the minimum retention period for processing logs, advance notice before inactivity-based erasure, processor erasure and legal holds.',
     ownerRole: 'PRIVACY_LEAD',
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 8', 's.8(7)'],
-    evidence: [
-      'Approved retention schedule mapped to processing activities',
-      'Deletion job logs and completion certificates',
-      '48-hour pre-erasure notices sent to Data Principals',
-      'Processor deletion confirmations',
-      'Legal hold and exception register',
-    ],
   },
   {
     id: 'P10',
@@ -173,31 +111,17 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'General Counsel',
     reviewEvery: 'annual',
     legalReferences: ['Rule 14', 's.11', 's.12', 's.14'],
-    evidence: [
-      'Published rights request channel with instructions and response standards',
-      'Rights request register with acknowledgement and closure timestamps',
-      'Access and correction fulfilment samples',
-      'Erasure and nomination request records',
-      'Identity verification records and refusal samples',
-    ],
   },
   {
     id: 'P11',
     slug: 'grievance-redressal',
     title: 'Grievance Redressal and DPO Contact Policy',
     summary:
-      'Defines the published DPO contact, grievance channels, acknowledgement, 90-day resolution, DPO escalation, Board route, and reporting.',
+      'Publishes the DPO or designated privacy contact and grievance channel, and sets acknowledgement, escalation and resolution of grievances within the published response period, with the route to the Data Protection Board.',
     ownerRole: 'DPO',
     approver: 'General Counsel',
     reviewEvery: 'annual',
     legalReferences: ['Rule 9', 'Rule 14', 's.13'],
-    evidence: [
-      'Published DPO or responsible person contact details and grievance channel',
-      'Grievance register with acknowledgement, escalation, and closure timestamps',
-      '90-day SLA report and breached grievances',
-      'Board complaint route publication and sample responses',
-      'Quarterly grievance trend and management report',
-    ],
   },
   {
     id: 'P12',
@@ -209,13 +133,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6(1)(f)', 's.8(1)', 's.8(2)'],
-    evidence: [
-      'Processor register with data categories, locations, and contract status',
-      'Signed data processing agreements with required clauses',
-      'Security due diligence questionnaire and evidence',
-      'Sub-processor list and approval records',
-      'Deletion and offboarding confirmations',
-    ],
   },
   {
     id: 'P13',
@@ -227,13 +144,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 10', 'Rule 11', 'Rule 12', 's.9'],
-    evidence: [
-      'Age gate configuration and test results',
-      'Verifiable parental consent records and verification method',
-      'Guardian consent records for persons with disabilities',
-      'Exemption register with Fourth Schedule class or purpose',
-      'No-tracking and no-targeted-advertising attestation',
-    ],
   },
   {
     id: 'P14',
@@ -245,13 +155,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 15', 's.16'],
-    evidence: [
-      'Transfer register with destination, data category, purpose, and safeguard',
-      'Restricted-country assessment and legal update review',
-      'Standard contractual clauses or equivalent safeguards',
-      'Transfer impact assessment for high-risk destinations',
-      'Localisation attestation for data required to remain in India',
-    ],
   },
   {
     id: 'P15',
@@ -263,13 +166,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6', 's.8(5)'],
-    evidence: [
-      'Background screening and signed confidentiality undertakings for personnel',
-      'Role-based privacy and security training completion report',
-      'Joiner, mover, and leaver checklist with access approval and revocation',
-      'Contractor and temporary staff onboarding, confidentiality, and training records',
-      'Disciplinary, exit, and continuing obligation reminders',
-    ],
   },
   {
     id: 'P16',
@@ -281,13 +177,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Security Lead',
     reviewEvery: 'annual',
     legalReferences: ['Rule 6', 's.8(5)'],
-    evidence: [
-      'SDLC policy, privacy-by-design checklist, and DPIA trigger criteria',
-      'Change approval and testing sample',
-      'SAST, DAST, dependency, and secrets scan reports',
-      'Release, rollback, and post-release monitoring records',
-      'Third-party code, API, and model review records',
-    ],
   },
   {
     id: 'P17',
@@ -299,14 +188,6 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Board of Directors',
     reviewEvery: 'annual',
     legalReferences: ['Rule 13', 's.10'],
-    evidence: [
-      'SDF designation assessment, factors, and notification',
-      'DPO appointment, qualifications, and India residency evidence',
-      'Independent auditor appointment, conflict check, and annual audit report',
-      'Annual DPIA, methodology, high-risk register, and remediation plan',
-      'Localisation attestation for specified data categories',
-      'Board reporting on DPIA, audit, and remediation findings',
-    ],
   },
   {
     id: 'P18',
@@ -318,12 +199,16 @@ export const POLICIES: readonly DpdpPolicy[] = [
     approver: 'Data Protection Officer',
     reviewEvery: 'annual',
     legalReferences: ['Rule 13', 'Rule 16', 's.10'],
-    evidence: [
-      'AI and automated decision system register with purpose, data, and affected persons',
-      'Algorithm and AI due diligence assessment before deployment and annually',
-      'Human oversight, explanation, and contestability records',
-      'Bias, drift, accuracy, and harmful output monitoring reports',
-      'Third-party model and API assessment for data use, retention, and transfer',
-    ],
+  },
+  {
+    id: 'P19',
+    slug: 'privacy-governance-assurance',
+    title: 'Privacy Governance, Assurance and Evidence Policy',
+    summary:
+      'Sets roles, leadership oversight, policy management, control testing, compliance metrics, regulatory tracking and evidence management for the privacy programme.',
+    ownerRole: 'DPO',
+    approver: 'Chief Executive Officer',
+    reviewEvery: 'annual',
+    legalReferences: [],
   },
 ];

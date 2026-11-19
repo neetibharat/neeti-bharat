@@ -94,4 +94,4 @@ function OrganizationMenu({ organizations, activeId, onChoose }: OrganizationMen
 }
 
 const itemClass =
-  'flex cursor-pointer items-center gap-2 rounded-md px-2.5 py-2 text-body text-fg outline-none data-focused:bg-brand-soft';
+  'flex cursor-pointer items-center gap-2 rounded-[calc(var(--radius-control)-0.25rem)] px-2.5 py-2 text-body text-fg outline-none data-focused:bg-brand-soft';

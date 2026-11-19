@@ -218,7 +218,7 @@ describe('proof requirements and status', () => {
     expect(controlView(stale, policiesWith('approved'), {}, NOW).status).toBe('in_progress');
   });
 
-  it('lists every requirement for the Evidence page, with its control and owner', () => {
+  it('lists every requirement for the Proof page, with its control and owner', () => {
     const control = row({
       proofRequirements: [requirement('a', [given(5)]), requirement('b', [])],
     });

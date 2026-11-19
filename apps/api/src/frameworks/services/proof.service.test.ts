@@ -20,7 +20,10 @@ function build(
   control: unknown = { id: 'DPDP-R6-01', title: 'Encryption', archivedAt: null },
   requirement: unknown = null,
 ) {
-  const controls = { findOne: vi.fn().mockResolvedValue(control) } as unknown as ControlRepository;
+  const controls = {
+    findOne: vi.fn().mockResolvedValue(control),
+    idsCoveredBy: vi.fn().mockResolvedValue(new Set<string>()),
+  } as unknown as ControlRepository;
   const requirements = {
     findOne: vi.fn().mockResolvedValue(requirement),
     create: vi.fn().mockResolvedValue({}),
@@ -44,6 +47,8 @@ function build(
     service: new ProofService(controls, requirements, activity, frameworks, directory),
     requirements,
     activity,
+    frameworks,
+    controls,
   };
 }
 
@@ -137,5 +142,33 @@ describe('ProofService', () => {
     const result = await build().service.overview({ tab: 'all', page: 1, limit: 25 });
     expect(result).toMatchObject({ items: [], total: 0, page: 1, pageSize: 25 });
     expect(result.counts.all).toBe(0);
+  });
+
+  it('narrows the overview to the proof of the controls a policy covers', async () => {
+    const item = (id: string, controlId: string) => ({
+      id,
+      title: id,
+      frequency: 'yearly',
+      status: 'missing',
+      controlId,
+      controlTitle: controlId,
+      ruleId: 'R6',
+      ownerRole: 'DPO',
+      ownerName: null,
+      assigneeId: null,
+      assigneeName: null,
+      dueOn: null,
+      overdue: false,
+    });
+    const { service, frameworks, controls } = build();
+    vi.mocked(frameworks.proofItems).mockResolvedValue([
+      item('PR-P05-01', 'DPDP-R6-01'),
+      item('PR-P06-01', 'DPDP-R6-04'),
+    ] as never);
+    vi.mocked(controls.idsCoveredBy).mockResolvedValue(new Set(['DPDP-R6-01']));
+    const result = await service.overview({ tab: 'all', page: 1, limit: 25, policyId: 'P05' });
+    expect(controls.idsCoveredBy).toHaveBeenCalledWith('P05');
+    expect(result.items.map((row) => row.id)).toEqual(['PR-P05-01']);
+    expect(result.counts.all).toBe(1);
   });
 });

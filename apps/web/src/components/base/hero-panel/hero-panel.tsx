@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Gauge } from '@/components/base/gauge/gauge';
+import { RingGauge } from '@/components/graphs/ring-gauge';
 import { cx } from '@/lib/utils/cx';
 
 export interface HeroPanelProps {
@@ -24,7 +24,7 @@ export function HeroPanel({ tag, percent, gaugeLabel, title, text, children }: H
       </span>
       <div className="flex items-center gap-6">
         <div role="img" aria-label={gaugeLabel} className="relative size-36 shrink-0">
-          <Gauge percent={percent} />
+          <RingGauge percent={percent} />
           <p className="absolute inset-0 grid place-content-center text-display font-medium tracking-tight tabular-nums">
             {percent}%
           </p>

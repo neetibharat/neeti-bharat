@@ -51,7 +51,6 @@ export interface PolicySeed {
   approverTitle: string;
   reviewEvery: string;
   legalReferences: string[];
-  evidence: string[];
   sortOrder: number;
 }
 
@@ -116,7 +115,6 @@ export function dpdpRows(): CatalogueRows {
       approverTitle: policy.approver,
       reviewEvery: policy.reviewEvery,
       legalReferences: [...policy.legalReferences],
-      evidence: [...policy.evidence],
       sortOrder: index,
     })),
     links: DPDP_CONTROLS.flatMap((control) =>
@@ -150,7 +148,7 @@ function proofRows(): ProofSeed[] {
     controlId: requirement.controlId,
     templateId: requirement.id,
     title: requirement.title,
-    description: '',
+    description: requirement.description ?? '',
     frequency: requirement.frequency,
     sortOrder: index,
   }));

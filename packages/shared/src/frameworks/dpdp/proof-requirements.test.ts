@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DPDP_CONTROLS, DPDP_POLICIES } from './index.js';
+import { DPDP_CONTROLS } from './index.js';
 import { PROOF_FRESH_DAYS, PROOF_FREQUENCIES, proofStatus } from './evidence.js';
 import { PROOF_REQUIREMENTS } from './proof-requirements.js';
 
 describe('PROOF_REQUIREMENTS', () => {
-  it('has one requirement for every thing the policies say to keep', () => {
-    const suggested = DPDP_POLICIES.reduce((n, policy) => n + policy.evidence.length, 0);
-    expect(PROOF_REQUIREMENTS).toHaveLength(suggested);
+  it('has the agreed amount', () => {
+    expect(PROOF_REQUIREMENTS).toHaveLength(39);
   });
 
   it('has unique ids', () => {

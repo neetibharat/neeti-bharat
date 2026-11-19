@@ -30,6 +30,8 @@ export interface ListQuery {
   page: number;
   limit: number;
   action?: string;
+  /** Only the events about this one thing, such as a vendor. */
+  subject?: { type: string; id: string };
 }
 
 @Injectable()
@@ -73,8 +75,12 @@ export class ActivityRepository {
     page,
     limit,
     action,
+    subject,
   }: ListQuery): Promise<{ rows: ActivityEvent[]; total: number }> {
-    const where = action ? { action } : undefined;
+    const where = {
+      ...(action ? { action } : {}),
+      ...(subject ? { subjectType: subject.type, subjectId: subject.id } : {}),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.db.activityEvent.findMany({
         where,

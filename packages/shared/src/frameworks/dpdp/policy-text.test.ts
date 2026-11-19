@@ -21,7 +21,8 @@ describe('policyTemplate', () => {
       'Breach detection and triage',
       'Board intimation',
       'Data Principal notification',
-      '72-hour detailed report',
+      'Detailed breach report',
+      'Incident management',
     ]);
   });
 

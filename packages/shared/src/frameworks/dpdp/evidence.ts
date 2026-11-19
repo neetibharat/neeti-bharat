@@ -228,3 +228,34 @@ export interface ProofOverviewResponse {
   /** The control the list is narrowed to, when one was asked for. */
   control: { id: string; title: string; ruleId: string } | null;
 }
+
+/** One control on the Proof page, with the requirements the open tab shows under it. */
+export interface ProofControlGroup {
+  controlId: string;
+  controlTitle: string;
+  /** The rule or group the control sits under, such as R6 or ORG. */
+  ruleId: string;
+  /** The job that owns the control. */
+  ownerRole: string;
+  /** Whoever holds that job, or null while it is vacant. */
+  ownerName: string | null;
+  /** How all of its requirements stand under the current search and filters, whatever tab is open. */
+  counts: ProofCounts;
+  /** The requirements the open tab shows, most urgent first. */
+  items: ProofItemResponse[];
+}
+
+/** One page of controls with their proof, from `GET /v1/proof/by-control`. */
+export interface ProofByControlResponse {
+  groups: ProofControlGroup[];
+  /** How many controls the chosen tab shows across all pages. */
+  total: number;
+  page: number;
+  pageSize: number;
+  /** How many requirements each tab would hold, for the figures above the list. */
+  counts: ProofCounts;
+  /** How many controls each tab would hold, for the tab labels. */
+  controlCounts: ProofCounts;
+  /** The rules that have something to prove, for the rule filter. */
+  rules: string[];
+}

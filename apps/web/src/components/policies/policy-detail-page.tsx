@@ -4,7 +4,6 @@ import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
 import { policyLabel, type PolicyDetailResponse } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
-import { Card } from '@/components/base/card/card';
 import { Tabs } from '@/components/base/tabs/tabs';
 import { PageHeader } from '@/components/base/page-header/page-header';
 import { Link } from '@/i18n/navigation';
@@ -15,6 +14,7 @@ import { EditPolicyButton } from './edit-policy-button';
 import { PolicyActions } from './policy-actions';
 import { PolicyApprovalCard } from './policy-approval-card';
 import { PolicyDocumentCard } from './policy-document-card';
+import { PolicyProof } from './policy-proof';
 import { PolicyProperties } from './policy-properties';
 
 function BackLink() {
@@ -93,17 +93,9 @@ function PolicyBody({ policy }: { policy: PolicyDetailResponse }) {
 
 /** What the policy needs kept as proof, and the controls it answers. */
 function Coverage({ policy }: { policy: PolicyDetailResponse }) {
-  const t = useTranslations('policies');
-
   return (
     <div className="flex flex-col gap-4">
-      <Card title={t('evidence.title')} description={t('evidence.description')}>
-        <ul className="list-disc space-y-1.5 pl-5 text-body text-fg marker:text-fg-subtle">
-          {policy.evidence.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </Card>
+      <PolicyProof policyId={policy.id} />
       <CoveredControls policyId={policy.id} />
     </div>
   );

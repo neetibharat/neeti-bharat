@@ -1,6 +1,7 @@
 {
   "common": {
-    "loading": "Loading"
+    "loading": "Loading",
+    "breadcrumb": "Breadcrumb"
   },
   "meta": {
     "title": "DPDP Kit",
@@ -10,9 +11,29 @@
     "heading": "DPDP compliance, in one place",
     "tagline": "Know what the law asks, do the work, and keep the proof."
   },
+  "search": {
+    "open": "Search",
+    "trigger": "Search pages and records",
+    "label": "Global search",
+    "placeholder": "Search pages, policies, vendors, people…",
+    "hint": "Type at least 2 letters to search records.",
+    "empty": "Nothing found for this search.",
+    "page": "Page",
+    "kinds": {
+      "policy": "Policy",
+      "proof": "Proof",
+      "vendor": "Vendor",
+      "breach": "Breach",
+      "request": "Request",
+      "person": "Person"
+    }
+  },
   "nav": {
     "label": "Main",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
     "openMenu": "Open menu",
+    "account": "Account menu",
     "soon": "Soon",
     "areas": {
       "workspace": "Workspace",
@@ -32,12 +53,12 @@
       "frameworks": "Frameworks",
       "policies": "Policies",
       "proof": "Proof",
-      "dataMap": "Data map",
       "connections": "Connections",
       "cloudTests": "Cloud checks",
-      "noticeAndConsent": "Notice and consent",
       "requests": "Requests",
       "breaches": "Breaches",
+      "vendors": "Vendors",
+      "training": "Training",
       "general": "General",
       "companyProfile": "Company profile",
       "people": "People and roles",
@@ -150,14 +171,6 @@
       "title": "Proof",
       "description": "Everything the company has to be able to show, and where each stands."
     },
-    "dataMap": {
-      "title": "Data map",
-      "description": "The list of personal data kept, why, for how long, and who receives it."
-    },
-    "noticeAndConsent": {
-      "title": "Notice and consent",
-      "description": "The public page where people read the notice, give or withdraw consent, and file requests."
-    },
     "requests": {
       "title": "Requests",
       "description": "Handles people asking to see, fix or erase their data, or to complain."
@@ -165,6 +178,10 @@
     "breaches": {
       "title": "Breaches",
       "description": "Walks the team through a personal data breach against the clock."
+    },
+    "vendors": {
+      "title": "Vendors",
+      "description": "The companies that handle personal data for you, and whether each is in order."
     },
     "secrets": {
       "title": "Secrets",
@@ -214,6 +231,7 @@
       "CONTROL_OWNER_CHANGED": "Control owner changed",
       "POLICY_REVIEW_REQUESTED": "Policy sent for approval",
       "POLICY_APPROVED": "Policy approved",
+      "POLICY_ACCEPTED": "Policy accepted",
       "POLICY_SENT_BACK": "Policy sent back",
       "POLICY_REOPENED": "Policy reopened",
       "CONTROL_CREATED": "Control added",
@@ -260,6 +278,16 @@
       "CONNECTION_ADDED": "Connection added",
       "CONNECTION_UPDATED": "Connection updated",
       "CONNECTION_REMOVED": "Connection removed",
+      "VENDOR_ADDED": "Vendor added",
+      "VENDOR_EDITED": "Vendor changed",
+      "VENDOR_ARCHIVED": "Vendor archived",
+      "VENDOR_RESTORED": "Vendor brought back",
+      "TRAINING_ADDED": "Training added",
+      "TRAINING_EDITED": "Training changed",
+      "TRAINING_ARCHIVED": "Training archived",
+      "TRAINING_RESTORED": "Training brought back",
+      "TRAINING_COMPLETED": "Training completed",
+      "TRAINING_REOPENED": "Training taken back",
       "CONNECTION_CHECKED": "Connection checked",
       "API_KEY_CREATED": "API key created",
       "API_KEY_REVOKED": "API key revoked",
@@ -288,6 +316,7 @@
       "CONTROL_OWNER_CHANGED": "Moved {controlId} ({title}) from {before} to {after}",
       "POLICY_REVIEW_REQUESTED": "Asked for approval of {policyId} ({title})",
       "POLICY_APPROVED": "Approved {policyId} ({title})",
+      "POLICY_ACCEPTED": "Accepted {policyId} ({title})",
       "POLICY_SENT_BACK": "Sent {policyId} ({title}) back to draft",
       "POLICY_REOPENED": "Reopened {policyId} ({title}) as a draft",
       "CONTROL_CREATED": "Added the control {controlId} ({title})",
@@ -334,6 +363,16 @@
       "CONNECTION_ADDED": "Connected {name} ({provider})",
       "CONNECTION_UPDATED": "Updated the connection {name}",
       "CONNECTION_REMOVED": "Removed the connection {name}",
+      "VENDOR_ADDED": "Added the vendor {name}",
+      "VENDOR_EDITED": "Changed the vendor {name}",
+      "VENDOR_ARCHIVED": "Archived the vendor {name}",
+      "VENDOR_RESTORED": "Brought back the vendor {name}",
+      "TRAINING_ADDED": "Added the training {name}",
+      "TRAINING_EDITED": "Changed the training {name}",
+      "TRAINING_ARCHIVED": "Archived the training {name}",
+      "TRAINING_RESTORED": "Brought back the training {name}",
+      "TRAINING_COMPLETED": "Recorded that {person} completed {name}",
+      "TRAINING_REOPENED": "Took back {person}'s completion of {name}",
       "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
       "API_KEY_CREATED": "Created the API key {name} with {role} access",
       "API_KEY_REVOKED": "Revoked the API key {name}",
@@ -564,7 +603,7 @@
     "accessLevels": {
       "title": "Access levels",
       "admin": "Everything, including people, connections, keys and secrets.",
-      "member": "Does the work: policies, data map, proof, requests and breaches.",
+      "member": "Does the work: policies, proof, requests and breaches.",
       "auditor": "Reads everything and changes nothing.",
       "description": "Choose one for each person. Everyone you add gets an email invitation to sign in."
     },
@@ -628,6 +667,19 @@
       "title": "Resend the invitation to {name}?",
       "body": "{email} gets a new email with a fresh link, valid for 7 days. Any earlier link stops working once they use the new one.",
       "confirm": "Resend"
+    },
+    "person": {
+      "training": "Training",
+      "policies": "Policies",
+      "details": "Details",
+      "work": "See their work",
+      "notFound": "This person could not be found.",
+      "email": "Email",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "access": "Access",
+      "roles": "Job roles",
+      "none": "Not said"
     }
   },
   "frameworks": {
@@ -776,6 +828,7 @@
       "form": {
         "title": "What is needed",
         "description": "What to collect (optional)",
+        "descriptionHint": "Paste a link to a template here, such as a Google Doc or a SharePoint file. It will open in a new tab.",
         "frequency": "How often",
         "save": "Save",
         "create": "Add",
@@ -820,7 +873,7 @@
         },
         "proof": {
           "label": "Proof in",
-          "hint": "Evidence that they are followed"
+          "hint": "Proof that they are followed"
         }
       },
       "tabs": {
@@ -845,7 +898,7 @@
         "coversCount": "{count} of {total} controls"
       },
       "proof": {
-        "hint": "The evidence this rule needs, most urgent first. Open one to add proof or to say who collects it.",
+        "hint": "The proof this rule needs, most urgent first. Open one to add proof or to say who collects it.",
         "empty": "No proof is needed for this rule yet."
       }
     },
@@ -952,7 +1005,8 @@
     },
     "evidence": {
       "title": "Proof to keep",
-      "description": "What a company keeps to show this policy is followed."
+      "description": "What the controls this policy covers need proof of, and where each stands.",
+      "empty": "The controls this policy covers need no proof yet."
     },
     "covers": {
       "title": "Controls it covers",
@@ -1080,11 +1134,11 @@
       "description": "Everything here is a starting point that your company can change.",
       "rules": {
         "title": "The rules and controls",
-        "text": "They follow the Digital Personal Data Protection Act and its Rules, written up from the prototype framework this project started with."
+        "text": "They follow the Digital Personal Data Protection Act and its Rules."
       },
       "policies": {
         "title": "The policies",
-        "text": "The 18 policies are templates written in plain English from the same source. On first start each is copied to your company, so editing yours never changes the original."
+        "text": "The 19 policies are templates written in plain English. On first start each is copied to your company, so editing yours never changes the original."
       },
       "proof": {
         "title": "The proof",
@@ -1153,17 +1207,17 @@
   },
   "proofPage": {
     "summary": {
-      "missing": "Missing",
-      "due": "Due again",
-      "provided": "Provided",
-      "overdue": "Overdue"
+      "missing": "Proof missing",
+      "due": "Proof due again",
+      "provided": "Proof provided",
+      "overdue": "Proof overdue"
     },
     "tabs": {
-      "all": "All ({count})",
-      "missing": "Missing ({count})",
-      "due": "Due again ({count})",
-      "provided": "Provided ({count})",
-      "overdue": "Overdue ({count})",
+      "all": "All controls ({count})",
+      "missing": "Controls with missing ({count})",
+      "due": "Controls due again ({count})",
+      "provided": "Controls complete ({count})",
+      "overdue": "Controls with overdue ({count})",
       "overview": "Overview",
       "mappings": "Mappings"
     },
@@ -1181,13 +1235,21 @@
     "never": "Never",
     "nobody": "No one holds this job yet",
     "empty": "Nothing here.",
-    "back": "Evidence",
+    "back": "Proof",
+    "byControl": {
+      "progress": "{provided} of {total} provided",
+      "overdue": "{count} overdue",
+      "due": "{count} due again",
+      "missing": "{count} missing",
+      "show": "Show the proof for {name}",
+      "hide": "Hide the proof for {name}"
+    },
     "overdueBadge": "Overdue",
     "noDate": "No date",
     "everyone": "Everyone",
     "allRules": "All rules",
     "filterRule": "Rule",
-    "search": "Search evidence",
+    "search": "Search proof",
     "files": {
       "title": "Drag and drop files here",
       "hint": "Accepted: {types}. Up to {max} each.",
@@ -1202,8 +1264,8 @@
       }
     },
     "settings": {
-      "title": "Settings",
-      "description": "Who collects this, how often, and by when. Changes save as you make them.",
+      "title": "Who and when",
+      "description": "Who collects this proof, how often it is needed, and when it is first due. Changes save as you make them.",
       "status": "Status",
       "overdue": "Overdue",
       "nextDue": "Next due: {date}",
@@ -1225,7 +1287,6 @@
     "control": {
       "showing": "Proof asked for by this control. Add what an auditor would want to see.",
       "fallback": "Control",
-      "back": "All proof",
       "tabs": {
         "requirements": "Requirements ({count})",
         "other": "Other proof ({count})",
@@ -1243,7 +1304,9 @@
         "approve": "To approve ({count})",
         "policies": "Policies ({count})",
         "breach": "Breaches ({count})",
-        "request": "Requests ({count})"
+        "request": "Requests ({count})",
+        "vendor": "Vendors ({count})",
+        "training": "Training ({count})"
       },
       "kinds": {
         "proof": "Proof to collect",
@@ -1251,7 +1314,9 @@
         "review": "Policy review",
         "draft": "Policy to write",
         "breach": "Breach to handle",
-        "request": "Request to answer"
+        "request": "Request to answer",
+        "vendor": "Vendor to review",
+        "training": "Training to take"
       },
       "due": "Due {date}",
       "overdue": "Overdue · {date}",
@@ -3108,7 +3173,9 @@
       "breach": "Breach",
       "request": "Request",
       "proof": "Proof",
-      "review": "Policy review"
+      "review": "Policy review",
+      "vendor": "Vendor review",
+      "training": "Training"
     },
     "text": {
       "breach": {
@@ -3126,6 +3193,14 @@
       "review": {
         "due_soon": "The policy “{title}” is due for review on {date}.",
         "overdue": "The policy “{title}” was due for review on {date} and is late."
+      },
+      "vendor": {
+        "due_soon": "The review of the vendor “{title}” is due on {date}.",
+        "overdue": "The review of the vendor “{title}” was due on {date} and is late."
+      },
+      "training": {
+        "due_soon": "The training “{title}” is due on {date}.",
+        "overdue": "The training “{title}” was due on {date} and is late."
       }
     },
     "settings": {
@@ -3150,6 +3225,14 @@
         "review": {
           "name": "Policy reviews",
           "about": "When a policy you own is coming up for its yearly review."
+        },
+        "vendor": {
+          "name": "Vendors",
+          "about": "When the review of a vendor you look after is coming up, or late."
+        },
+        "training": {
+          "name": "Training",
+          "about": "When a training you have to take is coming due, or late."
         }
       },
       "tabs": {
@@ -3207,5 +3290,329 @@
     },
     "privacy": "When you add a policy from a file, its text is sent to the service you choose, with your key, to be read. DPDP Kit does not keep the file. A person always checks and approves what it suggests.",
     "noSecrets": "AI help cannot keep a key yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
+  },
+  "training": {
+    "title": "Training",
+    "description": "What everyone at the company is asked to learn about handling personal data, and who has done it.",
+    "tabs": {
+      "mine": "My training",
+      "team": "Team",
+      "manage": "Trainings",
+      "policies": "Policies"
+    },
+    "add": "Add training",
+    "addHint": "Say what it teaches and link your own video or document. Everyone at the company is asked to take it.",
+    "edit": "Edit {name}",
+    "editTitle": "Change training",
+    "archive": "Stop asking for {name}",
+    "restore": "Ask for {name} again",
+    "archived": "Archived",
+    "inUse": "In use",
+    "doneOf": "{done} of {total} people",
+    "form": {
+      "name": "Name",
+      "about": "What it teaches",
+      "aboutHint": "A line or two, so people know what to expect.",
+      "url": "Link to the training",
+      "urlHint": "Your own video or document. People open it, then mark it done here.",
+      "add": "Add training",
+      "save": "Save",
+      "cancel": "Cancel",
+      "repeats": "Taken again every year",
+      "repeatsHint": "A completion lapses after a year, and the training shows as due again for the month before."
+    },
+    "columns": {
+      "training": "Training",
+      "done": "Taken by",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "none": {
+      "title": "No trainings yet",
+      "body": "Start with four suggested trainings on the DPDP Act, handling personal data, breaches and data requests. You can change them and add your own.",
+      "action": "Add the suggested trainings"
+    },
+    "mine": {
+      "allDone": "All training complete",
+      "allDoneOn": "Completed on {date}",
+      "completedOn": "Completed {date}",
+      "open": "Open",
+      "markDone": "Mark as done",
+      "undo": "Undo",
+      "none": {
+        "title": "Nothing to take yet",
+        "body": "Your admin has not set up any training. It will show here once they do."
+      },
+      "dueOn": "Due {date}",
+      "lateSince": "Late since {date}",
+      "renewOn": "Due again {date}",
+      "expiresOn": "Valid until {date}",
+      "certificate": "Certificate",
+      "forPerson": "Record for {name}",
+      "markDoneAgain": "Mark as done again",
+      "allDoneYearly": "Some trainings come round again each year."
+    },
+    "team": {
+      "summary": "{trained} of {everyone} people have completed all training.",
+      "noTrainings": "No training has been set up yet.",
+      "search": "Search people",
+      "noMatch": "No one matches your search.",
+      "person": "Person",
+      "progress": "Progress",
+      "state": "Status",
+      "doneOf": "{done} of {total} done",
+      "status": {
+        "complete": "Complete",
+        "started": "In progress",
+        "not_started": "Not started"
+      },
+      "policiesOf": "{done} of {total} policies",
+      "policiesColumn": "Policies",
+      "policiesSummary": "{accepted} of {everyone} people have accepted every policy.",
+      "trainingColumn": "Training"
+    },
+    "yearly": "Every year",
+    "certificate": {
+      "title": "Certificate of completion",
+      "awarded": "This certifies that",
+      "body": "has completed the data protection training of {company}:",
+      "completedOn": "Completed {date}",
+      "issued": "Issued {date}",
+      "print": "Print or save as PDF",
+      "back": "Back to training",
+      "notYet": "The certificate is ready once every training is done."
+    },
+    "policies": {
+      "about": "Read each approved policy, then accept it. A policy that is approved again has to be accepted again.",
+      "accept": "Accept",
+      "accepted": "Accepted {date}",
+      "changed": "Approved again {date}. Please read and accept it again.",
+      "approvedOn": "Approved {date}",
+      "allDone": "You have accepted every policy",
+      "none": {
+        "title": "No policies to accept yet",
+        "body": "Policies show here once they are approved."
+      },
+      "open": "Read",
+      "status": {
+        "todo": "To accept",
+        "accepted": "Accepted",
+        "changed": "Accept again"
+      }
+    }
+  },
+  "vendors": {
+    "title": "Vendors",
+    "description": "The companies that handle personal data for you: what they do, what they are given, and whether there is an agreement and a recent review.",
+    "add": "Add vendor",
+    "archive": "Archive {name}",
+    "restore": "Bring {name} back",
+    "search": "Search vendors",
+    "noMatch": "No vendors here.",
+    "noOwner": "Nobody named",
+    "nextReview": "Next review {date}",
+    "openAgreement": "Open agreement",
+    "tabs": {
+      "active": "In use ({count})",
+      "attention": "Needs a look ({count})",
+      "archived": "Archived ({count})"
+    },
+    "columns": {
+      "vendor": "Vendor",
+      "status": "Status",
+      "risk": "Risk",
+      "data": "Data and place",
+      "owner": "Owner",
+      "actions": "Actions"
+    },
+    "categories": {
+      "cloud": "Cloud and hosting",
+      "payments": "Payments",
+      "communications": "Email and messaging",
+      "hr": "HR and payroll",
+      "support": "Support",
+      "analytics": "Analytics",
+      "other": "Other"
+    },
+    "locations": {
+      "notSaid": "Not said yet",
+      "india": "Kept in India",
+      "abroad": "Kept abroad",
+      "both": "Kept in India and abroad"
+    },
+    "dataKinds": {
+      "name": "Names",
+      "contact": "Contact details",
+      "government_id": "Government IDs",
+      "financial": "Financial details",
+      "health": "Health data",
+      "location": "Location",
+      "biometric": "Biometrics",
+      "credentials": "Logins and passwords",
+      "employment": "Employment details",
+      "children": "Children’s data",
+      "other": "Other"
+    },
+    "attention": {
+      "details": "Details missing",
+      "assessment": "Not assessed yet",
+      "review": "Review date passed"
+    },
+    "form": {
+      "name": "Vendor name",
+      "service": "What it does for you",
+      "serviceHint": "For example, runs our payroll or hosts our database.",
+      "category": "Kind of service",
+      "location": "Where it keeps the data",
+      "website": "Website",
+      "owner": "Who answers for it",
+      "noOwner": "Nobody yet",
+      "data": "Personal data it is given",
+      "dataHint": "Tick everything it gets.",
+      "agreementUrl": "Link to the agreement",
+      "agreementUrlHint": "A link to the document in your own storage, such as Google Drive or SharePoint.",
+      "nextReviewOn": "Review again by",
+      "clearDate": "Clear the date",
+      "openCalendar": "Open the calendar",
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel",
+      "status": "Status"
+    },
+    "addHint": "Who it is and what it does. You fill in the rest on its page next.",
+    "archiveShort": "Archive",
+    "restoreShort": "Bring back",
+    "noData": "Not said yet",
+    "archivedNote": "This vendor is archived. Bring it back to change it.",
+    "sections": {
+      "edit": "Edit",
+      "details": {
+        "title": "Details",
+        "description": "What kind of service it is, how far it has been assessed, and who answers for it.",
+        "editTitle": "Change details"
+      },
+      "data": {
+        "title": "Data and place",
+        "description": "What personal data it is given, and where it keeps it.",
+        "editTitle": "Change data and place"
+      },
+      "review": {
+        "title": "Agreement and review",
+        "description": "Where the agreement is kept, and when to look at the vendor again.",
+        "editTitle": "Change agreement and review"
+      }
+    },
+    "risk": {
+      "title": "Risk",
+      "notRated": "Not rated yet",
+      "clear": "Start again",
+      "score": "{score} of 25",
+      "useSuggestion": "Start from the suggestion: {likelihood}, {impact}",
+      "inherent": {
+        "title": "Before your measures",
+        "hint": "How risky the vendor is before you do anything about it.",
+        "short": "Before"
+      },
+      "residual": {
+        "title": "After your measures",
+        "hint": "What is left once your own measures, such as the agreement and checks, are in place.",
+        "short": "After"
+      },
+      "likelihood": {
+        "1": "Very unlikely",
+        "2": "Unlikely",
+        "3": "Possible",
+        "4": "Likely",
+        "5": "Very likely",
+        "question": "How likely is a loss?"
+      },
+      "impact": {
+        "1": "Insignificant",
+        "2": "Minor",
+        "3": "Moderate",
+        "4": "Major",
+        "5": "Severe",
+        "question": "How bad would it be?"
+      },
+      "levels": {
+        "very_low": "Very low",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "very_high": "Very high"
+      },
+      "summary": {
+        "title": "Where it stands",
+        "description": "The risk on a map of how likely a loss is against how bad it would be. A ring is where it started, a solid dot is where it is now."
+      },
+      "compareHint": "Rate the risk before and after your measures to see the difference.",
+      "points": "{count} points",
+      "reduced": "Your measures bring the risk down from {from} to {to}.",
+      "increased": "The risk after your measures is higher than before: {from} to {to}. Check the ratings.",
+      "unchanged": "Your measures leave the risk at {to}.",
+      "now": "Risk now",
+      "outOf": "of {max}",
+      "map": {
+        "impact": "Impact",
+        "likelihood": "Likelihood"
+      },
+      "treatment": {
+        "title": "Treatment plan",
+        "description": "What you have decided to do about this risk, and why. This is what an auditor will ask for.",
+        "strategy": "What will you do about it?",
+        "rationale": "Why is this the right decision?",
+        "rationaleHint": "In a few words: what you are relying on, or what you will check.",
+        "save": "Save",
+        "notDecided": "Not decided yet",
+        "strategies": {
+          "mitigate": {
+            "name": "Reduce it",
+            "about": "Add safeguards, contract terms or checks that bring the risk down."
+          },
+          "transfer": {
+            "name": "Share it",
+            "about": "Move the risk to someone else, for example by contract or insurance."
+          },
+          "accept": {
+            "name": "Accept it",
+            "about": "The risk is low enough, or not worth reducing, and you are choosing to live with it."
+          },
+          "avoid": {
+            "name": "Avoid it",
+            "about": "Stop using the vendor, or stop giving it the data."
+          }
+        }
+      },
+      "reduction": {
+        "title": "Risk reduction",
+        "description": "What your measures take off the score: the risk before, and after.",
+        "empty": "Rate the risk on the Risk tab, before and after your measures, to see the difference here.",
+        "one": "Rate the other one too, on the Risk tab, to see how much your measures change it.",
+        "lower": "Your measures take <b>{count, plural, one {# point} other {# points}}</b> off the risk.",
+        "higher": "The risk is <b>{count, plural, one {# point} other {# points}}</b> higher after your measures.",
+        "same": "The risk is <b>the same</b> after your measures. Rate it again if they changed anything.",
+        "now": "Now {score}",
+        "before": "Before {score}"
+      }
+    },
+    "activity": {
+      "title": "History",
+      "description": "Every change made to this vendor, newest first.",
+      "empty": "Nothing has been changed yet."
+    },
+    "work": {
+      "review": "Vendor review"
+    },
+    "status": {
+      "not_assessed": "Not assessed",
+      "in_progress": "In progress",
+      "assessed": "Assessed"
+    },
+    "page": {
+      "overview": "Overview",
+      "risk": "Risk",
+      "history": "History",
+      "treatment": "Treatment"
+    }
   }
 }

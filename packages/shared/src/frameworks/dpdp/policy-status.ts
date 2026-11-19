@@ -60,8 +60,6 @@ export interface PolicyApprovalResponse {
 /** A policy with its text and approval history, from `GET /v1/policies/:id`. */
 export interface PolicyDetailResponse extends PolicyResponse {
   legalReferences: string[];
-  /** What the company keeps to show the policy is followed. */
-  evidence: string[];
   approvedAt: string | null;
   approvedByName: string | null;
   /** The number of the latest approved version, or 0 while it has never been approved. */
