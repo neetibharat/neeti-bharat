@@ -684,7 +684,7 @@
   },
   "frameworks": {
     "back": "Frameworks",
-    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules and drafted by counsel. It is general guidance, not advice on your company.",
     "appliesWhen": {
       "children": "Applies if you handle data of children or people with disabilities",
       "abroad": "Applies if you send data outside India",
@@ -983,7 +983,7 @@
       "description": "These do not count until they are restored.",
       "restore": "Restore"
     },
-    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules and drafted by counsel. It is general guidance, not advice on your company.",
     "columns": {
       "policy": "Policy",
       "owner": "Owner",
@@ -1142,11 +1142,11 @@
       },
       "proof": {
         "title": "The proof",
-        "text": "The suggested proof comes from what each policy says to keep. Each item was placed under the control whose wording fits best, by matching words, so some may need moving."
+        "text": "The suggested proof is the list counsel keeps for each control, such as the reports and registers an auditor asks to see. Some controls have no proof of their own. Your company can add, change or archive proof."
       },
       "review": {
         "title": "Not legal advice",
-        "text": "A lawyer has not yet reviewed any of this. Have counsel check the rules, policies and proof before you rely on them."
+        "text": "Counsel drafted the rules, controls, policies and proof. They are general guidance, not advice on your company, so have your own counsel check them before you rely on them."
       },
       "close": "Close"
     },

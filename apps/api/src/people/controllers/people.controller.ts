@@ -54,18 +54,19 @@ export class PeopleController {
     return this.service.list(query);
   }
 
+  @Get('options')
+  @ApiOperation({ summary: 'Active people as id and name, for pickers (admin only)' })
+  options(): Promise<PersonOptionsResponse> {
+    return this.service.options();
+  }
+
+  // After `options`, so that "options" is not read as a person's id.
   @Get(':id')
   @ApiOperation({
     summary: 'One person, with their access and the job roles they hold (admin only)',
   })
   get(@Param('id') id: string): Promise<PersonResponse> {
     return this.service.get(id);
-  }
-
-  @Get('options')
-  @ApiOperation({ summary: 'Active people as id and name, for pickers (admin only)' })
-  options(): Promise<PersonOptionsResponse> {
-    return this.service.options();
   }
 
   @Post()
