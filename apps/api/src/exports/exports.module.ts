@@ -5,11 +5,12 @@ import { FrameworksModule } from '../frameworks/frameworks.module';
 import { ExportsController } from './controllers/exports.controller';
 import { ExportRepository } from './repositories/export.repository';
 import { AuditPackService } from './services/audit-pack.service';
+import { EvidencePackService } from './services/evidence-pack.service';
 import { ExportService } from './services/export.service';
 
 @Module({
   imports: [ActivityModule, FrameworksModule, StorageModule],
   controllers: [ExportsController],
-  providers: [ExportService, AuditPackService, ExportRepository],
+  providers: [ExportService, AuditPackService, EvidencePackService, ExportRepository],
 })
 export class ExportsModule {}

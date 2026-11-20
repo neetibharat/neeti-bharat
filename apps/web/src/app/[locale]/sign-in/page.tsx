@@ -21,10 +21,10 @@ export default async function SignInPage({ params, searchParams }: SignInPagePro
   const [providers, { error }] = await Promise.all([getAuthProviders(), searchParams]);
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+    <main className="relative grid min-h-screen overflow-hidden bg-page lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
       <BrandPanel />
-      <section className="flex items-center justify-center bg-surface px-6 py-12 sm:px-12">
-        <div className="page-stagger w-full max-w-sm">
+      <section className="relative flex items-center justify-center px-6 py-12 sm:px-12">
+        <div className="page-stagger w-full max-w-md rounded-card border border-line/70 bg-surface p-8 shadow-card sm:p-10">
           <div>
             <div className="mb-8 flex items-center gap-2.5 lg:hidden">
               <BrandMark size="md" />

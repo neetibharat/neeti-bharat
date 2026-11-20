@@ -6,28 +6,32 @@ import { useEffect, useState } from 'react';
 import {
   Autocomplete,
   Button as AriaButton,
+  Collection,
   Dialog,
   DialogTrigger,
+  Header,
   Input,
   ListBox,
   ListBoxItem,
+  ListBoxSection,
   Modal,
   ModalOverlay,
   SearchField,
 } from 'react-aria-components';
 import { Button } from '@/components/base/button/button';
+import { useCan } from '@/components/providers/user-provider';
 import { useRouter } from '@/i18n/navigation';
 import { isSearchShortcut } from '@/lib/search';
-import { useSearchItems, type SearchItem } from './use-search-items';
+import type { SearchGroup, SearchItem } from '@/lib/search-groups';
+import { useSearchItems } from './use-search-items';
 
 export interface GlobalSearchProps {
-  isAdmin: boolean;
   /** A wide box with the shortcut shown, or just an icon. */
   variant: 'box' | 'icon';
 }
 
 /** Search for a page or a record from anywhere. Ctrl or Cmd with K opens it from the box. */
-export function GlobalSearch({ isAdmin, variant }: GlobalSearchProps) {
+export function GlobalSearch({ variant }: GlobalSearchProps) {
   const t = useTranslations('search');
   const [open, setOpen] = useState(false);
 
@@ -55,7 +59,7 @@ export function GlobalSearch({ isAdmin, variant }: GlobalSearchProps) {
       >
         <Modal className="w-full max-w-xl overflow-hidden rounded-card border border-line bg-surface shadow-popover outline-none entering:animate-pop-in">
           <Dialog aria-label={t('label')} className="outline-none">
-            <SearchPanel isAdmin={isAdmin} onDone={() => setOpen(false)} />
+            <SearchPanel onDone={() => setOpen(false)} />
           </Dialog>
         </Modal>
       </ModalOverlay>
@@ -77,33 +81,28 @@ function SearchBox({ label }: { label: string }) {
   );
 }
 
-function SearchPanel({ isAdmin, onDone }: { isAdmin: boolean; onDone: () => void }) {
+function SearchPanel({ onDone }: { onDone: () => void }) {
   const t = useTranslations('search');
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const { items, searching, active } = useSearchItems(query, isAdmin);
+  const who = useCan();
+  const { groups, searching, active, remember } = useSearchItems(query, who);
+  const items = groups.flatMap((group) => group.items);
 
   function go(key: string | number) {
     const item = items.find((entry) => entry.key === key);
     if (!item) return;
+    remember(item);
     onDone();
     router.push(item.href);
   }
 
   return (
     <Autocomplete inputValue={query} onInputChange={setQuery} filter={() => true}>
-      <SearchField autoFocus aria-label={t('label')} className="border-b border-line">
-        <div className="flex items-center gap-3 px-4">
-          <IconSearch className="size-5 shrink-0 text-fg-subtle" />
-          <Input
-            placeholder={t('placeholder')}
-            className="h-12 w-full bg-transparent text-body text-fg outline-none placeholder:text-fg-subtle"
-          />
-        </div>
-      </SearchField>
+      <SearchInput label={t('label')} placeholder={t('placeholder')} />
       <ListBox
         aria-label={t('label')}
-        items={items}
+        items={groups}
         onAction={go}
         renderEmptyState={() => (
           <p className="px-4 py-6 text-center text-body text-fg-muted">
@@ -112,9 +111,36 @@ function SearchPanel({ isAdmin, onDone }: { isAdmin: boolean; onDone: () => void
         )}
         className="max-h-[50vh] overflow-y-auto p-2 outline-none"
       >
-        {(item) => <ResultRow item={item} />}
+        {(group) => <ResultGroup group={group} />}
       </ListBox>
     </Autocomplete>
+  );
+}
+
+function SearchInput({ label, placeholder }: { label: string; placeholder: string }) {
+  return (
+    <SearchField autoFocus aria-label={label} className="border-b border-line">
+      <div className="flex items-center gap-3 px-4">
+        <IconSearch className="size-5 shrink-0 text-fg-subtle" />
+        <Input
+          placeholder={placeholder}
+          className="h-12 w-full bg-transparent text-body text-fg outline-none placeholder:text-fg-subtle"
+        />
+      </div>
+    </SearchField>
+  );
+}
+
+function ResultGroup({ group }: { group: SearchGroup }) {
+  const t = useTranslations('search.groups');
+
+  return (
+    <ListBoxSection id={group.id} className="mb-1">
+      <Header className="px-3 pt-2 pb-1 text-caption font-semibold tracking-wide text-fg-subtle uppercase">
+        {t(group.id)}
+      </Header>
+      <Collection items={group.items}>{(item) => <ResultRow item={item} />}</Collection>
+    </ListBoxSection>
   );
 }
 

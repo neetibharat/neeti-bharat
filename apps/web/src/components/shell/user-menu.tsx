@@ -1,6 +1,6 @@
 'use client';
 
-import { IconLogout } from '@tabler/icons-react';
+import { IconKeyboard, IconLogout } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { Button, Menu, MenuItem, MenuTrigger, Popover } from 'react-aria-components';
 import { Avatar } from '@/components/base/avatar/avatar';
@@ -8,6 +8,8 @@ import { NotificationBell } from '@/components/notifications/notification-bell';
 import { useRouter } from '@/i18n/navigation';
 import { authClient } from '@/lib/auth-client';
 import type { SessionUser } from '@/lib/session-user';
+import { OPEN_SHORTCUTS_EVENT } from '@/lib/shortcuts';
+import { ThemePicker } from './theme-picker';
 
 /** The bell and the signed-in person. The person's picture opens a card with who they are and a way to sign out. */
 export function UserMenu({ user }: { user: SessionUser }) {
@@ -45,6 +47,7 @@ export function UserMenu({ user }: { user: SessionUser }) {
 function AccountCard({ user, onSignOut }: { user: SessionUser; onSignOut: () => void }) {
   const t = useTranslations('roles');
   const tAuth = useTranslations('auth');
+  const tNav = useTranslations('nav');
   const displayName = user.name || user.email;
 
   return (
@@ -54,11 +57,18 @@ function AccountCard({ user, onSignOut }: { user: SessionUser; onSignOut: () => 
         <p className="truncate text-caption text-fg-subtle">{user.email}</p>
         <p className="truncate text-caption text-fg-subtle">{t(user.role)}</p>
       </div>
-      <Menu onAction={onSignOut} className="pt-1 outline-none">
-        <MenuItem
-          textValue={tAuth('signOut')}
-          className="flex cursor-pointer items-center gap-2 rounded-[calc(var(--radius-control)-0.25rem)] px-2.5 py-2 text-body text-fg outline-none data-focused:bg-brand-soft"
-        >
+      <ThemePicker />
+      <Menu
+        onAction={(key) =>
+          key === 'shortcuts' ? window.dispatchEvent(new Event(OPEN_SHORTCUTS_EVENT)) : onSignOut()
+        }
+        className="pt-1 outline-none"
+      >
+        <MenuItem id="shortcuts" textValue={tNav('shortcuts')} className={itemClass}>
+          <IconKeyboard className="size-4 text-fg-subtle" />
+          {tNav('shortcuts')}
+        </MenuItem>
+        <MenuItem id="signOut" textValue={tAuth('signOut')} className={itemClass}>
           <IconLogout className="size-4 text-fg-subtle" />
           {tAuth('signOut')}
         </MenuItem>
@@ -66,3 +76,6 @@ function AccountCard({ user, onSignOut }: { user: SessionUser; onSignOut: () => 
     </>
   );
 }
+
+const itemClass =
+  'flex cursor-pointer items-center gap-2 rounded-[calc(var(--radius-control)-0.25rem)] px-2.5 py-2 text-body text-fg outline-none data-focused:bg-brand-soft';

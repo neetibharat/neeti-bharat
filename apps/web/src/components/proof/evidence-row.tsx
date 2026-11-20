@@ -7,6 +7,7 @@ import { Alert } from '@/components/base/alert/alert';
 import { useCan } from '@/components/providers/user-provider';
 import { Button } from '@/components/base/button/button';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';
+import { CheckProofButton } from '@/components/ai-tools/check-proof-button';
 import { useDownloadEvidenceMutation, useRemoveEvidenceMutation } from '@/lib/api/evidence-api';
 import { formatFileSize } from '@/lib/file-size';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -36,6 +37,7 @@ export function EvidenceRow(props: { controlId: string; item: EvidenceResponse }
           {t('addedBy', { name: item.addedByName, date })}
         </p>
       </div>
+      <CheckProofButton controlId={props.controlId} item={item} />
       {canEdit && <RemoveEvidence controlId={props.controlId} item={item} />}
     </li>
   );

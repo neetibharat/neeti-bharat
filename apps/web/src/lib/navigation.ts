@@ -5,6 +5,7 @@ import {
   IconSchool,
   IconBell,
   IconBuilding,
+  IconCalendarDue,
   IconChecklist,
   IconDatabase,
   IconDownload,
@@ -43,6 +44,7 @@ export type SectionId = 'alerts' | 'developers' | 'records' | 'checks' | 'compli
 export type NavItemId =
   | 'dashboard'
   | 'myWork'
+  | 'deadlines'
   | 'frameworks'
   | 'readiness'
   | 'policies'
@@ -94,6 +96,7 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dashboard', href: '/', icon: IconLayoutDashboard, status: 'live' },
           { id: 'myWork', href: '/my-work', icon: IconChecklist, status: 'live' },
+          { id: 'deadlines', href: '/deadlines', icon: IconCalendarDue, status: 'live' },
         ],
       },
       {

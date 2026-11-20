@@ -17,6 +17,8 @@ import { Link } from '@/i18n/navigation';
 import { useSavePolicyContentMutation } from '@/lib/api/policy-edit-api';
 import { isProfileKey } from '@/lib/guards';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { CheckPolicyButton } from '@/components/ai-tools/check-policy-button';
+import { TailorPolicyButton } from '@/components/ai-tools/tailor-policy-button';
 import { PolicyEditor, PolicyReader } from './policy-editor';
 
 /** The text of a policy with each company answer filled in, in the shape the reader sees. */
@@ -70,7 +72,7 @@ export function PolicyDocumentCard({ policy }: { policy: PolicyDetailResponse })
     <Card
       title={t('title')}
       description={description}
-      actions={<CardButtons draft={draft} canEdit={canEdit} />}
+      actions={<CardButtons policy={policy} draft={draft} canEdit={canEdit} />}
     >
       <div className="flex flex-col gap-5">
         {draft.editing ? <Editing policy={policy} draft={draft} /> : <Reading policy={policy} />}
@@ -81,7 +83,8 @@ export function PolicyDocumentCard({ policy }: { policy: PolicyDetailResponse })
 
 type Draft = ReturnType<typeof useDraft>;
 
-function CardButtons({ draft, canEdit }: { draft: Draft; canEdit: boolean }) {
+function CardButtons(props: { policy: PolicyDetailResponse; draft: Draft; canEdit: boolean }) {
+  const { policy, draft, canEdit } = props;
   const t = useTranslations('policies.document');
 
   if (draft.editing) {
@@ -96,11 +99,17 @@ function CardButtons({ draft, canEdit }: { draft: Draft; canEdit: boolean }) {
       </>
     );
   }
-  return canEdit ? (
-    <Button color="secondary" onPress={draft.start}>
-      {t('edit')}
-    </Button>
-  ) : null;
+  return (
+    <>
+      <CheckPolicyButton policyId={policy.id} />
+      <TailorPolicyButton policy={policy} />
+      {canEdit && (
+        <Button color="secondary" onPress={draft.start}>
+          {t('edit')}
+        </Button>
+      )}
+    </>
+  );
 }
 
 function Editing({ policy, draft }: { policy: PolicyDetailResponse; draft: Draft }) {

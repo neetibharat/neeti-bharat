@@ -250,3 +250,36 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/*
+ * Dark theme: the same semantic tokens with dark values. Components use only the semantic layer, so this block is the
+ * whole of it. The attribute is set before the page paints (see the script in the root layout).
+ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-page: #0b1220;
+  --color-surface: #111a2b;
+  --color-surface-muted: #172236;
+  --color-surface-sunken: #0e1727;
+  --color-line: #223049;
+  --color-line-strong: #34476a;
+  --color-fg: #e6ebf3;
+  --color-fg-muted: #a8b4c8;
+  --color-fg-subtle: #8190a8;
+  --color-brand: #7f9bbd;
+  --color-brand-hover: #9bb3d0;
+  --color-brand-soft: #1a2a45;
+  --color-brand-line: #2f4a73;
+  --color-accent: #f59e0b;
+  --color-accent-soft: #3a2a10;
+  --color-overlay: rgb(0 0 0 / 0.6);
+  --color-tooltip: #e6ebf3;
+  --color-on-brand: #0b1220;
+  --color-chart-draft: #34476a;
+  --color-success: #34d399;
+  --color-success-soft: #0f2e22;
+  --color-danger: #f87171;
+  --color-danger-soft: #3a1518;
+  --color-info: #38bdf8;
+  --color-info-soft: #0c2a3d;
+}

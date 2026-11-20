@@ -24,8 +24,11 @@ import { TransactionAfterBody } from '../../core/prisma/transaction.interceptor'
 import type { UploadedFile as Upload } from '../../frameworks/utils/evidence-file';
 import {
   ImportPolicyDto,
+  SaveAiFeaturesDto,
   SaveAiSettingsDto,
+  saveAiFeaturesSchema,
   saveAiSettingsSchema,
+  type SaveAiFeaturesInput,
   type SaveAiSettingsInput,
 } from '../dto/ai.dto';
 import { AiSettingsService } from '../services/ai-settings.service';
@@ -75,6 +78,21 @@ export class AiController {
     return this.settings.save(body, actorOf(user));
   }
 
+  @Put('ai/features')
+  @Roles(['admin'])
+  @NoApiKey()
+  @ApiOperation({
+    summary:
+      'Switch AI features off or on, without touching the key or the model (admin only, never an API key)',
+  })
+  @ApiBody({ type: SaveAiFeaturesDto })
+  setFeatures(
+    @Body(new ZodValidationPipe(saveAiFeaturesSchema)) body: SaveAiFeaturesInput,
+    @Session() { user }: UserSession,
+  ): Promise<AiSettingsResponse> {
+    return this.settings.setFeatures(body.disabledFeatures, actorOf(user));
+  }
+
   @Delete('ai')
   @HttpCode(204)
   @Roles(['admin'])
@@ -97,7 +115,10 @@ export class AiController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: ImportPolicyDto })
-  import(@UploadedFile() file: Upload | undefined): Promise<PolicyImportResponse> {
-    return this.imports.read(file);
+  import(
+    @UploadedFile() file: Upload | undefined,
+    @Session() { user }: UserSession,
+  ): Promise<PolicyImportResponse> {
+    return this.imports.read(file, actorOf(user));
   }
 }

@@ -5,7 +5,7 @@ import { PROOF_REQUIREMENTS } from './proof-requirements.js';
 
 describe('PROOF_REQUIREMENTS', () => {
   it('has the agreed amount', () => {
-    expect(PROOF_REQUIREMENTS).toHaveLength(39);
+    expect(PROOF_REQUIREMENTS).toHaveLength(68);
   });
 
   it('has unique ids', () => {

@@ -9,6 +9,7 @@ import { useCan } from '@/components/providers/user-provider';
 import { Link } from '@/i18n/navigation';
 import { useGetMyTrainingQuery } from '@/lib/api/training-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { NoTrainings } from './manage-trainings';
 import { TrainingList, useDay } from './training-list';
 
 /** Shown once nothing is left to do, with a way to the certificate. */
@@ -40,11 +41,12 @@ function AllDone({ on }: { on: string }) {
 export function MyTraining() {
   const t = useTranslations('training.mine');
   const errorMessage = useErrorMessage();
-  const { canEdit } = useCan();
+  const { canEdit, isAdmin } = useCan();
   const { data, error } = useGetMyTrainingQuery();
 
   if (error) return <Alert tone="error">{errorMessage(error)}</Alert>;
   if (!data) return <Loading />;
+  if (data.items.length === 0 && isAdmin) return <NoTrainings />;
   if (data.items.length === 0) {
     return <EmptyState icon={IconSchool} title={t('none.title')} description={t('none.body')} />;
   }

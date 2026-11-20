@@ -7,6 +7,7 @@ import { MotionProvider } from '@/components/providers/motion-provider';
 import { StoreProvider } from '@/components/providers/store-provider';
 import { requireLocale } from '@/i18n/require-locale';
 import { routing } from '@/i18n/routing';
+import { THEME_BOOT_SCRIPT } from '@/lib/theme';
 import '../globals.css';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist', display: 'swap' });
@@ -38,7 +39,15 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${geist.variable} ${geistMono.variable}`}>
+    // The boot script may set the theme on <html> before React sees it, so that one attribute is allowed to differ.
+    <html
+      lang={locale}
+      className={`${geist.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="bg-page text-fg antialiased">
         <NextIntlClientProvider>
           <MotionProvider>

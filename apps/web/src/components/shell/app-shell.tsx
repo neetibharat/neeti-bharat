@@ -4,19 +4,21 @@ import { DesktopSidebar } from './desktop-sidebar';
 import { MobileBar } from './mobile-bar';
 import { SidebarContent } from './sidebar-content';
 import { GlobalSearch } from './search/global-search';
+import { ShortcutsHelp } from './shortcuts-help';
 import { UserMenu } from './user-menu';
 
 export function AppShell({ user, children }: { user: SessionUser; children: ReactNode }) {
   return (
     <div className="min-h-screen bg-page lg:grid lg:grid-cols-[auto_minmax(0,1fr)] print:block">
       <DesktopSidebar user={user} />
+      <ShortcutsHelp />
       <div className="min-w-0">
         <MobileBar user={user}>
           <SidebarContent user={user} />
         </MobileBar>
         <div className="hidden h-14 items-center px-5 lg:flex print:hidden">
           <div className="flex flex-1 justify-center">
-            <GlobalSearch isAdmin={user.role === 'admin'} variant="box" />
+            <GlobalSearch variant="box" />
           </div>
           <UserMenu user={user} />
         </div>

@@ -97,7 +97,7 @@ function TrainingsTable({ data }: { data: TrainingListResponse }) {
 }
 
 /** For a company with none, the suggested trainings in one click. */
-function NoTrainings() {
+export function NoTrainings() {
   const t = useTranslations('training.none');
   const [addSuggested, { isLoading }] = useAddSuggestedTrainingsMutation();
 

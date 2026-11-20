@@ -13,10 +13,12 @@ export interface DownloadButtonProps {
   label: string;
   color?: ButtonProps['color'];
   size?: ButtonProps['size'];
+  isDisabled?: boolean;
 }
 
 /** A button that downloads a file from the API. A failure shows under it, in words. */
-export function DownloadButton({ path, fallbackName, label, color, size }: DownloadButtonProps) {
+export function DownloadButton(props: DownloadButtonProps) {
+  const { path, fallbackName, label, color, size, isDisabled } = props;
   const errorMessage = useErrorMessage();
   const { download, isLoading, error } = useDownload(path, fallbackName);
 
@@ -27,6 +29,7 @@ export function DownloadButton({ path, fallbackName, label, color, size }: Downl
         size={size}
         iconLeading={IconDownload}
         isLoading={isLoading}
+        isDisabled={isDisabled}
         onPress={download}
       >
         {label}

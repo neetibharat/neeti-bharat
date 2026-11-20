@@ -13,11 +13,11 @@ import { DatePicker } from '@/components/base/date-picker/date-picker';
 import { FormActions } from '@/components/base/form-actions/form-actions';
 import { Input } from '@/components/base/input/input';
 import { Select } from '@/components/base/select/select';
-import { Textarea } from '@/components/base/textarea/textarea';
 import { trimStrings } from '@/lib/form';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
 import { AssigneeSelect } from '@/components/frameworks/assignee-select';
+import { TemplateTextarea } from './template-textarea';
 
 export const NEW_REQUIREMENT: SaveProofRequirementRequest = {
   title: '',
@@ -78,13 +78,13 @@ function Fields(props: {
         maxLength={PROOF_TITLE_MAX_LENGTH}
         autoFocus
       />
-      <Textarea
+      <TemplateTextarea
         label={t('description')}
         hint={t('descriptionHint')}
         value={values.description}
         onChange={(description) => onChange({ description })}
         maxLength={PROOF_DESCRIPTION_MAX_LENGTH}
-        rows={2}
+        rows={5}
       />
       <Select
         label={t('frequency')}

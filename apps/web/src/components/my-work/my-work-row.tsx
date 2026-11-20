@@ -18,7 +18,7 @@ import { IconLinkRow, type RowTone } from '@/components/base/icon-link-row/icon-
 import { isBreachStep, isRequestType } from '@/lib/guards';
 import { myWorkHref } from '@/lib/my-work-tabs';
 
-const LOOK: Record<MyWorkKind, { icon: Icon; tone: RowTone }> = {
+export const WORK_LOOK: Record<MyWorkKind, { icon: Icon; tone: RowTone }> = {
   breach: { icon: IconAlertTriangle, tone: 'danger' },
   request: { icon: IconInbox, tone: 'danger' },
   proof: { icon: IconPaperclip, tone: 'brand' },
@@ -30,7 +30,7 @@ const LOOK: Record<MyWorkKind, { icon: Icon; tone: RowTone }> = {
 };
 
 /** What it belongs to, in words. For a breach that is the step to do next, for a request its type. */
-function useItemContext(item: MyWorkItem): string {
+export function useWorkContext(item: MyWorkItem): string {
   const tSteps = useTranslations('breaches.steps');
   const tTypes = useTranslations('requests.types');
   const tVendor = useTranslations('vendors.work');
@@ -45,7 +45,7 @@ function useItemContext(item: MyWorkItem): string {
 /** One thing to do: what it is, what it belongs to, and when. It opens the breach, the request, the proof or the policy. */
 export function MyWorkRow({ item }: { item: MyWorkItem }) {
   const t = useTranslations('dashboard.work');
-  const context = useItemContext(item);
+  const context = useWorkContext(item);
 
   return (
     <IconLinkRow
@@ -53,7 +53,7 @@ export function MyWorkRow({ item }: { item: MyWorkItem }) {
       title={item.title}
       subtitle={`${t(`kinds.${item.kind}`)} · ${context}`}
       trailing={<DueLabel item={item} />}
-      {...LOOK[item.kind]}
+      {...WORK_LOOK[item.kind]}
     />
   );
 }

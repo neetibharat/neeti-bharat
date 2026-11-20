@@ -4,6 +4,7 @@ import { IconUserPlus } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';
+import { useOpenFromLink } from '@/lib/hooks/use-open-from-link';
 import { useAddPersonMutation } from '@/lib/api/people-api';
 import { PersonForm } from './person-form';
 
@@ -11,8 +12,10 @@ const EMPTY = { name: '', email: '', department: '', jobTitle: '', access: 'memb
 
 export function AddPersonButton() {
   const t = useTranslations('people');
+  const openFromLink = useOpenFromLink();
   return (
     <Modal
+      defaultOpen={openFromLink}
       trigger={<Button iconLeading={IconUserPlus}>{t('addPerson')}</Button>}
       title={t('addPerson')}
     >

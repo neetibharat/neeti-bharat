@@ -32,6 +32,7 @@ function Rows(props: {
   onPage: (page: number) => void;
 }) {
   const t = useTranslations('breaches.empty');
+  const { canEdit } = useCan();
   const { data, tab } = props;
 
   if (data.items.length === 0) {
@@ -40,6 +41,11 @@ function Rows(props: {
         icon={IconAlertTriangle}
         title={t(props.isSearching ? 'noMatch' : `${tab}Title`)}
         description={props.isSearching ? undefined : t(`${tab}Text`)}
+        action={
+          canEdit && tab === 'open' && !props.isSearching ? (
+            <ReportBreachButton openFromLink={false} />
+          ) : undefined
+        }
       />
     );
   }
