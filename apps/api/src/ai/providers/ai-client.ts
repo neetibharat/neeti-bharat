@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import type { AiProvider } from '@dpdp-kit/shared';
 
 /** Which service, which model and whose key a call is made with. */
@@ -48,6 +48,8 @@ const DETAIL_MAX_LENGTH = 200;
 
 @Injectable()
 export class HttpAiClient extends AiClient {
+  private readonly logger = new Logger(HttpAiClient.name);
+
   async verify(target: AiTarget): Promise<void> {
     const prompt = {
       system: 'Reply with the JSON object {"ok": true} and nothing else.',
@@ -65,6 +67,7 @@ export class HttpAiClient extends AiClient {
       target.provider === 'anthropic'
         ? anthropicRequest(target, prompt)
         : openAiRequest(target, prompt);
+    const started = Date.now();
     let response: Response;
     try {
       response = await fetch(request.url, {
@@ -77,6 +80,10 @@ export class HttpAiClient extends AiClient {
       throw new AiProviderError('timeout');
     }
     const body: unknown = await response.json().catch(() => null);
+    // How long the service took and how much it read and wrote, so a slow call can be explained. Never the key or the text.
+    this.logger.log(
+      `${target.provider} ${target.model}: ${response.status}, ${elapsed(started)}s, ${usageText(body)}`,
+    );
     if (!response.ok) throw failureOf(response.status, body, target.apiKey);
     const text = target.provider === 'anthropic' ? anthropicText(body) : openAiText(body);
     if (!text) throw new AiProviderError('empty');
@@ -90,6 +97,14 @@ interface ProviderRequest {
   body: unknown;
 }
 
+/**
+ * DeepSeek's models think at length, out of sight, before every answer unless told not to. These jobs are short answers
+ * in a fixed shape, so thinking only adds waiting (and can disturb strict JSON). The field is DeepSeek's own and no other
+ * service is sent it.
+ */
+const quietThinking = (target: AiTarget) =>
+  target.provider === 'deepseek' ? { thinking: { type: 'disabled' } } : {};
+
 function openAiRequest(target: AiTarget, prompt: AiPrompt): ProviderRequest {
   return {
     url: `${BASE_URL[target.provider]}/chat/completions`,
@@ -101,6 +116,7 @@ function openAiRequest(target: AiTarget, prompt: AiPrompt): ProviderRequest {
         { role: 'user', content: prompt.user },
       ],
       response_format: { type: 'json_object' },
+      ...quietThinking(target),
     },
   };
 }
@@ -116,6 +132,30 @@ function anthropicRequest(target: AiTarget, prompt: AiPrompt): ProviderRequest {
       messages: [{ role: 'user', content: prompt.user }],
     },
   };
+}
+
+const elapsed = (started: number): string => ((Date.now() - started) / 1000).toFixed(1);
+
+interface Usage {
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  input_tokens?: number;
+  output_tokens?: number;
+  completion_tokens_details?: { reasoning_tokens?: number };
+}
+
+const reasoningNote = (usage: Usage): string => {
+  const reasoning = usage.completion_tokens_details?.reasoning_tokens;
+  return reasoning ? ` (${reasoning} reasoning)` : '';
+};
+
+/** What a service says it read and wrote, in a few words, such as "read 2100, wrote 340 (120 reasoning)". */
+export function usageText(body: unknown): string {
+  const usage = (body as { usage?: Usage } | null)?.usage;
+  if (!usage) return 'no usage reported';
+  const read = usage.prompt_tokens ?? usage.input_tokens ?? 0;
+  const wrote = usage.completion_tokens ?? usage.output_tokens ?? 0;
+  return `read ${read}, wrote ${wrote}${reasoningNote(usage)}`;
 }
 
 const openAiText = (body: unknown): string =>

@@ -528,24 +528,24 @@ model PolicyApproval {
 // Everyone who works at the company, with or without a login. A person's access is not stored here:
 // it is read from their account (User) or open invitation, matched by email, so there is one source of truth.
 model Person {
-  organizationId    String
-  organization      Organization       @relation(fields: [organizationId], references: [id])
-  id                String             @id @default(uuid(7))
-  name              String
-  email             String
-  department        String?
-  jobTitle          String?
-  status            PersonStatus       @default(active)
-  leftAt            DateTime?          @db.Timestamptz(3)
-  createdAt         DateTime           @default(now()) @db.Timestamptz(3)
-  updatedAt         DateTime           @updatedAt @db.Timestamptz(3)
-  roles             RoleAssignment[]
-  controls          Control[]
-  proofRequirements ProofRequirement[]
-  policies          Policy[]
-  breaches          Breach[]
-  requests          DataRequest[]
-  vendors           Vendor[]
+  organizationId      String
+  organization        Organization         @relation(fields: [organizationId], references: [id])
+  id                  String               @id @default(uuid(7))
+  name                String
+  email               String
+  department          String?
+  jobTitle            String?
+  status              PersonStatus         @default(active)
+  leftAt              DateTime?            @db.Timestamptz(3)
+  createdAt           DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime             @updatedAt @db.Timestamptz(3)
+  roles               RoleAssignment[]
+  controls            Control[]
+  proofRequirements   ProofRequirement[]
+  policies            Policy[]
+  breaches            Breach[]
+  requests            DataRequest[]
+  vendors             Vendor[]
   trainingCompletions TrainingCompletion[]
   policyAcceptances   PolicyAcceptance[]
 
@@ -748,18 +748,20 @@ model CompanyLogo {
 
 // The AI service a company has chosen to read documents with, and its key. There is at most one a company.
 model AiSetting {
-  organizationId String       @id
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId   String       @id
+  organization     Organization @relation(fields: [organizationId], references: [id])
   /// One of AI_PROVIDERS in packages/shared.
-  provider       String
-  model          String
+  provider         String
+  model            String
   /// The API key, sealed by the secret box. Never sent to the web.
-  apiKey         String
+  apiKey           String
   /// The last four characters of the key, so people can tell which one is set.
-  keyHint        String
+  keyHint          String
+  /// Features of AI_FEATURES in packages/shared that an admin has switched off. Empty means all are on.
+  disabledFeatures String[]     @default([])
   /// The name is copied here, so the change stays attributed after the person leaves.
-  updatedByName  String
-  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+  updatedByName    String
+  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
 
   @@map("ai_settings")
 }
@@ -844,21 +846,21 @@ enum VendorTreatment {
 // longer used is archived and keeps its row.
 model Vendor {
   organizationId     String
-  organization       Organization   @relation(fields: [organizationId], references: [id])
-  id                 String         @id @default(uuid(7))
+  organization       Organization     @relation(fields: [organizationId], references: [id])
+  id                 String           @id @default(uuid(7))
   name               String
   website            String?
   /// What the vendor does for the company.
   service            String
   category           VendorCategory
-  status             VendorStatus   @default(not_assessed)
+  status             VendorStatus     @default(not_assessed)
   /// Codes from VENDOR_DATA_KINDS in packages/shared.
   dataKinds          String[]
   /// Empty until someone says where the vendor keeps the data.
   location           VendorLocation?
   /// A link to the agreement, kept in the company's own storage.
   agreementUrl       String?
-  nextReviewOn       DateTime?      @db.Timestamptz(3)
+  nextReviewOn       DateTime?        @db.Timestamptz(3)
   /// The risk before anything is done about it, as a place on a five-by-five grid (1 to 5 each). Empty until rated.
   inherentLikelihood Int?
   inherentImpact     Int?
@@ -870,10 +872,10 @@ model Vendor {
   treatmentNote      String?
   /// Who answers for the vendor. Cleared if they leave.
   ownerId            String?
-  owner              Person?        @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-  archivedAt         DateTime?      @db.Timestamptz(3)
-  createdAt          DateTime       @default(now()) @db.Timestamptz(3)
-  updatedAt          DateTime       @updatedAt @db.Timestamptz(3)
+  owner              Person?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  archivedAt         DateTime?        @db.Timestamptz(3)
+  createdAt          DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime         @updatedAt @db.Timestamptz(3)
 
   @@unique([organizationId, name])
   @@index([ownerId])

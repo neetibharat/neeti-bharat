@@ -11,6 +11,22 @@
     "heading": "DPDP compliance, in one place",
     "tagline": "Know what the law asks, do the work, and keep the proof."
   },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "items": {
+      "search": "Search pages and records",
+      "help": "Show this list",
+      "move": "Move through results",
+      "open": "Open the chosen result",
+      "close": "Close a dialog or the search"
+    }
+  },
+  "theme": {
+    "label": "Appearance",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
   "search": {
     "open": "Search",
     "trigger": "Search pages and records",
@@ -19,13 +35,29 @@
     "hint": "Type at least 2 letters to search records.",
     "empty": "Nothing found for this search.",
     "page": "Page",
+    "action": "Action",
+    "groups": {
+      "recent": "Recent",
+      "actions": "Quick actions",
+      "pages": "Pages",
+      "records": "Records"
+    },
+    "actions": {
+      "policy": "New policy",
+      "breach": "Log a breach",
+      "request": "Log a request",
+      "vendor": "Add a vendor",
+      "person": "Add a person"
+    },
     "kinds": {
       "policy": "Policy",
       "proof": "Proof",
       "vendor": "Vendor",
       "breach": "Breach",
       "request": "Request",
-      "person": "Person"
+      "person": "Person",
+      "rule": "Rule",
+      "control": "Control"
     }
   },
   "nav": {
@@ -34,6 +66,7 @@
     "expand": "Expand sidebar",
     "openMenu": "Open menu",
     "account": "Account menu",
+    "shortcuts": "Keyboard shortcuts",
     "soon": "Soon",
     "areas": {
       "workspace": "Workspace",
@@ -68,6 +101,7 @@
       "activityLog": "Activity log",
       "aiHelp": "AI help",
       "myWork": "My work",
+      "deadlines": "Deadlines",
       "exports": "Exports",
       "websiteCheck": "Website checks",
       "readiness": "Readiness check"
@@ -94,7 +128,6 @@
       "continueWithMicrosoft": "Continue with Microsoft",
       "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation.",
       "brand": {
-        "headline": "Privacy compliance your auditors can trust",
         "subline": "Everything the DPDP Act asks of you in one place: a checklist, your policies, the proof, and a record of every change.",
         "features": {
           "checklist": {
@@ -110,7 +143,30 @@
             "body": "It runs on your own servers, so your data stays with you."
           }
         },
-        "footer": "For the Digital Personal Data Protection Act, 2023"
+        "footer": "For the Digital Personal Data Protection Act, 2023",
+        "eyebrow": "For India’s DPDP Act · Free and self-hosted",
+        "headlineLead": "Privacy compliance",
+        "headlineAccent": "your auditors can trust.",
+        "chain": {
+          "law": {
+            "label": "The law",
+            "tag": "Rule 6",
+            "title": "Security safeguards",
+            "text": "What the Act asks of you, in plain words."
+          },
+          "control": {
+            "label": "The control",
+            "tag": "DPDP-R6-05",
+            "title": "Log integrity and review",
+            "text": "One job, with an owner and the policy that covers it."
+          },
+          "proof": {
+            "label": "The proof",
+            "tag": "Every month",
+            "title": "Monthly log review sign-off",
+            "text": "What an auditor asks to see, kept and ready."
+          }
+        }
       }
     },
     "signOut": "Sign out"
@@ -151,6 +207,8 @@
     "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY.",
     "AI_NOT_CONFIGURED": "AI help is not set up yet. An admin can set it up under Settings, AI help.",
     "AI_FAILED": "{reason, select, key {The AI service did not accept the key. Check that it is right and has not been revoked.} busy {The AI service is busy, or the key has reached its limit. Try again in a moment.} timeout {The AI service did not answer in time. Try again, or try a shorter file.} empty {The AI service sent back nothing. Try again.} unusable {The AI service answered, but not in a form that can be used. Try again.} other {The AI service refused the request. {detail}}}",
+    "AI_FEATURE_OFF": "An admin has switched this AI feature off. It can be turned on again under Settings, AI help.",
+    "NOTHING_TO_CHECK": "There is nothing here the AI can check. A picture, a scan or a link on its own has no text to read, and a policy that covers no control has nothing to be read against.",
     "FILE_UNREADABLE": "No text could be read from this file. A scan is a picture, so it has no text to read. Try a copy saved from the original document.",
     "FILE_TOO_LONG": "This file has far more text than a policy does. Check that it is the right file."
   },
@@ -189,14 +247,51 @@
     },
     "aiHelp": {
       "title": "AI help",
-      "description": "Connect an AI service so DPDP Kit can read a policy from a file. Optional, and a person always decides."
+      "description": "Connect an AI service so DPDP Kit can help draft and check policies and proof. Optional, and a person always decides."
     },
     "myWork": {
       "title": "My work",
       "description": "Everything waiting on one person, in the order to do it.",
       "mine": "Me",
       "viewing": "Whose work to show"
+    },
+    "deadlines": {
+      "title": "Deadlines",
+      "description": "Everything in the company with a date on it: breach reports, requests, proof, reviews and training."
     }
+  },
+  "deadlines": {
+    "tabs": {
+      "overdue": "Overdue ({count})",
+      "week": "This week ({count})",
+      "later": "Later ({count})"
+    },
+    "empty": {
+      "overdue": {
+        "title": "Nothing is late",
+        "text": "Every dated job is on time."
+      },
+      "week": {
+        "title": "Nothing due this week",
+        "text": "Jobs due in the next 7 days show here."
+      },
+      "later": {
+        "title": "Nothing coming up",
+        "text": "Reviews and proof due later show here."
+      }
+    },
+    "late": {
+      "days": "{count, plural, one {# day late} other {# days late}}",
+      "hours": "{count, plural, one {# hour late} other {# hours late}}",
+      "minutes": "{count, plural, one {# minute late} other {# minutes late}}"
+    },
+    "left": {
+      "days": "{count, plural, one {Due in # day} other {Due in # days}}",
+      "hours": "{count, plural, one {Due in # hour} other {Due in # hours}}",
+      "minutes": "{count, plural, one {Due in # minute} other {Due in # minutes}}"
+    },
+    "owner": "With {name}",
+    "unassigned": "With the DPO and admins"
   },
   "activity": {
     "title": "Activity log",
@@ -297,7 +392,9 @@
       "READINESS_CHECKED": "Readiness check taken",
       "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed",
       "AI_CONFIGURED": "AI help set up",
-      "AI_REMOVED": "AI help removed"
+      "AI_REMOVED": "AI help removed",
+      "AI_USED": "AI help used",
+      "AI_FEATURES_CHANGED": "AI features changed"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -382,7 +479,9 @@
       "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100",
       "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about",
       "AI_CONFIGURED": "Set up AI help with {provider} ({model})",
-      "AI_REMOVED": "Removed AI help ({provider})"
+      "AI_REMOVED": "Removed AI help ({provider})",
+      "AI_USED": "Used AI help to {feature, select, policy_import {read a policy from a file} policy_tailor {tailor a policy to the company} policy_check {check a policy against the rules} proof_check {check a piece of proof} other {do something}} ({provider}, {model})",
+      "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}"
     },
     "emptyValue": "empty",
     "values": {
@@ -828,7 +927,7 @@
       "form": {
         "title": "What is needed",
         "description": "What to collect (optional)",
-        "descriptionHint": "Paste a link to a template here, such as a Google Doc or a SharePoint file. It will open in a new tab.",
+        "descriptionHint": "Say what to collect. Type / to pick one of the kit’s templates, or paste a link to your own, such as a Google Doc or a SharePoint file.",
         "frequency": "How often",
         "save": "Save",
         "create": "Add",
@@ -859,6 +958,7 @@
     "ownerDefaultTag": "default",
     "rulePage": {
       "back": "DPDP",
+      "evidencePack": "Evidence pack",
       "notApplicable": "This rule does not apply to your company, based on your set-up answers. It is shown for reference and does not count towards your progress.",
       "pillars": {
         "count": "{done} of {total}",
@@ -1295,6 +1395,30 @@
     }
   },
   "dashboard": {
+    "gettingStarted": {
+      "title": "Get started",
+      "description": "Four jobs that set your company up. This goes away once they are done.",
+      "progressLabel": "Set-up progress",
+      "progress": "{done} of {total} done",
+      "steps": {
+        "profile": {
+          "title": "Fill in your company profile",
+          "text": "Name, grievance email and breach contact. Your policies and notices use them."
+        },
+        "people": {
+          "title": "Invite your people",
+          "text": "Add the team who will own controls, proof and approvals."
+        },
+        "readiness": {
+          "title": "Take the readiness check",
+          "text": "25 quick questions that show where you stand and where to start."
+        },
+        "policies": {
+          "title": "Approve your first policy",
+          "text": "Read a draft, change what is needed and approve it."
+        }
+      }
+    },
     "work": {
       "title": "My work",
       "description": "Open the earliest first. Tabs split it by the kind of work.",
@@ -1702,6 +1826,36 @@
       "title": "Audit pack",
       "description": "One zip with every list below, the newest approved text of each policy, every file uploaded as proof, and the result of the activity log's integrity check.",
       "download": "Download audit pack"
+    },
+    "evidence": {
+      "title": "Evidence packs",
+      "description": "One zip for a single rule: its controls, the approved text of the policies behind them, the proof files, and what was done about it. Hand one to an auditor or the Board.",
+      "download": "Download pack",
+      "controls": "{count, plural, one {# control} other {# controls}}",
+      "notApplicable": "Does not apply to your company"
+    },
+    "tabs": {
+      "evidence": "Evidence packs",
+      "lists": "Lists"
+    },
+    "range": {
+      "label": "Date range",
+      "hint": "Cuts proof, breaches, requests and the activity log to these days. The other lists are always whole.",
+      "clear": "Clear range",
+      "openCalendar": "Open calendar",
+      "whole": "Always the whole list",
+      "cutBy": "The range applies to the day it was {date}",
+      "presets": {
+        "last30": "Last 30 days",
+        "thisYear": "This financial year",
+        "lastYear": "Last financial year"
+      },
+      "dates": {
+        "added": "added",
+        "found": "found",
+        "received": "received",
+        "happened": "logged"
+      }
     },
     "lists": {
       "title": "Lists",
@@ -3250,10 +3404,111 @@
       "save": "Save changes"
     }
   },
+  "aiTools": {
+    "diff": {
+      "legendRemoved": "Taken out",
+      "legendAdded": "Put in",
+      "removed": "Taken out",
+      "added": "Put in",
+      "showSame": "Show unchanged text",
+      "hideSame": "Hide unchanged text",
+      "skipped": "{count, plural, one {# unchanged line} other {# unchanged lines}}"
+    },
+    "sends": "This sends {what} to {provider} ({model}) with your company's key. Nothing is saved until you say so.",
+    "run": "Run",
+    "running": "Reading…",
+    "again": "Try again",
+    "cancel": "Cancel",
+    "wait": "This can take up to a minute.",
+    "tailor": {
+      "button": "Tailor to my company",
+      "title": "Tailor this policy to your company",
+      "intro": "Rewrites this draft for your company, using your profile answers, the vendors you have listed and anything you tell it below. It keeps the sections and the legal meaning, and makes generic wording specific where it can. You read the changes and choose whether to replace the text.",
+      "sends": "the text of this policy, your company profile answers, your vendor list (names, what they do, what data they are given and where they work) and the note above",
+      "contextLabel": "About your company (optional)",
+      "contextHint": "What you do, the kind of personal data you handle and where, your systems, how big you are. Written once and kept in this browser for every policy. Do not write personal data about people here.",
+      "contextPlaceholder": "For example: We are a payments company with about 120 staff. We take card and bank details from customers across India, run on AWS Mumbai and use Razorpay and Freshdesk.",
+      "addDetail": "Add detail and try again",
+      "summary": "{count, plural, one {# line would change} other {# lines would change}}.",
+      "unchanged": "Nothing in your answers, vendor list or note bears on this policy, so the AI left the text as it is. Tell it more about your company and try again.",
+      "sectionSummary": "What the AI says it changed",
+      "sectionChanges": "{count, plural, one {The change, line by line} other {The # changes, line by line}}",
+      "noReasons": "The AI gave no reasons for these changes. Read them line by line under Changes.",
+      "close": "Close",
+      "missing": "These answers would let the policy say more: {answers}.",
+      "openProfile": "Open the company profile",
+      "replace": "Replace the text",
+      "discard": "Discard"
+    },
+    "check": {
+      "button": "Check against the rules",
+      "title": "Check this policy against the rules",
+      "intro": "Reads the policy against the controls it is linked to and says how well each is covered, and what to add where it is not.",
+      "sends": "the text of this policy and the rules and controls it covers",
+      "counts": "{covered} covered, {partly} partly, {missing} missing",
+      "suggestion": "Add:",
+      "disclaimer": "A second opinion to weigh, not legal advice. Read the policy yourself before you rely on it.",
+      "close": "Close",
+      "verdicts": {
+        "covered": "Covered",
+        "partly": "Partly",
+        "missing": "Missing"
+      }
+    },
+    "proof": {
+      "button": "Check with AI",
+      "title": "Check this proof",
+      "intro": "Reads the proof against the requirement it was added for and says whether it looks like what was asked.",
+      "sends": "the text of this proof, from the file or the note, and what it was added for",
+      "headline": {
+        "matches": "This looks like what was asked for",
+        "partly": "This shows part of what was asked for",
+        "does_not_match": "This does not look like what was asked for",
+        "unclear": "There is not enough text to tell"
+      },
+      "missing": "{count, plural, one {Not shown by this proof} other {# things not shown by this proof}}",
+      "suggestedTitle": "A clearer title",
+      "dateOnDocument": "Date on the document",
+      "disclaimer": "Judged from the text alone. A picture or a scan cannot be read, and a person still decides whether the proof is enough.",
+      "close": "Close",
+      "verdicts": {
+        "matches": "Looks right",
+        "partly": "Partly",
+        "does_not_match": "Does not match",
+        "unclear": "Unclear"
+      }
+    }
+  },
   "ai": {
+    "features": {
+      "title": "What AI help is used for",
+      "description": "Switch a feature off and it disappears from the app. The key and the model stay as they are, and changing either never changes these.",
+      "items": {
+        "policy_import": {
+          "name": "Read a policy from a file",
+          "about": "Fills in Add policy from a PDF, Word or PowerPoint file.",
+          "sends": "Sends the text of the file and your company profile answers."
+        },
+        "policy_tailor": {
+          "name": "Tailor a draft policy",
+          "about": "Proposes a rewrite of a draft for your company, which you read before keeping.",
+          "sends": "Sends the text of the policy and your company profile answers."
+        },
+        "policy_check": {
+          "name": "Check a policy against the rules",
+          "about": "Says how well a policy covers the controls it is linked to, and what it leaves out.",
+          "sends": "Sends the text of the policy and the rules and controls it covers."
+        },
+        "proof_check": {
+          "name": "Check a piece of proof",
+          "about": "Says whether a file or note looks like what the requirement asks for.",
+          "sends": "Sends the text of the file or note and what it was added for. Pictures and scans cannot be read."
+        }
+      }
+    },
     "card": {
       "title": "AI service",
-      "description": "Used to read policies from PDF, Word and PowerPoint files when you add a policy."
+      "description": "Your own AI service and key. Moving to a different service or model is a change here and nowhere else."
     },
     "status": {
       "on": "Connected",
@@ -3288,7 +3543,7 @@
       "body": "The key is forgotten. Files cannot be read until it is set up again.",
       "confirm": "Remove"
     },
-    "privacy": "When you add a policy from a file, its text is sent to the service you choose, with your key, to be read. DPDP Kit does not keep the file. A person always checks and approves what it suggests.",
+    "privacy": "When you use an AI feature, the text it needs is sent to the service you chose, with your key, to be read. DPDP Kit does not keep it, every use is written to the activity log, and a person always checks and approves what it suggests.",
     "noSecrets": "AI help cannot keep a key yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
   },
   "training": {
@@ -3408,7 +3663,21 @@
     "archive": "Archive {name}",
     "restore": "Bring {name} back",
     "search": "Search vendors",
-    "noMatch": "No vendors here.",
+    "empty": {
+      "noMatch": "No vendor matches your search.",
+      "active": {
+        "title": "No vendors yet",
+        "text": "List the companies that handle personal data for you, such as hosting, payments, email and payroll. Each gets an owner, an agreement and a yearly review."
+      },
+      "attention": {
+        "title": "Nothing needs a look",
+        "text": "Every vendor in use has its details filled in, an assessment and a review that is not late."
+      },
+      "archived": {
+        "title": "No archived vendors",
+        "text": "A vendor you stop using moves here, with its history kept."
+      }
+    },
     "noOwner": "Nobody named",
     "nextReview": "Next review {date}",
     "openAgreement": "Open agreement",

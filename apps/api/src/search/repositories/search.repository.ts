@@ -67,6 +67,36 @@ export class SearchRepository {
     }));
   }
 
+  async rules(q: string): Promise<SearchHit[]> {
+    const rows = await this.prisma.db.requirement.findMany({
+      where: { archivedAt: null, OR: [{ title: like(q) }, { reference: like(q) }] },
+      select: { id: true, frameworkId: true, reference: true, title: true },
+      ...first,
+    });
+    return rows.map((row) => ({
+      kind: 'rule',
+      id: row.id,
+      frameworkId: row.frameworkId,
+      title: row.title,
+      detail: row.reference,
+    }));
+  }
+
+  async controls(q: string): Promise<SearchHit[]> {
+    const rows = await this.prisma.db.control.findMany({
+      where: { archivedAt: null, title: like(q) },
+      select: { id: true, frameworkId: true, requirementId: true, title: true },
+      ...first,
+    });
+    return rows.map((row) => ({
+      kind: 'control',
+      id: row.id,
+      frameworkId: row.frameworkId,
+      ruleId: row.requirementId,
+      title: row.title,
+    }));
+  }
+
   async people(q: string): Promise<SearchHit[]> {
     const rows = await this.prisma.db.person.findMany({
       where: { OR: [{ name: like(q) }, { email: like(q) }] },

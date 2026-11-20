@@ -29,4 +29,19 @@ describe('splitLinks', () => {
       'http://b.in',
     ]);
   });
+
+  it('turns a template file kept with the app into a download shown by its file name', () => {
+    expect(splitLinks('Use /templates/PR-P01-01-notice.docx, then upload it.')).toEqual([
+      { text: 'Use ' },
+      { text: 'PR-P01-01-notice.docx', href: '/templates/PR-P01-01-notice.docx', isFile: true },
+      { text: ', then upload it.' },
+    ]);
+  });
+
+  it('does not take a /templates/ path that is part of a web address as a file', () => {
+    const parts = splitLinks('See https://x.in/templates/a.docx or /other/templates/b.docx');
+    expect(parts.filter((part) => part.href).map((part) => part.href)).toEqual([
+      'https://x.in/templates/a.docx',
+    ]);
+  });
 });

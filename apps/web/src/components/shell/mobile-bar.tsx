@@ -22,7 +22,7 @@ export function MobileBar({ user, children }: { user: SessionUser; children: Rea
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-surface px-4 lg:hidden print:hidden">
       <ProductName />
       <div className="flex items-center gap-1">
-        <GlobalSearch isAdmin={user.role === 'admin'} variant="icon" />
+        <GlobalSearch variant="icon" />
         <UserMenu user={user} />
         <DialogTrigger
           isOpen={openedOn === pathname}

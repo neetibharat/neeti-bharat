@@ -51,6 +51,14 @@ Use the scale in `theme.css`: `caption`, `label`, `body`, `subtitle`, `title`, `
 
 No `font-bold` or `font-extrabold`: they look heavy and uneven.
 
+## Dark theme
+
+The dark theme is the same semantic tokens with other values, in one block at the end of `theme.css` (`:root[data-theme='dark']`). Components use only the semantic layer, so they need nothing of their own; a new token needs a dark value in that block.
+
+- **Choice:** Appearance in the account menu is System, Light or Dark, kept in this browser under `dpdp_theme` (`lib/theme.ts`, `lib/hooks/use-theme.ts`). System follows the device and changes with it.
+- **No flash:** a small script in the page head (`THEME_BOOT_SCRIPT`) sets `data-theme` on `<html>` before anything paints, which is why `<html>` carries `suppressHydrationWarning`.
+- **On a brand fill** (buttons, tooltips) the text is `on-brand`, which is white in the light theme and the dark page colour in the dark one.
+
 ## Motion
 
 - Use motion for things that move between states: the sliding active item in the sidebar, page entry, anything that needs layout animation.
@@ -70,6 +78,7 @@ The shell is a slim, two-part sidebar: a rail of icons (one per area) beside a p
 - **The map lives in one file:** `lib/navigation.ts` lists the areas, their sections and their pages. To ship a module, build its page and change its `status` from `'soon'` to `'live'`. To add a page, add one line there, a route file, and its labels in `messages/en.json`. A test fails if any of the three is missing.
 - **The pieces** are in `components/shell/sidebar/`, one job per file: `sidebar.tsx` (puts it together), `rail.tsx` and `rail-button.tsx` (the icons), `panel.tsx` (the pages), `nav-item.tsx` (one row, with its "Soon" state) and `use-selected-area.ts` (which area the panel shows).
 - **Mobile** shows the same sidebar as a drawer, opened from the top bar.
+- **The top bar** (desktop) holds the global search in the middle and the bell and account menu at the right. On mobile the search is an icon and the bell and account menu sit in the mobile bar.
 - A module that is not built yet uses `comingSoon('<id>')` as its page; replace it when the module ships.
 
 ## Components

@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/base/page-header/page-header';
 import { Loading } from '@/components/base/loading/loading';
 import { useGetAiSettingsQuery, useRemoveAiSettingsMutation } from '@/lib/api/ai-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { AiFeaturesCard } from './ai-features-card';
 import { AiSettingsForm } from './ai-settings-form';
 
 function Fact({ label, value }: { label: string; value: string }) {
@@ -116,6 +117,7 @@ export function AiHelpPage() {
       <div className="flex flex-col gap-5">
         {!data.enabled && <Alert tone="error">{t('noSecrets')}</Alert>}
         <ServiceCard settings={data} />
+        {data.provider && <AiFeaturesCard settings={data} />}
         <Alert>{t('privacy')}</Alert>
       </div>
     </>

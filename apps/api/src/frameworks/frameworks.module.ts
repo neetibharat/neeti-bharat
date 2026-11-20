@@ -14,6 +14,7 @@ import { EvidenceController } from './controllers/evidence.controller';
 import { FrameworksController } from './controllers/frameworks.controller';
 import { PoliciesController } from './controllers/policies.controller';
 import { PolicyAcceptanceController } from './controllers/policy-acceptance.controller';
+import { DeadlinesController } from './controllers/deadlines.controller';
 import { MyWorkController } from './controllers/my-work.controller';
 import { ProofController } from './controllers/proof.controller';
 import { RequirementsController } from './controllers/requirements.controller';
@@ -30,9 +31,12 @@ import { EvidenceService } from './services/evidence.service';
 import { FrameworkSeedService } from './services/framework-seed.service';
 import { FrameworkEditService } from './services/framework-edit.service';
 import { FrameworksService } from './services/frameworks.service';
+import { DeadlinesService } from './services/deadlines.service';
 import { MyWorkService } from './services/my-work.service';
 import { OpenWorkReader } from './services/open-work-reader';
 import { PoliciesService } from './services/policies.service';
+import { PolicyScopeReader } from './services/policy-scope-reader';
+import { ProofReader } from './services/proof-reader';
 import { PolicyAcceptanceService } from './services/policy-acceptance.service';
 import { PolicyEditService } from './services/policy-edit.service';
 import { RuleReader } from './services/rule-reader';
@@ -57,6 +61,7 @@ import { ProofService } from './services/proof.service';
     EvidenceController,
     ProofController,
     MyWorkController,
+    DeadlinesController,
     RequirementsController,
     PoliciesController,
     PolicyAcceptanceController,
@@ -69,8 +74,11 @@ import { ProofService } from './services/proof.service';
     EvidenceService,
     ProofService,
     MyWorkService,
+    DeadlinesService,
     OpenWorkReader,
     PoliciesService,
+    PolicyScopeReader,
+    ProofReader,
     PolicyEditService,
     PolicyAcceptanceService,
     PolicyAcceptanceRepository,
@@ -83,6 +91,13 @@ import { ProofService } from './services/proof.service';
     FrameworkRepository,
     FrameworkSeedRepository,
   ],
-  exports: [FrameworksService, FrameworkSeedService, MyWorkService],
+  exports: [
+    FrameworksService,
+    FrameworkSeedService,
+    MyWorkService,
+    PoliciesService,
+    PolicyScopeReader,
+    ProofReader,
+  ],
 })
 export class FrameworksModule {}

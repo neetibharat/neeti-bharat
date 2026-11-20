@@ -13,6 +13,7 @@ import { dashboardAttention, overall } from '@/lib/dashboard-stats';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { statusCounts } from '@/lib/policy-stats';
 import { AttentionCard } from './attention-card';
+import { GettingStartedCard } from './getting-started-card';
 import { FrameworksCard } from './frameworks-card';
 import { ReadinessHero } from './readiness-hero';
 import { RecentActivityCard } from './recent-activity-card';
@@ -22,12 +23,13 @@ import { WorkPreview } from './work-preview';
 /** Where the company stands today: readiness, what needs attention, and what is waiting on you. */
 export function DashboardPage() {
   const t = useTranslations('home');
-  const { isAdmin } = useCan();
+  const { isAdmin, canEdit } = useCan();
 
   return (
     <>
       <PageHeader title={t('heading')} description={t('tagline')} />
       <div className="flex flex-col gap-5">
+        {canEdit && <GettingStartedCard />}
         <TopRow />
         <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
           <FrameworksRow />

@@ -1,9 +1,11 @@
-import type {
-  NotificationListResponse,
-  NotificationPreferencesResponse,
-  NotificationRoleDefaultsResponse,
-  NotificationUnreadResponse,
-  OrganizationSummary,
+import {
+  APP_ROLES,
+  NOTIFICATION_KINDS,
+  type NotificationListResponse,
+  type NotificationPreferencesResponse,
+  type NotificationRoleDefaultsResponse,
+  type NotificationUnreadResponse,
+  type OrganizationSummary,
 } from '@dpdp-kit/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
@@ -162,7 +164,7 @@ describe('role defaults', () => {
 
   it('start with every role and kind on, and are changed by an admin', async () => {
     const before = await defaults(world.alice);
-    expect(before.body.items).toHaveLength(12);
+    expect(before.body.items).toHaveLength(APP_ROLES.length * NOTIFICATION_KINDS.length);
     expect(before.body.items.every((i) => i.inApp && i.email)).toBe(true);
     const body = { items: [{ role: 'member', kind: 'proof', inApp: true, email: false }] };
     const saved = await world.alice.put<NotificationRoleDefaultsResponse>(

@@ -8,8 +8,10 @@ import { EmptyState } from '@/components/base/empty-state/empty-state';
 import { Pagination } from '@/components/base/pagination/pagination';
 import { Loading } from '@/components/base/loading/loading';
 import { Tabs } from '@/components/base/tabs/tabs';
+import { useCan } from '@/components/providers/user-provider';
 import { useGetRequestsQuery } from '@/lib/api/requests-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
+import { LogRequestButton } from './log-request-button';
 import { RequestsFrame } from './requests-frame';
 import { RequestsTable } from './requests-table';
 import type { RequestView } from './use-request-view';
@@ -22,6 +24,7 @@ function Rows(props: {
   onPage: (page: number) => void;
 }) {
   const t = useTranslations('requests.empty');
+  const { canEdit } = useCan();
   const { data, tab } = props;
 
   if (data.items.length === 0) {
@@ -30,6 +33,11 @@ function Rows(props: {
         icon={IconInbox}
         title={props.isFiltering ? t('noMatch') : t(`${tab}.title`)}
         description={props.isFiltering ? undefined : t(`${tab}.text`)}
+        action={
+          canEdit && tab === 'new' && !props.isFiltering ? (
+            <LogRequestButton openFromLink={false} />
+          ) : undefined
+        }
       />
     );
   }

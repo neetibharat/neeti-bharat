@@ -15,6 +15,8 @@ export class SearchService {
       this.repository.breaches(q),
       this.repository.requests(q),
       this.repository.people(q),
+      this.repository.rules(q),
+      this.repository.controls(q),
     ]);
     return { hits: groups.flat() };
   }
