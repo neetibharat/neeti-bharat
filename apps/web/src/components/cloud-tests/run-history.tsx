@@ -37,7 +37,9 @@ function RunRow({ run, onSelect }: { run: ConnectionRunSummary; onSelect: (id: s
       <TableCell>
         {format.dateTime(new Date(run.ranAt), { dateStyle: 'medium', timeStyle: 'short' })}
       </TableCell>
-      <TableCell className="text-fg-muted">{run.ranByName}</TableCell>
+      <TableCell className="text-fg-muted">
+        {run.bySchedule ? t('bySchedule') : run.ranByName}
+      </TableCell>
       <TableCell>
         <Counts run={run} />
       </TableCell>

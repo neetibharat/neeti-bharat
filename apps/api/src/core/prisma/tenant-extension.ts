@@ -25,6 +25,7 @@ export const TENANT_MODELS: ReadonlySet<string> = new Set([
   'AiSetting',
   'Connection',
   'ConnectionRun',
+  'CheckAcceptance',
   'Vendor',
   'Training',
   'TrainingCompletion',

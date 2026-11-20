@@ -3,6 +3,9 @@ import type {
   ConnectionRunListResponse,
   ConnectionRunResponse,
   ConnectionSummary,
+  AcceptCheckRequest,
+  CheckAcceptanceListResponse,
+  CheckAcceptanceResponse,
   CreateConnectionRequest,
   DiscoverGithubRequest,
   DiscoverGithubResponse,
@@ -10,6 +13,7 @@ import type {
   FindSubscriptionsResponse,
   GithubRepositoriesResponse,
   UpdateConnectionRequest,
+  UpdateConnectionScheduleRequest,
 } from '@dpdp-kit/shared';
 import { CONNECTION_PAGE_SIZE, CONNECTION_RUN_PAGE_SIZE } from '@dpdp-kit/shared';
 import { baseApi } from './base-api';
@@ -35,6 +39,18 @@ export const connectionsApi = baseApi.injectEndpoints({
     updateConnection: build.mutation<ConnectionSummary, { id: string } & UpdateConnectionRequest>({
       query: ({ id, ...body }) => ({
         url: `/connections/${encodeURIComponent(id)}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+    // How often it is checked without anyone asking. Nothing is tried with the system.
+    setConnectionSchedule: build.mutation<
+      ConnectionSummary,
+      { id: string } & UpdateConnectionScheduleRequest
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/connections/${encodeURIComponent(id)}/schedule`,
         method: 'PUT',
         body,
       }),
@@ -85,10 +101,36 @@ export const runsApi = baseApi.injectEndpoints({
   }),
 });
 
+// What people have accepted as deliberate. It counts from the next run, so no proof changes at once.
+export const acceptanceApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    getCheckAcceptances: build.query<CheckAcceptanceListResponse, string>({
+      query: (id) => `/connections/${encodeURIComponent(id)}/acceptances`,
+      providesTags: ['Connection'],
+    }),
+    acceptCheck: build.mutation<CheckAcceptanceResponse, { id: string } & AcceptCheckRequest>({
+      query: ({ id, ...body }) => ({
+        url: `/connections/${encodeURIComponent(id)}/acceptances`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+    removeCheckAcceptance: build.mutation<void, { id: string; acceptanceId: string }>({
+      query: ({ id, acceptanceId }) => ({
+        url: `/connections/${encodeURIComponent(id)}/acceptances/${encodeURIComponent(acceptanceId)}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+  }),
+});
+
 export const {
   useGetConnectionsQuery,
   useCreateConnectionMutation,
   useUpdateConnectionMutation,
+  useSetConnectionScheduleMutation,
   useRemoveConnectionMutation,
 } = connectionsApi;
 
@@ -100,3 +142,9 @@ export const {
 
 export const { useRunConnectionMutation, useGetConnectionRunsQuery, useGetConnectionRunQuery } =
   runsApi;
+
+export const {
+  useGetCheckAcceptancesQuery,
+  useAcceptCheckMutation,
+  useRemoveCheckAcceptanceMutation,
+} = acceptanceApi;

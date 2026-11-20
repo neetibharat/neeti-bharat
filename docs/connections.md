@@ -92,7 +92,38 @@ There are 6 checks in 3 groups. The two about the organisation run once, and the
 
 The results are on their own page, **Cloud checks** (under **Compliance checks** in the Data area, beside Website checks), with one connection at a time, Azure or GitHub (a selector lists up to 100 accounts when there are several; the Connections page links to the right one). **Run checks** always runs the account that is selected, so each account is run on its own. It shows the totals, the checks that need attention or all of them, filters by severity (high, medium or low, a fixed judgement about each check) and a search. Findings are grouped by area. Opening one shows what it checks, when it passes and when it needs attention, why it matters, what this account showed with every resource that did not pass (up to 200), and how to fix it. The History tab lists earlier runs.
 
-**Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it. Checks are run by hand; there is no schedule.
+**Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it.
+
+### Automatic checks
+
+Beside the account, an admin can set **Check automatically** to **Off**, **Every day** or **Every week**. It starts off. The API looks once an hour for connections that are due and checks each one the same way the button does. A check is due when a day (or a week) has passed since the last check or the last try, counted an hour short so the hourly look does not make it an hour late. A check pressed by hand counts, so a connection checked this morning is not checked again by the schedule the same day.
+
+- A scheduled run is kept like any other, marked **Automatic** in the history, and written to the activity log as **Scheduled check**. Changing the schedule is written to the activity log too.
+- When the sign-in fails, for example because a client secret expired, nothing is kept as a run. The connection is marked, the Cloud checks page shows that the last automatic check could not sign in, and the activity log has an entry. The schedule tries again when the next check is due, and the mark goes away when one works.
+- Each try is claimed in the database before it is made, so a restart, or more than one copy of the API, never checks the same connection twice. The schedule does not run in tests.
+- Anyone who can see the page is told when a schedule is on. Only an admin who is signed in as a person can change it; an API key cannot.
+
+## Proof from checks
+
+Some proofs are about how a system is set up, and a run of the checks can show that. Three are listed, and only these:
+
+| Proof                                      | Azure checks behind it                                                                            | GitHub checks behind it                |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| RC02 – User list, roles and MFA status     | Multi-factor sign-in registered and required                                                      | Two-factor sign-in on for every member |
+| RC04 – Privileged (admin) access list      | Global administrator count, privileged roles, wildcard roles, app registrations with broad roles  | Owner count                            |
+| RQ04 – Encryption, masking or tokenisation | Storage secure transfer, encryption at rest, SQL TLS, PostgreSQL and MySQL TLS, web apps on HTTPS | None                                   |
+
+When a run holds up for a proof, the run leaves a dated note on that proof, named **Cloud checks: {connection name}** and added by **Automatic check**. It lists each check behind the proof and says it passed, so an auditor can see what was true on that date. It counts like any other proof, so the proof's own frequency decides when it is due again. Nothing else changes: a run never removes or edits proof, and policies, training and the other proofs are still done by people.
+
+A run holds up for a proof when every check behind it for that system passed, or found nothing of its kind to look at, or was accepted (below), and at least one of them found something to pass. A check that failed, warned without being accepted, or could not answer (the connection may not read it) keeps the note from being made. A connection leaves at most one note on a proof in seven days, so a daily schedule does not bury it. A run of GitHub backs up only the proofs that list GitHub checks, and a run of Azure only the ones that list Azure checks.
+
+### Accepting something as deliberate
+
+A check can flag something that is deliberate, such as a database that is open to the public network behind a firewall. On the Cloud checks page, each resource a check lists has an **Accept** button, and a check that names no resources has one for the check as a whole. It asks why, up to 500 characters. The check still shows the resource, marked as accepted with the reason and who said so, and **Take back** undoes it. An accepted resource no longer keeps a proof from being backed. Accepting counts from the next run, and changes no earlier note.
+
+- Admins and members can accept and take back; auditors can read. Accepting and taking back are written to the activity log.
+- An acceptance belongs to one connection, one check and one resource name, so a new resource that fails is not accepted by an old decision. Accepting the same thing again replaces the reason.
+- A list of resources that was cut short (a result keeps 200) is never taken as all accepted.
 
 ## How credentials are kept
 
@@ -108,6 +139,8 @@ Only these addresses are ever called: for Azure, the Microsoft sign-in service, 
 ## In the code
 
 - `apps/api/src/connections/`: the routes (`/v1/connections`), the services, the repositories and `providers/`. Each provider has a client (`azure/azure-api.ts`, `github/github-api.ts`), its checks and a driver that gives the service one way to try the details and to read the system. `azure/` has one file of checks for each area; `github/checks/` has the organisation checks and the repository checks.
+- `connections/services/connection-scheduler.ts` is the hourly timer and `connection-schedule.service.ts` decides which connections are due and checks them. `ConnectionRepository.claimAttempt` is the claim.
+- `packages/shared/src/proof-checks.ts` lists which proofs each system's checks back up (`PROOF_CHECKS`). `connections/utils/proof-snapshot.ts` decides whether a run backs a proof and writes the note, and `frameworks/services/proof-snapshot.service.ts` attaches it. `connection-run.service.ts` saves a run, its log entry and the notes together. To back a new proof, add it to `PROOF_CHECKS`; a test checks that the proof and the checks exist.
 - `apps/api/src/core/secrets/`: the secret box.
 - `AzureConnector` and `GithubConnector` are the seams for tests: the end-to-end tests replace them with fakes that answer from a table, so no test leaves the machine.
 - The checks, groups and result shape are in `packages/shared/src/connections.ts`. A new check is a function in the provider's `checks/` folder, an id in that provider's list, and its words under `connections.checks` in `apps/web/messages/en.json`. A test fails if any of them is missing.

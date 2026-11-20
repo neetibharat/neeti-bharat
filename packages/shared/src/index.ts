@@ -5,6 +5,7 @@ export * from './auth.js';
 export * from './breaches.js';
 export * from './company-logo.js';
 export * from './connections.js';
+export * from './proof-checks.js';
 export * from './deadlines.js';
 export * from './duration.js';
 export * from './error-codes.js';

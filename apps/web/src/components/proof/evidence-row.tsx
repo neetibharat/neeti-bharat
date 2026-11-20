@@ -22,6 +22,7 @@ export function EvidenceRow(props: { controlId: string; item: EvidenceResponse }
   const { item } = props;
   const date = format.dateTime(new Date(item.createdAt), { dateStyle: 'medium' });
   const KindIcon = KIND_ICONS[item.kind];
+  const download = useDownload(props.controlId, item);
 
   return (
     <li className="flex items-start gap-3 p-3">
@@ -29,7 +30,7 @@ export function EvidenceRow(props: { controlId: string; item: EvidenceResponse }
       <div className="min-w-0 flex-1">
         <p className="text-body font-medium text-fg">{item.title}</p>
         {item.url && <ExternalLink url={item.url} />}
-        {item.kind === 'file' && <FileDetails controlId={props.controlId} item={item} />}
+        {item.kind === 'file' && <FileDetails item={item} error={download.error} />}
         {item.note && (
           <p className="mt-0.5 text-label whitespace-pre-wrap text-fg-muted">{item.note}</p>
         )}
@@ -37,8 +38,11 @@ export function EvidenceRow(props: { controlId: string; item: EvidenceResponse }
           {t('addedBy', { name: item.addedByName, date })}
         </p>
       </div>
-      <CheckProofButton controlId={props.controlId} item={item} />
-      {canEdit && <RemoveEvidence controlId={props.controlId} item={item} />}
+      <div className="flex shrink-0 items-center gap-1">
+        {item.kind === 'file' && <DownloadButton download={download} />}
+        <CheckProofButton controlId={props.controlId} item={item} />
+        {canEdit && <RemoveEvidence controlId={props.controlId} item={item} />}
+      </div>
     </li>
   );
 }
@@ -81,37 +85,53 @@ function ExternalLink({ url }: { url: string }) {
   );
 }
 
-/** A file's name and size, and a button that fetches a short-lived link and saves the file. */
-function FileDetails({ controlId, item }: { controlId: string; item: EvidenceResponse }) {
-  const t = useTranslations('frameworks.evidence');
-  const errorMessage = useErrorMessage();
+/** Fetches a short-lived link to the file and saves it. */
+function useDownload(controlId: string, item: EvidenceResponse) {
   const [fetchLink, { isLoading, error }] = useDownloadEvidenceMutation();
 
-  async function download() {
+  async function run() {
     const result = await fetchLink({ controlId, evidenceId: item.id });
     // The file arrives as an attachment, so the page stays where it is. A new tab would be blocked after the wait.
     if (result.data) window.location.assign(result.data.url);
   }
 
+  return { run, isLoading, error };
+}
+
+/** The download button, with the other actions on the right of the row. */
+function DownloadButton({ download }: { download: ReturnType<typeof useDownload> }) {
+  const t = useTranslations('frameworks.evidence');
+
   return (
-    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+    <Button
+      color="tertiary"
+      size="sm"
+      iconLeading={IconDownload}
+      isLoading={download.isLoading}
+      onPress={download.run}
+    >
+      {t('download')}
+    </Button>
+  );
+}
+
+/** A file's name and size, and why it could not be downloaded when it could not. */
+function FileDetails({
+  item,
+  error,
+}: {
+  item: EvidenceResponse;
+  error: ReturnType<typeof useDownload>['error'];
+}) {
+  const t = useTranslations('frameworks.evidence');
+  const errorMessage = useErrorMessage();
+
+  return (
+    <div className="mt-0.5 flex flex-col gap-1">
       <p className="truncate text-label text-fg-muted">
         {t('fileMeta', { name: item.fileName ?? '', size: formatFileSize(item.fileSize ?? 0) })}
       </p>
-      <Button
-        color="secondary"
-        size="sm"
-        iconLeading={IconDownload}
-        isLoading={isLoading}
-        onPress={download}
-      >
-        {t('download')}
-      </Button>
-      {error ? (
-        <Alert tone="error" className="w-full">
-          {errorMessage(error)}
-        </Alert>
-      ) : null}
+      {error ? <Alert tone="error">{errorMessage(error)}</Alert> : null}
     </div>
   );
 }

@@ -65,6 +65,69 @@ export class ConnectionRepository {
     });
   }
 
+  /** Saves how often the connection is checked, and whatever goes with it, together or not at all. */
+  async setScheduleWith(
+    id: string,
+    schedule: string,
+    alongside: (connection: Connection) => Promise<void>,
+  ): Promise<Connection> {
+    await this.prisma.db.connection.updateMany({ where: { id, ...active }, data: { schedule } });
+    const connection = await this.prisma.db.connection.findFirstOrThrow({
+      where: { id, ...active },
+    });
+    await alongside(connection);
+    return connection;
+  }
+
+  /** The organisations that are still open. Organisations are not scoped, so this works outside a request. */
+  openOrganizations(): Promise<{ id: string }[]> {
+    return this.prisma.db.organization.findMany({
+      where: { closedAt: null },
+      select: { id: true },
+    });
+  }
+
+  /** The connections that are checked on a schedule. */
+  scheduled(): Promise<Connection[]> {
+    return this.prisma.db.connection.findMany({
+      where: { ...active, schedule: { not: 'off' } },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  /**
+   * Takes this try for the schedule, unless one was taken since `before`. Only the caller that gets true goes on, so two
+   * copies of the API never check the same connection twice.
+   */
+  async claimAttempt(id: string, before: Date, now: Date): Promise<boolean> {
+    const { count } = await this.prisma.db.connection.updateMany({
+      where: {
+        id,
+        ...active,
+        schedule: { not: 'off' },
+        OR: [{ lastAttemptAt: null }, { lastAttemptAt: { lt: before } }],
+      },
+      data: { lastAttemptAt: now },
+    });
+    return count === 1;
+  }
+
+  /** Notes that a try could not sign in, with whatever goes with it, together or not at all. */
+  failScheduleWith(id: string, at: Date, alongside: () => Promise<void>): Promise<void> {
+    return this.prisma.runInTransaction(async () => {
+      await this.setScheduleFailure(id, at);
+      await alongside();
+    });
+  }
+
+  /** Notes that a try could not sign in, or clears the note with null when a check worked. */
+  async setScheduleFailure(id: string, at: Date | null): Promise<void> {
+    await this.prisma.db.connection.updateMany({
+      where: { id, ...active },
+      data: { scheduleFailedAt: at },
+    });
+  }
+
   findActive(id: string): Promise<Connection | null> {
     return this.prisma.db.connection.findFirst({ where: { id, ...active } });
   }

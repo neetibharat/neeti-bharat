@@ -32,7 +32,7 @@ function Summary({ run }: { run: ConnectionRunResponse }) {
 
   return (
     <Card
-      description={t('checked', {
+      description={t(run.bySchedule ? 'checkedBySchedule' : 'checked', {
         when: format.dateTime(new Date(run.ranAt), { dateStyle: 'medium', timeStyle: 'short' }),
         name: run.ranByName,
       })}
@@ -52,7 +52,13 @@ function Summary({ run }: { run: ConnectionRunResponse }) {
   );
 }
 
-function Groups({ results }: { results: ConnectionCheckResult[] }) {
+function Groups({
+  results,
+  connectionId,
+}: {
+  results: ConnectionCheckResult[];
+  connectionId: string;
+}) {
   const t = useTranslations('connections.groups') as unknown as Words;
   const filters = useTranslations('cloudTests.filters');
   const groups = ALL_GROUPS.map((group) => ({
@@ -70,7 +76,7 @@ function Groups({ results }: { results: ConnectionCheckResult[] }) {
             <p className="text-label text-fg-muted">{t(`${id}.about`)}</p>
           </div>
           {found.map((result) => (
-            <Finding key={result.id} result={result} />
+            <Finding key={result.id} result={result} connectionId={connectionId} />
           ))}
         </section>
       ))}
@@ -205,7 +211,7 @@ export function ScanResults({ runId }: { runId: string }) {
         query={query}
         onQuery={setQuery}
       />
-      <Groups results={shown} />
+      <Groups results={shown} connectionId={data.connectionId} />
     </div>
   );
 }

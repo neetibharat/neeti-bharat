@@ -31,6 +31,14 @@ export class EvidenceRepository {
     });
   }
 
+  /** The newest proof of this requirement that was added by this adder under this title. */
+  latestBy(requirementId: string, addedById: string, title: string): Promise<Evidence | null> {
+    return this.prisma.db.evidence.findFirst({
+      where: { proofRequirementId: requirementId, addedById, title },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   findOne(id: string, controlId: string): Promise<Evidence | null> {
     return this.prisma.db.evidence.findFirst({ where: { id, controlId } });
   }

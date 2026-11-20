@@ -67,6 +67,8 @@ export class FakeAzureConnector extends AzureConnector {
   readonly verified: AzureCredentials[] = [];
   /** How long Microsoft takes to answer, in milliseconds, so a test can see what a slow answer does. */
   delayMs = 0;
+  /** When set, Microsoft refuses every sign-in, as when a secret has expired. */
+  refuseSignIn = false;
 
   connect(): AzureApi {
     return healthyAzure();
@@ -91,7 +93,9 @@ export class FakeAzureConnector extends AzureConnector {
   async verify(credentials: AzureCredentials): Promise<void> {
     this.verified.push(credentials);
     if (this.delayMs > 0) await new Promise((done) => setTimeout(done, this.delayMs));
-    if (credentials.clientSecret === REFUSED_SECRET) throw new AzureSignInError('refused');
+    if (this.refuseSignIn || credentials.clientSecret === REFUSED_SECRET) {
+      throw new AzureSignInError('refused');
+    }
   }
 }
 

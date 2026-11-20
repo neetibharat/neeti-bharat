@@ -394,7 +394,11 @@
       "AI_CONFIGURED": "AI help set up",
       "AI_REMOVED": "AI help removed",
       "AI_USED": "AI help used",
-      "AI_FEATURES_CHANGED": "AI features changed"
+      "AI_FEATURES_CHANGED": "AI features changed",
+      "CONNECTION_SCHEDULE_CHANGED": "Check schedule changed",
+      "CONNECTION_SCHEDULED_CHECK_FAILED": "Automatic check failed",
+      "CONNECTION_CHECK_ACCEPTED": "Check result accepted",
+      "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Acceptance taken back"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -481,7 +485,11 @@
       "AI_CONFIGURED": "Set up AI help with {provider} ({model})",
       "AI_REMOVED": "Removed AI help ({provider})",
       "AI_USED": "Used AI help to {feature, select, policy_import {read a policy from a file} policy_tailor {tailor a policy to the company} policy_check {check a policy against the rules} proof_check {check a piece of proof} other {do something}} ({provider}, {model})",
-      "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}"
+      "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}",
+      "CONNECTION_SCHEDULE_CHANGED": "Set the automatic checks of {name} to {schedule}",
+      "CONNECTION_SCHEDULED_CHECK_FAILED": "The automatic check of {name} could not sign in",
+      "CONNECTION_CHECK_ACCEPTED": "Accepted a result of {check} on {name} as deliberate",
+      "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Took back the acceptance of {check} on {name}"
     },
     "emptyValue": "empty",
     "values": {
@@ -2002,7 +2010,8 @@
         "attention": "Needs attention ({count})",
         "all": "All checks ({count})"
       },
-      "allClear": "Nothing needs attention. Choose All checks to see what passed."
+      "allClear": "Nothing needs attention. Choose All checks to see what passed.",
+      "checkedBySchedule": "Checked {when}, automatically"
     },
     "groups": {
       "needsWork": "{count} to look at",
@@ -2404,7 +2413,8 @@
       "view": "View",
       "passed": "{count} passed",
       "warned": "{count} to review",
-      "failed": "{count} failed"
+      "failed": "{count} failed",
+      "bySchedule": "Automatic"
     },
     "form": {
       "title": "Connect Azure",
@@ -3310,6 +3320,30 @@
         "why": "A library with a known weakness is a common way in. The Act asks for reasonable security safeguards (section 8(5)).",
         "fix": "In the repository, open Settings, then Advanced Security, and turn on Dependabot alerts. Turn on Dependabot security updates too, so fixes are proposed for you."
       }
+    },
+    "schedule": {
+      "label": "Check automatically",
+      "options": {
+        "off": "Off",
+        "daily": "Every day",
+        "weekly": "Every week"
+      },
+      "readOnly": "Checked automatically: {schedule}.",
+      "failedTitle": "The last automatic check could not sign in",
+      "failedBody": "The details may have expired. An admin can enter new ones with Edit. The next automatic check tries again, and this goes away when one works."
+    },
+    "accept": {
+      "action": "Accept",
+      "title": "Accept this as deliberate",
+      "description": "Say why this is fine. The check still shows it, but a proof that relies on this check stops waiting for it. Your name and the reason are kept.",
+      "forResource": "Say why {name} is fine. The check still shows it, and your name and the reason are kept.",
+      "reason": "Why it is fine",
+      "reasonHint": "For example: a firewall keeps it closed to the internet.",
+      "confirm": "Accept",
+      "cancel": "Cancel",
+      "by": "Accepted by {name}: {reason}",
+      "takeBack": "Take back",
+      "wholeHint": "This check names no resources. If it is deliberate, accept it as a whole."
     }
   },
   "notifications": {
@@ -3530,7 +3564,9 @@
     "form": {
       "provider": "AI service",
       "model": "Model",
-      "modelHint": "The model that reads your files, named as the service names it.",
+      "modelHint": "Type the model's exact name, as the service writes it. A name that is wrong or has a typo will not work.",
+      "modelDocs": "Not sure of the name?",
+      "modelDocsLink": "See {service}'s list of models",
       "apiKey": "API key",
       "apiKeyHint": "Your own key from that service. It is tried first, then kept encrypted, and it is never shown again.",
       "save": "Save",

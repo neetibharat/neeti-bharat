@@ -149,6 +149,7 @@ model Organization {
   notificationPreferences  NotificationPreference[]
   connections              Connection[]
   connectionRuns           ConnectionRun[]
+  checkAcceptances         CheckAcceptance[]
   vendors                  Vendor[]
   trainings                Training[]
   policyAcceptances        PolicyAcceptance[]
@@ -885,19 +886,26 @@ model Vendor {
 // A link to an outside system that DPDP Kit reads from to check it, such as an Azure subscription. The credentials are
 // kept encrypted and are never sent back. A connection that is removed keeps its row and its runs, and loses the credentials.
 model Connection {
-  organizationId String
-  organization   Organization    @relation(fields: [organizationId], references: [id])
-  id             String          @id @default(uuid(7))
-  provider       String
-  name           String
+  organizationId   String
+  organization     Organization      @relation(fields: [organizationId], references: [id])
+  id               String            @id @default(uuid(7))
+  provider         String
+  name             String
   /// What identifies the system without being a secret, such as the tenant and subscription ids. Shown in the list.
-  identifiers    Json
+  identifiers      Json
   /// The credentials as JSON, sealed by the secret box. Empty once the connection is removed.
-  credentials    String
-  createdByName  String
-  createdAt      DateTime        @default(now()) @db.Timestamptz(3)
-  removedAt      DateTime?       @db.Timestamptz(3)
-  runs           ConnectionRun[]
+  credentials      String
+  createdByName    String
+  createdAt        DateTime          @default(now()) @db.Timestamptz(3)
+  removedAt        DateTime?         @db.Timestamptz(3)
+  /// How often it is checked without anyone asking: off, daily or weekly (CONNECTION_SCHEDULES in packages/shared).
+  schedule         String            @default("off")
+  /// When the schedule last tried, whether it worked or not. A try is claimed here first, so two copies of the API never both run it.
+  lastAttemptAt    DateTime?         @db.Timestamptz(3)
+  /// Set when the last scheduled try could not sign in, and cleared by the next check that works.
+  scheduleFailedAt DateTime?         @db.Timestamptz(3)
+  runs             ConnectionRun[]
+  acceptances      CheckAcceptance[]
 
   @@index([organizationId, createdAt])
   @@map("connections")
@@ -913,6 +921,8 @@ model ConnectionRun {
   ranAt          DateTime     @default(now()) @db.Timestamptz(3)
   /// The name is copied here, so the run stays attributed after the person leaves.
   ranByName      String
+  /// True when the schedule made the run, and no person pressed the button.
+  bySchedule     Boolean      @default(false)
   /// The list of results, in the shape of ConnectionCheckResult in packages/shared.
   results        Json
   passed         Int
@@ -922,6 +932,25 @@ model ConnectionRun {
 
   @@index([connectionId, ranAt])
   @@map("connection_runs")
+}
+
+// A person's decision that something a check flags is deliberate. The check still shows it; a proof fed by the check no
+// longer waits on it. An empty resourceName accepts the check as a whole.
+model CheckAcceptance {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  connectionId   String
+  connection     Connection   @relation(fields: [connectionId], references: [id])
+  checkId        String
+  resourceName   String       @default("")
+  reason         String
+  /// The name is copied here, so the decision stays attributed after the person leaves.
+  acceptedByName String
+  acceptedAt     DateTime     @default(now()) @db.Timestamptz(3)
+
+  @@unique([connectionId, checkId, resourceName])
+  @@map("check_acceptances")
 }
 
 // Keep in step with NOTIFICATION_KINDS in packages/shared (a test checks).

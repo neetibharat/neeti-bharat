@@ -9,6 +9,8 @@ import { GithubConnector } from '../../src/connections/providers/github/github-a
 import { MailService, type MailMessage } from '../../src/core/mail/mail.service';
 import { tmpdir } from 'node:os';
 import { PrismaService } from '../../src/core/prisma/prisma.service';
+import { ConnectionScheduleService } from '../../src/connections/services/connection-schedule.service';
+import { ProofReportService } from '../../src/proof-reports/services/proof-report.service';
 import { NotificationScanner } from '../../src/notifications/services/notification-scanner';
 import { fakeAi } from './fake-ai-client';
 import { azureConnector } from './fake-azure-connector';
@@ -112,6 +114,10 @@ export interface TestApp {
   withKey: (key: string) => Client;
   /** Makes the day's notices now, as the daily check would, as of `now`. */
   scanNotices: (now?: Date) => Promise<void>;
+  /** Checks the connections that are due, as the hourly look would, as of `now`. */
+  runScheduledChecks: (now?: Date) => Promise<void>;
+  /** Keeps the reports that have something new to say on their proofs, as the hourly look would. */
+  refreshProofReports: (now?: Date) => Promise<void>;
   /** Every email the app has sent, oldest first. */
   mailSent: () => MailMessage[];
   /** Every path of the API that is a GET and takes no parameters, for sweeping. */
@@ -229,6 +235,9 @@ export async function startTestApp(): Promise<TestApp> {
     anonymous: new Client(base, ''),
     withKey: (key) => new Client(base, '', key),
     scanNotices: (now = new Date()) => moduleRef.get(NotificationScanner).scanAll(now),
+    runScheduledChecks: (now = new Date()) =>
+      moduleRef.get(ConnectionScheduleService).runAllDue(now),
+    refreshProofReports: (now = new Date()) => moduleRef.get(ProofReportService).refreshAll(now),
     mailSent: () => inbox,
     readRoutes: () => readRoutesOf(app),
     stop: async () => {

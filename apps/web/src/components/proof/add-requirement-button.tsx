@@ -19,6 +19,7 @@ export function AddRequirementButton({ controlId }: { controlId: string }) {
         </Button>
       }
       title={t('addRequirement')}
+      size="lg"
     >
       {(close) => <Adding controlId={controlId} onDone={close} />}
     </Modal>

@@ -10,6 +10,6 @@ import { TrainingWorkReader } from './services/training-work-reader';
   imports: [ActivityModule, PeopleModule],
   controllers: [TrainingController],
   providers: [TrainingRepository, TrainingService, TrainingWorkReader],
-  exports: [TrainingWorkReader],
+  exports: [TrainingWorkReader, TrainingService],
 })
 export class TrainingModule {}

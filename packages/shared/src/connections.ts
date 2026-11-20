@@ -297,6 +297,16 @@ export const CONNECTION_RUN_PAGE_SIZE = 10;
 /** A connection is not checked again within this time, so a button pressed twice does not call Azure twice. */
 export const CONNECTION_RUN_GAP_SECONDS = 30;
 
+/** How often a connection is checked without anyone pressing the button. */
+export const CONNECTION_SCHEDULES = ['off', 'daily', 'weekly'] as const;
+export type ConnectionSchedule = (typeof CONNECTION_SCHEDULES)[number];
+
+/** How long after a check the next one is due. The hour less lets an hourly look find it on time instead of an hour late. */
+export const CONNECTION_SCHEDULE_HOURS: Record<Exclude<ConnectionSchedule, 'off'>, number> = {
+  daily: 23,
+  weekly: 7 * 24 - 1,
+};
+
 /** One thing checked. The words come from the web app; `values` fills in the numbers and names they quote. */
 export interface ConnectionCheckResult {
   id: CheckId;
@@ -312,6 +322,8 @@ export interface ConnectionRunSummary {
   connectionId: string;
   ranAt: string;
   ranByName: string;
+  /** True when the schedule made the run, and no person pressed the button. */
+  bySchedule: boolean;
   passed: number;
   warned: number;
   failed: number;
@@ -337,6 +349,9 @@ export interface ConnectionSummary {
   identifiers: Record<string, string>;
   createdAt: string;
   createdByName: string;
+  schedule: ConnectionSchedule;
+  /** When the schedule last tried and could not sign in, until a check works again. */
+  scheduleFailedAt: string | null;
   lastRun: ConnectionRunSummary | null;
 }
 
@@ -386,6 +401,10 @@ export interface UpdateConnectionRequest {
   credentials?: Partial<Record<AzureEditableField | 'privateKey', string>>;
   /** GitHub only. */
   repositories?: GithubSelection;
+}
+
+export interface UpdateConnectionScheduleRequest {
+  schedule: ConnectionSchedule;
 }
 
 /** The App's own sign-in, to ask which organisations it is installed on and which repositories it can see. */

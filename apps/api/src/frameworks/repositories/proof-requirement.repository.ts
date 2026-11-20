@@ -24,6 +24,9 @@ export interface NewRequirement extends RequirementDetails {
   controlId: string;
 }
 
+/** A requirement with the control it belongs to. */
+export type RequirementWithControl = ProofRequirement & { control: { id: string; title: string } };
+
 const WITH_EVIDENCE = {
   evidence: { orderBy: { createdAt: 'desc' } },
   assignee: { select: { id: true, name: true } },
@@ -39,6 +42,14 @@ export class ProofRequirementRepository {
       where: { controlId, archivedAt: null },
       include: WITH_EVIDENCE,
       orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    });
+  }
+
+  /** The requirement copied from this catalogue id, if it and its control have not been archived. */
+  findCurrentByTemplate(templateId: string): Promise<RequirementWithControl | null> {
+    return this.prisma.db.proofRequirement.findFirst({
+      where: { templateId, archivedAt: null, control: { archivedAt: null } },
+      include: { control: { select: { id: true, title: true } } },
     });
   }
 
