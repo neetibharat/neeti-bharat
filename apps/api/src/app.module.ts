@@ -16,6 +16,7 @@ import { ApiKeysModule } from './api-keys/api-keys.module';
 import { CompanyLogoModule } from './company-logo/company-logo.module';
 import { AiModule } from './ai/ai.module';
 import { ConnectionsModule } from './connections/connections.module';
+import { ProofReportsModule } from './proof-reports/proof-reports.module';
 import { TrainingModule } from './training/training.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { ExportsModule } from './exports/exports.module';
@@ -50,6 +51,7 @@ import { StorageModule } from './core/storage/storage.module';
     ApiKeysModule,
     CompanyLogoModule,
     ConnectionsModule,
+    ProofReportsModule,
     TrainingModule,
     VendorsModule,
     AiModule,

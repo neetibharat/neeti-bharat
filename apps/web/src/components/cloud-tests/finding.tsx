@@ -17,6 +17,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { outcomeKey } from '@/lib/connections';
+import { AcceptButton, AcceptedNote, useAcceptances } from './acceptance';
 
 type Words = (key: string, values?: Record<string, string | number>) => string;
 
@@ -41,7 +42,48 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Resources({ result }: { result: ConnectionCheckResult }) {
+/** One resource that did not pass, with how it did not, and what a person decided about it. */
+function ResourceRow({
+  resource,
+  result,
+  connectionId,
+}: {
+  resource: NonNullable<ConnectionCheckResult['resources']>[number];
+  result: ConnectionCheckResult;
+  connectionId: string;
+}) {
+  const t = useTranslations('cloudTests.finding');
+  const acceptance = useAcceptances(connectionId, result.id).get(resource.name);
+
+  return (
+    <li className="flex flex-col gap-1 px-3 py-1.5">
+      <div className="flex items-center justify-between gap-3">
+        <span className="min-w-0 truncate font-mono text-label text-fg">{resource.name}</span>
+        <div className="flex items-center gap-2">
+          <Badge color={resource.status === 'fail' ? 'danger' : 'warning'}>
+            {t(resource.status === 'fail' ? 'resourceFail' : 'resourceWarn')}
+          </Badge>
+          {!acceptance && (
+            <AcceptButton
+              connectionId={connectionId}
+              checkId={result.id}
+              resourceName={resource.name}
+            />
+          )}
+        </div>
+      </div>
+      {acceptance && <AcceptedNote connectionId={connectionId} acceptance={acceptance} />}
+    </li>
+  );
+}
+
+function Resources({
+  result,
+  connectionId,
+}: {
+  result: ConnectionCheckResult;
+  connectionId: string;
+}) {
   const t = useTranslations('cloudTests.finding');
   const { resources } = result;
   if (!resources || resources.length === 0) return null;
@@ -51,12 +93,12 @@ function Resources({ result }: { result: ConnectionCheckResult }) {
     <Section title={t('resources', { count })}>
       <ul className="flex flex-col divide-y divide-line rounded-control border border-line">
         {resources.map((resource) => (
-          <li key={resource.name} className="flex items-center justify-between gap-3 px-3 py-1.5">
-            <span className="min-w-0 truncate font-mono text-label text-fg">{resource.name}</span>
-            <Badge color={resource.status === 'fail' ? 'danger' : 'warning'}>
-              {t(resource.status === 'fail' ? 'resourceFail' : 'resourceWarn')}
-            </Badge>
-          </li>
+          <ResourceRow
+            key={resource.name}
+            resource={resource}
+            result={result}
+            connectionId={connectionId}
+          />
         ))}
       </ul>
       {count > CONNECTION_RESOURCES_KEPT && (
@@ -66,15 +108,52 @@ function Resources({ result }: { result: ConnectionCheckResult }) {
   );
 }
 
+/** For a check that names no resources: accept it as a whole, or see that it was. */
+function WholeCheck({
+  result,
+  connectionId,
+}: {
+  result: ConnectionCheckResult;
+  connectionId: string;
+}) {
+  const t = useTranslations('cloudTests.accept');
+  const whole = useAcceptances(connectionId, result.id).get('');
+  const named = (result.resources?.length ?? 0) > 0;
+  if (named || (result.status !== 'warn' && result.status !== 'fail')) return null;
+
+  return (
+    <div className="flex flex-col gap-1">
+      {whole ? (
+        <AcceptedNote connectionId={connectionId} acceptance={whole} />
+      ) : (
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-label text-fg-muted">{t('wholeHint')}</p>
+          <AcceptButton connectionId={connectionId} checkId={result.id} resourceName="" />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** What this account showed for the check, in words. */
+function outcomeText(result: ConnectionCheckResult, check: Words): string {
+  const key = outcomeKey(result);
+  return key.startsWith('skipped.')
+    ? check(key)
+    : check(`checks.${result.id}.${key}`, result.values ?? {});
+}
+
 /** The detail under one finding: what the check is, why it matters, what this account showed, and how to fix it. */
-function FindingDetail({ result }: { result: ConnectionCheckResult }) {
+function FindingDetail({
+  result,
+  connectionId,
+}: {
+  result: ConnectionCheckResult;
+  connectionId: string;
+}) {
   const t = useTranslations('cloudTests.finding');
   const check = useTranslations('connections') as unknown as Words;
   const detail = useTranslations('cloudTests.details') as unknown as Words;
-  const key = outcomeKey(result);
-  const outcome = key.startsWith('skipped.')
-    ? check(key)
-    : check(`checks.${result.id}.${key}`, result.values ?? {});
   const needsFix = result.status === 'warn' || result.status === 'fail';
 
   return (
@@ -94,9 +173,10 @@ function FindingDetail({ result }: { result: ConnectionCheckResult }) {
         <p>{detail(`${result.id}.why`)}</p>
       </Section>
       <Section title={t('result')}>
-        <p>{outcome}</p>
+        <p>{outcomeText(result, check)}</p>
       </Section>
-      <Resources result={result} />
+      <Resources result={result} connectionId={connectionId} />
+      <WholeCheck result={result} connectionId={connectionId} />
       {needsFix && (
         <Section title={t('fix')}>
           <p>{detail(`${result.id}.fix`)}</p>
@@ -107,7 +187,13 @@ function FindingDetail({ result }: { result: ConnectionCheckResult }) {
 }
 
 /** One check as a row that opens to show the detail. A native disclosure keeps it light and reachable by keyboard. */
-export function Finding({ result }: { result: ConnectionCheckResult }) {
+export function Finding({
+  result,
+  connectionId,
+}: {
+  result: ConnectionCheckResult;
+  connectionId: string;
+}) {
   const t = useTranslations('connections');
   const severity = useTranslations('cloudTests.severity');
   const check = t as unknown as Words;
@@ -129,7 +215,7 @@ export function Finding({ result }: { result: ConnectionCheckResult }) {
           aria-hidden
         />
       </summary>
-      <FindingDetail result={result} />
+      <FindingDetail result={result} connectionId={connectionId} />
     </details>
   );
 }

@@ -41,6 +41,8 @@ import { PolicyAcceptanceService } from './services/policy-acceptance.service';
 import { PolicyEditService } from './services/policy-edit.service';
 import { RuleReader } from './services/rule-reader';
 import { ProofService } from './services/proof.service';
+import { ProofSnapshotService } from './services/proof-snapshot.service';
+import { SystemProofService } from './services/system-proof.service';
 
 @Module({
   imports: [
@@ -73,6 +75,8 @@ import { ProofService } from './services/proof.service';
     ControlEditService,
     EvidenceService,
     ProofService,
+    ProofSnapshotService,
+    SystemProofService,
     MyWorkService,
     DeadlinesService,
     OpenWorkReader,
@@ -98,6 +102,8 @@ import { ProofService } from './services/proof.service';
     PoliciesService,
     PolicyScopeReader,
     ProofReader,
+    ProofSnapshotService,
+    SystemProofService,
   ],
 })
 export class FrameworksModule {}

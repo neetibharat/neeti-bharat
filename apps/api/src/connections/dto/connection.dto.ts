@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  AZURE_CHECK_IDS,
   AZURE_ID_PATTERN,
+  GITHUB_CHECK_IDS,
+  type CheckId,
   CONNECTION_MAX_PAGE_SIZE,
+  CHECK_ACCEPTANCE_REASON_MAX_LENGTH,
+  CHECK_ACCEPTANCE_RESOURCE_MAX_LENGTH,
   CONNECTION_NAME_MAX_LENGTH,
   CONNECTION_PAGE_SIZE,
   CONNECTION_RUN_PAGE_SIZE,
+  CONNECTION_SCHEDULES,
   CONNECTION_SECRET_MAX_LENGTH,
   GITHUB_ID_PATTERN,
   GITHUB_KEY_MAX_LENGTH,
@@ -87,6 +93,18 @@ export const updateConnectionSchema = z
   })
   .strict();
 
+export const updateScheduleSchema = z.object({ schedule: z.enum(CONNECTION_SCHEDULES) }).strict();
+
+const checkIds = [...AZURE_CHECK_IDS, ...GITHUB_CHECK_IDS] as [CheckId, ...CheckId[]];
+
+export const acceptCheckSchema = z
+  .object({
+    checkId: z.enum(checkIds),
+    resourceName: z.string().trim().max(CHECK_ACCEPTANCE_RESOURCE_MAX_LENGTH),
+    reason: z.string().trim().min(1).max(CHECK_ACCEPTANCE_REASON_MAX_LENGTH),
+  })
+  .strict();
+
 export const listConnectionsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(CONNECTION_MAX_PAGE_SIZE).default(CONNECTION_PAGE_SIZE),
@@ -101,6 +119,8 @@ export type CreateConnectionInput = z.output<typeof createConnectionSchema>;
 export type DiscoverGithubInput = z.output<typeof discoverGithubSchema>;
 export type FindSubscriptionsInput = z.output<typeof findSubscriptionsSchema>;
 export type UpdateConnectionInput = z.output<typeof updateConnectionSchema>;
+export type UpdateScheduleInput = z.output<typeof updateScheduleSchema>;
+export type AcceptCheckInput = z.output<typeof acceptCheckSchema>;
 export type ListConnectionsQuery = z.output<typeof listConnectionsSchema>;
 export type ListRunsQuery = z.output<typeof listRunsSchema>;
 
@@ -134,6 +154,28 @@ export class FindSubscriptionsDto {
 
   @ApiProperty({ description: 'Used once to sign in, and not kept.' })
   clientSecret!: string;
+}
+
+export class UpdateScheduleDto {
+  @ApiProperty({
+    enum: ['off', 'daily', 'weekly'],
+    description: 'How often the connection is checked without anyone asking.',
+  })
+  schedule!: string;
+}
+
+export class AcceptCheckDto {
+  @ApiProperty({ example: 'sql_public_access' })
+  checkId!: string;
+
+  @ApiProperty({
+    example: 'orders-db',
+    description: 'The resource to accept. Empty accepts the check as a whole.',
+  })
+  resourceName!: string;
+
+  @ApiProperty({ example: 'A firewall keeps it closed to the internet.' })
+  reason!: string;
 }
 
 export class DiscoverGithubDto {

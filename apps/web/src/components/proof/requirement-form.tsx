@@ -44,7 +44,7 @@ function OwnerAndDue(props: {
   const { values, onChange } = props;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2">
       <AssigneeSelect
         label={t('assignee')}
         noneLabel={t('controlOwner')}
@@ -84,7 +84,7 @@ function Fields(props: {
         value={values.description}
         onChange={(description) => onChange({ description })}
         maxLength={PROOF_DESCRIPTION_MAX_LENGTH}
-        rows={5}
+        rows={8}
       />
       <Select
         label={t('frequency')}
@@ -109,7 +109,7 @@ export function RequirementForm(props: RequirementFormProps) {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-3">
+    <form onSubmit={submit} className="flex flex-col gap-5">
       <Fields values={values} onChange={patch} />
       {props.error ? <Alert tone="error">{errorMessage(props.error)}</Alert> : null}
       <FormActions

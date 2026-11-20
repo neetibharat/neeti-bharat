@@ -19,6 +19,7 @@ import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { EditConnectionButton } from '@/components/connections/edit-connection-button';
 import { RunButton } from './run-button';
 import { RunHistory } from './run-history';
+import { ScheduleControl } from './schedule-control';
 import { ScanResults } from './scan-results';
 
 type TabId = 'results' | 'history';
@@ -98,6 +99,37 @@ function Scan({
   );
 }
 
+/** Which account, and beside it how often it is checked without anyone asking. */
+function Account({
+  connections,
+  connection,
+  onPick,
+}: {
+  connections: ConnectionSummary[];
+  connection: ConnectionSummary;
+  onPick: (id: string) => void;
+}) {
+  const t = useTranslations('cloudTests');
+  const { isAdmin } = useCan();
+
+  return (
+    <div className="flex min-w-0 flex-1 flex-wrap items-start gap-4">
+      {connections.length > 1 ? (
+        <Select
+          label={t('account')}
+          selectedKey={connection.id}
+          onSelectionChange={onPick}
+          options={connections.map((item) => ({ id: item.id, label: item.name }))}
+          className="w-full max-w-xs"
+        />
+      ) : (
+        <h2 className="text-subtitle font-semibold text-fg">{connection.name}</h2>
+      )}
+      <ScheduleControl connection={connection} canChange={isAdmin} />
+    </div>
+  );
+}
+
 /** The account on the left, and on the right the button that checks it now. */
 function Toolbar({
   connections,
@@ -110,22 +142,11 @@ function Toolbar({
   onPick: (id: string) => void;
   onRan: (runId: string) => void;
 }) {
-  const t = useTranslations('cloudTests');
   const { canEdit, isAdmin } = useCan();
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-3">
-      {connections.length > 1 ? (
-        <Select
-          label={t('account')}
-          selectedKey={connection.id}
-          onSelectionChange={onPick}
-          options={connections.map((item) => ({ id: item.id, label: item.name }))}
-          className="w-full max-w-sm"
-        />
-      ) : (
-        <h2 className="text-subtitle font-semibold text-fg">{connection.name}</h2>
-      )}
+      <Account connections={connections} connection={connection} onPick={onPick} />
       {canEdit && (
         <RunButton
           id={connection.id}

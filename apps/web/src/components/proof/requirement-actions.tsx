@@ -28,6 +28,7 @@ export function RequirementActions(props: {
           </Button>
         }
         title={t('edit')}
+        size="lg"
       >
         {(close) => <Editing requirement={props.requirement} onDone={close} />}
       </Modal>

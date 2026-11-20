@@ -3,6 +3,7 @@ import {
   CONNECTION_RUN_GAP_SECONDS,
   type ConnectionListResponse,
   type ConnectionProvider,
+  type ConnectionSchedule,
   type ConnectionRunListResponse,
   type ConnectionRunResponse,
   type ConnectionSummary,
@@ -17,10 +18,9 @@ import type { CreateConnectionInput, UpdateConnectionInput } from '../dto/connec
 import type { Credentials } from '../providers/connection-driver';
 import { ConnectionDrivers } from '../providers/connection-drivers';
 import { selectionOf } from '../providers/github/github-driver';
-import { tally } from '../providers/outcome';
-import { ConnectionRunRepository } from '../repositories/connection-run.repository';
+import { ConnectionRunService } from './connection-run.service';
 import { ConnectionRepository } from '../repositories/connection.repository';
-import { failureOf, toRunResponse, toRunSummary, toSummary } from '../utils/connection-mapper';
+import { failureOf, toSummary } from '../utils/connection-mapper';
 
 /** The fields of the credentials that may be replaced, for each system. The rest identify what is read, and stay. */
 const EDITABLE: Record<ConnectionProvider, readonly string[]> = {
@@ -32,10 +32,10 @@ const EDITABLE: Record<ConnectionProvider, readonly string[]> = {
 export class ConnectionsService {
   constructor(
     private readonly connections: ConnectionRepository,
-    private readonly runs: ConnectionRunRepository,
     private readonly secrets: SecretBox,
     private readonly drivers: ConnectionDrivers,
     private readonly activity: ActivityService,
+    private readonly runService: ConnectionRunService,
   ) {}
 
   async list(page: number, limit: number): Promise<ConnectionListResponse> {
@@ -146,8 +146,57 @@ export class ConnectionsService {
   /** Reads the system now and keeps what it finds. It takes a few seconds, and is not repeated within seconds. */
   async run(id: string, actor: ActivityActor): Promise<ConnectionRunResponse> {
     const row = await this.find(id);
-    const provider = row.provider as ConnectionProvider;
     await this.refuseIfJustRun(id);
+    return this.check(row, actor, false);
+  }
+
+  /** How often the connection is checked without anyone asking. */
+  async setSchedule(
+    id: string,
+    schedule: ConnectionSchedule,
+    actor: ActivityActor,
+  ): Promise<ConnectionSummary> {
+    const before = await this.find(id);
+    const saved = await this.connections.setScheduleWith(id, schedule, (updated) =>
+      this.activity.record({
+        actor,
+        action: 'CONNECTION_SCHEDULE_CHANGED',
+        subject: { type: 'connection', id },
+        details: { name: updated.name, schedule },
+        before: { schedule: before.schedule },
+        after: { schedule },
+      }),
+    );
+    const [latest] = await this.connections.latestRuns([id]);
+    return toSummary(saved, latest);
+  }
+
+  /**
+   * Checks the connection because its schedule says it is due. A check that cannot sign in is noted on the connection and
+   * in the activity log, and is not tried again until the next one is due.
+   */
+  async runBySchedule(row: Connection, actor: ActivityActor): Promise<void> {
+    try {
+      await this.check(row, actor, true);
+    } catch (error) {
+      const reason = failureOf(error);
+      await this.connections.failScheduleWith(row.id, new Date(), () =>
+        this.activity.record({
+          actor,
+          action: 'CONNECTION_SCHEDULED_CHECK_FAILED',
+          subject: { type: 'connection', id: row.id },
+          details: { name: row.name, reason },
+        }),
+      );
+    }
+  }
+
+  private async check(
+    row: Connection,
+    actor: ActivityActor,
+    bySchedule: boolean,
+  ): Promise<ConnectionRunResponse> {
+    const provider = row.provider as ConnectionProvider;
     const credentials = this.credentialsOf(row);
     const identifiers = await this.verify(
       provider,
@@ -155,31 +204,16 @@ export class ConnectionsService {
       selectionOf(this.identifiersOf(row)),
     );
     const results = await this.drivers.byProvider[provider].check(credentials, identifiers);
-    const counts = tally(results);
-    // Nothing is held open while the system is read: the run and its log entry are saved together only now.
-    const saved = await this.runs.createWith(
-      { connectionId: id, ranByName: actor.label, results, ...counts },
-      () =>
-        this.activity.record({
-          actor,
-          action: 'CONNECTION_CHECKED',
-          subject: { type: 'connection', id },
-          details: { name: row.name, passed: counts.passed, total: results.length },
-        }),
-    );
-    return toRunResponse(saved);
+    return this.runService.save(row, actor, bySchedule, results);
   }
 
   async listRuns(id: string, page: number, limit: number): Promise<ConnectionRunListResponse> {
     await this.find(id);
-    const { rows, total } = await this.runs.list(id, page, limit);
-    return { items: rows.map(toRunSummary), total, page, pageSize: limit };
+    return this.runService.list(id, page, limit);
   }
 
-  async getRun(runId: string): Promise<ConnectionRunResponse> {
-    const row = await this.runs.findById(runId);
-    if (!row) throw new AppException('NOT_FOUND', HttpStatus.NOT_FOUND);
-    return toRunResponse(row);
+  getRun(runId: string): Promise<ConnectionRunResponse> {
+    return this.runService.find(runId);
   }
 
   /** What a sealed value is tied to, so one organisation’s credentials cannot be opened as another’s. */
@@ -221,7 +255,7 @@ export class ConnectionsService {
   }
 
   private async refuseIfJustRun(id: string): Promise<void> {
-    const last = await this.runs.lastRanAt(id);
+    const last = await this.runService.lastRanAt(id);
     if (last && Date.now() - last.getTime() < CONNECTION_RUN_GAP_SECONDS * 1000) {
       throw new AppException('RATE_LIMITED', HttpStatus.TOO_MANY_REQUESTS);
     }

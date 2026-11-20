@@ -1,10 +1,12 @@
 import { GITHUB_CHECK_IDS } from '@dpdp-kit/shared';
 import type {
+  CheckAcceptanceResponse,
   ConnectionListResponse,
   ConnectionRunResponse,
   ConnectionSummary,
   CreatedApiKeyResponse,
   OrganizationSummary,
+  ProofRequirementDetailResponse,
 } from '@dpdp-kit/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { REFUSED_SECRET, azureConnector } from './support/fake-azure-connector';
@@ -212,6 +214,196 @@ describe('checking a connection', () => {
     expect(log.text).toContain('CONNECTION_ADDED');
     expect(log.text).toContain('CONNECTION_CHECKED');
     expect(log.text).not.toContain(SECRET);
+  });
+});
+
+describe('checking on a schedule', () => {
+  const path = () => `/v1/connections/${world.connectionId}`;
+  const hours = (count: number) => new Date(Date.now() + count * 60 * 60 * 1000);
+  const runs = async () =>
+    (
+      await world.alice.get<{ items: { bySchedule: boolean; ranByName: string }[]; total: number }>(
+        `${path()}/runs`,
+        world.alpha,
+      )
+    ).body;
+
+  it('starts off, and is set by an admin who is a person', async () => {
+    const before = await world.alice.get<ConnectionSummary>(path(), world.alpha);
+    expect(before.body.schedule).toBe('off');
+    const set = await world.alice.put<ConnectionSummary>(
+      `${path()}/schedule`,
+      { schedule: 'daily' },
+      world.alpha,
+    );
+    expect([set.status, set.body.schedule]).toEqual([200, 'daily']);
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_SCHEDULE_CHANGED');
+  });
+
+  it('is refused for a member, an admin key, another organisation and a word that is no schedule', async () => {
+    const body = { schedule: 'weekly' };
+    expect((await world.bob.put(`${path()}/schedule`, body, world.alpha)).status).toBe(403);
+    const adminKey = await makeKey('admin');
+    expect((await adminKey.put(`${path()}/schedule`, body)).status).toBe(403);
+    expect((await world.bob.put(`${path()}/schedule`, body, world.beta)).status).toBe(404);
+    const odd = await world.alice.put(`${path()}/schedule`, { schedule: 'hourly' }, world.alpha);
+    expect(odd.status).toBe(400);
+  });
+
+  it('leaves a connection alone until its time, then checks it once and says it was the schedule', async () => {
+    const before = (await runs()).total;
+    await world.app.runScheduledChecks(hours(1));
+    expect((await runs()).total).toBe(before);
+    await world.app.runScheduledChecks(hours(25));
+    const after = await runs();
+    expect(after.total).toBe(before + 1);
+    expect(after.items[0]).toMatchObject({ bySchedule: true, ranByName: 'Scheduled check' });
+    await world.app.runScheduledChecks(hours(25));
+    expect((await runs()).total).toBe(before + 1);
+  });
+
+  it('does nothing for a connection that is off', async () => {
+    await world.alice.put(`${path()}/schedule`, { schedule: 'off' }, world.alpha);
+    const before = (await runs()).total;
+    await world.app.runScheduledChecks(hours(24 * 30));
+    expect((await runs()).total).toBe(before);
+  });
+
+  it('notes a sign-in that fails, logs it, and does not try again until the next one is due', async () => {
+    await world.alice.put(`${path()}/schedule`, { schedule: 'daily' }, world.alpha);
+    const before = (await runs()).total;
+    azureConnector.refuseSignIn = true;
+    try {
+      await world.app.runScheduledChecks(hours(24 * 40));
+      const seen = azureConnector.verified.length;
+      await world.app.runScheduledChecks(hours(24 * 40));
+      expect(azureConnector.verified).toHaveLength(seen);
+    } finally {
+      azureConnector.refuseSignIn = false;
+    }
+    expect((await runs()).total).toBe(before);
+    const failed = await world.alice.get<ConnectionSummary>(path(), world.alpha);
+    expect(failed.body.scheduleFailedAt).not.toBeNull();
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_SCHEDULED_CHECK_FAILED');
+    await world.app.runScheduledChecks(hours(24 * 42));
+    const healed = await world.alice.get<ConnectionSummary>(path(), world.alpha);
+    expect(healed.body.scheduleFailedAt).toBeNull();
+    expect((await runs()).total).toBe(before + 1);
+    await world.alice.put(`${path()}/schedule`, { schedule: 'off' }, world.alpha);
+  });
+});
+
+describe('proof from checks', () => {
+  const path = () => `/v1/connections/${world.connectionId}`;
+
+  it('leaves one dated note on a proof the checks back up, however many runs follow', async () => {
+    const proof = await world.alice.get<ProofRequirementDetailResponse>(
+      '/v1/proof/PR-P04-01',
+      world.alpha,
+    );
+    const notes = proof.body.requirement.evidence.filter(
+      (item) => item.addedByName === 'Automatic check',
+    );
+    expect(notes).toHaveLength(1);
+    expect(notes[0]).toMatchObject({ kind: 'note', title: 'Cloud checks: Production' });
+    expect(notes[0]!.note).toContain('entra_mfa_registered: passed');
+    expect(proof.body.requirement.status).toBe('provided');
+  });
+
+  it('writes the note to the activity log under the automatic check, not under a person', async () => {
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('Automatic check');
+  });
+
+  it('keeps a decision that something is deliberate, with the reason and who made it', async () => {
+    const made = await world.alice.post<CheckAcceptanceResponse>(
+      `${path()}/acceptances`,
+      {
+        checkId: 'sql_public_access',
+        resourceName: 'orders-db',
+        reason: 'A firewall keeps it closed.',
+      },
+      world.alpha,
+    );
+    expect(made.status).toBe(201);
+    expect(made.body).toMatchObject({
+      resourceName: 'orders-db',
+      acceptedByName: expect.any(String),
+    });
+    const listed = await world.alice.get<{ items: CheckAcceptanceResponse[] }>(
+      `${path()}/acceptances`,
+      world.alpha,
+    );
+    expect(listed.body.items.map((item) => item.reason)).toEqual(['A firewall keeps it closed.']);
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_CHECK_ACCEPTED');
+  });
+
+  it('replaces the reason when the same thing is accepted again, and can be taken back', async () => {
+    const again = await world.alice.post<CheckAcceptanceResponse>(
+      `${path()}/acceptances`,
+      { checkId: 'sql_public_access', resourceName: 'orders-db', reason: 'Reviewed again.' },
+      world.alpha,
+    );
+    const listed = await world.alice.get<{ items: CheckAcceptanceResponse[] }>(
+      `${path()}/acceptances`,
+      world.alpha,
+    );
+    expect(listed.body.items).toHaveLength(1);
+    expect(listed.body.items[0]!.reason).toBe('Reviewed again.');
+    const gone = await world.alice.delete(`${path()}/acceptances/${again.body.id}`, world.alpha);
+    expect(gone.status).toBe(204);
+    const after = await world.alice.get<{ items: CheckAcceptanceResponse[] }>(
+      `${path()}/acceptances`,
+      world.alpha,
+    );
+    expect(after.body.items).toEqual([]);
+  });
+
+  it('refuses a check that does not exist, an empty reason, and anyone who cannot change things', async () => {
+    const body = { checkId: 'sql_public_access', resourceName: '', reason: 'Fine.' };
+    const unknown = await world.alice.post(
+      `${path()}/acceptances`,
+      { ...body, checkId: 'nothing' },
+      world.alpha,
+    );
+    expect(unknown.status).toBe(400);
+    const empty = await world.alice.post(
+      `${path()}/acceptances`,
+      { ...body, reason: ' ' },
+      world.alpha,
+    );
+    expect(empty.status).toBe(400);
+    expect((await world.bob.post(`${path()}/acceptances`, body, world.beta)).status).toBe(404);
+  });
+});
+
+describe('reports kept on proofs', () => {
+  const reports = async (proofId: string) => {
+    const proof = await world.alice.get<ProofRequirementDetailResponse>(
+      `/v1/proof/${proofId}`,
+      world.alpha,
+    );
+    return proof.body.requirement.evidence.filter((item) => item.title.startsWith('Report:'));
+  };
+
+  it('keeps the cloud report on its proof once, as a note while no file storage is set up', async () => {
+    await world.app.refreshProofReports();
+    await world.app.refreshProofReports();
+    const kept = await reports('PR-P19-04');
+    expect(kept).toHaveLength(1);
+    expect(kept[0]).toMatchObject({ kind: 'note', title: 'Report: Cloud configuration check' });
+    expect(kept[0]!.note).toContain('Cloud configuration check report');
+    expect(kept[0]!.note).toContain('Entra mfa enforced');
+    expect(kept[0]!.addedByName).toBe('Automatic check');
+  });
+
+  it('keeps nothing on a proof whose source has nothing to report yet', async () => {
+    expect(await reports('PR-P19-01')).toEqual([]);
+    expect(await reports('PR-P19-03')).toEqual([]);
+    expect(await reports('PR-P03-03')).toEqual([]);
   });
 });
 

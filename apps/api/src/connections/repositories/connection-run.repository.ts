@@ -9,6 +9,7 @@ export type ConnectionRunSummaryRow = Omit<ConnectionRun, 'results' | 'organizat
 export interface NewConnectionRun {
   connectionId: string;
   ranByName: string;
+  bySchedule?: boolean;
   results: ConnectionCheckResult[];
   passed: number;
   warned: number;
@@ -21,6 +22,7 @@ const summary = {
   connectionId: true,
   ranAt: true,
   ranByName: true,
+  bySchedule: true,
   passed: true,
   warned: true,
   failed: true,

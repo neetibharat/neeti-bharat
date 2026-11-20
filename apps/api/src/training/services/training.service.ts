@@ -76,6 +76,21 @@ export class TrainingService {
     };
   }
 
+  /** Everyone's standing with every training in use, all at once, for the report kept on the training proof. */
+  async report(now: Date) {
+    const inUse = await this.trainings.findInUse();
+    const [everyone, completions] = await Promise.all([
+      this.trainings.activePeopleAll(),
+      this.trainings.completionsOfActive(inUse.map((training) => training.id)),
+    ]);
+    return {
+      trainings: inUse.map(({ name, repeatsYearly }) => ({ name, repeatsYearly })),
+      people: everyone.map((person) => toTeamRow(person, inUse, completions, now)),
+      trained: everyone.filter((person) => isTrained(inUse, completions, person, now)).length,
+      everyone: everyone.length,
+    };
+  }
+
   async add(input: AddTrainingInput, actor: ActivityActor): Promise<TrainingResponse> {
     await this.requireFreeName(input.name);
     const row = await this.trainings.create(input);
