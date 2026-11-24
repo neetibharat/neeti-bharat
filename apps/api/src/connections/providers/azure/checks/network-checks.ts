@@ -1,6 +1,8 @@
+import { described, type Named } from './azure-lists';
 import { judge, resourcesPath, type AzureCheck, type Verdict } from './outcome';
 
 interface Rule {
+  name?: string;
   properties?: {
     direction?: string;
     access?: string;
@@ -11,8 +13,7 @@ interface Rule {
   };
 }
 
-interface SecurityGroup {
-  name: string;
+interface SecurityGroup extends Named {
   properties?: { securityRules?: Rule[] };
 }
 
@@ -56,6 +57,12 @@ export const nsgOpenPorts: AzureCheck = {
       ),
       (group): Verdict =>
         (group.properties?.securityRules ?? []).some(opensToTheInternet) ? 'fail' : 'ok',
-      (group) => group.name,
+      (group) =>
+        described(group, {
+          securityRules: (group.properties?.securityRules ?? [])
+            .filter(opensToTheInternet)
+            .map((rule) => rule.name ?? '?')
+            .join(', '),
+        }),
     ),
 };

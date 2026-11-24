@@ -57,6 +57,15 @@ function judge(
   return { lines, backed };
 }
 
+/** When the oldest of the checks behind a proof was read: a result carried over from an earlier run was read then. */
+function readAt(ids: readonly string[], results: ConnectionCheckResult[], ranAt: Date): Date {
+  const times = ids.flatMap((id) => {
+    const carried = results.find((r) => r.id === id)?.checkedAt;
+    return carried ? [new Date(carried).getTime()] : [];
+  });
+  return new Date(Math.min(ranAt.getTime(), ...times));
+}
+
 /**
  * What a run says for one proof, or null when the run cannot back it: the proof is not one the system's checks stand
  * behind, a check behind it is open, or none of them found anything to pass. Only a run that holds up is kept.
@@ -71,7 +80,7 @@ export function snapshotFor(
   const ids = PROOF_CHECKS[proofId]?.[connection.provider] ?? [];
   const verdict = ids.length > 0 ? judge(ids, results, accepted) : null;
   if (!verdict?.backed) return null;
-  const when = `${ranAt.toISOString().slice(0, 16).replace('T', ' ')} UTC`;
+  const when = `${readAt(ids, results, ranAt).toISOString().slice(0, 16).replace('T', ' ')} UTC`;
   const head = `Automatic check of ${connection.name} (${SYSTEM[connection.provider]}) on ${when}. Every check behind this proof held up.`;
   return { text: [head, ...verdict.lines].join('\n').slice(0, EVIDENCE_NOTE_MAX_LENGTH) };
 }

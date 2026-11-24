@@ -58,7 +58,8 @@ export class ConnectionScheduleService {
   private async isDue(row: Connection, now: Date): Promise<boolean> {
     const due = nextDue(
       row.schedule as ConnectionSchedule,
-      await this.runs.lastRanAt(row.id),
+      // A run of only some checks does not put off the next full one.
+      await this.runs.lastRanAt(row.id, true),
       row.lastAttemptAt,
     );
     return due !== null && due <= now;

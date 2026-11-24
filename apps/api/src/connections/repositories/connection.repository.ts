@@ -79,6 +79,20 @@ export class ConnectionRepository {
     return connection;
   }
 
+  /** Which groups of checks it leaves out, saved with whatever goes with it, such as its log entry. */
+  async setGroupsOffWith(
+    id: string,
+    groupsOff: string[],
+    alongside: (connection: Connection) => Promise<void>,
+  ): Promise<Connection> {
+    await this.prisma.db.connection.updateMany({ where: { id, ...active }, data: { groupsOff } });
+    const connection = await this.prisma.db.connection.findFirstOrThrow({
+      where: { id, ...active },
+    });
+    await alongside(connection);
+    return connection;
+  }
+
   /** The organisations that are still open. Organisations are not scoped, so this works outside a request. */
   openOrganizations(): Promise<{ id: string }[]> {
     return this.prisma.db.organization.findMany({

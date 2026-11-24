@@ -2,19 +2,21 @@ import type { AzureApi } from '../azure-api';
 import {
   MAX_ONE_BY_ONE,
   belongsTo,
+  described,
   disks,
   fulfilled,
   readable,
   refusedAmong,
   sqlServers,
   storageAccounts,
+  type Disk,
   type SqlServer,
   type StorageAccount,
 } from './azure-lists';
-import { judge, type AzureCheck, type Verdict } from './outcome';
+import { judge, type AzureCheck, type Described, type Verdict } from './outcome';
 
 interface Encrypted {
-  name: string;
+  resource: Described;
   on: boolean;
 }
 
@@ -29,7 +31,9 @@ async function sqlEncryption(
       .filter((server) => belongsTo(server, subscriptionId))
       .slice(0, MAX_ONE_BY_ONE)
       .map((server) =>
-        api.arm.list<{ id: string; name: string }>(`${server.id}/databases?api-version=2021-11-01`),
+        api.arm.list<{ id: string; name: string; location?: string }>(
+          `${server.id}/databases?api-version=2021-11-01`,
+        ),
       ),
   );
   const databases = lists
@@ -41,12 +45,33 @@ async function sqlEncryption(
       const tde = await api.arm.get<{ properties?: { state?: string } }>(
         `${db.id}/transparentDataEncryption/current?api-version=2021-11-01`,
       );
-      return { name: db.name, on: tde.properties?.state === 'Enabled' };
+      const state = tde.properties?.state;
+      return {
+        resource: described(db, { transparentDataEncryption: state }),
+        on: state === 'Enabled',
+      };
     }),
   );
   refusedAmong(settled);
   return fulfilled(settled);
 }
+
+/** A storage account with the two settings that say whether it encrypts. */
+const storageEncryption = (account: StorageAccount): Encrypted => {
+  const services = account.properties?.encryption?.services;
+  return {
+    resource: described(account, {
+      'encryption.services.blob.enabled': services?.blob?.enabled,
+      'encryption.services.file.enabled': services?.file?.enabled,
+    }),
+    on: isEncrypted(account),
+  };
+};
+
+const diskEncryption = (disk: Disk): Encrypted => {
+  const type = disk.properties?.encryption?.type;
+  return { resource: described(disk, { 'encryption.type': type }), on: Boolean(type) };
+};
 
 /** A storage account encrypts blobs and files unless one of them says outright that it does not. */
 const isEncrypted = ({ properties }: StorageAccount): boolean => {
@@ -67,11 +92,8 @@ export const encryptionAtRest: AzureCheck = {
       sqlServers(api, subscriptionId),
     ]);
     const items: Encrypted[] = [
-      ...readable([stored]).map((account) => ({ name: account.name, on: isEncrypted(account) })),
-      ...readable([volumes]).map((disk) => ({
-        name: disk.name,
-        on: Boolean(disk.properties?.encryption?.type),
-      })),
+      ...readable([stored]).map(storageEncryption),
+      ...readable([volumes]).map(diskEncryption),
       ...(servers.status === 'fulfilled'
         ? await sqlEncryption(api, subscriptionId, servers.value)
         : []),
@@ -79,7 +101,7 @@ export const encryptionAtRest: AzureCheck = {
     return judge(
       items,
       ({ on }): Verdict => (on ? 'ok' : 'fail'),
-      ({ name }) => name,
+      ({ resource }) => resource,
     );
   },
 };

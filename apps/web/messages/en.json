@@ -384,6 +384,7 @@
       "TRAINING_COMPLETED": "Training completed",
       "TRAINING_REOPENED": "Training taken back",
       "CONNECTION_CHECKED": "Connection checked",
+      "CONNECTION_RECHECKED": "Checks run again",
       "API_KEY_CREATED": "API key created",
       "API_KEY_REVOKED": "API key revoked",
       "ORGANIZATION_CREATED": "Organisation created",
@@ -396,6 +397,7 @@
       "AI_USED": "AI help used",
       "AI_FEATURES_CHANGED": "AI features changed",
       "CONNECTION_SCHEDULE_CHANGED": "Check schedule changed",
+      "CONNECTION_GROUPS_CHANGED": "Checks chosen",
       "CONNECTION_SCHEDULED_CHECK_FAILED": "Automatic check failed",
       "CONNECTION_CHECK_ACCEPTED": "Check result accepted",
       "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Acceptance taken back"
@@ -475,6 +477,7 @@
       "TRAINING_COMPLETED": "Recorded that {person} completed {name}",
       "TRAINING_REOPENED": "Took back {person}'s completion of {name}",
       "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
+      "CONNECTION_RECHECKED": "Ran {count, plural, one {# check} other {# checks}} of {name} again: {passed} passed",
       "API_KEY_CREATED": "Created the API key {name} with {role} access",
       "API_KEY_REVOKED": "Revoked the API key {name}",
       "ORGANIZATION_CREATED": "Created the organisation {name}",
@@ -487,6 +490,7 @@
       "AI_USED": "Used AI help to {feature, select, policy_import {read a policy from a file} policy_tailor {tailor a policy to the company} policy_check {check a policy against the rules} proof_check {check a piece of proof} other {do something}} ({provider}, {model})",
       "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}",
       "CONNECTION_SCHEDULE_CHANGED": "Set the automatic checks of {name} to {schedule}",
+      "CONNECTION_GROUPS_CHANGED": "Chose what is checked on {name}: {off, plural, =0 {every group} one {# group left out} other {# groups left out}}",
       "CONNECTION_SCHEDULED_CHECK_FAILED": "The automatic check of {name} could not sign in",
       "CONNECTION_CHECK_ACCEPTED": "Accepted a result of {check} on {name} as deliberate",
       "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Took back the acceptance of {check} on {name}"
@@ -2011,7 +2015,8 @@
         "all": "All checks ({count})"
       },
       "allClear": "Nothing needs attention. Choose All checks to see what passed.",
-      "checkedBySchedule": "Checked {when}, automatically"
+      "checkedBySchedule": "Checked {when}, automatically",
+      "rechecked": "{name} ran {count, plural, one {# check} other {# checks}} again {when}. The rest are as earlier runs found them."
     },
     "groups": {
       "needsWork": "{count} to look at",
@@ -2414,7 +2419,8 @@
       "passed": "{count} passed",
       "warned": "{count} to review",
       "failed": "{count} failed",
-      "bySchedule": "Automatic"
+      "bySchedule": "Automatic",
+      "rechecked": "{count, plural, one {# check} other {# checks}} run again"
     },
     "form": {
       "title": "Connect Azure",
@@ -2975,7 +2981,29 @@
       "resourceWarn": "Review",
       "shown": "Showing {shown} of {count}.",
       "fix": "How to fix",
-      "attentionCount": "{count} to fix"
+      "attentionCount": "{count} to fix",
+      "group": "Resource group {group}",
+      "open": "Open",
+      "seen": "What the check saw",
+      "notSet": "not set",
+      "readEarlier": "From an earlier run, read {when}.",
+      "recheck": "Run this check again"
+    },
+    "groupsChoice": {
+      "label": "What is checked",
+      "all": "All {total} groups",
+      "some": "{on} of {total} groups",
+      "title": "Choose what to check",
+      "description": "Untick what this account does not use, such as containers. Those checks stop running and stop showing in new results. A proof they back up cannot be backed by this account while they are off.",
+      "checks": "({count, plural, one {# check} other {# checks}})",
+      "atLeastOne": "Keep at least one group on.",
+      "readOnly": "Not checked on this account: {groups}.",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "recheck": {
+      "group": "Run {count, plural, one {this check} other {these # checks}} again",
+      "running": "Checking"
     },
     "details": {
       "entra_mfa_registered": {

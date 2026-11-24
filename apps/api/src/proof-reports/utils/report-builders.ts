@@ -2,6 +2,7 @@ import {
   CONNECTION_NAMES_SHOWN,
   type ConnectionCheckResult,
   type ConnectionProvider,
+  type FlaggedResource,
   type TeamTrainingRow,
 } from '@dpdp-kit/shared';
 import { dateOf, dateTimeOf, humanize, type ReportDoc } from './report-doc';
@@ -37,21 +38,37 @@ export interface CloudRunInput {
 
 type Accepted = CloudRunInput['accepted'];
 
+/** The settings a check saw on a resource, as `(minimalTlsVersion: 1.0)`, so the report says why it did not pass. */
+function foundOf({ found }: FlaggedResource): string {
+  const pairs = Object.entries(found ?? {}).map(([key, value]) => `${key}: ${value ?? 'not set'}`);
+  return pairs.length > 0 ? ` (${pairs.join(', ')})` : '';
+}
+
 function flaggedDetail(result: ConnectionCheckResult, accepted: Accepted): string {
   const whole = accepted.find((a) => a.checkId === result.id && a.resourceName === '');
   if (whole) return `Accepted by a person: ${whole.reason}`;
   const resources = result.resources ?? [];
   const named = resources.slice(0, CONNECTION_NAMES_SHOWN).map((resource) => {
     const own = accepted.find((a) => a.checkId === result.id && a.resourceName === resource.name);
-    return own ? `${resource.name} (accepted: ${own.reason})` : resource.name;
+    return own
+      ? `${resource.name} (accepted: ${own.reason})`
+      : `${resource.name}${foundOf(resource)}`;
   });
   const more = resources.length - named.length;
   return more > 0 ? `${named.join(', ')} and ${more} more` : named.join(', ');
 }
 
-function cloudDetail(result: ConnectionCheckResult, accepted: Accepted): string {
+function outcomeDetail(result: ConnectionCheckResult, accepted: Accepted): string {
   if (result.status === 'skipped') return SKIPPED[result.reason ?? 'none'] ?? '';
   return result.status === 'pass' ? '' : flaggedDetail(result, accepted);
+}
+
+/** A result carried over from an earlier run says when it was read. */
+function cloudDetail(result: ConnectionCheckResult, accepted: Accepted): string {
+  const detail = outcomeDetail(result, accepted);
+  if (!result.checkedAt) return detail;
+  const read = `Read ${dateTimeOf(new Date(result.checkedAt))}.`;
+  return detail ? `${read} ${detail}` : read;
 }
 
 /** The latest run of each connected account, with every check and what it found. Nothing when no account is connected. */

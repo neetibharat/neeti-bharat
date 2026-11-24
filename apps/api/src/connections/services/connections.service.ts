@@ -1,6 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
+  CHECK_GROUPS,
   CONNECTION_RUN_GAP_SECONDS,
+  checksOn,
+  type CheckId,
   type ConnectionListResponse,
   type ConnectionProvider,
   type ConnectionSchedule,
@@ -143,11 +146,41 @@ export class ConnectionsService {
     });
   }
 
-  /** Reads the system now and keeps what it finds. It takes a few seconds, and is not repeated within seconds. */
-  async run(id: string, actor: ActivityActor): Promise<ConnectionRunResponse> {
+  /**
+   * Reads the system now and keeps what it finds. It takes a few seconds, and is not repeated within seconds. `checks`
+   * runs only those, and keeps the rest as the last run found them.
+   */
+  async run(id: string, actor: ActivityActor, checks?: CheckId[]): Promise<ConnectionRunResponse> {
     const row = await this.find(id);
+    const only = this.onlyOf(row, checks);
     await this.refuseIfJustRun(id);
-    return this.check(row, actor, false);
+    return this.check(row, actor, false, only);
+  }
+
+  /** Which groups of checks the account leaves out, such as containers it does not use. At least one stays on. */
+  async setGroupsOff(
+    id: string,
+    groupsOff: string[],
+    actor: ActivityActor,
+  ): Promise<ConnectionSummary> {
+    const before = await this.find(id);
+    const groups = CHECK_GROUPS[before.provider as ConnectionProvider].map((group) => group.id);
+    const off = [...new Set(groupsOff)];
+    if (off.some((group) => !groups.includes(group)) || off.length === groups.length) {
+      throw new AppException('VALIDATION_FAILED', HttpStatus.BAD_REQUEST);
+    }
+    const saved = await this.connections.setGroupsOffWith(id, off, (updated) =>
+      this.activity.record({
+        actor,
+        action: 'CONNECTION_GROUPS_CHANGED',
+        subject: { type: 'connection', id },
+        details: { name: updated.name, off: off.length },
+        before: { groupsOff: before.groupsOff.join(', ') },
+        after: { groupsOff: off.join(', ') },
+      }),
+    );
+    const [latest] = await this.connections.latestRuns([id]);
+    return toSummary(saved, latest);
   }
 
   /** How often the connection is checked without anyone asking. */
@@ -195,6 +228,7 @@ export class ConnectionsService {
     row: Connection,
     actor: ActivityActor,
     bySchedule: boolean,
+    only?: ReadonlySet<CheckId>,
   ): Promise<ConnectionRunResponse> {
     const provider = row.provider as ConnectionProvider;
     const credentials = this.credentialsOf(row);
@@ -203,8 +237,10 @@ export class ConnectionsService {
       credentials,
       selectionOf(this.identifiersOf(row)),
     );
-    const results = await this.drivers.byProvider[provider].check(credentials, identifiers);
-    return this.runService.save(row, actor, bySchedule, results);
+    // A full run still reads only the groups that are on.
+    const read = only ?? new Set(checksOn(provider, row.groupsOff));
+    const results = await this.drivers.byProvider[provider].check(credentials, identifiers, read);
+    return this.runService.save(row, actor, { bySchedule, only }, results);
   }
 
   async listRuns(id: string, page: number, limit: number): Promise<ConnectionRunListResponse> {
@@ -252,6 +288,20 @@ export class ConnectionsService {
         provider,
       });
     }
+  }
+
+  /**
+   * The checks to run, when only some are asked for. Each must be one of the checks the account runs, and naming every
+   * one of them is the same as naming none.
+   */
+  private onlyOf(row: Connection, checks?: CheckId[]): ReadonlySet<CheckId> | undefined {
+    if (!checks) return undefined;
+    const own = checksOn(row.provider as ConnectionProvider, row.groupsOff);
+    if (checks.some((check) => !own.includes(check))) {
+      throw new AppException('VALIDATION_FAILED', HttpStatus.BAD_REQUEST);
+    }
+    const only = new Set(checks);
+    return only.size === own.length ? undefined : only;
   }
 
   private async refuseIfJustRun(id: string): Promise<void> {

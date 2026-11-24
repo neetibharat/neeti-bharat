@@ -10,6 +10,7 @@ export interface NewConnectionRun {
   connectionId: string;
   ranByName: string;
   bySchedule?: boolean;
+  rechecked?: string[];
   results: ConnectionCheckResult[];
   passed: number;
   warned: number;
@@ -23,6 +24,7 @@ const summary = {
   ranAt: true,
   ranByName: true,
   bySchedule: true,
+  rechecked: true,
   passed: true,
   warned: true,
   failed: true,
@@ -59,14 +61,22 @@ export class ConnectionRunRepository {
     return this.prisma.db.connectionRun.findUnique({ where: { id } });
   }
 
-  /** When the connection was last checked, if ever. */
-  async lastRanAt(connectionId: string): Promise<Date | null> {
+  /** When the connection was last checked, if ever. `whole` counts only runs that read every check. */
+  async lastRanAt(connectionId: string, whole = false): Promise<Date | null> {
     const row = await this.prisma.db.connectionRun.findFirst({
-      where: { connectionId },
+      where: { connectionId, ...(whole && { rechecked: { isEmpty: true } }) },
       orderBy: { ranAt: 'desc' },
       select: { ranAt: true },
     });
     return row?.ranAt ?? null;
+  }
+
+  /** The latest run with its results, to carry over what a run of only some checks does not read again. */
+  latest(connectionId: string): Promise<ConnectionRun | null> {
+    return this.prisma.db.connectionRun.findFirst({
+      where: { connectionId },
+      orderBy: [{ ranAt: 'desc' }, { id: 'desc' }],
+    });
   }
 
   /** One page of runs, newest first, without their results. */

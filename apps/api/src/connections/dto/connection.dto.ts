@@ -105,6 +105,17 @@ export const acceptCheckSchema = z
   })
   .strict();
 
+/** The groups of checks to leave out, by id. The service checks that they are the provider's own. */
+export const updateGroupsSchema = z
+  .object({ groupsOff: z.array(z.string().trim().min(1).max(40)).max(20) })
+  .strict();
+
+/** Which checks to run. No body, or no list, runs them all. */
+export const runConnectionSchema = z
+  .object({ checks: z.array(z.enum(checkIds)).min(1).max(checkIds.length).optional() })
+  .strict()
+  .optional();
+
 export const listConnectionsSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(CONNECTION_MAX_PAGE_SIZE).default(CONNECTION_PAGE_SIZE),
@@ -121,6 +132,8 @@ export type FindSubscriptionsInput = z.output<typeof findSubscriptionsSchema>;
 export type UpdateConnectionInput = z.output<typeof updateConnectionSchema>;
 export type UpdateScheduleInput = z.output<typeof updateScheduleSchema>;
 export type AcceptCheckInput = z.output<typeof acceptCheckSchema>;
+export type RunConnectionInput = z.output<typeof runConnectionSchema>;
+export type UpdateGroupsInput = z.output<typeof updateGroupsSchema>;
 export type ListConnectionsQuery = z.output<typeof listConnectionsSchema>;
 export type ListRunsQuery = z.output<typeof listRunsSchema>;
 
@@ -162,6 +175,24 @@ export class UpdateScheduleDto {
     description: 'How often the connection is checked without anyone asking.',
   })
   schedule!: string;
+}
+
+export class UpdateGroupsDto {
+  @ApiProperty({
+    example: ['containers'],
+    description: 'The groups of checks this account does not run. At least one group stays on.',
+  })
+  groupsOff!: string[];
+}
+
+export class RunConnectionDto {
+  @ApiProperty({
+    required: false,
+    example: ['sql_tls', 'sql_firewall'],
+    description:
+      'Only these checks. The rest are kept as the last run found them. Left out, every check runs.',
+  })
+  checks?: string[];
 }
 
 export class AcceptCheckDto {

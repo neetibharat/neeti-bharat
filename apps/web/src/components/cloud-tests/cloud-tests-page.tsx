@@ -17,6 +17,7 @@ import { Link } from '@/i18n/navigation';
 import { useGetConnectionsQuery } from '@/lib/api/connections-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { EditConnectionButton } from '@/components/connections/edit-connection-button';
+import { GroupsControl } from './groups-control';
 import { RunButton } from './run-button';
 import { RunHistory } from './run-history';
 import { ScheduleControl } from './schedule-control';
@@ -70,17 +71,19 @@ function Scan({
 }) {
   const t = useTranslations('cloudTests.tabs');
   const [tab, setTab] = useState<TabId>('results');
+  // Kept across runs of the same account, so what is open and filtered stays put after running a check again.
+  const results = runId ? (
+    <ScanResults key={connection.id} runId={runId} onRan={onSelect} />
+  ) : (
+    <NotRunYet />
+  );
 
   return (
     <Tabs<TabId>
       selectedKey={tab}
       onSelectionChange={setTab}
       tabs={[
-        {
-          id: 'results',
-          label: t('results'),
-          content: runId ? <ScanResults key={runId} runId={runId} /> : <NotRunYet />,
-        },
+        { id: 'results', label: t('results'), content: results },
         {
           id: 'history',
           label: t('history'),
@@ -126,6 +129,7 @@ function Account({
         <h2 className="text-subtitle font-semibold text-fg">{connection.name}</h2>
       )}
       <ScheduleControl connection={connection} canChange={isAdmin} />
+      <GroupsControl connection={connection} canChange={isAdmin} />
     </div>
   );
 }

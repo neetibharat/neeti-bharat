@@ -63,6 +63,7 @@ function build(
         provider: options.provider ?? 'azure',
         identifiers: options.identifiers ?? {},
         credentials: stored.credentials ?? '',
+        groupsOff: [],
       }),
     ),
     updateWith: vi
