@@ -1,4 +1,5 @@
 import type {
+  CheckId,
   ConnectionCheckResult,
   ConnectionFailure,
   ConnectionProvider,
@@ -26,6 +27,7 @@ export const toRunSummary = (row: ConnectionRunSummaryRow): ConnectionRunSummary
   ranAt: row.ranAt.toISOString(),
   ranByName: row.ranByName,
   bySchedule: row.bySchedule,
+  rechecked: row.rechecked as CheckId[],
   passed: row.passed,
   warned: row.warned,
   failed: row.failed,
@@ -50,6 +52,7 @@ export const toSummary = (
   createdByName: row.createdByName,
   schedule: row.schedule as ConnectionSchedule,
   scheduleFailedAt: row.scheduleFailedAt?.toISOString() ?? null,
+  groupsOff: row.groupsOff,
   lastRun: lastRun ? toRunSummary(lastRun) : null,
 });
 

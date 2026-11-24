@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
 import type { ConnectionDriver, Credentials, Identifiers } from '../connection-driver';
 import type { GithubConnector, GithubCredentials } from './github-api';
 import { runGithubChecks } from './run-github-checks';
@@ -35,7 +35,11 @@ export class GithubDriver implements ConnectionDriver {
     return identifiersFor(github, account, selection ?? { mode: 'all', repositories: [] });
   }
 
-  check(credentials: Credentials, identifiers: Identifiers): Promise<ConnectionCheckResult[]> {
+  check(
+    credentials: Credentials,
+    identifiers: Identifiers,
+    only?: ReadonlySet<CheckId>,
+  ): Promise<ConnectionCheckResult[]> {
     const account = {
       login: identifiers.account ?? '',
       type: identifiers.accountType === 'User' ? ('User' as const) : ('Organization' as const),
@@ -44,6 +48,7 @@ export class GithubDriver implements ConnectionDriver {
       this.github.connect(credentials as unknown as GithubCredentials),
       account,
       selectionOf(identifiers),
+      only,
     );
   }
 }

@@ -1,4 +1,4 @@
-import { GITHUB_CHECK_IDS } from '@dpdp-kit/shared';
+import { CHECK_GROUPS, GITHUB_CHECK_IDS } from '@dpdp-kit/shared';
 import type {
   CheckAcceptanceResponse,
   ConnectionListResponse,
@@ -8,7 +8,7 @@ import type {
   OrganizationSummary,
   ProofRequirementDetailResponse,
 } from '@dpdp-kit/shared';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { REFUSED_SECRET, azureConnector } from './support/fake-azure-connector';
 import { GOOD_KEY, REFUSED_KEY } from './support/fake-github-connector';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
@@ -292,6 +292,94 @@ describe('checking on a schedule', () => {
     expect(healed.body.scheduleFailedAt).toBeNull();
     expect((await runs()).total).toBe(before + 1);
     await world.alice.put(`${path()}/schedule`, { schedule: 'off' }, world.alpha);
+  });
+});
+
+/**
+ * Some minutes on, so a run is not refused for following the last one too closely. A run made this way is dated by the
+ * same clock, so the next one must go further.
+ */
+async function minutesLater<T>(minutes: number, work: () => Promise<T>): Promise<T> {
+  vi.useFakeTimers({ toFake: ['Date'], now: Date.now() + minutes * 60_000 });
+  try {
+    return await work();
+  } finally {
+    vi.useRealTimers();
+  }
+}
+
+describe('running only some checks again', () => {
+  const path = () => `/v1/connections/${world.connectionId}`;
+
+  it('reads only those, and keeps the rest as the last run found them, with when that was', async () => {
+    const before = await world.alice.get<ConnectionSummary>(path(), world.alpha);
+    const checks = ['storage_public_access', 'sql_tls'];
+    const run = await minutesLater(1, () =>
+      world.alice.post<ConnectionRunResponse>(`${path()}/run`, { checks }, world.alpha),
+    );
+    expect(run.status).toBe(201);
+    expect(run.body.rechecked).toEqual(checks);
+    expect(run.body.results).toHaveLength(51);
+    const read = run.body.results.filter((result) => !result.checkedAt).map((result) => result.id);
+    expect(read.sort()).toEqual([...checks].sort());
+    const carried = run.body.results.find((result) => result.id === 'entra_mfa_enforced');
+    expect(carried?.checkedAt).toBe(before.body.lastRun?.ranAt);
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_RECHECKED');
+  });
+
+  it('refuses a check of another system, an empty list and a check that does not exist', async () => {
+    for (const checks of [['github_dependabot'], [], ['no_such_check']]) {
+      const refused = await world.alice.post<{ code: string }>(
+        `${path()}/run`,
+        { checks },
+        world.alpha,
+      );
+      expect([refused.status, refused.body.code]).toEqual([400, 'VALIDATION_FAILED']);
+    }
+  });
+});
+
+describe('choosing which checks run', () => {
+  const path = () => `/v1/connections/${world.connectionId}`;
+  const containers = CHECK_GROUPS.azure.find((group) => group.id === 'containers')!
+    .checks as readonly string[];
+
+  it('lets an admin who is a person turn a group off, and logs it', async () => {
+    const set = await world.alice.put<ConnectionSummary>(
+      `${path()}/groups`,
+      { groupsOff: ['containers'] },
+      world.alpha,
+    );
+    expect([set.status, set.body.groupsOff]).toEqual([200, ['containers']]);
+    const log = await world.alice.get('/v1/activity?limit=100', world.alpha);
+    expect(log.text).toContain('CONNECTION_GROUPS_CHANGED');
+  });
+
+  it('refuses a member, an admin key, a group of another system, an unknown group and turning all off', async () => {
+    const body = { groupsOff: ['network'] };
+    expect((await world.bob.put(`${path()}/groups`, body, world.alpha)).status).toBe(403);
+    const adminKey = await makeKey('admin');
+    expect((await adminKey.put(`${path()}/groups`, body)).status).toBe(403);
+    const all = CHECK_GROUPS.azure.map((group) => group.id);
+    for (const groupsOff of [['githubAccess'], ['no_such_group'], all]) {
+      const refused = await world.alice.put(`${path()}/groups`, { groupsOff }, world.alpha);
+      expect(refused.status).toBe(400);
+    }
+  });
+
+  it('leaves the group out of a run, and will not run one of its checks on its own', async () => {
+    const run = await minutesLater(2, () =>
+      world.alice.post<ConnectionRunResponse>(`${path()}/run`, undefined, world.alpha),
+    );
+    expect(run.status).toBe(201);
+    expect(run.body.rechecked).toEqual([]);
+    expect(run.body.results).toHaveLength(51 - containers.length);
+    expect(run.body.results.some((result) => containers.includes(result.id))).toBe(false);
+    const one = await world.alice.post(`${path()}/run`, { checks: [containers[0]] }, world.alpha);
+    expect(one.status).toBe(400);
+    // Leaves every group on for the tests that follow.
+    await world.alice.put(`${path()}/groups`, { groupsOff: [] }, world.alpha);
   });
 });
 

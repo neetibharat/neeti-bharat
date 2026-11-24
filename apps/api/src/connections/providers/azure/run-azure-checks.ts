@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult } from '@dpdp-kit/shared';
 import { AzureAccessError, cached, type AzureApi } from './azure-api';
 import { AZURE_CHECKS } from './checks';
 import type { AzureCheck, Outcome } from './checks/outcome';
@@ -12,14 +12,18 @@ async function attempt(check: AzureCheck, api: AzureApi, subscriptionId: string)
   }
 }
 
-/** Runs every check against one subscription. Reads are shared, so a list that two checks need is fetched once. */
+/**
+ * Runs every check against one subscription, or only those in `only`. Reads are shared, so a list that two checks need
+ * is fetched once.
+ */
 export async function runAzureChecks(
   api: AzureApi,
   subscriptionId: string,
+  only?: ReadonlySet<CheckId>,
 ): Promise<ConnectionCheckResult[]> {
   const shared = cached(api);
   return Promise.all(
-    AZURE_CHECKS.map(async (check) => ({
+    AZURE_CHECKS.filter((check) => !only || only.has(check.id)).map(async (check) => ({
       id: check.id,
       ...(await attempt(check, shared, subscriptionId)),
     })),

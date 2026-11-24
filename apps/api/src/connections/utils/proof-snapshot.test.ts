@@ -18,6 +18,16 @@ describe('snapshotFor', () => {
     expect(note?.text).toContain('- entra_mfa_enforced: passed');
   });
 
+  it('dates the note by the oldest reading behind it, when a check was carried over from an earlier run', () => {
+    const results: ConnectionCheckResult[] = [
+      pass('entra_mfa_registered'),
+      { ...pass('entra_mfa_enforced'), checkedAt: '2026-03-01T08:15:00.000Z' },
+    ];
+    expect(snapshotFor('PR-P04-01', azure, results, none, at)?.text).toContain(
+      'on 2026-03-01 08:15 UTC',
+    );
+  });
+
   it('gives nothing for a proof the system has no checks for, or one that is not listed', () => {
     expect(
       snapshotFor('PR-P05-01', { name: 'Code', provider: 'github' }, allPass, none, at),

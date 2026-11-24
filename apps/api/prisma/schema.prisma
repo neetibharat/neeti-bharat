@@ -904,6 +904,8 @@ model Connection {
   lastAttemptAt    DateTime?         @db.Timestamptz(3)
   /// Set when the last scheduled try could not sign in, and cleared by the next check that works.
   scheduleFailedAt DateTime?         @db.Timestamptz(3)
+  /// The groups of checks it does not run (CHECK_GROUPS in packages/shared), such as containers it does not use.
+  groupsOff        String[]          @default([])
   runs             ConnectionRun[]
   acceptances      CheckAcceptance[]
 
@@ -923,6 +925,8 @@ model ConnectionRun {
   ranByName      String
   /// True when the schedule made the run, and no person pressed the button.
   bySchedule     Boolean      @default(false)
+  /// The checks this run read again. Empty when it read them all; its other results were carried over from the run before.
+  rechecked      String[]     @default([])
   /// The list of results, in the shape of ConnectionCheckResult in packages/shared.
   results        Json
   passed         Int

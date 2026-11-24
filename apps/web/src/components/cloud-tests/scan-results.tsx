@@ -19,24 +19,31 @@ import { countBySeverity, visibleResults, type SeverityFilter } from '@/lib/clou
 import { inView, needsAttention, type ResultView } from '@/lib/connections';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { Finding } from './finding';
+import { RecheckButton } from './recheck-button';
 
 type Words = (key: string, values?: Record<string, string | number>) => string;
 
 /** Every group of every provider. A run holds the results of one, and a group none of them fall in is left out. */
 const ALL_GROUPS = Object.values(CHECK_GROUPS).flat();
 
+/** Who made the run and when, and for a run of only some checks, how many it read again. */
+function useRunLine(run: ConnectionRunResponse): string {
+  const t = useTranslations('connections.results');
+  const format = useFormatter();
+  const values = {
+    when: format.dateTime(new Date(run.ranAt), { dateStyle: 'medium', timeStyle: 'short' }),
+    name: run.ranByName,
+  };
+  if (run.rechecked.length > 0) return t('rechecked', { ...values, count: run.rechecked.length });
+  return t(run.bySchedule ? 'checkedBySchedule' : 'checked', values);
+}
+
 /** When the run was made and by whom, and how many checks ended each way. */
 function Summary({ run }: { run: ConnectionRunResponse }) {
   const t = useTranslations('connections.results');
-  const format = useFormatter();
 
   return (
-    <Card
-      description={t(run.bySchedule ? 'checkedBySchedule' : 'checked', {
-        when: format.dateTime(new Date(run.ranAt), { dateStyle: 'medium', timeStyle: 'short' }),
-        name: run.ranByName,
-      })}
-    >
+    <Card description={useRunLine(run)}>
       <HeroFacts>
         <HeroFact label={t('passed')} value={String(run.passed)} dot="bg-success" />
         <HeroFact label={t('warned')} value={String(run.warned)} dot="bg-accent" />
@@ -52,14 +59,34 @@ function Summary({ run }: { run: ConnectionRunResponse }) {
   );
 }
 
-function Groups({
-  results,
-  connectionId,
-}: {
+interface GroupsProps {
   results: ConnectionCheckResult[];
   connectionId: string;
-}) {
+  onRan: (runId: string) => void;
+}
+
+/** A group's title and what it covers, and beside them the button that runs the checks shown in it again. */
+function GroupHeader({ id, results, connectionId, onRan }: GroupsProps & { id: string }) {
   const t = useTranslations('connections.groups') as unknown as Words;
+  const recheck = useTranslations('cloudTests.recheck');
+
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <h3 className="text-subtitle font-semibold text-fg">{t(`${id}.title`)}</h3>
+        <p className="text-label text-fg-muted">{t(`${id}.about`)}</p>
+      </div>
+      <RecheckButton
+        connectionId={connectionId}
+        checks={results.map((result) => result.id)}
+        label={recheck('group', { count: results.length })}
+        onRan={onRan}
+      />
+    </div>
+  );
+}
+
+function Groups({ results, connectionId, onRan }: GroupsProps) {
   const filters = useTranslations('cloudTests.filters');
   const groups = ALL_GROUPS.map((group) => ({
     id: group.id,
@@ -71,12 +98,9 @@ function Groups({
     <>
       {groups.map(({ id, found }) => (
         <section key={id} className="flex flex-col gap-2">
-          <div>
-            <h3 className="text-subtitle font-semibold text-fg">{t(`${id}.title`)}</h3>
-            <p className="text-label text-fg-muted">{t(`${id}.about`)}</p>
-          </div>
+          <GroupHeader id={id} results={found} connectionId={connectionId} onRan={onRan} />
           {found.map((result) => (
-            <Finding key={result.id} result={result} connectionId={connectionId} />
+            <Finding key={result.id} result={result} connectionId={connectionId} onRan={onRan} />
           ))}
         </section>
       ))}
@@ -175,8 +199,11 @@ function Filters(props: FiltersProps) {
   );
 }
 
-/** One run of the checks: the totals, filters, and every finding, grouped, each opening to its detail. */
-export function ScanResults({ runId }: { runId: string }) {
+/**
+ * One run of the checks: the totals, filters, and every finding, grouped, each opening to its detail. `onRan` shows the
+ * run made by running some checks again.
+ */
+export function ScanResults({ runId, onRan }: { runId: string; onRan: (runId: string) => void }) {
   const errorMessage = useErrorMessage();
   const check = useTranslations('connections') as unknown as Words;
   const { data, error } = useGetConnectionRunQuery(runId);
@@ -211,7 +238,7 @@ export function ScanResults({ runId }: { runId: string }) {
         query={query}
         onQuery={setQuery}
       />
-      <Groups results={shown} connectionId={data.connectionId} />
+      <Groups results={shown} connectionId={data.connectionId} onRan={onRan} />
     </div>
   );
 }

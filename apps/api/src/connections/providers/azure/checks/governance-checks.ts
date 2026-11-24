@@ -1,6 +1,6 @@
 import { environmentOf } from './environment';
-import type { ResourceGroup } from './azure-lists';
-import { judge, type AzureCheck, type Verdict } from './outcome';
+import { groupOf, type ResourceGroup } from './azure-lists';
+import { judge, type AzureCheck, type Described, type Verdict } from './outcome';
 
 const under = (subscriptionId: string) => `/subscriptions/${subscriptionId}`;
 
@@ -99,7 +99,7 @@ export const defenderPlans: AzureCheck = {
     return judge(
       plans,
       ({ properties }): Verdict => (properties?.pricingTier === 'Standard' ? 'ok' : 'warn'),
-      ({ name }) => name,
+      ({ name, properties }) => ({ name, found: { pricingTier: properties?.pricingTier } }),
     );
   },
 };
@@ -109,6 +109,29 @@ interface Assessment {
     displayName?: string;
     status?: { code?: string };
     metadata?: { severity?: string };
+    resourceDetails?: { Id?: string; ResourceId?: string };
+    links?: { azurePortal?: string };
+  };
+}
+
+type AssessmentProperties = NonNullable<Assessment['properties']>;
+
+// Older and newer versions of the API name the resource's address differently.
+const assessedId = (details: AssessmentProperties['resourceDetails']): string | undefined =>
+  details?.Id ?? details?.ResourceId;
+
+/** Defender gives the portal page without the scheme. */
+const portalUrl = (portal?: string): string | undefined =>
+  portal ? `https://${portal.replace(/^https:\/\//, '')}` : undefined;
+
+/** The recommendation, the resource it is about, and its page in the portal. */
+function recommendation({ properties = {} }: Assessment): Described {
+  const resourceId = assessedId(properties.resourceDetails);
+  return {
+    name: properties.displayName ?? '?',
+    group: groupOf(resourceId),
+    url: portalUrl(properties.links?.azurePortal),
+    found: { severity: properties.metadata?.severity, resource: resourceId?.split('/').pop() },
   };
 }
 
@@ -125,7 +148,7 @@ export const defenderRecommendations: AzureCheck = {
         if (properties?.status?.code !== 'Unhealthy') return 'ok';
         return properties.metadata?.severity === 'High' ? 'fail' : 'warn';
       },
-      ({ properties }) => properties?.displayName ?? '?',
+      recommendation,
     );
   },
 };

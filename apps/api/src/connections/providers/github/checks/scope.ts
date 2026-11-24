@@ -1,5 +1,5 @@
 import type { GithubCheckId } from '@dpdp-kit/shared';
-import { judge, nothingToCheck, type Outcome, type Verdict } from '../../outcome';
+import { judge, nothingToCheck, type Found, type Outcome, type Verdict } from '../../outcome';
 import { GithubAccessError, type GithubAccount, type GithubApi } from '../github-api';
 
 /** A repository as GitHub lists it. */
@@ -41,8 +41,11 @@ export async function mapLimit<T, R>(
   return answers;
 }
 
-/** `null` is a repository that cannot be judged because the App may not read what the check needs. */
-export type RepoVerdict = Verdict | null;
+/**
+ * How one repository did, what the check saw, and which of its settings pages to open to change it. `null` is a
+ * repository that cannot be judged because the App may not read what the check needs.
+ */
+export type RepoVerdict = { verdict: Verdict; found: Found; page: string } | null;
 
 /**
  * Judges each repository. One the App may not read is left out, and if that is all of them the check says it was not
@@ -64,7 +67,11 @@ export async function judgeRepos(
   if (known.length === 0) return { status: 'skipped', reason: 'access' };
   return judge(
     known,
-    (item) => item.verdict as Verdict,
-    (item) => item.repo.full_name,
+    (item) => item.verdict!.verdict,
+    ({ repo, verdict }) => ({
+      name: repo.full_name,
+      url: `https://github.com/${repo.full_name}/settings/${verdict!.page}`,
+      found: verdict!.found,
+    }),
   );
 }

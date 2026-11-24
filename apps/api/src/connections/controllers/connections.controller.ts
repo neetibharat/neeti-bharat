@@ -23,12 +23,16 @@ import {
   UpdateConnectionDto,
   UpdateScheduleDto,
   AcceptCheckDto,
+  RunConnectionDto,
+  UpdateGroupsDto,
   acceptCheckSchema,
   createConnectionSchema,
   discoverGithubSchema,
   findSubscriptionsSchema,
   listConnectionsSchema,
   listRunsSchema,
+  runConnectionSchema,
+  updateGroupsSchema,
   updateConnectionSchema,
   updateScheduleSchema,
   type AcceptCheckInput,
@@ -37,6 +41,8 @@ import {
   type FindSubscriptionsInput,
   type ListConnectionsQuery,
   type ListRunsQuery,
+  type RunConnectionInput,
+  type UpdateGroupsInput,
   type UpdateConnectionInput,
   type UpdateScheduleInput,
 } from '../dto/connection.dto';
@@ -162,6 +168,22 @@ export class ConnectionsController {
     return this.service.setSchedule(id, body.schedule, actorOf(user));
   }
 
+  @Put(':id/groups')
+  @Roles(['admin'])
+  @NoApiKey()
+  @ApiOperation({
+    summary:
+      'Choose which groups of checks the account runs, leaving out what it does not use. At least one stays on (admin only, never a key)',
+  })
+  @ApiBody({ type: UpdateGroupsDto })
+  setGroups(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateGroupsSchema)) body: UpdateGroupsInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionSummary> {
+    return this.service.setGroupsOff(id, body.groupsOff, actorOf(user));
+  }
+
   @Get(':id/acceptances')
   @Roles(['admin', 'member', 'auditor'])
   @ApiOperation({
@@ -214,10 +236,15 @@ export class ConnectionsController {
   @TransactionAfterBody()
   @ApiOperation({
     summary:
-      'Read the connected system and check it now. Takes up to about half a minute, and is not repeated within seconds (admin and member)',
+      'Read the connected system and check it now: every check, or only those named, keeping the rest as the last run found them. Takes up to about half a minute, and is not repeated within seconds (admin and member)',
   })
-  run(@Param('id') id: string, @Session() { user }: UserSession): Promise<ConnectionRunResponse> {
-    return this.service.run(id, actorOf(user));
+  @ApiBody({ type: RunConnectionDto, required: false })
+  run(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(runConnectionSchema)) body: RunConnectionInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionRunResponse> {
+    return this.service.run(id, actorOf(user), body?.checks);
   }
 
   @Get(':id')

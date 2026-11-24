@@ -14,10 +14,12 @@ import {
   type ConnectionCheckResult,
   type ConnectionCheckStatus,
 } from '@dpdp-kit/shared';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { outcomeKey } from '@/lib/connections';
 import { AcceptButton, AcceptedNote, useAcceptances } from './acceptance';
+import { RecheckButton } from './recheck-button';
+import { ResourceFacts } from './resource-facts';
 
 type Words = (key: string, values?: Record<string, string | number>) => string;
 
@@ -72,6 +74,7 @@ function ResourceRow({
           )}
         </div>
       </div>
+      <ResourceFacts resource={resource} />
       {acceptance && <AcceptedNote connectionId={connectionId} acceptance={acceptance} />}
     </li>
   );
@@ -135,6 +138,15 @@ function WholeCheck({
   );
 }
 
+/** A result carried over from an earlier run says when it was read, so an old answer is not taken for a new one. */
+function ReadEarlier({ checkedAt }: { checkedAt?: string }) {
+  const t = useTranslations('cloudTests.finding');
+  const format = useFormatter();
+  if (!checkedAt) return null;
+  const when = format.dateTime(new Date(checkedAt), { dateStyle: 'medium', timeStyle: 'short' });
+  return <p className="italic">{t('readEarlier', { when })}</p>;
+}
+
 /** What this account showed for the check, in words. */
 function outcomeText(result: ConnectionCheckResult, check: Words): string {
   const key = outcomeKey(result);
@@ -143,14 +155,34 @@ function outcomeText(result: ConnectionCheckResult, check: Words): string {
     : check(`checks.${result.id}.${key}`, result.values ?? {});
 }
 
-/** The detail under one finding: what the check is, why it matters, what this account showed, and how to fix it. */
-function FindingDetail({
-  result,
-  connectionId,
-}: {
+interface FindingProps {
   result: ConnectionCheckResult;
   connectionId: string;
-}) {
+  /** Shows the run made by running the check again. */
+  onRan: (runId: string) => void;
+}
+
+/** What the check looks at, and when it passes and when it does not. */
+function AboutCheck({ id }: { id: ConnectionCheckResult['id'] }) {
+  const t = useTranslations('cloudTests.finding');
+  const check = useTranslations('connections') as unknown as Words;
+  const detail = useTranslations('cloudTests.details') as unknown as Words;
+
+  return (
+    <Section title={t('about')}>
+      <p>{check(`checks.${id}.about`)}</p>
+      <p>
+        <span className="font-medium text-fg">{t('passRule')}</span> {detail(`${id}.passRule`)}
+      </p>
+      <p>
+        <span className="font-medium text-fg">{t('failRule')}</span> {detail(`${id}.failRule`)}
+      </p>
+    </Section>
+  );
+}
+
+/** The detail under one finding: what the check is, why it matters, what this account showed, and how to fix it. */
+function FindingDetail({ result, connectionId, onRan }: FindingProps) {
   const t = useTranslations('cloudTests.finding');
   const check = useTranslations('connections') as unknown as Words;
   const detail = useTranslations('cloudTests.details') as unknown as Words;
@@ -158,22 +190,13 @@ function FindingDetail({
 
   return (
     <div className="flex flex-col gap-4 border-t border-line px-4 py-4 text-label text-fg-muted">
-      <Section title={t('about')}>
-        <p>{check(`checks.${result.id}.about`)}</p>
-        <p>
-          <span className="font-medium text-fg">{t('passRule')}</span>{' '}
-          {detail(`${result.id}.passRule`)}
-        </p>
-        <p>
-          <span className="font-medium text-fg">{t('failRule')}</span>{' '}
-          {detail(`${result.id}.failRule`)}
-        </p>
-      </Section>
+      <AboutCheck id={result.id} />
       <Section title={t('why')}>
         <p>{detail(`${result.id}.why`)}</p>
       </Section>
       <Section title={t('result')}>
         <p>{outcomeText(result, check)}</p>
+        <ReadEarlier checkedAt={result.checkedAt} />
       </Section>
       <Resources result={result} connectionId={connectionId} />
       <WholeCheck result={result} connectionId={connectionId} />
@@ -182,18 +205,20 @@ function FindingDetail({
           <p>{detail(`${result.id}.fix`)}</p>
         </Section>
       )}
+      <div className="flex justify-end">
+        <RecheckButton
+          connectionId={connectionId}
+          checks={[result.id]}
+          label={t('recheck')}
+          onRan={onRan}
+        />
+      </div>
     </div>
   );
 }
 
 /** One check as a row that opens to show the detail. A native disclosure keeps it light and reachable by keyboard. */
-export function Finding({
-  result,
-  connectionId,
-}: {
-  result: ConnectionCheckResult;
-  connectionId: string;
-}) {
+export function Finding({ result, connectionId, onRan }: FindingProps) {
   const t = useTranslations('connections');
   const severity = useTranslations('cloudTests.severity');
   const check = t as unknown as Words;
@@ -215,7 +240,7 @@ export function Finding({
           aria-hidden
         />
       </summary>
-      <FindingDetail result={result} connectionId={connectionId} />
+      <FindingDetail result={result} connectionId={connectionId} onRan={onRan} />
     </details>
   );
 }

@@ -79,6 +79,15 @@ describe('branchProtection', () => {
   it('warns when the branch is protected but needs no review', async () => {
     const result = await branchProtection.run(scopeOf({ gets: { [classic]: {} } }));
     expect(result.status).toBe('warn');
+    // What it saw, and the settings page that changes it.
+    expect(result.resources).toEqual([
+      {
+        name: 'acme/api',
+        status: 'warn',
+        url: 'https://github.com/acme/api/settings/branches',
+        found: { branch: 'main', required_approving_review_count: 0 },
+      },
+    ]);
   });
 
   it('passes when a ruleset requires a pull request and there is no classic rule', async () => {

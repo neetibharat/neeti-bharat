@@ -232,10 +232,38 @@ describe('storage', () => {
       status: 'fail',
       values: { count: 2, total: 3, names: 'old, plain' },
     });
-    // Every one that did not pass is kept, with how each did, so a page can list them all.
+    // Every one that did not pass is kept, with how each did and the settings that decided it.
     expect(result.resources).toEqual([
-      { name: 'old', status: 'fail' },
-      { name: 'plain', status: 'fail' },
+      {
+        name: 'old',
+        status: 'fail',
+        location: 'centralindia',
+        found: { supportsHttpsTrafficOnly: true, minimumTlsVersion: 'TLS1_0' },
+      },
+      {
+        name: 'plain',
+        status: 'fail',
+        location: 'centralindia',
+        found: { supportsHttpsTrafficOnly: false, minimumTlsVersion: null },
+      },
+    ]);
+  });
+
+  it('gives a flagged resource its resource group and its page in the Azure portal', async () => {
+    const id =
+      '/subscriptions/sub/resourceGroups/rg-prod/providers/Microsoft.Storage/storageAccounts/open';
+    const result = await run(storagePublicAccess, [
+      { ...account('open', { allowBlobPublicAccess: true }), id },
+    ]);
+    expect(result.resources).toEqual([
+      {
+        name: 'open',
+        status: 'fail',
+        location: 'centralindia',
+        group: 'rg-prod',
+        url: `https://portal.azure.com/#resource${id}`,
+        found: { allowBlobPublicAccess: true },
+      },
     ]);
   });
 
@@ -799,8 +827,8 @@ describe('monitoring and governance', () => {
     });
     expect(result).toMatchObject({ status: 'fail', values: { count: 2, total: 3, names: 'A, B' } });
     expect(result.resources).toEqual([
-      { name: 'A', status: 'fail' },
-      { name: 'B', status: 'warn' },
+      { name: 'A', status: 'fail', found: { severity: 'High', resource: null } },
+      { name: 'B', status: 'warn', found: { severity: 'Low', resource: null } },
     ]);
     expect(
       (

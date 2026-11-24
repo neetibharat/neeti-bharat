@@ -92,11 +92,42 @@ There are 6 checks in 3 groups. The two about the organisation run once, and the
 
 The results are on their own page, **Cloud checks** (under **Compliance checks** in the Data area, beside Website checks), with one connection at a time, Azure or GitHub (a selector lists up to 100 accounts when there are several; the Connections page links to the right one). **Run checks** always runs the account that is selected, so each account is run on its own. It shows the totals, the checks that need attention or all of them, filters by severity (high, medium or low, a fixed judgement about each check) and a search. Findings are grouped by area. Opening one shows what it checks, when it passes and when it needs attention, why it matters, what this account showed with every resource that did not pass (up to 200), and how to fix it. The History tab lists earlier runs.
 
+Each resource that did not pass shows what the check saw on it:
+
+- its region and, on Azure, its resource group;
+- an **Open** link to its page in the Azure portal, or to the repository's settings page on GitHub (for a Defender recommendation, the recommendation's own page);
+- the settings that decided the result, under the system's own names, such as `minimalTlsVersion 1.0` or `required_approving_review_count 0`. A setting the system does not report is shown as not set.
+
+Checks that count people, such as multi-factor registration, name no one and show only the count. The cloud report kept on proofs lists the same settings beside each resource.
+
 **Run checks** reads the subscription now. It takes up to about half a minute and is not repeated within 30 seconds. Admins and members can run it; auditors can read the results. Each run is kept, with who ran it.
+
+### Choosing what is checked
+
+Beside the schedule, **What is checked** says how many groups the account runs, such as **All 7 groups**. An admin can open it and untick a group the account does not use, such as containers. At least one group stays on.
+
+- Checks in a group that is off do not run, whether by **Run checks**, by the schedule or on their own, and are not in new results. Earlier runs keep what they found.
+- A proof that relies on a check that is off cannot be backed by this account while it is off, because nothing shows that the check holds.
+- Others see which groups are not checked. Only an admin who is signed in as a person can change it, and the change is written to the activity log.
+- The API takes it as `PUT /v1/connections/{id}/groups` with `{ "groupsOff": [...] }`, using the group ids in `CHECK_GROUPS`.
+
+### Running some checks again
+
+After fixing something, there is no need to read everything again:
+
+- **Run this check again**, at the foot of an open finding, reads that one check.
+- **Run these checks again**, beside each group, reads the checks the group shows under the current filters.
+
+Either one makes a new run that reads only those checks. Every other check is kept as the last run found it, so the latest run always has every check. A kept result says it is from an earlier run and when it was read. The summary and the history say how many checks the run read again.
+
+- The API takes the list as `POST /v1/connections/{id}/run` with `{ "checks": [...] }`. Without a body it runs everything. Each check must belong to that system. Naming every check is the same as a full run.
+- The 30-second gap applies the same way, and the activity log names the run as checks run again.
+- The schedule counts only full runs, so running a few checks again never puts off the next full one.
+- A proof note made from such a run is dated by the oldest reading behind it, so a kept result is never presented as new.
 
 ### Automatic checks
 
-Beside the account, an admin can set **Check automatically** to **Off**, **Every day** or **Every week**. It starts off. The API looks once an hour for connections that are due and checks each one the same way the button does. A check is due when a day (or a week) has passed since the last check or the last try, counted an hour short so the hourly look does not make it an hour late. A check pressed by hand counts, so a connection checked this morning is not checked again by the schedule the same day.
+Beside the account, an admin can set **Check automatically** to **Off**, **Every day** or **Every week**. It starts off. The API looks once an hour for connections that are due and checks each one the same way the button does. A check is due when a day (or a week) has passed since the last check or the last try, counted an hour short so the hourly look does not make it an hour late. A full run pressed by hand counts, so a connection checked this morning is not checked again by the schedule the same day.
 
 - A scheduled run is kept like any other, marked **Automatic** in the history, and written to the activity log as **Scheduled check**. Changing the schedule is written to the activity log too.
 - When the sign-in fails, for example because a client secret expired, nothing is kept as a run. The connection is marked, the Cloud checks page shows that the last automatic check could not sign in, and the activity log has an entry. The schedule tries again when the next check is due, and the mark goes away when one works.
@@ -143,4 +174,6 @@ Only these addresses are ever called: for Azure, the Microsoft sign-in service, 
 - `packages/shared/src/proof-checks.ts` lists which proofs each system's checks back up (`PROOF_CHECKS`). `connections/utils/proof-snapshot.ts` decides whether a run backs a proof and writes the note, and `frameworks/services/proof-snapshot.service.ts` attaches it. `connection-run.service.ts` saves a run, its log entry and the notes together. To back a new proof, add it to `PROOF_CHECKS`; a test checks that the proof and the checks exist.
 - `apps/api/src/core/secrets/`: the secret box.
 - `AzureConnector` and `GithubConnector` are the seams for tests: the end-to-end tests replace them with fakes that answer from a table, so no test leaves the machine.
+- `providers/outcome.ts` judges a list of resources and keeps, for each that did not pass, what the check describes: its name, region, resource group, link and the settings it read. An Azure check that is one rule about one kind of resource is written with `rule()` in `azure/checks/rules.ts`, which takes the verdict and the settings to show.
+- `connections/utils/carry-over.ts` keeps the results a run of only some checks did not read again.
 - The checks, groups and result shape are in `packages/shared/src/connections.ts`. A new check is a function in the provider's `checks/` folder, an id in that provider's list, and its words under `connections.checks` in `apps/web/messages/en.json`. A test fails if any of them is missing.
