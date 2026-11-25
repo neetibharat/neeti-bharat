@@ -1,19 +1,22 @@
 import type { AzureApi } from '../azure-api';
-import { nameOf, type Named } from './azure-lists';
-import { judge, type AzureCheck, type Verdict } from './outcome';
+import { described, type Named } from './azure-lists';
+import { judge, type AzureCheck, type Found, type Verdict } from './outcome';
 
 /**
- * A check made of one rule about one kind of resource: list them all, judge each, and name the ones that are not fine.
- * Most of what is checked is exactly this, so each is a line that says what to look for.
+ * A check made of one rule about one kind of resource: list them all, judge each, and name the ones that are not fine
+ * with the settings that decided it. Most of what is checked is exactly this, so each says what to look for and what it
+ * looked at.
  */
 export function rule<T extends Named>(
   id: AzureCheck['id'],
   list: (api: AzureApi, subscriptionId: string) => Promise<T[]>,
   verdict: (item: T) => Verdict,
+  found: (item: T) => Found,
 ): AzureCheck {
   return {
     id,
-    run: async (api, subscriptionId) => judge(await list(api, subscriptionId), verdict, nameOf),
+    run: async (api, subscriptionId) =>
+      judge(await list(api, subscriptionId), verdict, (item) => described(item, found(item))),
   };
 }
 

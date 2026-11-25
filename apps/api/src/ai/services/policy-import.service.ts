@@ -1,17 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { PolicyImportResponse } from '@dpdp-kit/shared';
+import type { ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import type { UploadedFile } from '../../frameworks/utils/evidence-file';
-import { AiClient, AiProviderError, type AiTarget } from '../providers/ai-client';
-import { readDocumentText } from '../utils/document-text';
 import { ProfileService } from '../../profile/services/profile.service';
-import {
-  UnusableReply,
-  importPrompt,
-  toImportResponse,
-  type CompanyAnswer,
-} from '../utils/import-prompt';
-import { AiSettingsService } from './ai-settings.service';
+import { readDocumentText } from '../utils/document-text';
+import { importPrompt, toImportResponse } from '../utils/import-prompt';
+import { AiRunner } from './ai-runner.service';
 
 /**
  * Reads a policy out of a file with the company's AI service, for the Add policy form to fill in. The file and what
@@ -20,45 +15,21 @@ import { AiSettingsService } from './ai-settings.service';
 @Injectable()
 export class PolicyImportService {
   constructor(
-    private readonly settings: AiSettingsService,
-    private readonly client: AiClient,
+    private readonly runner: AiRunner,
     private readonly profile: ProfileService,
   ) {}
 
-  async read(file: UploadedFile | undefined): Promise<PolicyImportResponse> {
+  async read(file: UploadedFile | undefined, actor: ActivityActor): Promise<PolicyImportResponse> {
     if (!file) throw new AppException('FILE_REQUIRED', HttpStatus.BAD_REQUEST);
-    const target = await this.settings.target();
     const text = await readDocumentText(file);
     const { entries } = await this.profile.list();
-    return this.parse(await this.ask(target, file.originalname, text, entries));
-  }
-
-  private async ask(
-    target: AiTarget,
-    fileName: string,
-    text: string,
-    answers: CompanyAnswer[],
-  ): Promise<string> {
-    try {
-      return await this.client.completeJson(target, importPrompt(fileName, text, answers));
-    } catch (error) {
-      if (!(error instanceof AiProviderError)) throw error;
-      throw new AppException('AI_FAILED', HttpStatus.BAD_GATEWAY, {
-        reason: error.reason,
-        detail: error.detail,
-      });
-    }
-  }
-
-  /** An answer that is not the JSON asked for is the service's failure, not the person's. */
-  private parse(reply: string): PolicyImportResponse {
-    try {
-      return toImportResponse(reply);
-    } catch (error) {
-      if (!(error instanceof UnusableReply)) throw error;
-      throw new AppException('AI_FAILED', HttpStatus.BAD_GATEWAY, {
-        reason: 'unusable',
-      });
-    }
+    return this.runner.run(
+      {
+        feature: 'policy_import',
+        prompt: importPrompt(file.originalname, text, entries),
+        parse: toImportResponse,
+      },
+      { actor, subject: { type: 'policy' } },
+    );
   }
 }

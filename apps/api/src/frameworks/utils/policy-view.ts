@@ -17,7 +17,6 @@ export interface PolicyRow {
   reviewEvery: string;
   templateId: string | null;
   legalReferences: string[];
-  evidence: string[];
   status: PolicyStatus;
   approvedAt: Date | null;
   approvedByName: string | null;
@@ -44,13 +43,9 @@ export function policyView(row: PolicyRow): PolicyResponse {
 /** What only a policy's own page shows, on top of what the list shows. */
 export function policyFacts(
   row: PolicyRow,
-): Pick<
-  PolicyDetailResponse,
-  'legalReferences' | 'evidence' | 'approvedAt' | 'approvedByName' | 'version'
-> {
+): Pick<PolicyDetailResponse, 'legalReferences' | 'approvedAt' | 'approvedByName' | 'version'> {
   return {
     legalReferences: row.legalReferences,
-    evidence: row.evidence,
     approvedAt: row.approvedAt?.toISOString() ?? null,
     approvedByName: row.approvedByName,
     version: row._count.approvals,

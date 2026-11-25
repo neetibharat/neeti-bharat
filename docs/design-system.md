@@ -51,6 +51,14 @@ Use the scale in `theme.css`: `caption`, `label`, `body`, `subtitle`, `title`, `
 
 No `font-bold` or `font-extrabold`: they look heavy and uneven.
 
+## Dark theme
+
+The dark theme is the same semantic tokens with other values, in one block at the end of `theme.css` (`:root[data-theme='dark']`). Components use only the semantic layer, so they need nothing of their own; a new token needs a dark value in that block.
+
+- **Choice:** Appearance in the account menu is System, Light or Dark, kept in this browser under `dpdp_theme` (`lib/theme.ts`, `lib/hooks/use-theme.ts`). System follows the device and changes with it.
+- **No flash:** a small script in the page head (`THEME_BOOT_SCRIPT`) sets `data-theme` on `<html>` before anything paints, which is why `<html>` carries `suppressHydrationWarning`.
+- **On a brand fill** (buttons, tooltips) the text is `on-brand`, which is white in the light theme and the dark page colour in the dark one.
+
 ## Motion
 
 - Use motion for things that move between states: the sliding active item in the sidebar, page entry, anything that needs layout animation.
@@ -70,6 +78,7 @@ The shell is a slim, two-part sidebar: a rail of icons (one per area) beside a p
 - **The map lives in one file:** `lib/navigation.ts` lists the areas, their sections and their pages. To ship a module, build its page and change its `status` from `'soon'` to `'live'`. To add a page, add one line there, a route file, and its labels in `messages/en.json`. A test fails if any of the three is missing.
 - **The pieces** are in `components/shell/sidebar/`, one job per file: `sidebar.tsx` (puts it together), `rail.tsx` and `rail-button.tsx` (the icons), `panel.tsx` (the pages), `nav-item.tsx` (one row, with its "Soon" state) and `use-selected-area.ts` (which area the panel shows).
 - **Mobile** shows the same sidebar as a drawer, opened from the top bar.
+- **The top bar** (desktop) holds the global search in the middle and the bell and account menu at the right. On mobile the search is an icon and the bell and account menu sit in the mobile bar.
 - A module that is not built yet uses `comingSoon('<id>')` as its page; replace it when the module ships.
 
 ## Components
@@ -96,9 +105,22 @@ All live in `apps/web/src/components/base/<name>/<name>.tsx`.
 | `Pagination`                                            | "26–50 of 112" with Previous and Next. Renders nothing when everything fits on one page.                                                                                                                                                                                                                    |
 | `Loading`                                               | A turning spinner in the middle of a page or card while its data loads.                                                                                                                                                                                                                                     |
 | `StatTile`                                              | A small card with one figure, a label and an optional note. `tone` colours a figure above zero.                                                                                                                                                                                                             |
-| `HeroPanel`, `HeroFacts`, `HeroFact`, `Gauge`           | The readiness card: a white card with a brand-coloured ring that fills to a percentage, a heading and a row of figures.                                                                                                                                                                                     |
+| `HeroPanel`, `HeroFacts`, `HeroFact`, `RingGauge`       | The readiness card: a white card with a brand-coloured ring that fills to a percentage, a heading and a row of figures.                                                                                                                                                                                     |
 | `IconLinkRow`, `AttentionList`                          | A bordered link row with a toned icon tile, a title and a subtitle; and a titled card of such rows with an empty state and a "more" note.                                                                                                                                                                   |
 | `Avatar`, `BrandMark`, `EmptyState`                     | Identity and empty screens.                                                                                                                                                                                                                                                                                 |
+
+## Charts
+
+Every chart is drawn by hand with `d3-shape` and `d3-scale` as plain SVG, in `apps/web/src/components/graphs/`. There is no chart library, so a chart can look like the rest of the product and is not limited by what a library offers. A chart in this folder knows nothing about the page it sits on: it takes numbers and colours, and the page gives it both.
+
+| Chart         | What it draws                                                                                                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RingGauge`   | A ring that fills to a percentage, for the readiness card.                                                                                                                      |
+| `StackedBars` | Rows of bars, each split into coloured parts, with a key and a tooltip on each part.                                                                                            |
+| `TickRamp`    | A scale as a rising ramp of ticks, one per point, coloured by band. Ticks up to one value are solid and those up to another are hatched, with a pill over each marked tick.     |
+| `ContourMap`  | A square map of two scales, with smooth bands where their product crosses from one level to the next, and dots on it. With two dots, an arrow shows which way the second moved. |
+
+Colours come from the theme, such as `var(--color-chart-approved)` or `var(--color-risk-high)`, never raw values. A chart that fills or counts up does so with `motion`, and shows its final state at once for a person who has asked for less motion. `useWidth` gives a chart the width it has been given, and keeps it up to date as the space changes.
 
 ## Adding a component
 

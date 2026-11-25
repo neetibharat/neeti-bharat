@@ -1,22 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import type { MyWorkItem, MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
 import { currentRole } from '../../core/org/org-context';
-import { OpenBreachReader } from '../../breaches/services/open-breach-reader';
-import { OpenRequestReader } from '../../requests/services/open-request-reader';
 import { PersonDirectory } from '../../people/services/person-directory';
 import { ControlRepository } from '../repositories/control.repository';
 import { PolicyRepository } from '../repositories/policy.repository';
 import { myWorkItems, workloadOf } from '../utils/my-work';
+import { OpenWorkReader } from './open-work-reader';
 
-/** What is waiting on a person: breaches and requests to deal with, proof to collect, policies to approve, review or write. */
+/** What is waiting on a person: breaches and requests to deal with, proof to collect, policies to approve, review or write, vendors to review. */
 @Injectable()
 export class MyWorkService {
   constructor(
     private readonly controls: ControlRepository,
     private readonly policies: PolicyRepository,
     private readonly directory: PersonDirectory,
-    private readonly breaches: OpenBreachReader,
-    private readonly requests: OpenRequestReader,
+    private readonly openWork: OpenWorkReader,
   ) {}
 
   async forUser(user: { email: string }): Promise<MyWorkResponse> {
@@ -71,19 +69,17 @@ export class MyWorkService {
     return this.itemsOf(snapshot, personId, new Set(roles), isAdmin);
   }
 
-  /** The controls, policies, open breaches and open requests the work is worked out from. */
+  /** The controls, policies, open breaches and requests, and vendors the work is worked out from. */
   private async snapshot() {
-    const [controls, policies, breaches, requests] = await Promise.all([
+    const [controls, policies, open] = await Promise.all([
       this.controls.findActive(),
       this.policies.findActive(),
-      this.breaches.open(),
-      this.requests.open(),
+      this.openWork.read(),
     ]);
     return {
       controls,
       policies,
-      breaches,
-      requests,
+      ...open,
       briefs: new Map(policies.map((policy) => [policy.id, policy])),
     };
   }

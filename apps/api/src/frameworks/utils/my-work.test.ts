@@ -8,6 +8,7 @@ import {
   type WorkBreach,
   type WorkRequest,
   type WorkPolicy,
+  type WorkVendor,
 } from './my-work';
 
 const NOW = new Date('2026-11-10T12:00:00Z');
@@ -58,6 +59,8 @@ const input = (over: Partial<MyWorkInput> = {}): MyWorkInput => ({
   briefs: new Map() as PolicyBriefs,
   breaches: [],
   requests: [],
+  vendors: [],
+  training: [],
   now: NOW,
   ...over,
 });
@@ -291,5 +294,51 @@ describe('workloadOf', () => {
         item('draft'),
       ]),
     ).toEqual({ personId: 'p1', open: 5, overdue: 1 });
+  });
+});
+
+describe('vendor work', () => {
+  const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
+  const vendor = (over: Partial<WorkVendor> = {}): WorkVendor => ({
+    id: 'v1',
+    name: 'Acme Payroll',
+    ownerId: 'me',
+    reviewDueOn: null,
+    ...over,
+  });
+
+  it('gives a review that is close, with its date, and one that is late', () => {
+    const [soon] = myWorkItems(input({ vendors: [vendor({ reviewDueOn: daysAhead(10) })] }));
+    expect(soon).toMatchObject({ kind: 'vendor', id: 'v1', context: 'review', overdue: false });
+    expect(soon!.dueOn).toBe(daysAhead(10).toISOString());
+    const [late] = myWorkItems(input({ vendors: [vendor({ reviewDueOn: daysAgo(2) })] }));
+    expect(late).toMatchObject({ context: 'review', overdue: true });
+  });
+
+  it('gives nothing for a date that is far off or not set', () => {
+    expect(myWorkItems(input({ vendors: [vendor({ reviewDueOn: daysAhead(90) })] }))).toEqual([]);
+    expect(myWorkItems(input({ vendors: [vendor()] }))).toEqual([]);
+  });
+
+  it('is the named owner’s, or the DPO’s and the admins’ when nobody is named', () => {
+    const due = { reviewDueOn: daysAgo(1) };
+    expect(myWorkItems(input({ vendors: [vendor({ ...due, ownerId: 'other' })] }))).toEqual([]);
+    expect(myWorkItems(input({ vendors: [vendor({ ...due, ownerId: null })] }))).toHaveLength(1);
+    const outsider = input({ roles: new Set(), vendors: [vendor({ ...due, ownerId: null })] });
+    expect(myWorkItems(outsider)).toEqual([]);
+    expect(myWorkItems({ ...outsider, isAdmin: true })).toHaveLength(1);
+  });
+});
+
+describe('training work', () => {
+  const due = (personId: string, dueOn: Date) => ({ personId, id: 't1', name: 'Awareness', dueOn });
+
+  it('is the person’s own, late once its day has passed', () => {
+    const soon = new Date(NOW.getTime() + 5 * 86_400_000);
+    const [mine] = myWorkItems(input({ training: [due('me', soon), due('other', soon)] }));
+    expect(mine).toMatchObject({ kind: 'training', id: 't1', title: 'Awareness', overdue: false });
+    expect(myWorkItems(input({ training: [due('other', soon)] }))).toEqual([]);
+    const [late] = myWorkItems(input({ training: [due('me', daysAgo(2))] }));
+    expect(late).toMatchObject({ kind: 'training', overdue: true });
   });
 });

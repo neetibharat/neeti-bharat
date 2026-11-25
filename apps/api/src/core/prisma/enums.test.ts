@@ -14,6 +14,10 @@ import {
   REQUEST_TYPES,
   RULE_CONDITIONS,
   TASK_OUTCOMES,
+  VENDOR_CATEGORIES,
+  VENDOR_LOCATIONS,
+  VENDOR_STATUSES,
+  VENDOR_TREATMENTS,
 } from '@dpdp-kit/shared';
 import { describe, expect, it } from 'vitest';
 import {
@@ -32,6 +36,10 @@ import {
   RequestType,
   RequirementCondition,
   TaskOutcome,
+  VendorCategory,
+  VendorLocation,
+  VendorStatus,
+  VendorTreatment,
 } from '../../generated/prisma/enums';
 
 // A list in packages/shared that drifts from the database enum would let the API store or send a value the other side rejects.
@@ -52,6 +60,10 @@ describe('database enums match packages/shared', () => {
     ['TaskOutcome', TaskOutcome, TASK_OUTCOMES],
     ['NotificationKind', NotificationKind, NOTIFICATION_KINDS],
     ['NotificationState', NotificationState, NOTIFICATION_STATES],
+    ['VendorCategory', VendorCategory, VENDOR_CATEGORIES],
+    ['VendorLocation', VendorLocation, VENDOR_LOCATIONS],
+    ['VendorStatus', VendorStatus, VENDOR_STATUSES],
+    ['VendorTreatment', VendorTreatment, VENDOR_TREATMENTS],
   ])('%s', (_name, prismaEnum, shared) => {
     expect(Object.values(prismaEnum)).toEqual([...shared]);
   });

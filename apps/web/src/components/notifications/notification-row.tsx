@@ -2,9 +2,11 @@
 
 import {
   IconAlertTriangle,
+  IconBuildingStore,
   IconFileCheck,
   IconInbox,
   IconPaperclip,
+  IconSchool,
   type Icon,
 } from '@tabler/icons-react';
 import type { NotificationKind, NotificationSummary } from '@dpdp-kit/shared';
@@ -17,6 +19,8 @@ const LOOK: Record<NotificationKind, { icon: Icon }> = {
   request: { icon: IconInbox },
   proof: { icon: IconPaperclip },
   review: { icon: IconFileCheck },
+  vendor: { icon: IconBuildingStore },
+  training: { icon: IconSchool },
 };
 
 /** One notice: what is due or late, opening the thing itself. A notice that has not been read has a dot. */

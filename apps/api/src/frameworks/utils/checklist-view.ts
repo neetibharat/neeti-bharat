@@ -154,7 +154,7 @@ export function buildChecklist(
   });
 }
 
-/** One requirement as the Evidence page lists it. */
+/** One requirement as the Proof page lists it. */
 function proofItem(
   requirement: ProofRequirementRow,
   control: ControlRow,

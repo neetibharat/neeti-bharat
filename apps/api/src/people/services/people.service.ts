@@ -111,6 +111,13 @@ export class PeopleService {
     await this.people.ensure({ name, email: account.email });
   }
 
+  /** One person, whether they work here or have left. */
+  async get(id: string): Promise<PersonResponse> {
+    if (!(await this.people.findById(id)))
+      throw new AppException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    return this.one(id);
+  }
+
   private async one(id: string): Promise<PersonResponse> {
     const person = (await this.people.findWithRoles(id))!;
     return (await this.withAccess([person]))[0]!;

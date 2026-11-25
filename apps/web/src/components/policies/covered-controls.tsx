@@ -35,7 +35,7 @@ function CoveredRow({ item }: { item: PolicyCoverageItem }) {
   return (
     <li className="flex items-center justify-between gap-4 py-3">
       <div className="min-w-0">
-        <p className="text-body font-medium text-fg">{control.title}</p>
+        <p className="text-body text-fg">{control.title}</p>
         <Link
           href={`/frameworks/${encodeURIComponent(framework.id)}/rules/${encodeURIComponent(rule.id)}`}
           className="text-label text-fg-muted underline-offset-2 hover:text-brand hover:underline"

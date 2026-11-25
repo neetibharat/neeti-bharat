@@ -1,12 +1,14 @@
 'use client';
 
-import { EXPORT_DATASETS } from '@dpdp-kit/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { PageHeader } from '@/components/base/page-header/page-header';
+import { Tabs } from '@/components/base/tabs/tabs';
 import { DownloadButton } from './download-button';
+import { EvidencePacks } from './evidence-packs';
+import { ExportLists } from './export-lists';
 
-/** What an auditor asks for: everything in one zip, or one list at a time as a spreadsheet. */
+/** What an auditor asks for: everything in one zip, one rule's evidence in a zip, or one list at a time as a spreadsheet. */
 export function ExportsPage() {
   const t = useTranslations('exports');
 
@@ -25,34 +27,14 @@ export function ExportsPage() {
             />
           }
         />
-        <Card title={t('lists.title')} description={t('lists.description')}>
-          <ul className="divide-y divide-line">
-            {EXPORT_DATASETS.map((dataset) => (
-              <DatasetRow key={dataset} dataset={dataset} />
-            ))}
-          </ul>
-        </Card>
+        <Tabs
+          defaultSelectedKey="evidence"
+          tabs={[
+            { id: 'evidence', label: t('tabs.evidence'), content: <EvidencePacks /> },
+            { id: 'lists', label: t('tabs.lists'), content: <ExportLists /> },
+          ]}
+        />
       </div>
     </>
-  );
-}
-
-function DatasetRow({ dataset }: { dataset: (typeof EXPORT_DATASETS)[number] }) {
-  const t = useTranslations('exports');
-
-  return (
-    <li className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
-      <div className="min-w-0">
-        <p className="text-body font-medium text-fg">{t(`datasets.${dataset}.name`)}</p>
-        <p className="text-label text-fg-muted">{t(`datasets.${dataset}.about`)}</p>
-      </div>
-      <DownloadButton
-        path={`/exports/csv/${dataset}`}
-        fallbackName={`${dataset}.csv`}
-        label={t('lists.download')}
-        color="secondary"
-        size="sm"
-      />
-    </li>
   );
 }

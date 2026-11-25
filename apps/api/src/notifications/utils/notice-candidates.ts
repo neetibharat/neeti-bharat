@@ -17,7 +17,14 @@ export interface NoticeCandidate {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const DATED_KINDS: readonly string[] = ['breach', 'request', 'proof', 'review'];
+const DATED_KINDS: readonly string[] = [
+  'breach',
+  'request',
+  'proof',
+  'review',
+  'vendor',
+  'training',
+];
 
 function stateOf(item: MyWorkItem & { dueOn: string }, now: Date): NotificationState | null {
   if (item.overdue) return 'overdue';

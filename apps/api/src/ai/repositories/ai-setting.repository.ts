@@ -40,6 +40,19 @@ export class AiSettingRepository {
     });
   }
 
+  /** Runs `work` in one transaction, joining the request's when it has one. */
+  inTransaction<T>(work: () => Promise<T>): Promise<T> {
+    return this.prisma.transact(() => work());
+  }
+
+  /** Switches features off or on. The key and model stay as they are. */
+  setDisabledFeatures(disabledFeatures: string[]): Promise<AiSetting> {
+    return this.prisma.db.aiSetting.update({
+      where: { organizationId: currentOrganizationId() },
+      data: { disabledFeatures },
+    });
+  }
+
   async remove(): Promise<void> {
     await this.prisma.db.aiSetting.deleteMany({
       where: { organizationId: currentOrganizationId() },

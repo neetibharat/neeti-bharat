@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AiProviderError, HttpAiClient } from './ai-client';
+import { AiProviderError, HttpAiClient, usageText } from './ai-client';
 
 const prompt = { system: 'Be brief.', user: 'Hello' };
 const KEY = 'sk-super-secret-1234';
@@ -42,6 +42,29 @@ describe('HttpAiClient', () => {
       response_format: { type: 'json_object' },
       messages: [{ role: 'system' }, { role: 'user' }],
     });
+  });
+
+  it('tells DeepSeek not to think out of sight first, and sends that to no other service', async () => {
+    const deepseek = answer(BOTH_SHAPES);
+    await new HttpAiClient().completeJson(
+      { provider: 'deepseek', model: 'deepseek-flash', apiKey: KEY },
+      prompt,
+    );
+    expect(sent(deepseek).body).toMatchObject({ thinking: { type: 'disabled' } });
+
+    const openai = answer(BOTH_SHAPES);
+    await new HttpAiClient().completeJson(
+      { provider: 'openai', model: 'gpt-x', apiKey: KEY },
+      prompt,
+    );
+    expect(sent(openai).body).not.toHaveProperty('thinking');
+
+    const anthropic = answer(BOTH_SHAPES);
+    await new HttpAiClient().completeJson(
+      { provider: 'anthropic', model: 'claude-x', apiKey: KEY },
+      prompt,
+    );
+    expect(sent(anthropic).body).not.toHaveProperty('thinking');
   });
 
   it('asks Anthropic through its own route and header', async () => {
@@ -101,5 +124,27 @@ describe('HttpAiClient', () => {
     await expect(new HttpAiClient().completeJson(target, prompt)).rejects.toMatchObject({
       reason: 'timeout',
     });
+  });
+});
+
+describe('usageText', () => {
+  it('says what was read and written, and how much of it was reasoning', () => {
+    expect(
+      usageText({
+        usage: {
+          prompt_tokens: 2100,
+          completion_tokens: 340,
+          completion_tokens_details: { reasoning_tokens: 120 },
+        },
+      }),
+    ).toBe('read 2100, wrote 340 (120 reasoning)');
+    expect(usageText({ usage: { input_tokens: 900, output_tokens: 50 } })).toBe(
+      'read 900, wrote 50',
+    );
+  });
+
+  it('copes with an answer that reports nothing', () => {
+    expect(usageText(null)).toBe('no usage reported');
+    expect(usageText({})).toBe('no usage reported');
   });
 });

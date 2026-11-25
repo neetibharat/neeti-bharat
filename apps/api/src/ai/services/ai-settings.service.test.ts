@@ -120,3 +120,53 @@ describe('AiSettingsService', () => {
     );
   });
 });
+
+describe('AiSettingsService features', () => {
+  const saved = (disabled: string[] = []) => ({
+    provider: 'deepseek',
+    model: 'deepseek-flash',
+    apiKey: 'sealed',
+    keyHint: '1234',
+    updatedByName: 'Asha',
+    disabledFeatures: disabled,
+  });
+
+  it('shows which features are switched off, and no key', async () => {
+    const { service, state } = build();
+    state.row = saved(['proof_check', 'made_up']);
+    const shown = await inOrg(() => service.get());
+    expect(shown.disabledFeatures).toEqual(['proof_check']);
+    expect(JSON.stringify(shown)).not.toContain('sealed');
+  });
+
+  it('refuses a feature that is off, and any feature while nothing is set up', async () => {
+    const { service, state } = build();
+    await expect(inOrg(() => service.assertOn('policy_tailor'))).rejects.toMatchObject({
+      code: 'AI_NOT_CONFIGURED',
+    });
+    state.row = saved(['policy_tailor']);
+    await expect(inOrg(() => service.assertOn('policy_tailor'))).rejects.toMatchObject({
+      code: 'AI_FEATURE_OFF',
+    });
+    await expect(inOrg(() => service.assertOn('policy_check'))).resolves.toBeUndefined();
+  });
+
+  it('switches features off in the setting, leaves the key alone, and logs who did it', async () => {
+    const { service, state, settings, activity } = build();
+    state.row = saved();
+    (settings as Record<string, unknown>).setDisabledFeatures = vi
+      .fn()
+      .mockImplementation((features: string[]) => {
+        state.row = { ...state.row, disabledFeatures: features };
+        return Promise.resolve(state.row);
+      });
+    const result = await inOrg(() => service.setFeatures(['proof_check', 'policy_check'], actor));
+    expect(result.disabledFeatures).toEqual(['policy_check', 'proof_check']);
+    expect(activity.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'AI_FEATURES_CHANGED',
+        details: { off: 'policy_check, proof_check' },
+      }),
+    );
+  });
+});

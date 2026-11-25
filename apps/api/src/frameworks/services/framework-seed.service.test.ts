@@ -35,7 +35,7 @@ describe('FrameworkSeedService', () => {
     );
     const rows = vi.mocked(repository.insert).mock.calls[0]![0];
     expect(rows.controls).toHaveLength(47);
-    expect(rows.policies).toHaveLength(18);
+    expect(rows.policies).toHaveLength(19);
   });
 
   it('does nothing once everything is stored', async () => {

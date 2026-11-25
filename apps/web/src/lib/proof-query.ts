@@ -17,6 +17,7 @@ export interface ProofQuery {
   assigneeId?: string;
   ruleId?: string;
   controlId?: string;
+  policyId?: string;
   page?: number;
   limit?: number;
 }

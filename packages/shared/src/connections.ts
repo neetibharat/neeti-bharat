@@ -264,6 +264,19 @@ export const CHECK_GROUPS: Readonly<
   Record<ConnectionProvider, readonly { id: string; checks: readonly CheckId[] }[]>
 > = { azure: AZURE_CHECK_GROUPS, github: GITHUB_CHECK_GROUPS };
 
+/** Every check of each provider, in the order a run lists them. */
+export const PROVIDER_CHECK_IDS: Readonly<Record<ConnectionProvider, readonly CheckId[]>> = {
+  azure: AZURE_CHECK_IDS,
+  github: GITHUB_CHECK_IDS,
+};
+
+/** The checks of a provider that run, leaving out the groups turned off on the connection. */
+export function checksOn(provider: ConnectionProvider, groupsOff: readonly string[]): CheckId[] {
+  return CHECK_GROUPS[provider]
+    .filter((group) => !groupsOff.includes(group.id))
+    .flatMap((group) => group.checks);
+}
+
 export const GITHUB_CHECK_SEVERITY: Readonly<Record<GithubCheckId, CheckSeverity>> = {
   github_two_factor: 'high',
   github_branch_protection: 'high',
@@ -297,6 +310,33 @@ export const CONNECTION_RUN_PAGE_SIZE = 10;
 /** A connection is not checked again within this time, so a button pressed twice does not call Azure twice. */
 export const CONNECTION_RUN_GAP_SECONDS = 30;
 
+/** How often a connection is checked without anyone pressing the button. */
+export const CONNECTION_SCHEDULES = ['off', 'daily', 'weekly'] as const;
+export type ConnectionSchedule = (typeof CONNECTION_SCHEDULES)[number];
+
+/** How long after a check the next one is due. The hour less lets an hourly look find it on time instead of an hour late. */
+export const CONNECTION_SCHEDULE_HOURS: Record<Exclude<ConnectionSchedule, 'off'>, number> = {
+  daily: 23,
+  weekly: 7 * 24 - 1,
+};
+
+/** A setting as the system reports it. `null` is a setting that is not set at all. */
+export type FoundValue = string | number | boolean | null;
+
+/** One resource that did not pass, and what the check saw on it. */
+export interface FlaggedResource {
+  name: string;
+  status: 'warn' | 'fail';
+  /** Where it runs, such as an Azure region. */
+  location?: string;
+  /** The Azure resource group it is in. */
+  group?: string;
+  /** Its own page in the system, to open it there. */
+  url?: string;
+  /** The settings the check read, under the system's own names, so a person can see why it did not pass. */
+  found?: Record<string, FoundValue>;
+}
+
 /** One thing checked. The words come from the web app; `values` fills in the numbers and names they quote. */
 export interface ConnectionCheckResult {
   id: CheckId;
@@ -304,7 +344,9 @@ export interface ConnectionCheckResult {
   reason?: SkippedReason;
   values?: Record<string, string | number>;
   /** The resources that did not pass, with how each one did not, up to `CONNECTION_RESOURCES_KEPT`. */
-  resources?: { name: string; status: 'warn' | 'fail' }[];
+  resources?: FlaggedResource[];
+  /** Set only on a result carried over from an earlier run, because this run checked other things: when it was read. */
+  checkedAt?: string;
 }
 
 export interface ConnectionRunSummary {
@@ -312,6 +354,10 @@ export interface ConnectionRunSummary {
   connectionId: string;
   ranAt: string;
   ranByName: string;
+  /** True when the schedule made the run, and no person pressed the button. */
+  bySchedule: boolean;
+  /** The checks this run read again. Empty when it read them all; the other results are carried over from before. */
+  rechecked: CheckId[];
   passed: number;
   warned: number;
   failed: number;
@@ -337,6 +383,11 @@ export interface ConnectionSummary {
   identifiers: Record<string, string>;
   createdAt: string;
   createdByName: string;
+  schedule: ConnectionSchedule;
+  /** When the schedule last tried and could not sign in, until a check works again. */
+  scheduleFailedAt: string | null;
+  /** The groups of checks this account does not run, from `CHECK_GROUPS`, such as containers it does not use. */
+  groupsOff: string[];
   lastRun: ConnectionRunSummary | null;
 }
 
@@ -386,6 +437,20 @@ export interface UpdateConnectionRequest {
   credentials?: Partial<Record<AzureEditableField | 'privateKey', string>>;
   /** GitHub only. */
   repositories?: GithubSelection;
+}
+
+/** Which checks to run. Left out, every check runs. */
+export interface RunConnectionRequest {
+  checks?: CheckId[];
+}
+
+/** The groups of checks to leave out. At least one group stays on. */
+export interface UpdateConnectionGroupsRequest {
+  groupsOff: string[];
+}
+
+export interface UpdateConnectionScheduleRequest {
+  schedule: ConnectionSchedule;
 }
 
 /** The App's own sign-in, to ask which organisations it is installed on and which repositories it can see. */

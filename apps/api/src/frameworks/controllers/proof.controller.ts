@@ -1,14 +1,20 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { ProofOverviewResponse, ProofRequirementDetailResponse } from '@dpdp-kit/shared';
+import type {
+  ProofByControlResponse,
+  ProofOverviewResponse,
+  ProofRequirementDetailResponse,
+} from '@dpdp-kit/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import {
   SaveProofRequirementDto,
+  listProofByControlSchema,
   listProofSchema,
   saveProofRequirementSchema,
+  type ListProofByControlInput,
   type ListProofInput,
   type SaveProofRequirementInput,
 } from '../dto/proof-requirement.dto';
@@ -34,12 +40,44 @@ export class ProofController {
   @ApiQuery({ name: 'assigneeId', required: false })
   @ApiQuery({ name: 'ruleId', required: false })
   @ApiQuery({ name: 'controlId', required: false, description: 'Only this control’s proof' })
+  @ApiQuery({
+    name: 'policyId',
+    required: false,
+    description: 'Only the proof of the controls this policy covers',
+  })
   @ApiQuery({ name: 'page', required: false, description: 'From 1, default 1' })
   @ApiQuery({ name: 'limit', required: false, description: '1 to 100, default 25' })
   overview(
     @Query(new ZodValidationPipe(listProofSchema)) query: ListProofInput,
   ): Promise<ProofOverviewResponse> {
     return this.service.overview(query);
+  }
+
+  // Declared before `proof/:requirementId`, which would otherwise take "by-control" for an id.
+  @Get('proof/by-control')
+  @Roles(['admin', 'member', 'auditor'])
+  @ApiOperation({
+    summary:
+      'One page of controls, each with the proof it needs and where each stands, with the counts per tab',
+  })
+  @ApiQuery({
+    name: 'tab',
+    required: false,
+    description: 'all (default), overdue, missing, due or provided',
+  })
+  @ApiQuery({ name: 'q', required: false, description: 'Search the proof and its control' })
+  @ApiQuery({ name: 'assigneeId', required: false })
+  @ApiQuery({ name: 'ruleId', required: false })
+  @ApiQuery({ name: 'page', required: false, description: 'From 1, default 1' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Controls per page, 1 to 100, default 25',
+  })
+  byControl(
+    @Query(new ZodValidationPipe(listProofByControlSchema)) query: ListProofByControlInput,
+  ): Promise<ProofByControlResponse> {
+    return this.service.byControl(query);
   }
 
   @Get('proof/:requirementId')

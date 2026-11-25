@@ -1,9 +1,11 @@
 import type {
+  CheckId,
   ConnectionCheckResult,
   ConnectionFailure,
   ConnectionProvider,
   ConnectionRunResponse,
   ConnectionRunSummary,
+  ConnectionSchedule,
   ConnectionSummary,
 } from '@dpdp-kit/shared';
 import type { Connection, ConnectionRun } from '../../generated/prisma/client';
@@ -24,6 +26,8 @@ export const toRunSummary = (row: ConnectionRunSummaryRow): ConnectionRunSummary
   connectionId: row.connectionId,
   ranAt: row.ranAt.toISOString(),
   ranByName: row.ranByName,
+  bySchedule: row.bySchedule,
+  rechecked: row.rechecked as CheckId[],
   passed: row.passed,
   warned: row.warned,
   failed: row.failed,
@@ -46,6 +50,9 @@ export const toSummary = (
   identifiers: row.identifiers as Record<string, string>,
   createdAt: row.createdAt.toISOString(),
   createdByName: row.createdByName,
+  schedule: row.schedule as ConnectionSchedule,
+  scheduleFailedAt: row.scheduleFailedAt?.toISOString() ?? null,
+  groupsOff: row.groupsOff,
   lastRun: lastRun ? toRunSummary(lastRun) : null,
 });
 

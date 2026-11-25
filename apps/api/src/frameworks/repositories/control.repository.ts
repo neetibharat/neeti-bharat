@@ -101,6 +101,15 @@ export class ControlRepository {
     return this.prisma.db.control.update({ where: orgKey(id), data: change });
   }
 
+  /** The controls a policy covers. */
+  async idsCoveredBy(policyId: string): Promise<Set<string>> {
+    const links = await this.prisma.db.controlPolicyLink.findMany({
+      where: { policyId },
+      select: { controlId: true },
+    });
+    return new Set(links.map((link) => link.controlId));
+  }
+
   /** Adds a control at the end of the list, with its policies in the order given. */
   async create(data: NewControl, policyIds: string[]): Promise<void> {
     const sortOrder = await nextSortOrder(() =>

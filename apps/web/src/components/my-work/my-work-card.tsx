@@ -60,7 +60,7 @@ function Sections({ items, now }: { items: MyWorkItem[]; now: Date }) {
           </h3>
           <ul className="flex flex-col gap-2">
             {group.items.map((item) => (
-              <MyWorkRow key={`${item.kind}:${item.id}`} item={item} />
+              <MyWorkRow key={`${item.kind}:${item.id}:${item.context}`} item={item} />
             ))}
           </ul>
         </section>

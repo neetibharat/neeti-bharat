@@ -3,13 +3,19 @@ import type {
   ConnectionRunListResponse,
   ConnectionRunResponse,
   ConnectionSummary,
+  AcceptCheckRequest,
+  CheckAcceptanceListResponse,
+  CheckAcceptanceResponse,
   CreateConnectionRequest,
   DiscoverGithubRequest,
   DiscoverGithubResponse,
   FindSubscriptionsRequest,
   FindSubscriptionsResponse,
   GithubRepositoriesResponse,
+  RunConnectionRequest,
+  UpdateConnectionGroupsRequest,
   UpdateConnectionRequest,
+  UpdateConnectionScheduleRequest,
 } from '@dpdp-kit/shared';
 import { CONNECTION_PAGE_SIZE, CONNECTION_RUN_PAGE_SIZE } from '@dpdp-kit/shared';
 import { baseApi } from './base-api';
@@ -47,6 +53,36 @@ export const connectionsApi = baseApi.injectEndpoints({
   }),
 });
 
+// How a connection is checked. Nothing is tried with the system.
+export const checkingApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    // How often it is checked without anyone asking.
+    setConnectionSchedule: build.mutation<
+      ConnectionSummary,
+      { id: string } & UpdateConnectionScheduleRequest
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/connections/${encodeURIComponent(id)}/schedule`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+    // Which groups of checks it leaves out.
+    setConnectionGroups: build.mutation<
+      ConnectionSummary,
+      { id: string } & UpdateConnectionGroupsRequest
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/connections/${encodeURIComponent(id)}/groups`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+  }),
+});
+
 // What a system can see, for the person to choose from. None of it is saved.
 export const lookupApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -67,8 +103,13 @@ export const lookupApi = baseApi.injectEndpoints({
 export const runsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Reads the system, so it can take up to about half a minute.
-    runConnection: build.mutation<ConnectionRunResponse, string>({
-      query: (id) => ({ url: `/connections/${encodeURIComponent(id)}/run`, method: 'POST' }),
+    // Without `checks`, every check runs; with them, only those, and the rest are kept as the last run found them.
+    runConnection: build.mutation<ConnectionRunResponse, { id: string } & RunConnectionRequest>({
+      query: ({ id, checks }) => ({
+        url: `/connections/${encodeURIComponent(id)}/run`,
+        method: 'POST',
+        body: checks ? { checks } : {},
+      }),
       invalidatesTags: [...CHANGES.connection],
     }),
     getConnectionRuns: build.query<ConnectionRunListResponse, { id: string; page: number }>({
@@ -85,12 +126,39 @@ export const runsApi = baseApi.injectEndpoints({
   }),
 });
 
+// What people have accepted as deliberate. It counts from the next run, so no proof changes at once.
+export const acceptanceApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    getCheckAcceptances: build.query<CheckAcceptanceListResponse, string>({
+      query: (id) => `/connections/${encodeURIComponent(id)}/acceptances`,
+      providesTags: ['Connection'],
+    }),
+    acceptCheck: build.mutation<CheckAcceptanceResponse, { id: string } & AcceptCheckRequest>({
+      query: ({ id, ...body }) => ({
+        url: `/connections/${encodeURIComponent(id)}/acceptances`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+    removeCheckAcceptance: build.mutation<void, { id: string; acceptanceId: string }>({
+      query: ({ id, acceptanceId }) => ({
+        url: `/connections/${encodeURIComponent(id)}/acceptances/${encodeURIComponent(acceptanceId)}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [...CHANGES.connection],
+    }),
+  }),
+});
+
 export const {
   useGetConnectionsQuery,
   useCreateConnectionMutation,
   useUpdateConnectionMutation,
   useRemoveConnectionMutation,
 } = connectionsApi;
+
+export const { useSetConnectionScheduleMutation, useSetConnectionGroupsMutation } = checkingApi;
 
 export const {
   useFindSubscriptionsMutation,
@@ -100,3 +168,9 @@ export const {
 
 export const { useRunConnectionMutation, useGetConnectionRunsQuery, useGetConnectionRunQuery } =
   runsApi;
+
+export const {
+  useGetCheckAcceptancesQuery,
+  useAcceptCheckMutation,
+  useRemoveCheckAcceptanceMutation,
+} = acceptanceApi;

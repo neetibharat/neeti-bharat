@@ -37,9 +37,18 @@ function RunRow({ run, onSelect }: { run: ConnectionRunSummary; onSelect: (id: s
       <TableCell>
         {format.dateTime(new Date(run.ranAt), { dateStyle: 'medium', timeStyle: 'short' })}
       </TableCell>
-      <TableCell className="text-fg-muted">{run.ranByName}</TableCell>
+      <TableCell className="text-fg-muted">
+        {run.bySchedule ? t('bySchedule') : run.ranByName}
+      </TableCell>
       <TableCell>
-        <Counts run={run} />
+        <div className="flex flex-col gap-1">
+          <Counts run={run} />
+          {run.rechecked.length > 0 && (
+            <span className="text-label text-fg-muted">
+              {t('rechecked', { count: run.rechecked.length })}
+            </span>
+          )}
+        </div>
       </TableCell>
       <TableCell>
         <Button color="tertiary" size="sm" onPress={() => onSelect(run.id)}>

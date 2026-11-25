@@ -62,6 +62,7 @@ describe('before an AI service is set up', () => {
       model: null,
       keyHint: null,
       configuredByName: null,
+      disabledFeatures: [],
     });
     const imported = await world.alice.upload('/v1/policies/import', policyFile(), world.org);
     expect(imported.status).toBe(409);

@@ -1,5 +1,5 @@
 import { AzureAccessError, type AzureApi } from '../azure-api';
-import { resourcesPath } from './outcome';
+import { resourcesPath, type Described, type Found } from './outcome';
 
 /** What every resource has: where it is, and what it is called. */
 export interface Named {
@@ -189,6 +189,23 @@ export const belongsTo = (resource: Named, sub: string): boolean =>
   Boolean(resource.id?.startsWith(`/subscriptions/${sub}/`));
 
 export const nameOf = (item: Named): string => item.name;
+
+const PORTAL = 'https://portal.azure.com/#resource';
+
+/** The resource group in a resource's address, such as `rg-prod` in `/subscriptions/…/resourceGroups/rg-prod/…`. */
+export const groupOf = (id?: string): string | undefined =>
+  id ? /\/resourceGroups\/([^/]+)/i.exec(id)?.[1] : undefined;
+
+/** A resource with its region, its resource group, its page in the Azure portal, and the settings the check read. */
+export function described(resource: Named, found?: Found): Described {
+  return {
+    name: resource.name,
+    location: resource.location,
+    group: groupOf(resource.id),
+    url: resource.id ? `${PORTAL}${resource.id}` : undefined,
+    found,
+  };
+}
 
 /** The most resources read one by one, such as the settings of each web app. */
 export const MAX_ONE_BY_ONE = 100;

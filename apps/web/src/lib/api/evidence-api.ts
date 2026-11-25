@@ -3,6 +3,7 @@ import type {
   EvidenceDownloadResponse,
   EvidenceListResponse,
   EvidenceResponse,
+  ProofByControlResponse,
   ProofOverviewResponse,
   ProofRequirementDetailResponse,
   SaveProofRequirementRequest,
@@ -11,7 +12,7 @@ import type { ProofQuery } from '../proof-query';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 
-// Changes are also written to the activity log, and move a control's status and the Evidence page.
+// Changes are also written to the activity log, and move a control's status and the Proof page.
 
 export const evidenceApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -22,6 +23,11 @@ export const evidenceApi = baseApi.injectEndpoints({
     // One page of the list, with the counts for each tab. The search and filters are applied by the server.
     getProofOverview: build.query<ProofOverviewResponse, ProofQuery>({
       query: (params) => ({ url: '/proof', params }),
+      providesTags: ['Proof'],
+    }),
+    // One page of controls, each with its requirements, and the counts for each tab.
+    getProofByControl: build.query<ProofByControlResponse, ProofQuery>({
+      query: (params) => ({ url: '/proof/by-control', params }),
       providesTags: ['Proof'],
     }),
     getRequirement: build.query<ProofRequirementDetailResponse, string>({
@@ -104,6 +110,7 @@ export const requirementApi = baseApi.injectEndpoints({
 export const {
   useGetEvidenceQuery,
   useGetProofOverviewQuery,
+  useGetProofByControlQuery,
   useGetRequirementQuery,
   useAddEvidenceMutation,
   useRemoveEvidenceMutation,

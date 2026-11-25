@@ -32,7 +32,7 @@ export function RunButton({
         <Button
           iconLeading={IconPlayerPlay}
           isLoading={isLoading}
-          onPress={() => void run(id).then((result) => result.data && onRan(result.data.id))}
+          onPress={() => void run({ id }).then((result) => result.data && onRan(result.data.id))}
         >
           {t(isLoading ? 'running' : 'run')}
         </Button>

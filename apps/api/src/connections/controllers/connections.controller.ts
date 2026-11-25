@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type {
+  CheckAcceptanceListResponse,
+  CheckAcceptanceResponse,
   ConnectionListResponse,
   ConnectionRunListResponse,
   ConnectionRunResponse,
@@ -19,19 +21,32 @@ import {
   DiscoverGithubDto,
   FindSubscriptionsDto,
   UpdateConnectionDto,
+  UpdateScheduleDto,
+  AcceptCheckDto,
+  RunConnectionDto,
+  UpdateGroupsDto,
+  acceptCheckSchema,
   createConnectionSchema,
   discoverGithubSchema,
   findSubscriptionsSchema,
   listConnectionsSchema,
   listRunsSchema,
+  runConnectionSchema,
+  updateGroupsSchema,
   updateConnectionSchema,
+  updateScheduleSchema,
+  type AcceptCheckInput,
   type CreateConnectionInput,
   type DiscoverGithubInput,
   type FindSubscriptionsInput,
   type ListConnectionsQuery,
   type ListRunsQuery,
+  type RunConnectionInput,
+  type UpdateGroupsInput,
   type UpdateConnectionInput,
+  type UpdateScheduleInput,
 } from '../dto/connection.dto';
+import { CheckAcceptanceService } from '../services/check-acceptance.service';
 import { ConnectionLookupService } from '../services/connection-lookup.service';
 import { ConnectionsService } from '../services/connections.service';
 
@@ -42,6 +57,7 @@ export class ConnectionsController {
   constructor(
     private readonly service: ConnectionsService,
     private readonly lookup: ConnectionLookupService,
+    private readonly acceptances: CheckAcceptanceService,
   ) {}
 
   @Get()
@@ -136,6 +152,74 @@ export class ConnectionsController {
     return this.service.update(id, body, actorOf(user));
   }
 
+  @Put(':id/schedule')
+  @Roles(['admin'])
+  @NoApiKey()
+  @ApiOperation({
+    summary:
+      'Set how often a connection is checked without anyone asking: off, daily or weekly (admin only, never a key)',
+  })
+  @ApiBody({ type: UpdateScheduleDto })
+  setSchedule(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateScheduleSchema)) body: UpdateScheduleInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionSummary> {
+    return this.service.setSchedule(id, body.schedule, actorOf(user));
+  }
+
+  @Put(':id/groups')
+  @Roles(['admin'])
+  @NoApiKey()
+  @ApiOperation({
+    summary:
+      'Choose which groups of checks the account runs, leaving out what it does not use. At least one stays on (admin only, never a key)',
+  })
+  @ApiBody({ type: UpdateGroupsDto })
+  setGroups(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateGroupsSchema)) body: UpdateGroupsInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionSummary> {
+    return this.service.setGroupsOff(id, body.groupsOff, actorOf(user));
+  }
+
+  @Get(':id/acceptances')
+  @Roles(['admin', 'member', 'auditor'])
+  @ApiOperation({
+    summary: 'What people have accepted as deliberate on a connection, newest first',
+  })
+  listAcceptances(@Param('id') id: string): Promise<CheckAcceptanceListResponse> {
+    return this.acceptances.list(id);
+  }
+
+  @Post(':id/acceptances')
+  @Roles(['admin', 'member'])
+  @ApiOperation({
+    summary:
+      'Accept something a check flags as deliberate, with the reason. The check still shows it; proofs fed by the check stop waiting on it (admin and member)',
+  })
+  @ApiBody({ type: AcceptCheckDto })
+  accept(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(acceptCheckSchema)) body: AcceptCheckInput,
+    @Session() { user }: UserSession,
+  ): Promise<CheckAcceptanceResponse> {
+    return this.acceptances.accept(id, body, actorOf(user));
+  }
+
+  @Delete(':id/acceptances/:acceptanceId')
+  @HttpCode(204)
+  @Roles(['admin', 'member'])
+  @ApiOperation({ summary: 'Take back an acceptance (admin and member)' })
+  removeAcceptance(
+    @Param('id') id: string,
+    @Param('acceptanceId') acceptanceId: string,
+    @Session() { user }: UserSession,
+  ): Promise<void> {
+    return this.acceptances.remove(id, acceptanceId, actorOf(user));
+  }
+
   @Delete(':id')
   @HttpCode(204)
   @Roles(['admin'])
@@ -152,10 +236,15 @@ export class ConnectionsController {
   @TransactionAfterBody()
   @ApiOperation({
     summary:
-      'Read the connected system and check it now. Takes up to about half a minute, and is not repeated within seconds (admin and member)',
+      'Read the connected system and check it now: every check, or only those named, keeping the rest as the last run found them. Takes up to about half a minute, and is not repeated within seconds (admin and member)',
   })
-  run(@Param('id') id: string, @Session() { user }: UserSession): Promise<ConnectionRunResponse> {
-    return this.service.run(id, actorOf(user));
+  @ApiBody({ type: RunConnectionDto, required: false })
+  run(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(runConnectionSchema)) body: RunConnectionInput,
+    @Session() { user }: UserSession,
+  ): Promise<ConnectionRunResponse> {
+    return this.service.run(id, actorOf(user), body?.checks);
   }
 
   @Get(':id')

@@ -9,7 +9,7 @@ import { Modal } from '@/components/base/modal/modal';
 const STEPS = ['law', 'controls', 'templates', 'copy', 'proof'] as const;
 const PARTS = ['rules', 'policies', 'proof', 'review'] as const;
 
-/** Says where the rules, policies and proof came from, and that a lawyer has not yet checked them. */
+/** Says where the rules, policies and proof came from, and that they are general guidance, not advice on the company. */
 export function WhereFromButton({ policyCount }: { policyCount: number }) {
   const t = useTranslations('policies.whereFrom');
 

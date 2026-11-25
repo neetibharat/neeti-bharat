@@ -13,6 +13,17 @@ The set-up has four steps and can be skipped at any point with **Skip for now**,
 
 Each step saves its answers when **Continue** is pressed, and only those that changed. `POST /v1/organizations/current/onboarding` (admin only) ends the set-up. It is idempotent: the first call writes `ONBOARDING_COMPLETED` to the activity log, and later calls change nothing.
 
+## Getting started on the dashboard
+
+Until four jobs are done, admins and members see a **Get started** card at the top of the dashboard (auditors do not). Each job opens the page where it is done, and the first one not done is highlighted:
+
+1. **Company profile:** the Company profile answers `companyName`, `grievanceEmail` and `breachContact` are all filled in.
+2. **People:** at least one active person besides the signed-in one.
+3. **Readiness check:** one has been taken.
+4. **First policy:** one policy is approved.
+
+The card works these out from the same data the rest of the page reads (`lib/getting-started.ts`) and disappears once all four are done.
+
 ## The readiness check
 
 The readiness check is 25 yes/partly/no questions in eight areas, worth 100 points. Its page (`/readiness`) shows the latest score, how each area did, where to start, and the scores of earlier checks. Admins and members can take it again; auditors can read it.

@@ -77,7 +77,6 @@ export class PolicyRepository {
         ...fields,
         ...orgOwned(),
         legalReferences: [],
-        evidence: [],
         sortOrder,
         ...(content && {
           content: content as object,

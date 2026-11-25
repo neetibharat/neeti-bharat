@@ -1,6 +1,7 @@
 import {
   GITHUB_CHECK_IDS,
   GITHUB_REPOSITORIES_MAX,
+  type CheckId,
   type ConnectionCheckResult,
   type GithubSelection,
 } from '@dpdp-kit/shared';
@@ -41,20 +42,25 @@ export async function repositoriesInScope(
     .slice(0, GITHUB_REPOSITORIES_MAX);
 }
 
-const allSkipped = (error: unknown): ConnectionCheckResult[] =>
-  GITHUB_CHECK_IDS.map((id) => ({
+const allSkipped = (checks: GithubCheck[], error: unknown): ConnectionCheckResult[] =>
+  checks.map(({ id }) => ({
     id,
     status: 'skipped' as const,
     reason: error instanceof GithubAccessError ? ('access' as const) : ('error' as const),
   }));
 
-/** Runs every check against one connection. Reads are shared, so a list that two checks need is fetched once. */
+/**
+ * Runs every check against one connection, or only those in `only`. Reads are shared, so a list that two checks need is
+ * fetched once.
+ */
 export async function runGithubChecks(
   api: GithubApi,
   account: GithubAccount,
   selection: GithubSelection,
+  only?: ReadonlySet<CheckId>,
 ): Promise<ConnectionCheckResult[]> {
   const shared = cachedGithub(api);
+  const checks = GITHUB_CHECKS.filter((check) => !only || only.has(check.id));
   try {
     const scope = {
       api: shared,
@@ -62,9 +68,9 @@ export async function runGithubChecks(
       repositories: await repositoriesInScope(shared, selection),
     };
     return await Promise.all(
-      GITHUB_CHECKS.map(async (check) => ({ id: check.id, ...(await attempt(check, scope)) })),
+      checks.map(async (check) => ({ id: check.id, ...(await attempt(check, scope)) })),
     );
   } catch (error) {
-    return allSkipped(error);
+    return allSkipped(checks, error);
   }
 }

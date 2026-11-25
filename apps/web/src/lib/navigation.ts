@@ -1,12 +1,14 @@
 import {
   IconAdjustmentsHorizontal,
   IconAlertTriangle,
+  IconBuildingStore,
+  IconSchool,
   IconBell,
   IconBuilding,
+  IconCalendarDue,
   IconChecklist,
   IconDatabase,
   IconDownload,
-  IconFileCheck,
   IconFileText,
   IconGauge,
   IconHistory,
@@ -42,18 +44,19 @@ export type SectionId = 'alerts' | 'developers' | 'records' | 'checks' | 'compli
 export type NavItemId =
   | 'dashboard'
   | 'myWork'
+  | 'deadlines'
   | 'frameworks'
   | 'readiness'
   | 'policies'
   | 'proof'
   | 'exports'
-  | 'dataMap'
   | 'connections'
   | 'cloudTests'
   | 'websiteCheck'
-  | 'noticeAndConsent'
   | 'requests'
   | 'breaches'
+  | 'vendors'
+  | 'training'
   | 'general'
   | 'companyProfile'
   | 'people'
@@ -93,6 +96,7 @@ export const NAV_AREAS: NavArea[] = [
         items: [
           { id: 'dashboard', href: '/', icon: IconLayoutDashboard, status: 'live' },
           { id: 'myWork', href: '/my-work', icon: IconChecklist, status: 'live' },
+          { id: 'deadlines', href: '/deadlines', icon: IconCalendarDue, status: 'live' },
         ],
       },
       {
@@ -113,7 +117,6 @@ export const NAV_AREAS: NavArea[] = [
     sections: [
       {
         items: [
-          { id: 'dataMap', href: '/data-map', icon: IconDatabase, status: 'soon' },
           { id: 'connections', href: '/connections', icon: IconPlugConnected, status: 'live' },
         ],
       },
@@ -132,14 +135,10 @@ export const NAV_AREAS: NavArea[] = [
     sections: [
       {
         items: [
-          {
-            id: 'noticeAndConsent',
-            href: '/notice-and-consent',
-            icon: IconFileCheck,
-            status: 'soon',
-          },
           { id: 'requests', href: '/requests', icon: IconInbox, status: 'live' },
           { id: 'breaches', href: '/breaches', icon: IconAlertTriangle, status: 'live' },
+          { id: 'vendors', href: '/vendors', icon: IconBuildingStore, status: 'live' },
+          { id: 'training', href: '/training', icon: IconSchool, status: 'live' },
         ],
       },
     ],

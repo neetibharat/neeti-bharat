@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';
+import { useOpenFromLink } from '@/lib/hooks/use-open-from-link';
 import { useCan } from '@/components/providers/user-provider';
 import { useGetFrameworksQuery } from '@/lib/api/frameworks-api';
 import { useCreatePolicyMutation } from '@/lib/api/policy-edit-api';
@@ -16,10 +17,12 @@ import { PolicyForm, type PolicyFormValues } from './policy-form';
 export function AddPolicyButton() {
   const { canEdit } = useCan();
   const t = useTranslations('policies.add');
+  const openFromLink = useOpenFromLink();
   if (!canEdit) return null;
 
   return (
     <Modal
+      defaultOpen={openFromLink}
       size="xl"
       trigger={
         <Button color="secondary" iconLeading={IconPlus}>

@@ -1,7 +1,8 @@
 'use client';
 
-import type { ErrorCode } from '@dpdp-kit/shared';
+import { ORGANIZATION_HEADER, type ErrorCode } from '@dpdp-kit/shared';
 import { useState } from 'react';
+import { getActiveOrganizationId } from '@/lib/active-organization';
 import { fileNameFromDisposition } from '@/lib/download';
 
 async function failure(response: Response): Promise<{ code: ErrorCode }> {
@@ -19,7 +20,12 @@ export function useDownload(path: string, fallbackName: string) {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/v1${path}`, { credentials: 'same-origin' });
+      // Without the organisation, someone who belongs to several gets "choose which organisation" and no file.
+      const organizationId = getActiveOrganizationId();
+      const response = await fetch(`/v1${path}`, {
+        credentials: 'same-origin',
+        headers: organizationId ? { [ORGANIZATION_HEADER]: organizationId } : {},
+      });
       if (!response.ok) throw await failure(response);
       const name = fileNameFromDisposition(
         response.headers.get('Content-Disposition'),

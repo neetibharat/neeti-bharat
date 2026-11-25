@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
 
 /** What a connection signs in with, as the person entered it. Which fields there are depends on the system. */
 export type Credentials = Record<string, string>;
@@ -16,6 +16,10 @@ export interface ConnectionDriver {
    * sign-in and access errors when they do not work. `selection` is the repositories to read, for GitHub.
    */
   verify(credentials: Credentials, selection?: GithubSelection): Promise<Identifiers>;
-  /** Reads the system and judges it. `identifiers` are what `verify` gave back. */
-  check(credentials: Credentials, identifiers: Identifiers): Promise<ConnectionCheckResult[]>;
+  /** Reads the system and judges it. `identifiers` are what `verify` gave back. `only` limits it to those checks. */
+  check(
+    credentials: Credentials,
+    identifiers: Identifiers,
+    only?: ReadonlySet<CheckId>,
+  ): Promise<ConnectionCheckResult[]>;
 }

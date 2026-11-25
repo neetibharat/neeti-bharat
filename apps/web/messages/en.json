@@ -1,6 +1,7 @@
 {
   "common": {
-    "loading": "Loading"
+    "loading": "Loading",
+    "breadcrumb": "Breadcrumb"
   },
   "meta": {
     "title": "DPDP Kit",
@@ -10,9 +11,62 @@
     "heading": "DPDP compliance, in one place",
     "tagline": "Know what the law asks, do the work, and keep the proof."
   },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "items": {
+      "search": "Search pages and records",
+      "help": "Show this list",
+      "move": "Move through results",
+      "open": "Open the chosen result",
+      "close": "Close a dialog or the search"
+    }
+  },
+  "theme": {
+    "label": "Appearance",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "search": {
+    "open": "Search",
+    "trigger": "Search pages and records",
+    "label": "Global search",
+    "placeholder": "Search pages, policies, vendors, people…",
+    "hint": "Type at least 2 letters to search records.",
+    "empty": "Nothing found for this search.",
+    "page": "Page",
+    "action": "Action",
+    "groups": {
+      "recent": "Recent",
+      "actions": "Quick actions",
+      "pages": "Pages",
+      "records": "Records"
+    },
+    "actions": {
+      "policy": "New policy",
+      "breach": "Log a breach",
+      "request": "Log a request",
+      "vendor": "Add a vendor",
+      "person": "Add a person"
+    },
+    "kinds": {
+      "policy": "Policy",
+      "proof": "Proof",
+      "vendor": "Vendor",
+      "breach": "Breach",
+      "request": "Request",
+      "person": "Person",
+      "rule": "Rule",
+      "control": "Control"
+    }
+  },
   "nav": {
     "label": "Main",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
     "openMenu": "Open menu",
+    "account": "Account menu",
+    "shortcuts": "Keyboard shortcuts",
     "soon": "Soon",
     "areas": {
       "workspace": "Workspace",
@@ -32,12 +86,12 @@
       "frameworks": "Frameworks",
       "policies": "Policies",
       "proof": "Proof",
-      "dataMap": "Data map",
       "connections": "Connections",
       "cloudTests": "Cloud checks",
-      "noticeAndConsent": "Notice and consent",
       "requests": "Requests",
       "breaches": "Breaches",
+      "vendors": "Vendors",
+      "training": "Training",
       "general": "General",
       "companyProfile": "Company profile",
       "people": "People and roles",
@@ -47,6 +101,7 @@
       "activityLog": "Activity log",
       "aiHelp": "AI help",
       "myWork": "My work",
+      "deadlines": "Deadlines",
       "exports": "Exports",
       "websiteCheck": "Website checks",
       "readiness": "Readiness check"
@@ -73,7 +128,6 @@
       "continueWithMicrosoft": "Continue with Microsoft",
       "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation.",
       "brand": {
-        "headline": "Privacy compliance your auditors can trust",
         "subline": "Everything the DPDP Act asks of you in one place: a checklist, your policies, the proof, and a record of every change.",
         "features": {
           "checklist": {
@@ -89,7 +143,30 @@
             "body": "It runs on your own servers, so your data stays with you."
           }
         },
-        "footer": "For the Digital Personal Data Protection Act, 2023"
+        "footer": "For the Digital Personal Data Protection Act, 2023",
+        "eyebrow": "For India’s DPDP Act · Free and self-hosted",
+        "headlineLead": "Privacy compliance",
+        "headlineAccent": "your auditors can trust.",
+        "chain": {
+          "law": {
+            "label": "The law",
+            "tag": "Rule 6",
+            "title": "Security safeguards",
+            "text": "What the Act asks of you, in plain words."
+          },
+          "control": {
+            "label": "The control",
+            "tag": "DPDP-R6-05",
+            "title": "Log integrity and review",
+            "text": "One job, with an owner and the policy that covers it."
+          },
+          "proof": {
+            "label": "The proof",
+            "tag": "Every month",
+            "title": "Monthly log review sign-off",
+            "text": "What an auditor asks to see, kept and ready."
+          }
+        }
       }
     },
     "signOut": "Sign out"
@@ -130,6 +207,8 @@
     "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY.",
     "AI_NOT_CONFIGURED": "AI help is not set up yet. An admin can set it up under Settings, AI help.",
     "AI_FAILED": "{reason, select, key {The AI service did not accept the key. Check that it is right and has not been revoked.} busy {The AI service is busy, or the key has reached its limit. Try again in a moment.} timeout {The AI service did not answer in time. Try again, or try a shorter file.} empty {The AI service sent back nothing. Try again.} unusable {The AI service answered, but not in a form that can be used. Try again.} other {The AI service refused the request. {detail}}}",
+    "AI_FEATURE_OFF": "An admin has switched this AI feature off. It can be turned on again under Settings, AI help.",
+    "NOTHING_TO_CHECK": "There is nothing here the AI can check. A picture, a scan or a link on its own has no text to read, and a policy that covers no control has nothing to be read against.",
     "FILE_UNREADABLE": "No text could be read from this file. A scan is a picture, so it has no text to read. Try a copy saved from the original document.",
     "FILE_TOO_LONG": "This file has far more text than a policy does. Check that it is the right file."
   },
@@ -150,14 +229,6 @@
       "title": "Proof",
       "description": "Everything the company has to be able to show, and where each stands."
     },
-    "dataMap": {
-      "title": "Data map",
-      "description": "The list of personal data kept, why, for how long, and who receives it."
-    },
-    "noticeAndConsent": {
-      "title": "Notice and consent",
-      "description": "The public page where people read the notice, give or withdraw consent, and file requests."
-    },
     "requests": {
       "title": "Requests",
       "description": "Handles people asking to see, fix or erase their data, or to complain."
@@ -166,20 +237,61 @@
       "title": "Breaches",
       "description": "Walks the team through a personal data breach against the clock."
     },
+    "vendors": {
+      "title": "Vendors",
+      "description": "The companies that handle personal data for you, and whether each is in order."
+    },
     "secrets": {
       "title": "Secrets",
       "description": "Passwords and keys DPDP Kit uses to reach your other systems."
     },
     "aiHelp": {
       "title": "AI help",
-      "description": "Connect an AI service so DPDP Kit can read a policy from a file. Optional, and a person always decides."
+      "description": "Connect an AI service so DPDP Kit can help draft and check policies and proof. Optional, and a person always decides."
     },
     "myWork": {
       "title": "My work",
       "description": "Everything waiting on one person, in the order to do it.",
       "mine": "Me",
       "viewing": "Whose work to show"
+    },
+    "deadlines": {
+      "title": "Deadlines",
+      "description": "Everything in the company with a date on it: breach reports, requests, proof, reviews and training."
     }
+  },
+  "deadlines": {
+    "tabs": {
+      "overdue": "Overdue ({count})",
+      "week": "This week ({count})",
+      "later": "Later ({count})"
+    },
+    "empty": {
+      "overdue": {
+        "title": "Nothing is late",
+        "text": "Every dated job is on time."
+      },
+      "week": {
+        "title": "Nothing due this week",
+        "text": "Jobs due in the next 7 days show here."
+      },
+      "later": {
+        "title": "Nothing coming up",
+        "text": "Reviews and proof due later show here."
+      }
+    },
+    "late": {
+      "days": "{count, plural, one {# day late} other {# days late}}",
+      "hours": "{count, plural, one {# hour late} other {# hours late}}",
+      "minutes": "{count, plural, one {# minute late} other {# minutes late}}"
+    },
+    "left": {
+      "days": "{count, plural, one {Due in # day} other {Due in # days}}",
+      "hours": "{count, plural, one {Due in # hour} other {Due in # hours}}",
+      "minutes": "{count, plural, one {Due in # minute} other {Due in # minutes}}"
+    },
+    "owner": "With {name}",
+    "unassigned": "With the DPO and admins"
   },
   "activity": {
     "title": "Activity log",
@@ -214,6 +326,7 @@
       "CONTROL_OWNER_CHANGED": "Control owner changed",
       "POLICY_REVIEW_REQUESTED": "Policy sent for approval",
       "POLICY_APPROVED": "Policy approved",
+      "POLICY_ACCEPTED": "Policy accepted",
       "POLICY_SENT_BACK": "Policy sent back",
       "POLICY_REOPENED": "Policy reopened",
       "CONTROL_CREATED": "Control added",
@@ -260,7 +373,18 @@
       "CONNECTION_ADDED": "Connection added",
       "CONNECTION_UPDATED": "Connection updated",
       "CONNECTION_REMOVED": "Connection removed",
+      "VENDOR_ADDED": "Vendor added",
+      "VENDOR_EDITED": "Vendor changed",
+      "VENDOR_ARCHIVED": "Vendor archived",
+      "VENDOR_RESTORED": "Vendor brought back",
+      "TRAINING_ADDED": "Training added",
+      "TRAINING_EDITED": "Training changed",
+      "TRAINING_ARCHIVED": "Training archived",
+      "TRAINING_RESTORED": "Training brought back",
+      "TRAINING_COMPLETED": "Training completed",
+      "TRAINING_REOPENED": "Training taken back",
       "CONNECTION_CHECKED": "Connection checked",
+      "CONNECTION_RECHECKED": "Checks run again",
       "API_KEY_CREATED": "API key created",
       "API_KEY_REVOKED": "API key revoked",
       "ORGANIZATION_CREATED": "Organisation created",
@@ -269,7 +393,14 @@
       "READINESS_CHECKED": "Readiness check taken",
       "NOTIFICATION_DEFAULTS_CHANGED": "Notification defaults changed",
       "AI_CONFIGURED": "AI help set up",
-      "AI_REMOVED": "AI help removed"
+      "AI_REMOVED": "AI help removed",
+      "AI_USED": "AI help used",
+      "AI_FEATURES_CHANGED": "AI features changed",
+      "CONNECTION_SCHEDULE_CHANGED": "Check schedule changed",
+      "CONNECTION_GROUPS_CHANGED": "Checks chosen",
+      "CONNECTION_SCHEDULED_CHECK_FAILED": "Automatic check failed",
+      "CONNECTION_CHECK_ACCEPTED": "Check result accepted",
+      "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Acceptance taken back"
     },
     "actions": {
       "USER_CREATED": "Account created for {email} as {role}",
@@ -288,6 +419,7 @@
       "CONTROL_OWNER_CHANGED": "Moved {controlId} ({title}) from {before} to {after}",
       "POLICY_REVIEW_REQUESTED": "Asked for approval of {policyId} ({title})",
       "POLICY_APPROVED": "Approved {policyId} ({title})",
+      "POLICY_ACCEPTED": "Accepted {policyId} ({title})",
       "POLICY_SENT_BACK": "Sent {policyId} ({title}) back to draft",
       "POLICY_REOPENED": "Reopened {policyId} ({title}) as a draft",
       "CONTROL_CREATED": "Added the control {controlId} ({title})",
@@ -334,7 +466,18 @@
       "CONNECTION_ADDED": "Connected {name} ({provider})",
       "CONNECTION_UPDATED": "Updated the connection {name}",
       "CONNECTION_REMOVED": "Removed the connection {name}",
+      "VENDOR_ADDED": "Added the vendor {name}",
+      "VENDOR_EDITED": "Changed the vendor {name}",
+      "VENDOR_ARCHIVED": "Archived the vendor {name}",
+      "VENDOR_RESTORED": "Brought back the vendor {name}",
+      "TRAINING_ADDED": "Added the training {name}",
+      "TRAINING_EDITED": "Changed the training {name}",
+      "TRAINING_ARCHIVED": "Archived the training {name}",
+      "TRAINING_RESTORED": "Brought back the training {name}",
+      "TRAINING_COMPLETED": "Recorded that {person} completed {name}",
+      "TRAINING_REOPENED": "Took back {person}'s completion of {name}",
       "CONNECTION_CHECKED": "Checked {name}: {passed} of {total} checks passed",
+      "CONNECTION_RECHECKED": "Ran {count, plural, one {# check} other {# checks}} of {name} again: {passed} passed",
       "API_KEY_CREATED": "Created the API key {name} with {role} access",
       "API_KEY_REVOKED": "Revoked the API key {name}",
       "ORGANIZATION_CREATED": "Created the organisation {name}",
@@ -343,7 +486,14 @@
       "READINESS_CHECKED": "Took the readiness check and scored {score} out of 100",
       "NOTIFICATION_DEFAULTS_CHANGED": "Changed what each role is notified about",
       "AI_CONFIGURED": "Set up AI help with {provider} ({model})",
-      "AI_REMOVED": "Removed AI help ({provider})"
+      "AI_REMOVED": "Removed AI help ({provider})",
+      "AI_USED": "Used AI help to {feature, select, policy_import {read a policy from a file} policy_tailor {tailor a policy to the company} policy_check {check a policy against the rules} proof_check {check a piece of proof} other {do something}} ({provider}, {model})",
+      "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}",
+      "CONNECTION_SCHEDULE_CHANGED": "Set the automatic checks of {name} to {schedule}",
+      "CONNECTION_GROUPS_CHANGED": "Chose what is checked on {name}: {off, plural, =0 {every group} one {# group left out} other {# groups left out}}",
+      "CONNECTION_SCHEDULED_CHECK_FAILED": "The automatic check of {name} could not sign in",
+      "CONNECTION_CHECK_ACCEPTED": "Accepted a result of {check} on {name} as deliberate",
+      "CONNECTION_CHECK_ACCEPTANCE_REMOVED": "Took back the acceptance of {check} on {name}"
     },
     "emptyValue": "empty",
     "values": {
@@ -564,7 +714,7 @@
     "accessLevels": {
       "title": "Access levels",
       "admin": "Everything, including people, connections, keys and secrets.",
-      "member": "Does the work: policies, data map, proof, requests and breaches.",
+      "member": "Does the work: policies, proof, requests and breaches.",
       "auditor": "Reads everything and changes nothing.",
       "description": "Choose one for each person. Everyone you add gets an email invitation to sign in."
     },
@@ -628,11 +778,24 @@
       "title": "Resend the invitation to {name}?",
       "body": "{email} gets a new email with a fresh link, valid for 7 days. Any earlier link stops working once they use the new one.",
       "confirm": "Resend"
+    },
+    "person": {
+      "training": "Training",
+      "policies": "Policies",
+      "details": "Details",
+      "work": "See their work",
+      "notFound": "This person could not be found.",
+      "email": "Email",
+      "jobTitle": "Job title",
+      "department": "Department",
+      "access": "Access",
+      "roles": "Job roles",
+      "none": "Not said"
     }
   },
   "frameworks": {
     "back": "Frameworks",
-    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules and drafted by counsel. It is general guidance, not advice on your company.",
     "appliesWhen": {
       "children": "Applies if you handle data of children or people with disabilities",
       "abroad": "Applies if you send data outside India",
@@ -776,6 +939,7 @@
       "form": {
         "title": "What is needed",
         "description": "What to collect (optional)",
+        "descriptionHint": "Say what to collect. Type / to pick one of the kit’s templates, or paste a link to your own, such as a Google Doc or a SharePoint file.",
         "frequency": "How often",
         "save": "Save",
         "create": "Add",
@@ -806,6 +970,7 @@
     "ownerDefaultTag": "default",
     "rulePage": {
       "back": "DPDP",
+      "evidencePack": "Evidence pack",
       "notApplicable": "This rule does not apply to your company, based on your set-up answers. It is shown for reference and does not count towards your progress.",
       "pillars": {
         "count": "{done} of {total}",
@@ -820,7 +985,7 @@
         },
         "proof": {
           "label": "Proof in",
-          "hint": "Evidence that they are followed"
+          "hint": "Proof that they are followed"
         }
       },
       "tabs": {
@@ -845,7 +1010,7 @@
         "coversCount": "{count} of {total} controls"
       },
       "proof": {
-        "hint": "The evidence this rule needs, most urgent first. Open one to add proof or to say who collects it.",
+        "hint": "The proof this rule needs, most urgent first. Open one to add proof or to say who collects it.",
         "empty": "No proof is needed for this rule yet."
       }
     },
@@ -930,7 +1095,7 @@
       "description": "These do not count until they are restored.",
       "restore": "Restore"
     },
-    "reviewNote": "A suggested checklist taken from the DPDP Rules. It is not legal advice, and a lawyer has not reviewed it yet.",
+    "reviewNote": "A suggested checklist taken from the DPDP Rules and drafted by counsel. It is general guidance, not advice on your company.",
     "columns": {
       "policy": "Policy",
       "owner": "Owner",
@@ -952,7 +1117,8 @@
     },
     "evidence": {
       "title": "Proof to keep",
-      "description": "What a company keeps to show this policy is followed."
+      "description": "What the controls this policy covers need proof of, and where each stands.",
+      "empty": "The controls this policy covers need no proof yet."
     },
     "covers": {
       "title": "Controls it covers",
@@ -1080,19 +1246,19 @@
       "description": "Everything here is a starting point that your company can change.",
       "rules": {
         "title": "The rules and controls",
-        "text": "They follow the Digital Personal Data Protection Act and its Rules, written up from the prototype framework this project started with."
+        "text": "They follow the Digital Personal Data Protection Act and its Rules."
       },
       "policies": {
         "title": "The policies",
-        "text": "The 18 policies are templates written in plain English from the same source. On first start each is copied to your company, so editing yours never changes the original."
+        "text": "The 19 policies are templates written in plain English. On first start each is copied to your company, so editing yours never changes the original."
       },
       "proof": {
         "title": "The proof",
-        "text": "The suggested proof comes from what each policy says to keep. Each item was placed under the control whose wording fits best, by matching words, so some may need moving."
+        "text": "The suggested proof is the list counsel keeps for each control, such as the reports and registers an auditor asks to see. Some controls have no proof of their own. Your company can add, change or archive proof."
       },
       "review": {
         "title": "Not legal advice",
-        "text": "A lawyer has not yet reviewed any of this. Have counsel check the rules, policies and proof before you rely on them."
+        "text": "Counsel drafted the rules, controls, policies and proof. They are general guidance, not advice on your company, so have your own counsel check them before you rely on them."
       },
       "close": "Close"
     },
@@ -1153,17 +1319,17 @@
   },
   "proofPage": {
     "summary": {
-      "missing": "Missing",
-      "due": "Due again",
-      "provided": "Provided",
-      "overdue": "Overdue"
+      "missing": "Proof missing",
+      "due": "Proof due again",
+      "provided": "Proof provided",
+      "overdue": "Proof overdue"
     },
     "tabs": {
-      "all": "All ({count})",
-      "missing": "Missing ({count})",
-      "due": "Due again ({count})",
-      "provided": "Provided ({count})",
-      "overdue": "Overdue ({count})",
+      "all": "All controls ({count})",
+      "missing": "Controls with missing ({count})",
+      "due": "Controls due again ({count})",
+      "provided": "Controls complete ({count})",
+      "overdue": "Controls with overdue ({count})",
       "overview": "Overview",
       "mappings": "Mappings"
     },
@@ -1181,13 +1347,21 @@
     "never": "Never",
     "nobody": "No one holds this job yet",
     "empty": "Nothing here.",
-    "back": "Evidence",
+    "back": "Proof",
+    "byControl": {
+      "progress": "{provided} of {total} provided",
+      "overdue": "{count} overdue",
+      "due": "{count} due again",
+      "missing": "{count} missing",
+      "show": "Show the proof for {name}",
+      "hide": "Hide the proof for {name}"
+    },
     "overdueBadge": "Overdue",
     "noDate": "No date",
     "everyone": "Everyone",
     "allRules": "All rules",
     "filterRule": "Rule",
-    "search": "Search evidence",
+    "search": "Search proof",
     "files": {
       "title": "Drag and drop files here",
       "hint": "Accepted: {types}. Up to {max} each.",
@@ -1202,8 +1376,8 @@
       }
     },
     "settings": {
-      "title": "Settings",
-      "description": "Who collects this, how often, and by when. Changes save as you make them.",
+      "title": "Who and when",
+      "description": "Who collects this proof, how often it is needed, and when it is first due. Changes save as you make them.",
       "status": "Status",
       "overdue": "Overdue",
       "nextDue": "Next due: {date}",
@@ -1225,7 +1399,6 @@
     "control": {
       "showing": "Proof asked for by this control. Add what an auditor would want to see.",
       "fallback": "Control",
-      "back": "All proof",
       "tabs": {
         "requirements": "Requirements ({count})",
         "other": "Other proof ({count})",
@@ -1234,6 +1407,30 @@
     }
   },
   "dashboard": {
+    "gettingStarted": {
+      "title": "Get started",
+      "description": "Four jobs that set your company up. This goes away once they are done.",
+      "progressLabel": "Set-up progress",
+      "progress": "{done} of {total} done",
+      "steps": {
+        "profile": {
+          "title": "Fill in your company profile",
+          "text": "Name, grievance email and breach contact. Your policies and notices use them."
+        },
+        "people": {
+          "title": "Invite your people",
+          "text": "Add the team who will own controls, proof and approvals."
+        },
+        "readiness": {
+          "title": "Take the readiness check",
+          "text": "25 quick questions that show where you stand and where to start."
+        },
+        "policies": {
+          "title": "Approve your first policy",
+          "text": "Read a draft, change what is needed and approve it."
+        }
+      }
+    },
     "work": {
       "title": "My work",
       "description": "Open the earliest first. Tabs split it by the kind of work.",
@@ -1243,7 +1440,9 @@
         "approve": "To approve ({count})",
         "policies": "Policies ({count})",
         "breach": "Breaches ({count})",
-        "request": "Requests ({count})"
+        "request": "Requests ({count})",
+        "vendor": "Vendors ({count})",
+        "training": "Training ({count})"
       },
       "kinds": {
         "proof": "Proof to collect",
@@ -1251,7 +1450,9 @@
         "review": "Policy review",
         "draft": "Policy to write",
         "breach": "Breach to handle",
-        "request": "Request to answer"
+        "request": "Request to answer",
+        "vendor": "Vendor to review",
+        "training": "Training to take"
       },
       "due": "Due {date}",
       "overdue": "Overdue · {date}",
@@ -1638,6 +1839,36 @@
       "description": "One zip with every list below, the newest approved text of each policy, every file uploaded as proof, and the result of the activity log's integrity check.",
       "download": "Download audit pack"
     },
+    "evidence": {
+      "title": "Evidence packs",
+      "description": "One zip for a single rule: its controls, the approved text of the policies behind them, the proof files, and what was done about it. Hand one to an auditor or the Board.",
+      "download": "Download pack",
+      "controls": "{count, plural, one {# control} other {# controls}}",
+      "notApplicable": "Does not apply to your company"
+    },
+    "tabs": {
+      "evidence": "Evidence packs",
+      "lists": "Lists"
+    },
+    "range": {
+      "label": "Date range",
+      "hint": "Cuts proof, breaches, requests and the activity log to these days. The other lists are always whole.",
+      "clear": "Clear range",
+      "openCalendar": "Open calendar",
+      "whole": "Always the whole list",
+      "cutBy": "The range applies to the day it was {date}",
+      "presets": {
+        "last30": "Last 30 days",
+        "thisYear": "This financial year",
+        "lastYear": "Last financial year"
+      },
+      "dates": {
+        "added": "added",
+        "found": "found",
+        "received": "received",
+        "happened": "logged"
+      }
+    },
     "lists": {
       "title": "Lists",
       "description": "The whole list, not just the page you are looking at. They open in Excel.",
@@ -1783,7 +2014,9 @@
         "attention": "Needs attention ({count})",
         "all": "All checks ({count})"
       },
-      "allClear": "Nothing needs attention. Choose All checks to see what passed."
+      "allClear": "Nothing needs attention. Choose All checks to see what passed.",
+      "checkedBySchedule": "Checked {when}, automatically",
+      "rechecked": "{name} ran {count, plural, one {# check} other {# checks}} again {when}. The rest are as earlier runs found them."
     },
     "groups": {
       "needsWork": "{count} to look at",
@@ -2185,7 +2418,9 @@
       "view": "View",
       "passed": "{count} passed",
       "warned": "{count} to review",
-      "failed": "{count} failed"
+      "failed": "{count} failed",
+      "bySchedule": "Automatic",
+      "rechecked": "{count, plural, one {# check} other {# checks}} run again"
     },
     "form": {
       "title": "Connect Azure",
@@ -2746,7 +2981,29 @@
       "resourceWarn": "Review",
       "shown": "Showing {shown} of {count}.",
       "fix": "How to fix",
-      "attentionCount": "{count} to fix"
+      "attentionCount": "{count} to fix",
+      "group": "Resource group {group}",
+      "open": "Open",
+      "seen": "What the check saw",
+      "notSet": "not set",
+      "readEarlier": "From an earlier run, read {when}.",
+      "recheck": "Run this check again"
+    },
+    "groupsChoice": {
+      "label": "What is checked",
+      "all": "All {total} groups",
+      "some": "{on} of {total} groups",
+      "title": "Choose what to check",
+      "description": "Untick what this account does not use, such as containers. Those checks stop running and stop showing in new results. A proof they back up cannot be backed by this account while they are off.",
+      "checks": "({count, plural, one {# check} other {# checks}})",
+      "atLeastOne": "Keep at least one group on.",
+      "readOnly": "Not checked on this account: {groups}.",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "recheck": {
+      "group": "Run {count, plural, one {this check} other {these # checks}} again",
+      "running": "Checking"
     },
     "details": {
       "entra_mfa_registered": {
@@ -3091,6 +3348,30 @@
         "why": "A library with a known weakness is a common way in. The Act asks for reasonable security safeguards (section 8(5)).",
         "fix": "In the repository, open Settings, then Advanced Security, and turn on Dependabot alerts. Turn on Dependabot security updates too, so fixes are proposed for you."
       }
+    },
+    "schedule": {
+      "label": "Check automatically",
+      "options": {
+        "off": "Off",
+        "daily": "Every day",
+        "weekly": "Every week"
+      },
+      "readOnly": "Checked automatically: {schedule}.",
+      "failedTitle": "The last automatic check could not sign in",
+      "failedBody": "The details may have expired. An admin can enter new ones with Edit. The next automatic check tries again, and this goes away when one works."
+    },
+    "accept": {
+      "action": "Accept",
+      "title": "Accept this as deliberate",
+      "description": "Say why this is fine. The check still shows it, but a proof that relies on this check stops waiting for it. Your name and the reason are kept.",
+      "forResource": "Say why {name} is fine. The check still shows it, and your name and the reason are kept.",
+      "reason": "Why it is fine",
+      "reasonHint": "For example: a firewall keeps it closed to the internet.",
+      "confirm": "Accept",
+      "cancel": "Cancel",
+      "by": "Accepted by {name}: {reason}",
+      "takeBack": "Take back",
+      "wholeHint": "This check names no resources. If it is deliberate, accept it as a whole."
     }
   },
   "notifications": {
@@ -3108,7 +3389,9 @@
       "breach": "Breach",
       "request": "Request",
       "proof": "Proof",
-      "review": "Policy review"
+      "review": "Policy review",
+      "vendor": "Vendor review",
+      "training": "Training"
     },
     "text": {
       "breach": {
@@ -3126,6 +3409,14 @@
       "review": {
         "due_soon": "The policy “{title}” is due for review on {date}.",
         "overdue": "The policy “{title}” was due for review on {date} and is late."
+      },
+      "vendor": {
+        "due_soon": "The review of the vendor “{title}” is due on {date}.",
+        "overdue": "The review of the vendor “{title}” was due on {date} and is late."
+      },
+      "training": {
+        "due_soon": "The training “{title}” is due on {date}.",
+        "overdue": "The training “{title}” was due on {date} and is late."
       }
     },
     "settings": {
@@ -3150,6 +3441,14 @@
         "review": {
           "name": "Policy reviews",
           "about": "When a policy you own is coming up for its yearly review."
+        },
+        "vendor": {
+          "name": "Vendors",
+          "about": "When the review of a vendor you look after is coming up, or late."
+        },
+        "training": {
+          "name": "Training",
+          "about": "When a training you have to take is coming due, or late."
         }
       },
       "tabs": {
@@ -3167,10 +3466,111 @@
       "save": "Save changes"
     }
   },
+  "aiTools": {
+    "diff": {
+      "legendRemoved": "Taken out",
+      "legendAdded": "Put in",
+      "removed": "Taken out",
+      "added": "Put in",
+      "showSame": "Show unchanged text",
+      "hideSame": "Hide unchanged text",
+      "skipped": "{count, plural, one {# unchanged line} other {# unchanged lines}}"
+    },
+    "sends": "This sends {what} to {provider} ({model}) with your company's key. Nothing is saved until you say so.",
+    "run": "Run",
+    "running": "Reading…",
+    "again": "Try again",
+    "cancel": "Cancel",
+    "wait": "This can take up to a minute.",
+    "tailor": {
+      "button": "Tailor to my company",
+      "title": "Tailor this policy to your company",
+      "intro": "Rewrites this draft for your company, using your profile answers, the vendors you have listed and anything you tell it below. It keeps the sections and the legal meaning, and makes generic wording specific where it can. You read the changes and choose whether to replace the text.",
+      "sends": "the text of this policy, your company profile answers, your vendor list (names, what they do, what data they are given and where they work) and the note above",
+      "contextLabel": "About your company (optional)",
+      "contextHint": "What you do, the kind of personal data you handle and where, your systems, how big you are. Written once and kept in this browser for every policy. Do not write personal data about people here.",
+      "contextPlaceholder": "For example: We are a payments company with about 120 staff. We take card and bank details from customers across India, run on AWS Mumbai and use Razorpay and Freshdesk.",
+      "addDetail": "Add detail and try again",
+      "summary": "{count, plural, one {# line would change} other {# lines would change}}.",
+      "unchanged": "Nothing in your answers, vendor list or note bears on this policy, so the AI left the text as it is. Tell it more about your company and try again.",
+      "sectionSummary": "What the AI says it changed",
+      "sectionChanges": "{count, plural, one {The change, line by line} other {The # changes, line by line}}",
+      "noReasons": "The AI gave no reasons for these changes. Read them line by line under Changes.",
+      "close": "Close",
+      "missing": "These answers would let the policy say more: {answers}.",
+      "openProfile": "Open the company profile",
+      "replace": "Replace the text",
+      "discard": "Discard"
+    },
+    "check": {
+      "button": "Check against the rules",
+      "title": "Check this policy against the rules",
+      "intro": "Reads the policy against the controls it is linked to and says how well each is covered, and what to add where it is not.",
+      "sends": "the text of this policy and the rules and controls it covers",
+      "counts": "{covered} covered, {partly} partly, {missing} missing",
+      "suggestion": "Add:",
+      "disclaimer": "A second opinion to weigh, not legal advice. Read the policy yourself before you rely on it.",
+      "close": "Close",
+      "verdicts": {
+        "covered": "Covered",
+        "partly": "Partly",
+        "missing": "Missing"
+      }
+    },
+    "proof": {
+      "button": "Check with AI",
+      "title": "Check this proof",
+      "intro": "Reads the proof against the requirement it was added for and says whether it looks like what was asked.",
+      "sends": "the text of this proof, from the file or the note, and what it was added for",
+      "headline": {
+        "matches": "This looks like what was asked for",
+        "partly": "This shows part of what was asked for",
+        "does_not_match": "This does not look like what was asked for",
+        "unclear": "There is not enough text to tell"
+      },
+      "missing": "{count, plural, one {Not shown by this proof} other {# things not shown by this proof}}",
+      "suggestedTitle": "A clearer title",
+      "dateOnDocument": "Date on the document",
+      "disclaimer": "Judged from the text alone. A picture or a scan cannot be read, and a person still decides whether the proof is enough.",
+      "close": "Close",
+      "verdicts": {
+        "matches": "Looks right",
+        "partly": "Partly",
+        "does_not_match": "Does not match",
+        "unclear": "Unclear"
+      }
+    }
+  },
   "ai": {
+    "features": {
+      "title": "What AI help is used for",
+      "description": "Switch a feature off and it disappears from the app. The key and the model stay as they are, and changing either never changes these.",
+      "items": {
+        "policy_import": {
+          "name": "Read a policy from a file",
+          "about": "Fills in Add policy from a PDF, Word or PowerPoint file.",
+          "sends": "Sends the text of the file and your company profile answers."
+        },
+        "policy_tailor": {
+          "name": "Tailor a draft policy",
+          "about": "Proposes a rewrite of a draft for your company, which you read before keeping.",
+          "sends": "Sends the text of the policy and your company profile answers."
+        },
+        "policy_check": {
+          "name": "Check a policy against the rules",
+          "about": "Says how well a policy covers the controls it is linked to, and what it leaves out.",
+          "sends": "Sends the text of the policy and the rules and controls it covers."
+        },
+        "proof_check": {
+          "name": "Check a piece of proof",
+          "about": "Says whether a file or note looks like what the requirement asks for.",
+          "sends": "Sends the text of the file or note and what it was added for. Pictures and scans cannot be read."
+        }
+      }
+    },
     "card": {
       "title": "AI service",
-      "description": "Used to read policies from PDF, Word and PowerPoint files when you add a policy."
+      "description": "Your own AI service and key. Moving to a different service or model is a change here and nowhere else."
     },
     "status": {
       "on": "Connected",
@@ -3192,7 +3592,9 @@
     "form": {
       "provider": "AI service",
       "model": "Model",
-      "modelHint": "The model that reads your files, named as the service names it.",
+      "modelHint": "Type the model's exact name, as the service writes it. A name that is wrong or has a typo will not work.",
+      "modelDocs": "Not sure of the name?",
+      "modelDocsLink": "See {service}'s list of models",
       "apiKey": "API key",
       "apiKeyHint": "Your own key from that service. It is tried first, then kept encrypted, and it is never shown again.",
       "save": "Save",
@@ -3205,7 +3607,345 @@
       "body": "The key is forgotten. Files cannot be read until it is set up again.",
       "confirm": "Remove"
     },
-    "privacy": "When you add a policy from a file, its text is sent to the service you choose, with your key, to be read. DPDP Kit does not keep the file. A person always checks and approves what it suggests.",
+    "privacy": "When you use an AI feature, the text it needs is sent to the service you chose, with your key, to be read. DPDP Kit does not keep it, every use is written to the activity log, and a person always checks and approves what it suggests.",
     "noSecrets": "AI help cannot keep a key yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
+  },
+  "training": {
+    "title": "Training",
+    "description": "What everyone at the company is asked to learn about handling personal data, and who has done it.",
+    "tabs": {
+      "mine": "My training",
+      "team": "Team",
+      "manage": "Trainings",
+      "policies": "Policies"
+    },
+    "add": "Add training",
+    "addHint": "Say what it teaches and link your own video or document. Everyone at the company is asked to take it.",
+    "edit": "Edit {name}",
+    "editTitle": "Change training",
+    "archive": "Stop asking for {name}",
+    "restore": "Ask for {name} again",
+    "archived": "Archived",
+    "inUse": "In use",
+    "doneOf": "{done} of {total} people",
+    "form": {
+      "name": "Name",
+      "about": "What it teaches",
+      "aboutHint": "A line or two, so people know what to expect.",
+      "url": "Link to the training",
+      "urlHint": "Your own video or document. People open it, then mark it done here.",
+      "add": "Add training",
+      "save": "Save",
+      "cancel": "Cancel",
+      "repeats": "Taken again every year",
+      "repeatsHint": "A completion lapses after a year, and the training shows as due again for the month before."
+    },
+    "columns": {
+      "training": "Training",
+      "done": "Taken by",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "none": {
+      "title": "No trainings yet",
+      "body": "Start with four suggested trainings on the DPDP Act, handling personal data, breaches and data requests. You can change them and add your own.",
+      "action": "Add the suggested trainings"
+    },
+    "mine": {
+      "allDone": "All training complete",
+      "allDoneOn": "Completed on {date}",
+      "completedOn": "Completed {date}",
+      "open": "Open",
+      "markDone": "Mark as done",
+      "undo": "Undo",
+      "none": {
+        "title": "Nothing to take yet",
+        "body": "Your admin has not set up any training. It will show here once they do."
+      },
+      "dueOn": "Due {date}",
+      "lateSince": "Late since {date}",
+      "renewOn": "Due again {date}",
+      "expiresOn": "Valid until {date}",
+      "certificate": "Certificate",
+      "forPerson": "Record for {name}",
+      "markDoneAgain": "Mark as done again",
+      "allDoneYearly": "Some trainings come round again each year."
+    },
+    "team": {
+      "summary": "{trained} of {everyone} people have completed all training.",
+      "noTrainings": "No training has been set up yet.",
+      "search": "Search people",
+      "noMatch": "No one matches your search.",
+      "person": "Person",
+      "progress": "Progress",
+      "state": "Status",
+      "doneOf": "{done} of {total} done",
+      "status": {
+        "complete": "Complete",
+        "started": "In progress",
+        "not_started": "Not started"
+      },
+      "policiesOf": "{done} of {total} policies",
+      "policiesColumn": "Policies",
+      "policiesSummary": "{accepted} of {everyone} people have accepted every policy.",
+      "trainingColumn": "Training"
+    },
+    "yearly": "Every year",
+    "certificate": {
+      "title": "Certificate of completion",
+      "awarded": "This certifies that",
+      "body": "has completed the data protection training of {company}:",
+      "completedOn": "Completed {date}",
+      "issued": "Issued {date}",
+      "print": "Print or save as PDF",
+      "back": "Back to training",
+      "notYet": "The certificate is ready once every training is done."
+    },
+    "policies": {
+      "about": "Read each approved policy, then accept it. A policy that is approved again has to be accepted again.",
+      "accept": "Accept",
+      "accepted": "Accepted {date}",
+      "changed": "Approved again {date}. Please read and accept it again.",
+      "approvedOn": "Approved {date}",
+      "allDone": "You have accepted every policy",
+      "none": {
+        "title": "No policies to accept yet",
+        "body": "Policies show here once they are approved."
+      },
+      "open": "Read",
+      "status": {
+        "todo": "To accept",
+        "accepted": "Accepted",
+        "changed": "Accept again"
+      }
+    }
+  },
+  "vendors": {
+    "title": "Vendors",
+    "description": "The companies that handle personal data for you: what they do, what they are given, and whether there is an agreement and a recent review.",
+    "add": "Add vendor",
+    "archive": "Archive {name}",
+    "restore": "Bring {name} back",
+    "search": "Search vendors",
+    "empty": {
+      "noMatch": "No vendor matches your search.",
+      "active": {
+        "title": "No vendors yet",
+        "text": "List the companies that handle personal data for you, such as hosting, payments, email and payroll. Each gets an owner, an agreement and a yearly review."
+      },
+      "attention": {
+        "title": "Nothing needs a look",
+        "text": "Every vendor in use has its details filled in, an assessment and a review that is not late."
+      },
+      "archived": {
+        "title": "No archived vendors",
+        "text": "A vendor you stop using moves here, with its history kept."
+      }
+    },
+    "noOwner": "Nobody named",
+    "nextReview": "Next review {date}",
+    "openAgreement": "Open agreement",
+    "tabs": {
+      "active": "In use ({count})",
+      "attention": "Needs a look ({count})",
+      "archived": "Archived ({count})"
+    },
+    "columns": {
+      "vendor": "Vendor",
+      "status": "Status",
+      "risk": "Risk",
+      "data": "Data and place",
+      "owner": "Owner",
+      "actions": "Actions"
+    },
+    "categories": {
+      "cloud": "Cloud and hosting",
+      "payments": "Payments",
+      "communications": "Email and messaging",
+      "hr": "HR and payroll",
+      "support": "Support",
+      "analytics": "Analytics",
+      "other": "Other"
+    },
+    "locations": {
+      "notSaid": "Not said yet",
+      "india": "Kept in India",
+      "abroad": "Kept abroad",
+      "both": "Kept in India and abroad"
+    },
+    "dataKinds": {
+      "name": "Names",
+      "contact": "Contact details",
+      "government_id": "Government IDs",
+      "financial": "Financial details",
+      "health": "Health data",
+      "location": "Location",
+      "biometric": "Biometrics",
+      "credentials": "Logins and passwords",
+      "employment": "Employment details",
+      "children": "Children’s data",
+      "other": "Other"
+    },
+    "attention": {
+      "details": "Details missing",
+      "assessment": "Not assessed yet",
+      "review": "Review date passed"
+    },
+    "form": {
+      "name": "Vendor name",
+      "service": "What it does for you",
+      "serviceHint": "For example, runs our payroll or hosts our database.",
+      "category": "Kind of service",
+      "location": "Where it keeps the data",
+      "website": "Website",
+      "owner": "Who answers for it",
+      "noOwner": "Nobody yet",
+      "data": "Personal data it is given",
+      "dataHint": "Tick everything it gets.",
+      "agreementUrl": "Link to the agreement",
+      "agreementUrlHint": "A link to the document in your own storage, such as Google Drive or SharePoint.",
+      "nextReviewOn": "Review again by",
+      "clearDate": "Clear the date",
+      "openCalendar": "Open the calendar",
+      "add": "Add",
+      "save": "Save",
+      "cancel": "Cancel",
+      "status": "Status"
+    },
+    "addHint": "Who it is and what it does. You fill in the rest on its page next.",
+    "archiveShort": "Archive",
+    "restoreShort": "Bring back",
+    "noData": "Not said yet",
+    "archivedNote": "This vendor is archived. Bring it back to change it.",
+    "sections": {
+      "edit": "Edit",
+      "details": {
+        "title": "Details",
+        "description": "What kind of service it is, how far it has been assessed, and who answers for it.",
+        "editTitle": "Change details"
+      },
+      "data": {
+        "title": "Data and place",
+        "description": "What personal data it is given, and where it keeps it.",
+        "editTitle": "Change data and place"
+      },
+      "review": {
+        "title": "Agreement and review",
+        "description": "Where the agreement is kept, and when to look at the vendor again.",
+        "editTitle": "Change agreement and review"
+      }
+    },
+    "risk": {
+      "title": "Risk",
+      "notRated": "Not rated yet",
+      "clear": "Start again",
+      "score": "{score} of 25",
+      "useSuggestion": "Start from the suggestion: {likelihood}, {impact}",
+      "inherent": {
+        "title": "Before your measures",
+        "hint": "How risky the vendor is before you do anything about it.",
+        "short": "Before"
+      },
+      "residual": {
+        "title": "After your measures",
+        "hint": "What is left once your own measures, such as the agreement and checks, are in place.",
+        "short": "After"
+      },
+      "likelihood": {
+        "1": "Very unlikely",
+        "2": "Unlikely",
+        "3": "Possible",
+        "4": "Likely",
+        "5": "Very likely",
+        "question": "How likely is a loss?"
+      },
+      "impact": {
+        "1": "Insignificant",
+        "2": "Minor",
+        "3": "Moderate",
+        "4": "Major",
+        "5": "Severe",
+        "question": "How bad would it be?"
+      },
+      "levels": {
+        "very_low": "Very low",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "very_high": "Very high"
+      },
+      "summary": {
+        "title": "Where it stands",
+        "description": "The risk on a map of how likely a loss is against how bad it would be. A ring is where it started, a solid dot is where it is now."
+      },
+      "compareHint": "Rate the risk before and after your measures to see the difference.",
+      "points": "{count} points",
+      "reduced": "Your measures bring the risk down from {from} to {to}.",
+      "increased": "The risk after your measures is higher than before: {from} to {to}. Check the ratings.",
+      "unchanged": "Your measures leave the risk at {to}.",
+      "now": "Risk now",
+      "outOf": "of {max}",
+      "map": {
+        "impact": "Impact",
+        "likelihood": "Likelihood"
+      },
+      "treatment": {
+        "title": "Treatment plan",
+        "description": "What you have decided to do about this risk, and why. This is what an auditor will ask for.",
+        "strategy": "What will you do about it?",
+        "rationale": "Why is this the right decision?",
+        "rationaleHint": "In a few words: what you are relying on, or what you will check.",
+        "save": "Save",
+        "notDecided": "Not decided yet",
+        "strategies": {
+          "mitigate": {
+            "name": "Reduce it",
+            "about": "Add safeguards, contract terms or checks that bring the risk down."
+          },
+          "transfer": {
+            "name": "Share it",
+            "about": "Move the risk to someone else, for example by contract or insurance."
+          },
+          "accept": {
+            "name": "Accept it",
+            "about": "The risk is low enough, or not worth reducing, and you are choosing to live with it."
+          },
+          "avoid": {
+            "name": "Avoid it",
+            "about": "Stop using the vendor, or stop giving it the data."
+          }
+        }
+      },
+      "reduction": {
+        "title": "Risk reduction",
+        "description": "What your measures take off the score: the risk before, and after.",
+        "empty": "Rate the risk on the Risk tab, before and after your measures, to see the difference here.",
+        "one": "Rate the other one too, on the Risk tab, to see how much your measures change it.",
+        "lower": "Your measures take <b>{count, plural, one {# point} other {# points}}</b> off the risk.",
+        "higher": "The risk is <b>{count, plural, one {# point} other {# points}}</b> higher after your measures.",
+        "same": "The risk is <b>the same</b> after your measures. Rate it again if they changed anything.",
+        "now": "Now {score}",
+        "before": "Before {score}"
+      }
+    },
+    "activity": {
+      "title": "History",
+      "description": "Every change made to this vendor, newest first.",
+      "empty": "Nothing has been changed yet."
+    },
+    "work": {
+      "review": "Vendor review"
+    },
+    "status": {
+      "not_assessed": "Not assessed",
+      "in_progress": "In progress",
+      "assessed": "Assessed"
+    },
+    "page": {
+      "overview": "Overview",
+      "risk": "Risk",
+      "history": "History",
+      "treatment": "Treatment"
+    }
   }
 }

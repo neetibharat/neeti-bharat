@@ -13,11 +13,11 @@ import { DatePicker } from '@/components/base/date-picker/date-picker';
 import { FormActions } from '@/components/base/form-actions/form-actions';
 import { Input } from '@/components/base/input/input';
 import { Select } from '@/components/base/select/select';
-import { Textarea } from '@/components/base/textarea/textarea';
 import { trimStrings } from '@/lib/form';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { useFormDraft } from '@/lib/hooks/use-form-draft';
 import { AssigneeSelect } from '@/components/frameworks/assignee-select';
+import { TemplateTextarea } from './template-textarea';
 
 export const NEW_REQUIREMENT: SaveProofRequirementRequest = {
   title: '',
@@ -44,7 +44,7 @@ function OwnerAndDue(props: {
   const { values, onChange } = props;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2">
       <AssigneeSelect
         label={t('assignee')}
         noneLabel={t('controlOwner')}
@@ -78,12 +78,13 @@ function Fields(props: {
         maxLength={PROOF_TITLE_MAX_LENGTH}
         autoFocus
       />
-      <Textarea
+      <TemplateTextarea
         label={t('description')}
+        hint={t('descriptionHint')}
         value={values.description}
         onChange={(description) => onChange({ description })}
         maxLength={PROOF_DESCRIPTION_MAX_LENGTH}
-        rows={2}
+        rows={8}
       />
       <Select
         label={t('frequency')}
@@ -108,7 +109,7 @@ export function RequirementForm(props: RequirementFormProps) {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-3">
+    <form onSubmit={submit} className="flex flex-col gap-5">
       <Fields values={values} onChange={patch} />
       {props.error ? <Alert tone="error">{errorMessage(props.error)}</Alert> : null}
       <FormActions

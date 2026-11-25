@@ -9,6 +9,9 @@ import { fakeAzure } from '../providers/azure/checks/fake-azure';
 import { ConnectionDrivers } from '../providers/connection-drivers';
 import type { ConnectionRunRepository } from '../repositories/connection-run.repository';
 import type { ConnectionRepository } from '../repositories/connection.repository';
+import type { ProofSnapshotService } from '../../frameworks/services/proof-snapshot.service';
+import type { CheckAcceptanceService } from './check-acceptance.service';
+import { ConnectionRunService } from './connection-run.service';
 import { ConnectionsService } from './connections.service';
 
 const actor = { id: 'u1', label: 'Asha' };
@@ -60,6 +63,7 @@ function build(
         provider: options.provider ?? 'azure',
         identifiers: options.identifiers ?? {},
         credentials: stored.credentials ?? '',
+        groupsOff: [],
       }),
     ),
     updateWith: vi
@@ -100,15 +104,24 @@ function build(
     connect: vi.fn(),
   };
   const activity = { record: vi.fn().mockResolvedValue(undefined) };
+  const acceptances = { setOf: vi.fn().mockResolvedValue(new Set<string>()) };
+  const snapshots = { record: vi.fn().mockResolvedValue(undefined) };
+  const runService = new ConnectionRunService(
+    runs as unknown as ConnectionRunRepository,
+    connections as unknown as ConnectionRepository,
+    activity as unknown as ActivityService,
+    acceptances as unknown as CheckAcceptanceService,
+    snapshots as unknown as ProofSnapshotService,
+  );
   const service = new ConnectionsService(
     connections as unknown as ConnectionRepository,
-    runs as unknown as ConnectionRunRepository,
     secrets,
     new ConnectionDrivers(azure as unknown as AzureConnector, github as unknown as GithubConnector),
     activity as unknown as ActivityService,
+    runService,
   );
   const inOrg = <T>(work: () => Promise<T>) => runInOrganization('org-1', work);
-  return { service, connections, runs, azure, github, activity, stored, secrets, inOrg };
+  return { service, connections, runs, azure, github, activity, snapshots, stored, secrets, inOrg };
 }
 
 describe('ConnectionsService.create', () => {

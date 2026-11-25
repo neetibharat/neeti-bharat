@@ -42,6 +42,8 @@ const NOTICE_SUBJECT: Record<NotificationKind, (title: string) => string> = {
   request: (title) => `The request from ${title}`,
   proof: (title) => `The proof “${title}”`,
   review: (title) => `The review of the policy “${title}”`,
+  vendor: (title) => `The review of the vendor “${title}”`,
+  training: (title) => `The training “${title}”`,
 };
 
 /** Every word of every email lives here, keyed by locale. Only English is written so far. */

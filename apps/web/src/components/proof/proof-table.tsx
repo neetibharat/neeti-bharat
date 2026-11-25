@@ -16,7 +16,14 @@ import { Link } from '@/i18n/navigation';
 import { isJobRole } from '@/lib/guards';
 
 /** The proof items as a table. A title opens that requirement's own page. */
-export function ProofTable({ items }: { items: ProofItemResponse[] }) {
+export function ProofTable({
+  items,
+  showControl = true,
+}: {
+  items: ProofItemResponse[];
+  /** Off when the table sits under its control, which already names it. */
+  showControl?: boolean;
+}) {
   const t = useTranslations('proofPage');
   if (!items.length) return <p className="text-body text-fg-muted">{t('empty')}</p>;
 
@@ -24,7 +31,7 @@ export function ProofTable({ items }: { items: ProofItemResponse[] }) {
     <Table aria-label={t('columns.proof')}>
       <TableHeader>
         <TableColumn isRowHeader>{t('columns.proof')}</TableColumn>
-        <TableColumn className="w-56">{t('columns.control')}</TableColumn>
+        {showControl && <TableColumn className="w-56">{t('columns.control')}</TableColumn>}
         <TableColumn className="w-44">{t('columns.assignee')}</TableColumn>
         <TableColumn className="w-32">{t('columns.frequency')}</TableColumn>
         <TableColumn className="w-44">{t('columns.status')}</TableColumn>
@@ -32,14 +39,14 @@ export function ProofTable({ items }: { items: ProofItemResponse[] }) {
       </TableHeader>
       <TableBody>
         {items.map((item) => (
-          <ProofRow key={item.id} item={item} />
+          <ProofRow key={item.id} item={item} showControl={showControl} />
         ))}
       </TableBody>
     </Table>
   );
 }
 
-function ProofRow({ item }: { item: ProofItemResponse }) {
+function ProofRow({ item, showControl }: { item: ProofItemResponse; showControl: boolean }) {
   const t = useTranslations('proofPage');
   const tProof = useTranslations('frameworks.proof');
   const format = useFormatter();
@@ -54,10 +61,12 @@ function ProofRow({ item }: { item: ProofItemResponse }) {
           {item.title}
         </Link>
       </TableCell>
-      <TableCell>
-        <p className="text-label text-fg">{item.controlTitle}</p>
-        <Badge className="mt-1">{item.ruleId}</Badge>
-      </TableCell>
+      {showControl && (
+        <TableCell>
+          <p className="text-label text-fg">{item.controlTitle}</p>
+          <Badge className="mt-1">{item.ruleId}</Badge>
+        </TableCell>
+      )}
       <TableCell>
         <Collector item={item} />
       </TableCell>

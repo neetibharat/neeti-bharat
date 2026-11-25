@@ -1,5 +1,12 @@
 /** What a notice is about. These match the dated kinds of work in My work. */
-export const NOTIFICATION_KINDS = ['breach', 'request', 'proof', 'review'] as const;
+export const NOTIFICATION_KINDS = [
+  'breach',
+  'request',
+  'proof',
+  'review',
+  'vendor',
+  'training',
+] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
 /** Whether the date is close, or has passed. */

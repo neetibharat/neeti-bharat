@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult } from '@dpdp-kit/shared';
 import { identifiersOf } from '../../utils/connection-mapper';
 import type { ConnectionDriver, Credentials, Identifiers } from '../connection-driver';
 import { type AzureConnector, type AzureCredentials } from './azure-api';
@@ -14,8 +14,12 @@ export class AzureDriver implements ConnectionDriver {
     return identifiersOf(azure);
   }
 
-  check(credentials: Credentials): Promise<ConnectionCheckResult[]> {
+  check(
+    credentials: Credentials,
+    _identifiers: Identifiers,
+    only?: ReadonlySet<CheckId>,
+  ): Promise<ConnectionCheckResult[]> {
     const azure = credentials as unknown as AzureCredentials;
-    return runAzureChecks(this.azure.connect(azure), azure.subscriptionId);
+    return runAzureChecks(this.azure.connect(azure), azure.subscriptionId, only);
   }
 }

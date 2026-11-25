@@ -2,7 +2,14 @@ import type { ConnectionCheckResult } from '@dpdp-kit/shared';
 import type { AzureApi } from '../azure-api';
 import type { Outcome } from '../../outcome';
 
-export { judge, nothingToCheck, type Outcome, type Verdict } from '../../outcome';
+export {
+  judge,
+  nothingToCheck,
+  type Described,
+  type Found,
+  type Outcome,
+  type Verdict,
+} from '../../outcome';
 
 export interface AzureCheck {
   id: ConnectionCheckResult['id'];

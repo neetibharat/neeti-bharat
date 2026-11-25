@@ -14,17 +14,20 @@ export interface ModalProps {
   trigger: ReactElement;
   title: string;
   description?: string;
-  /** `lg` for dialogs with a longer form, `xl` for two columns side by side. */
-  size?: 'md' | 'lg' | 'xl';
+  /** Open as soon as it shows, for a page that was opened to add something. */
+  defaultOpen?: boolean;
+  /** `lg` for dialogs with a longer form, `xl` for two columns side by side, `2xl` for two columns that each need room. */
+  size?: 'md' | 'lg' | 'xl' | '2xl';
   /** Receives `close` so the content can dismiss the dialog. */
   children: (close: () => void) => ReactNode;
 }
 
-const WIDTHS = { md: 'max-w-md', lg: 'max-w-xl', xl: 'max-w-4xl' } as const;
+const WIDTHS = { md: 'max-w-md', lg: 'max-w-xl', xl: 'max-w-4xl', '2xl': 'max-w-5xl' } as const;
 
-export function Modal({ trigger, title, description, size = 'md', children }: ModalProps) {
+export function Modal(props: ModalProps) {
+  const { trigger, title, description, size = 'md', defaultOpen, children } = props;
   return (
-    <DialogTrigger>
+    <DialogTrigger defaultOpen={defaultOpen}>
       {trigger}
       <ModalOverlay
         isDismissable

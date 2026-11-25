@@ -9,6 +9,9 @@ import {
 } from '@dpdp-kit/shared';
 import { z } from 'zod';
 import type { AiPrompt } from '../providers/ai-client';
+import { UnusableReply, jsonIn, within } from './ai-reply';
+
+export { UnusableReply };
 
 const SYSTEM = `You turn an existing policy document into the fields of a policy record. Reply with one JSON object and nothing else.
 
@@ -70,23 +73,6 @@ export function importPrompt(
     user: `File name: ${fileName}\n\nDocument:\n${text}`,
   };
 }
-
-/** A reply that could not be used. The text of it is never shown. */
-export class UnusableReply extends Error {}
-
-/** The first JSON object in the reply, for models that wrap it in a code fence or a sentence. */
-function jsonIn(reply: string): unknown {
-  const start = reply.indexOf('{');
-  const end = reply.lastIndexOf('}');
-  if (start < 0 || end <= start) throw new UnusableReply();
-  try {
-    return JSON.parse(reply.slice(start, end + 1));
-  } catch {
-    throw new UnusableReply();
-  }
-}
-
-const within = (value: string, max: number): string => value.trim().slice(0, max).trim();
 
 /** Checks what the AI sent and turns it into what the Add policy form is filled in with. */
 export function toImportResponse(reply: string): PolicyImportResponse {

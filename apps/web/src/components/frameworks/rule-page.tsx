@@ -21,6 +21,8 @@ import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { ruleHeading } from '@/lib/rule-progress';
 import { NO_FILTERS, toProofQuery } from '@/lib/proof-query';
 import { policiesOfRule, ruleStats } from '@/lib/rule-stats';
+import { DownloadButton } from '@/components/exports/download-button';
+import { evidencePackPath } from '@/components/exports/evidence-packs';
 import { RuleActions } from './rule-actions';
 import { RuleControls } from './rule-controls';
 import { RulePillars } from './rule-pillars';
@@ -109,11 +111,16 @@ function RuleHeaderActions({ rule, canEdit }: { rule: RuleResponse; canEdit: boo
       <Badge color="warning">{t(`appliesWhen.${rule.appliesWhen}`)}</Badge>
     ) : null;
   const canChange = canEdit && !isLocked(rule.frameworkId === DPDP_FRAMEWORK_ID);
-  if (!condition && !canChange) return undefined;
 
   return (
     <div className="flex items-center gap-3">
       {condition}
+      <DownloadButton
+        path={evidencePackPath(rule.frameworkId, rule.id)}
+        fallbackName={`evidence-pack-${rule.reference}.zip`}
+        label={t('rulePage.evidencePack')}
+        color="secondary"
+      />
       {canChange && <RuleActions rule={rule} />}
     </div>
   );

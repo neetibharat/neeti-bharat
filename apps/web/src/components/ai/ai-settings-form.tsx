@@ -52,6 +52,32 @@ function ProviderSelect({ values, onChange }: { values: Values; onChange: Change
   );
 }
 
+// Each service's own list of model names. Names change, so the page is the source, not a list kept here.
+const MODEL_DOCS: Record<AiProvider, string> = {
+  openai: 'https://platform.openai.com/docs/models',
+  anthropic: 'https://docs.claude.com/en/docs/about-claude/models/overview',
+  deepseek: 'https://api-docs.deepseek.com/quick_start/pricing',
+};
+
+function ModelDocs({ provider }: { provider: AiProvider }) {
+  const t = useTranslations('ai.form');
+  const tProviders = useTranslations('ai.providers');
+
+  return (
+    <p className="-mt-2 text-label text-fg-muted">
+      {t('modelDocs')}{' '}
+      <a
+        href={MODEL_DOCS[provider]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-brand underline-offset-2 hover:underline"
+      >
+        {t('modelDocsLink', { service: tProviders(provider) })}
+      </a>
+    </p>
+  );
+}
+
 function ModelAndKey({ values, onChange }: { values: Values; onChange: Change }) {
   const t = useTranslations('ai.form');
 
@@ -66,6 +92,7 @@ function ModelAndKey({ values, onChange }: { values: Values; onChange: Change })
         autoComplete="off"
         isRequired
       />
+      <ModelDocs provider={values.provider} />
       <Input
         label={t('apiKey')}
         hint={t('apiKeyHint')}

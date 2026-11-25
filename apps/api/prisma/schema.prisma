@@ -149,6 +149,11 @@ model Organization {
   notificationPreferences  NotificationPreference[]
   connections              Connection[]
   connectionRuns           ConnectionRun[]
+  checkAcceptances         CheckAcceptance[]
+  vendors                  Vendor[]
+  trainings                Training[]
+  policyAcceptances        PolicyAcceptance[]
+  trainingCompletions      TrainingCompletion[]
   notificationRoleDefaults NotificationRoleDefault[]
 
   @@map("organizations")
@@ -215,6 +220,7 @@ model ActivityEvent {
 
   @@index([organizationId, seq])
   @@index([organizationId, action, seq])
+  @@index([organizationId, subjectType, subjectId, seq])
   @@index([occurredAt])
   @@map("activity_events")
 }
@@ -455,8 +461,6 @@ model Policy {
   approverTitle       String
   reviewEvery         String              @default("annual")
   legalReferences     String[]
-  /// What the company keeps to show the policy is followed.
-  evidence            String[]
   status              PolicyStatus        @default(draft)
   /// Set while approved, and cleared when the policy goes back to draft.
   approvedAt          DateTime?           @db.Timestamptz(3)
@@ -477,6 +481,7 @@ model Policy {
   updatedAt           DateTime            @updatedAt @db.Timestamptz(3)
   controls            ControlPolicyLink[]
   approvals           PolicyApproval[]
+  acceptances         PolicyAcceptance[]
 
   @@id([organizationId, id])
   @@unique([organizationId, frameworkId, templateId])
@@ -524,23 +529,26 @@ model PolicyApproval {
 // Everyone who works at the company, with or without a login. A person's access is not stored here:
 // it is read from their account (User) or open invitation, matched by email, so there is one source of truth.
 model Person {
-  organizationId    String
-  organization      Organization       @relation(fields: [organizationId], references: [id])
-  id                String             @id @default(uuid(7))
-  name              String
-  email             String
-  department        String?
-  jobTitle          String?
-  status            PersonStatus       @default(active)
-  leftAt            DateTime?          @db.Timestamptz(3)
-  createdAt         DateTime           @default(now()) @db.Timestamptz(3)
-  updatedAt         DateTime           @updatedAt @db.Timestamptz(3)
-  roles             RoleAssignment[]
-  controls          Control[]
-  proofRequirements ProofRequirement[]
-  policies          Policy[]
-  breaches          Breach[]
-  requests          DataRequest[]
+  organizationId      String
+  organization        Organization         @relation(fields: [organizationId], references: [id])
+  id                  String               @id @default(uuid(7))
+  name                String
+  email               String
+  department          String?
+  jobTitle            String?
+  status              PersonStatus         @default(active)
+  leftAt              DateTime?            @db.Timestamptz(3)
+  createdAt           DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime             @updatedAt @db.Timestamptz(3)
+  roles               RoleAssignment[]
+  controls            Control[]
+  proofRequirements   ProofRequirement[]
+  policies            Policy[]
+  breaches            Breach[]
+  requests            DataRequest[]
+  vendors             Vendor[]
+  trainingCompletions TrainingCompletion[]
+  policyAcceptances   PolicyAcceptance[]
 
   @@unique([organizationId, email])
   @@map("persons")
@@ -741,18 +749,20 @@ model CompanyLogo {
 
 // The AI service a company has chosen to read documents with, and its key. There is at most one a company.
 model AiSetting {
-  organizationId String       @id
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId   String       @id
+  organization     Organization @relation(fields: [organizationId], references: [id])
   /// One of AI_PROVIDERS in packages/shared.
-  provider       String
-  model          String
+  provider         String
+  model            String
   /// The API key, sealed by the secret box. Never sent to the web.
-  apiKey         String
+  apiKey           String
   /// The last four characters of the key, so people can tell which one is set.
-  keyHint        String
+  keyHint          String
+  /// Features of AI_FEATURES in packages/shared that an admin has switched off. Empty means all are on.
+  disabledFeatures String[]     @default([])
   /// The name is copied here, so the change stays attributed after the person leaves.
-  updatedByName  String
-  updatedAt      DateTime     @updatedAt @db.Timestamptz(3)
+  updatedByName    String
+  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
 
   @@map("ai_settings")
 }
@@ -799,22 +809,105 @@ model ApiKey {
   @@map("api_keys")
 }
 
+// Keep in step with VENDOR_CATEGORIES in packages/shared (a test checks).
+enum VendorCategory {
+  cloud
+  payments
+  communications
+  hr
+  support
+  analytics
+  other
+}
+
+// Keep in step with VENDOR_LOCATIONS in packages/shared (a test checks).
+enum VendorLocation {
+  india
+  abroad
+  both
+}
+
+// Keep in step with VENDOR_STATUSES in packages/shared (a test checks).
+enum VendorStatus {
+  not_assessed
+  in_progress
+  assessed
+}
+
+// Keep in step with VENDOR_TREATMENTS in packages/shared (a test checks).
+enum VendorTreatment {
+  mitigate
+  transfer
+  accept
+  avoid
+}
+
+// A company that handles the company's personal data on its behalf, such as a cloud host or a payroll tool: what it
+// does, what data it gets and where it keeps it, how far it has been assessed, and how risky it is. A vendor that is no
+// longer used is archived and keeps its row.
+model Vendor {
+  organizationId     String
+  organization       Organization     @relation(fields: [organizationId], references: [id])
+  id                 String           @id @default(uuid(7))
+  name               String
+  website            String?
+  /// What the vendor does for the company.
+  service            String
+  category           VendorCategory
+  status             VendorStatus     @default(not_assessed)
+  /// Codes from VENDOR_DATA_KINDS in packages/shared.
+  dataKinds          String[]
+  /// Empty until someone says where the vendor keeps the data.
+  location           VendorLocation?
+  /// A link to the agreement, kept in the company's own storage.
+  agreementUrl       String?
+  nextReviewOn       DateTime?        @db.Timestamptz(3)
+  /// The risk before anything is done about it, as a place on a five-by-five grid (1 to 5 each). Empty until rated.
+  inherentLikelihood Int?
+  inherentImpact     Int?
+  /// The risk after the company's own measures, on the same grid.
+  residualLikelihood Int?
+  residualImpact     Int?
+  /// What the company has decided to do about the risk, and why. Empty until decided.
+  treatment          VendorTreatment?
+  treatmentNote      String?
+  /// Who answers for the vendor. Cleared if they leave.
+  ownerId            String?
+  owner              Person?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  archivedAt         DateTime?        @db.Timestamptz(3)
+  createdAt          DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime         @updatedAt @db.Timestamptz(3)
+
+  @@unique([organizationId, name])
+  @@index([ownerId])
+  @@map("vendors")
+}
+
 // A link to an outside system that DPDP Kit reads from to check it, such as an Azure subscription. The credentials are
 // kept encrypted and are never sent back. A connection that is removed keeps its row and its runs, and loses the credentials.
 model Connection {
-  organizationId String
-  organization   Organization    @relation(fields: [organizationId], references: [id])
-  id             String          @id @default(uuid(7))
-  provider       String
-  name           String
+  organizationId   String
+  organization     Organization      @relation(fields: [organizationId], references: [id])
+  id               String            @id @default(uuid(7))
+  provider         String
+  name             String
   /// What identifies the system without being a secret, such as the tenant and subscription ids. Shown in the list.
-  identifiers    Json
+  identifiers      Json
   /// The credentials as JSON, sealed by the secret box. Empty once the connection is removed.
-  credentials    String
-  createdByName  String
-  createdAt      DateTime        @default(now()) @db.Timestamptz(3)
-  removedAt      DateTime?       @db.Timestamptz(3)
-  runs           ConnectionRun[]
+  credentials      String
+  createdByName    String
+  createdAt        DateTime          @default(now()) @db.Timestamptz(3)
+  removedAt        DateTime?         @db.Timestamptz(3)
+  /// How often it is checked without anyone asking: off, daily or weekly (CONNECTION_SCHEDULES in packages/shared).
+  schedule         String            @default("off")
+  /// When the schedule last tried, whether it worked or not. A try is claimed here first, so two copies of the API never both run it.
+  lastAttemptAt    DateTime?         @db.Timestamptz(3)
+  /// Set when the last scheduled try could not sign in, and cleared by the next check that works.
+  scheduleFailedAt DateTime?         @db.Timestamptz(3)
+  /// The groups of checks it does not run (CHECK_GROUPS in packages/shared), such as containers it does not use.
+  groupsOff        String[]          @default([])
+  runs             ConnectionRun[]
+  acceptances      CheckAcceptance[]
 
   @@index([organizationId, createdAt])
   @@map("connections")
@@ -830,6 +923,10 @@ model ConnectionRun {
   ranAt          DateTime     @default(now()) @db.Timestamptz(3)
   /// The name is copied here, so the run stays attributed after the person leaves.
   ranByName      String
+  /// True when the schedule made the run, and no person pressed the button.
+  bySchedule     Boolean      @default(false)
+  /// The checks this run read again. Empty when it read them all; its other results were carried over from the run before.
+  rechecked      String[]     @default([])
   /// The list of results, in the shape of ConnectionCheckResult in packages/shared.
   results        Json
   passed         Int
@@ -841,12 +938,33 @@ model ConnectionRun {
   @@map("connection_runs")
 }
 
+// A person's decision that something a check flags is deliberate. The check still shows it; a proof fed by the check no
+// longer waits on it. An empty resourceName accepts the check as a whole.
+model CheckAcceptance {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  connectionId   String
+  connection     Connection   @relation(fields: [connectionId], references: [id])
+  checkId        String
+  resourceName   String       @default("")
+  reason         String
+  /// The name is copied here, so the decision stays attributed after the person leaves.
+  acceptedByName String
+  acceptedAt     DateTime     @default(now()) @db.Timestamptz(3)
+
+  @@unique([connectionId, checkId, resourceName])
+  @@map("check_acceptances")
+}
+
 // Keep in step with NOTIFICATION_KINDS in packages/shared (a test checks).
 enum NotificationKind {
   breach
   request
   proof
   review
+  vendor
+  training
 }
 
 // Keep in step with NOTIFICATION_STATES in packages/shared (a test checks).
@@ -907,4 +1025,55 @@ model NotificationPreference {
 
   @@id([organizationId, userId, kind])
   @@map("notification_preferences")
+}
+
+/// A training the company asks everyone to take, with a link to its own video or document.
+model Training {
+  organizationId String
+  organization   Organization         @relation(fields: [organizationId], references: [id])
+  id             String               @id @default(uuid(7))
+  name           String
+  about          String?
+  url            String?
+  /// Taken again each year: a completion lapses after 365 days.
+  repeatsYearly  Boolean              @default(false)
+  archivedAt     DateTime?            @db.Timestamptz(3)
+  createdAt      DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime             @updatedAt @db.Timestamptz(3)
+  completions    TrainingCompletion[]
+
+  @@unique([organizationId, name])
+  @@map("trainings")
+}
+
+/// That a person has taken a training, and when. A person who takes it again moves the date.
+model TrainingCompletion {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  trainingId     String
+  training       Training     @relation(fields: [trainingId], references: [id])
+  personId       String
+  person         Person       @relation(fields: [personId], references: [id])
+  completedAt    DateTime     @db.Timestamptz(3)
+
+  @@unique([trainingId, personId])
+  @@index([personId])
+  @@map("training_completions")
+}
+
+/// That a person has read and accepted a policy, and when. Accepting again after the policy is approved anew moves the date.
+model PolicyAcceptance {
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(uuid(7))
+  policyId       String
+  policy         Policy       @relation(fields: [organizationId, policyId], references: [organizationId, id])
+  personId       String
+  person         Person       @relation(fields: [personId], references: [id])
+  acceptedAt     DateTime     @db.Timestamptz(3)
+
+  @@unique([policyId, personId])
+  @@index([personId])
+  @@map("policy_acceptances")
 }

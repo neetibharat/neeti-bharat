@@ -18,7 +18,7 @@ export function NotificationBell() {
     <Link
       href="/notifications"
       aria-label={t('bell', { count: unread })}
-      className="relative grid size-9 shrink-0 place-items-center rounded-control text-fg-muted transition hover:bg-surface-muted hover:text-fg focus-visible:focus-ring"
+      className="relative grid size-10 shrink-0 place-items-center rounded-full bg-surface text-fg-muted ring-1 ring-line-strong ring-inset shadow-xs transition hover:bg-surface-muted hover:text-fg focus-visible:focus-ring"
     >
       <IconBell className="size-5" />
       {unread > 0 && (
