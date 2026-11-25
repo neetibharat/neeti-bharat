@@ -1387,7 +1387,12 @@
       "title": "Proof",
       "description": "What has been given for this, newest first.",
       "add": "Add proof",
-      "empty": "Nothing has been given yet."
+      "empty": "Nothing has been given yet.",
+      "filledTitle": "Filled template",
+      "filledHint": "The template, filled in. This is the main proof. Upload it with the same file name as the template.",
+      "filledEmpty": "The filled template has not been uploaded yet.",
+      "otherTitle": "Other proof",
+      "otherHint": "Exports, screenshots, links and notes that back it up."
     },
     "mappings": {
       "control": "Control",
