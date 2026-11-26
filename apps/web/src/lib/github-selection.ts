@@ -1,4 +1,4 @@
-import type { GithubRepositoryOption, GithubSelection } from '@dpdp-kit/shared';
+import type { GithubRepositoryOption, GithubSelection } from '@neeti-bharat/shared';
 
 /** What a GitHub connection keeps in the clear about which repositories it reads. */
 export function selectionOf(identifiers: Record<string, string>): GithubSelection {

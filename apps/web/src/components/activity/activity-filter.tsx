@@ -1,6 +1,6 @@
 'use client';
 
-import { ACTIVITY_ACTIONS, type ActivityAction } from '@dpdp-kit/shared';
+import { ACTIVITY_ACTIONS, type ActivityAction } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Select, type SelectOption } from '@/components/base/select/select';
 import { ALL } from '@/lib/filters';

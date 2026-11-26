@@ -3,7 +3,7 @@ import type {
   OrganizationSummary,
   PolicyDetailResponse,
   PolicyListResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 

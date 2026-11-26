@@ -1,8 +1,8 @@
-import type { AuthProvidersResponse, MeResponse } from '@dpdp-kit/shared';
+import type { AuthProvidersResponse, MeResponse } from '@neeti-bharat/shared';
 import { cookies, headers } from 'next/headers';
 import { cache } from 'react';
 import { redirect } from '@/i18n/navigation';
-import type { Locale } from '@dpdp-kit/shared';
+import type { Locale } from '@neeti-bharat/shared';
 import { ORGANIZATION_COOKIE, resolveActiveOrganization } from './active-organization';
 import { isAdminUser } from './permissions';
 import { toSessionUser, type SessionUser } from './session-user';

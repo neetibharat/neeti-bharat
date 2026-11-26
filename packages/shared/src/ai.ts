@@ -1,11 +1,11 @@
 import type { PolicyDocument } from './frameworks/dpdp/policy-document.js';
 import type { JobRole } from './people.js';
 
-/** The AI services DPDP Kit can ask to read a document. Each is called with the company's own key. */
+/** The AI services Neeti Bharat can ask to read a document. The install's `AI_PROVIDER` names one of them. */
 export const AI_PROVIDERS = ['openai', 'anthropic', 'deepseek'] as const;
 export type AiProvider = (typeof AI_PROVIDERS)[number];
 
-/** A model suggested when a provider is picked. OpenAI has none: its model names change often, so the company types one. */
+/** The model used when `AI_MODEL` is not set. OpenAI has none: its model names change often, so it must be named. */
 export const AI_DEFAULT_MODELS: Readonly<Record<AiProvider, string>> = {
   openai: '',
   anthropic: 'claude-haiku-5-5',
@@ -27,28 +27,19 @@ export const AI_FEATURES = [
 ] as const;
 export type AiFeature = (typeof AI_FEATURES)[number];
 
-/** The company's AI setting, from `GET /v1/ai`. The key is never sent back, only its last four characters. */
+/** The AI setting, from `GET /v1/ai`. The install's `.env` names the service; an admin chooses the features. */
 export interface AiSettingsResponse {
-  /** False when the install has no secrets key, so no key can be kept. */
-  enabled: boolean;
+  /** Null when the install has no AI service set up, so no feature can run. */
   provider: AiProvider | null;
   model: string | null;
   /** The last four characters of the key, so people can tell which one is set. */
   keyHint: string | null;
-  /** Who set it. */
-  configuredByName: string | null;
-  /** The features an admin has switched off. Empty when all are on. */
-  disabledFeatures: AiFeature[];
+  /** The features an admin has switched on. Empty until one is. */
+  enabledFeatures: AiFeature[];
 }
 
 export interface SaveAiFeaturesRequest {
-  disabledFeatures: AiFeature[];
-}
-
-export interface SaveAiSettingsRequest {
-  provider: AiProvider;
-  model: string;
-  apiKey: string;
+  enabledFeatures: AiFeature[];
 }
 
 /** The files a policy can be read from. A scan with no text in it cannot be read. */

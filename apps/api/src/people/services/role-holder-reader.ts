@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { JobRole } from '@dpdp-kit/shared';
+import type { JobRole } from '@neeti-bharat/shared';
 import { PeopleRepository } from '../repositories/people.repository';
 
 export interface RoleHolder {

@@ -1,4 +1,4 @@
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 import { ALL, matchesSearch } from './filters';
 
 /** What narrows the policy list. `ALL` for the owner or approver means no limit; an empty search matches everything. */

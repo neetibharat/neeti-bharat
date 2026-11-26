@@ -1,7 +1,7 @@
 'use client';
 
 import { IconExternalLink } from '@tabler/icons-react';
-import type { FlaggedResource, FoundValue } from '@dpdp-kit/shared';
+import type { FlaggedResource, FoundValue } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 
 /** A setting as the system wrote it. One that is not set at all says so. */

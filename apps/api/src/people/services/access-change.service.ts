@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AppRole, LeaveResponse } from '@dpdp-kit/shared';
+import type { AppRole, LeaveResponse } from '@neeti-bharat/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import type { Account } from '../../users/repositories/user.repository';
 import { UserService } from '../../users/services/user.service';

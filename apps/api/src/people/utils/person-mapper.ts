@@ -1,5 +1,5 @@
-import type { AccessLevel, PersonResponse, RoleHolderResponse } from '@dpdp-kit/shared';
-import { JOB_ROLES } from '@dpdp-kit/shared';
+import type { AccessLevel, PersonResponse, RoleHolderResponse } from '@neeti-bharat/shared';
+import { JOB_ROLES } from '@neeti-bharat/shared';
 import type { Account } from '../../users/repositories/user.repository';
 import type { Invitation, RoleAssignment } from '../../generated/prisma/client';
 import type { PersonWithRoles } from '../repositories/people.repository';

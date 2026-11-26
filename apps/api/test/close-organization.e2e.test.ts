@@ -1,4 +1,4 @@
-import type { CreatedApiKeyResponse, OrganizationSummary } from '@dpdp-kit/shared';
+import type { CreatedApiKeyResponse, OrganizationSummary } from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 

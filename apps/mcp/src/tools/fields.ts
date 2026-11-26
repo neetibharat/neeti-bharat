@@ -1,4 +1,4 @@
-import { JOB_ROLES } from '@dpdp-kit/shared';
+import { JOB_ROLES } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const jobRole = z

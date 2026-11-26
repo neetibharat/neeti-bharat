@@ -4,7 +4,7 @@ import {
   type CheckId,
   type ConnectionCheckResult,
   type GithubSelection,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { Outcome } from '../outcome';
 import { GithubAccessError, cachedGithub, type GithubAccount, type GithubApi } from './github-api';
 import { ownerCount, twoFactor } from './checks/org-checks';

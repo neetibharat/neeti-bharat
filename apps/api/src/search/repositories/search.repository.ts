@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { SearchHit } from '@dpdp-kit/shared';
+import type { SearchHit } from '@neeti-bharat/shared';
 import { PrismaService } from '../../core/prisma/prisma.service';
 
 /** The most hits shown for each kind of record. */

@@ -6,7 +6,7 @@ import {
   PROFILE_FIELDS,
   REQUEST_TYPES,
   TASK_OUTCOMES,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type {
   AppRole,
   BreachStep,
@@ -15,7 +15,7 @@ import type {
   ProfileKey,
   RequestType,
   TaskOutcome,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** A type guard for a fixed list of strings, so values from the API need no cast. */
 function oneOf<T extends string>(list: readonly T[]) {

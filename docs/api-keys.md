@@ -17,14 +17,14 @@ Making and revoking a key are written to the activity log (`API_KEY_CREATED`, `A
 Send it in the `x-api-key` header. No cookie and no `x-organization-id` header are needed:
 
 ```
-curl -H "x-api-key: dpdp_…" https://your-api-address/v1/breaches?tab=open
+curl -H "x-api-key: sk_live_…" https://your-api-address/v1/breaches?tab=open
 ```
 
 A key that is wrong, revoked or expired is answered with `UNAUTHENTICATED` (401). A route the key's role does not allow is answered with `FORBIDDEN` (403). The routes and what they take are listed in the API's Swagger page.
 
 ## How keys are kept
 
-A key is `dpdp_` followed by 32 random bytes in hex. It is shown once, when it is made. Only its SHA-256 hash is stored, with the first characters so a list can tell keys apart. The key is random, so the hash needs no salt, and a request finds its key by that hash. The time a key was last used is noted at most once a minute.
+A key is `sk_live_` followed by 32 random bytes in hex. Keys made before the product was renamed start with `dpdp_` and keep working, because a request finds its key by its hash, not by its prefix. It is shown once, when it is made. Only its SHA-256 hash is stored, with the first characters so a list can tell keys apart. The key is random, so the hash needs no salt, and a request finds its key by that hash. The time a key was last used is noted at most once a minute.
 
 ## In the code
 

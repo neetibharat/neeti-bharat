@@ -1,6 +1,6 @@
 'use client';
 
-import type { CreatedApiKeyResponse } from '@dpdp-kit/shared';
+import type { CreatedApiKeyResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type ReactElement } from 'react';
 import { Modal } from '@/components/base/modal/modal';

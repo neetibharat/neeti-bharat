@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 import { useState } from 'react';
 import { useUpdateProfileEntryMutation } from '@/lib/api/profile-api';
 import {

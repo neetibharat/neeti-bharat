@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProofRequirementDetailResponse } from '@dpdp-kit/shared';
+import type { ProofRequirementDetailResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';

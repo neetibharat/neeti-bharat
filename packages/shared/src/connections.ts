@@ -1,4 +1,4 @@
-/** The outside systems DPDP Kit can connect to and check. */
+/** The outside systems Neeti Bharat can connect to and check. */
 export const CONNECTION_PROVIDERS = ['azure', 'github'] as const;
 export type ConnectionProvider = (typeof CONNECTION_PROVIDERS)[number];
 

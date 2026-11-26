@@ -4,7 +4,7 @@ import {
   type PolicyDetailResponse,
   type PolicyResponse,
   type PolicyStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** A policy as stored, with who must approve it and how many controls and versions it has. */
 export interface PolicyRow {

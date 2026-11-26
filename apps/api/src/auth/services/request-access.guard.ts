@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { API_KEY_HEADER } from '@dpdp-kit/shared';
+import { API_KEY_HEADER } from '@neeti-bharat/shared';
 import { AuthGuard } from '@thallesp/nestjs-better-auth';
 import { ApiKeyAdmission } from '../../api-keys/services/api-key-admission';
 import { OrganizationGuard } from '../../organizations/services/organization.guard';

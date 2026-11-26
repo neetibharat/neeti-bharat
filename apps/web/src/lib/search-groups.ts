@@ -1,4 +1,4 @@
-import type { SearchHit, SearchKind } from '@dpdp-kit/shared';
+import type { SearchHit, SearchKind } from '@neeti-bharat/shared';
 import type { Icon } from '@tabler/icons-react';
 import {
   SEARCH_ICONS,
@@ -27,6 +27,8 @@ export interface SearchGroup {
 export interface SearchWho {
   isAdmin: boolean;
   canEdit: boolean;
+  /** The install has an AI service, so its page can be found. */
+  aiOn?: boolean;
 }
 
 /** Looks up words: `t` for the search's own, `tNav` for the names of pages. */
@@ -38,7 +40,7 @@ export interface SearchWords {
 const matches = (text: string, needle: string) => text.toLowerCase().includes(needle);
 
 export function pageItems(needle: string, who: SearchWho, words: SearchWords): SearchItem[] {
-  return searchablePages(who.isAdmin)
+  return searchablePages(who.isAdmin, who.aiOn)
     .map((page) => ({ ...page, title: words.tNav(page.id) }))
     .filter((page) => matches(page.title, needle))
     .map((page) => ({
@@ -79,7 +81,8 @@ export function recordItems(hits: SearchHit[], who: SearchWho, words: SearchWord
 /** The icon of a result opened before, worked out again from its key. */
 function iconOf(key: string, who: SearchWho): Icon | undefined {
   const [group, id = ''] = key.split(':');
-  if (group === 'page') return searchablePages(who.isAdmin).find((page) => page.id === id)?.icon;
+  if (group === 'page')
+    return searchablePages(who.isAdmin, true).find((page) => page.id === id)?.icon;
   if (group === 'action')
     return quickActionsFor(true, true).find((action) => action.id === id)?.icon;
   return SEARCH_ICONS[group as SearchKind];

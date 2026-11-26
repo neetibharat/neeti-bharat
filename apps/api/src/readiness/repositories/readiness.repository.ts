@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { ReadinessAnswers } from '@dpdp-kit/shared';
+import type { ReadinessAnswers } from '@neeti-bharat/shared';
 import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Prisma, ReadinessCheck } from '../../generated/prisma/client';

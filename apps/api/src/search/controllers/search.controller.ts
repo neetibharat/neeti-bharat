@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { SearchResponse } from '@dpdp-kit/shared';
+import type { SearchResponse } from '@neeti-bharat/shared';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import { Roles } from '../../core/org/roles.decorator';
 import { searchSchema, type SearchQuery } from '../dto/search.dto';

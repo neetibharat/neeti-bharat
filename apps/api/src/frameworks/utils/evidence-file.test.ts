@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EVIDENCE_FILE_MAX_BYTES } from '@dpdp-kit/shared';
+import { EVIDENCE_FILE_MAX_BYTES } from '@neeti-bharat/shared';
 import {
   checkEvidenceFile,
   evidenceFileKey,

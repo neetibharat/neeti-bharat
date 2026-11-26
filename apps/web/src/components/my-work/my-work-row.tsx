@@ -11,7 +11,7 @@ import {
   IconSchool,
   type Icon,
 } from '@tabler/icons-react';
-import type { MyWorkItem, MyWorkKind } from '@dpdp-kit/shared';
+import type { MyWorkItem, MyWorkKind } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { IconLinkRow, type RowTone } from '@/components/base/icon-link-row/icon-link-row';

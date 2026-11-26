@@ -1,6 +1,6 @@
 'use client';
 
-import { requestRef, type RequestListItem } from '@dpdp-kit/shared';
+import { requestRef, type RequestListItem } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   Table,

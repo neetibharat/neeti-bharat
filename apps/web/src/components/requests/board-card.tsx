@@ -1,6 +1,6 @@
 'use client';
 
-import { requestRef } from '@dpdp-kit/shared';
+import { requestRef } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

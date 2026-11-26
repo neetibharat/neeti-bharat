@@ -1,6 +1,6 @@
 'use client';
 
-import type { RequestResponse } from '@dpdp-kit/shared';
+import type { RequestResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { RequestAssignee } from './request-assignee';

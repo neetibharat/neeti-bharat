@@ -1,6 +1,6 @@
 'use client';
 
-import { ORGANIZATION_NAME_MAX_LENGTH } from '@dpdp-kit/shared';
+import { ORGANIZATION_NAME_MAX_LENGTH } from '@neeti-bharat/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

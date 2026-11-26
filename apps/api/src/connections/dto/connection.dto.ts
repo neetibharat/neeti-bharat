@@ -16,7 +16,7 @@ import {
   GITHUB_KEY_MAX_LENGTH,
   GITHUB_REPOSITORIES_MAX,
   GITHUB_REPOSITORY_MODES,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const guid = z.string().trim().regex(AZURE_ID_PATTERN);

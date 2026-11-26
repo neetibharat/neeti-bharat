@@ -1,4 +1,4 @@
-import { PROOF_REQUIREMENTS, PROOF_TEMPLATE_FILES, templateNote } from '@dpdp-kit/shared';
+import { PROOF_REQUIREMENTS, PROOF_TEMPLATE_FILES, templateNote } from '@neeti-bharat/shared';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';

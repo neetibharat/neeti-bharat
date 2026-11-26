@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPencil } from '@tabler/icons-react';
-import type { PersonResponse } from '@dpdp-kit/shared';
+import type { PersonResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';

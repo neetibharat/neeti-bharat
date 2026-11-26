@@ -1,6 +1,6 @@
 'use client';
 
-import { POLICY_STATUSES, type PolicyStatus } from '@dpdp-kit/shared';
+import { POLICY_STATUSES, type PolicyStatus } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { HeroFact, HeroFacts, HeroPanel } from '@/components/base/hero-panel/hero-panel';
 import { percentOf } from '@/lib/percent';

@@ -1,4 +1,4 @@
-import type { CompanyLogoResponse } from '@dpdp-kit/shared';
+import type { CompanyLogoResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

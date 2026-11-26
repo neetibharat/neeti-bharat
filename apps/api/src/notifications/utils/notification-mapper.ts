@@ -1,4 +1,4 @@
-import type { NotificationSummary } from '@dpdp-kit/shared';
+import type { NotificationSummary } from '@neeti-bharat/shared';
 import type { Notification } from '../../generated/prisma/client';
 
 export function toNotificationSummary(row: Notification): NotificationSummary {

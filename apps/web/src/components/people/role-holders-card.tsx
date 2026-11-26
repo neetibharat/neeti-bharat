@@ -1,6 +1,6 @@
 'use client';
 
-import { type JobRole, type RoleHolderResponse } from '@dpdp-kit/shared';
+import { type JobRole, type RoleHolderResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';

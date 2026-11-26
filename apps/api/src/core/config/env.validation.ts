@@ -1,3 +1,9 @@
+import {
+  AI_DEFAULT_MODELS,
+  AI_KEY_MAX_LENGTH,
+  AI_MODEL_MAX_LENGTH,
+  AI_PROVIDERS,
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { isValidSecretKey } from '../secrets/secret-box';
 
@@ -50,6 +56,24 @@ const secretsFields = {
   ),
 };
 
+/** The one AI service the install uses. Leave the key empty and AI help is off. */
+const aiFields = {
+  AI_PROVIDER: z.preprocess((v) => (v === '' ? undefined : v), z.enum(AI_PROVIDERS).optional()),
+  // A model name is letters, digits and a few separators, never anything that could change an address.
+  AI_MODEL: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z
+      .string()
+      .max(AI_MODEL_MAX_LENGTH)
+      .regex(/^[\w.:-]+$/)
+      .optional(),
+  ),
+  AI_API_KEY: z.preprocess(
+    (v) => (v === '' ? undefined : v),
+    z.string().max(AI_KEY_MAX_LENGTH).regex(/^\S+$/).optional(),
+  ),
+};
+
 const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -62,6 +86,7 @@ const envSchema = z
     ...oauthFields,
     ...storageFields,
     ...secretsFields,
+    ...aiFields,
   })
   .refine((env) => env.NODE_ENV !== 'production' || Boolean(env.SMTP_HOST), {
     message: 'SMTP_HOST is required in production, so sign-in links can be emailed',
@@ -104,6 +129,18 @@ const envSchema = z
     message: 'Use either Azure Blob Storage (AZURE_STORAGE_*) or S3 (STORAGE_BUCKET), not both',
     path: ['AZURE_STORAGE_ACCOUNT'],
   })
+  .refine((env) => Boolean(env.AI_API_KEY) === Boolean(env.AI_PROVIDER), {
+    message: 'Set both AI_PROVIDER and AI_API_KEY, or neither',
+    path: ['AI_PROVIDER'],
+  })
+  .refine(
+    (env) => !env.AI_PROVIDER || Boolean(env.AI_MODEL ?? AI_DEFAULT_MODELS[env.AI_PROVIDER]),
+    {
+      message:
+        'AI_MODEL is required for this AI_PROVIDER: name the model, as the service writes it',
+      path: ['AI_MODEL'],
+    },
+  )
   .refine((env) => !env.SMTP_HOST || Boolean(env.SMTP_FROM), {
     message: 'SMTP_FROM is required when SMTP_HOST is set',
     path: ['SMTP_FROM'],

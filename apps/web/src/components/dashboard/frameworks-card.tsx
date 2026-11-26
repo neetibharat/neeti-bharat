@@ -1,6 +1,6 @@
 'use client';
 
-import type { FrameworkSummaryResponse } from '@dpdp-kit/shared';
+import type { FrameworkSummaryResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { FrameworkSeal } from '@/components/frameworks/framework-seal';

@@ -4,7 +4,7 @@ import {
   type VendorDataKind,
   type VendorRating,
   type VendorResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { day, iso } from '../../frameworks/utils/dates';
 import type { VendorRow } from '../repositories/vendor.repository';
 

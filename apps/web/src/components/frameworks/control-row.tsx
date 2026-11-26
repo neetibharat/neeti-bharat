@@ -1,6 +1,6 @@
 'use client';
 
-import type { ControlResponse } from '@dpdp-kit/shared';
+import type { ControlResponse } from '@neeti-bharat/shared';
 import { ControlStatusBadge } from './control-status-badge';
 import { IconUser } from '@tabler/icons-react';
 import { useFormatter, useTranslations } from 'next-intl';

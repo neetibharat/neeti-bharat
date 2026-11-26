@@ -1,6 +1,6 @@
 'use client';
 
-import type { ConnectionSummary } from '@dpdp-kit/shared';
+import type { ConnectionSummary } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

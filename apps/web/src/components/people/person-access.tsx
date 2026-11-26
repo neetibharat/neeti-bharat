@@ -1,6 +1,6 @@
 'use client';
 
-import type { AppRole, PersonResponse } from '@dpdp-kit/shared';
+import type { AppRole, PersonResponse } from '@neeti-bharat/shared';
 import { Alert } from '@/components/base/alert/alert';
 import { useSetAccessMutation } from '@/lib/api/people-api';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';

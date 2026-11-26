@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCircleCheck } from '@tabler/icons-react';
-import type { MyWorkItem } from '@dpdp-kit/shared';
+import type { MyWorkItem } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { EmptyState } from '@/components/base/empty-state/empty-state';

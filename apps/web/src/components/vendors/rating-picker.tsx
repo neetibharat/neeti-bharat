@@ -1,6 +1,6 @@
 'use client';
 
-import { RISK_POINTS, type RiskPoint, type VendorRating } from '@dpdp-kit/shared';
+import { RISK_POINTS, type RiskPoint, type VendorRating } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { cx } from '@/lib/utils/cx';

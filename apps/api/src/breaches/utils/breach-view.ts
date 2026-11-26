@@ -4,7 +4,7 @@ import {
   type BreachListItem,
   type BreachResponse,
   type BreachStep,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { iso } from '../../frameworks/utils/dates';
 import { isOverdue, reportDueAt } from './breach-clock';
 

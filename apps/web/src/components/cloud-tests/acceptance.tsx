@@ -4,7 +4,7 @@ import {
   CHECK_ACCEPTANCE_REASON_MAX_LENGTH,
   type CheckAcceptanceResponse,
   type CheckId,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useState, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';

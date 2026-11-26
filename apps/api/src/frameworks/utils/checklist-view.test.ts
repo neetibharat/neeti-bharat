@@ -1,4 +1,4 @@
-import type { JobRole, PolicyStatus } from '@dpdp-kit/shared';
+import type { JobRole, PolicyStatus } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   buildChecklist,

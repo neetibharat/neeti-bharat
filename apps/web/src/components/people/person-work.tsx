@@ -1,6 +1,6 @@
 'use client';
 
-import type { MyWorkload } from '@dpdp-kit/shared';
+import type { MyWorkload } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Link } from '@/i18n/navigation';

@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyDetailResponse } from '@dpdp-kit/shared';
+import type { PolicyDetailResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { useCan } from '@/components/providers/user-provider';

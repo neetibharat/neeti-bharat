@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ORGANIZATION_NAME_MAX_LENGTH } from '@dpdp-kit/shared';
+import { ORGANIZATION_NAME_MAX_LENGTH } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const createOrganizationSchema = z.object({

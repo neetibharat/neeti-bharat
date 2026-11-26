@@ -1,6 +1,6 @@
 'use client';
 
-import { isLocked, type FrameworkResponse, type RuleResponse } from '@dpdp-kit/shared';
+import { isLocked, type FrameworkResponse, type RuleResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Card } from '@/components/base/card/card';

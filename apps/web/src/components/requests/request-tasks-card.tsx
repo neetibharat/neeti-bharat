@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPlus } from '@tabler/icons-react';
-import { REQUEST_SYSTEM_MAX_LENGTH, type RequestResponse } from '@dpdp-kit/shared';
+import { REQUEST_SYSTEM_MAX_LENGTH, type RequestResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

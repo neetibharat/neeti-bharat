@@ -1,4 +1,8 @@
-import { ORGANISATION_RULE_ID, type ControlResponse, type RuleResponse } from '@dpdp-kit/shared';
+import {
+  ORGANISATION_RULE_ID,
+  type ControlResponse,
+  type RuleResponse,
+} from '@neeti-bharat/shared';
 import { percentOf } from './percent';
 
 export type RuleStatus = 'notStarted' | 'inProgress' | 'done';

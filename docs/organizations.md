@@ -54,7 +54,7 @@ An invitation belongs to the organisation that sent it. Each time a session star
 
 ## In the web app
 
-The sidebar shows an organisation switcher above the signed-in person. It lists the organisations they can open and "Create an organisation". The choice is kept in the `dpdp_org` cookie. Switching reloads the app, so nothing from the organisation just left stays on screen or in the cache. A person who belongs to no organisation is sent to `/new-organization` after signing in. The same page, reached from the switcher, makes another one.
+The sidebar shows an organisation switcher above the signed-in person. It lists the organisations they can open and "Create an organisation". The choice is kept in the `app_org` cookie. Switching reloads the app, so nothing from the organisation just left stays on screen or in the cache. A person who belongs to no organisation is sent to `/new-organization` after signing in. The same page, reached from the switcher, makes another one.
 
 ## Tests
 

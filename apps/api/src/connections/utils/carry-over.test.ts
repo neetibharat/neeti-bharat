@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { ConnectionCheckResult } from '@neeti-bharat/shared';
 import { carryOver } from './carry-over';
 
 const before = new Date('2026-11-01T10:00:00.000Z');

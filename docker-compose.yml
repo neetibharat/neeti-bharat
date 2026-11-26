@@ -2,15 +2,15 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: dpdp
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dpdp}
-      POSTGRES_DB: dpdp
+      POSTGRES_USER: neeti
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-neeti}
+      POSTGRES_DB: neeti
     ports:
       - '127.0.0.1:5440:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U dpdp']
+      test: ['CMD-SHELL', 'pg_isready -U neeti']
       interval: 5s
       timeout: 3s
       retries: 10
@@ -22,8 +22,8 @@ services:
     # A fresh named volume is owned by root, and the image's own user cannot write to it.
     user: '0:0'
     environment:
-      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY_ID:-dpdpminio}
-      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_ACCESS_KEY:-dpdpminio-secret}
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY_ID:-neetiminio}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_ACCESS_KEY:-neetiminio-secret}
     ports:
       - '127.0.0.1:9000:9000'
       - '127.0.0.1:9001:9001'
@@ -37,8 +37,8 @@ services:
       - minio
     restart: on-failure
     environment:
-      MC_HOST_local: http://${STORAGE_ACCESS_KEY_ID:-dpdpminio}:${STORAGE_SECRET_ACCESS_KEY:-dpdpminio-secret}@minio:9000
-    command: mb --ignore-existing local/${STORAGE_BUCKET:-dpdp-proof}
+      MC_HOST_local: http://${STORAGE_ACCESS_KEY_ID:-neetiminio}:${STORAGE_SECRET_ACCESS_KEY:-neetiminio-secret}@minio:9000
+    command: mb --ignore-existing local/${STORAGE_BUCKET:-neeti-proof}
 
 volumes:
   pgdata:

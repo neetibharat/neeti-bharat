@@ -1,6 +1,6 @@
 'use client';
 
-import type { MyWorkload, PersonResponse } from '@dpdp-kit/shared';
+import type { MyWorkload, PersonResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Avatar } from '@/components/base/avatar/avatar';
 import { Badge } from '@/components/base/badge/badge';

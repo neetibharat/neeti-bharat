@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
-import type { ProofByControlResponse, ProofControlGroup } from '@dpdp-kit/shared';
+import type { ProofByControlResponse, ProofControlGroup } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 import { Badge } from '@/components/base/badge/badge';

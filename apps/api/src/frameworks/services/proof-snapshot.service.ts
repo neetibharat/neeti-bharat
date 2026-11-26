@@ -4,7 +4,7 @@ import {
   PROOF_SNAPSHOT_GAP_DAYS,
   type ConnectionCheckResult,
   type ConnectionProvider,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { snapshotFor, type Accepted } from '../../connections/utils/proof-snapshot';
 import { SystemProofService } from './system-proof.service';
 

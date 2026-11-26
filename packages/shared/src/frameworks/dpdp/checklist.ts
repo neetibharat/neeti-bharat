@@ -117,7 +117,7 @@ export interface FrameworkResponse {
   about: string;
   /** The short mark on its badge, such as DPDP. */
   seal: string;
-  /** True for one that ships with the Kit, false for one the company made. */
+  /** True for one that ships with Neeti Bharat, false for one the company made. */
   isBuiltIn: boolean;
 }
 

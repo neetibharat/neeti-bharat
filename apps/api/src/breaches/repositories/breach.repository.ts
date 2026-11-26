@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { BreachStep } from '@dpdp-kit/shared';
+import type { BreachStep } from '@neeti-bharat/shared';
 import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { BreachRow, BreachSummaryRow } from '../utils/breach-view';

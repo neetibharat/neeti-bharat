@@ -6,7 +6,7 @@ import type {
   ProofOverviewResponse,
   ProofStatus,
   ProofTab,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** What the proof list can be narrowed by. Every part is optional except the page. */
 export interface ProofListQuery {

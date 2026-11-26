@@ -1,4 +1,4 @@
-import type { BreachStep } from '@dpdp-kit/shared';
+import type { BreachStep } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { breachCounts, breachList } from './breach-list';
 import type { BreachSummaryRow } from './breach-view';

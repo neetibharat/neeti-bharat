@@ -1,4 +1,4 @@
-import { PROOF_TEMPLATES, type ProofTemplate } from '@dpdp-kit/shared';
+import { PROOF_TEMPLATES, type ProofTemplate } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { insertTemplate, matchingTemplates, templateTrigger } from './template-suggest';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPencil, IconPlus } from '@tabler/icons-react';
-import type { TrainingResponse } from '@dpdp-kit/shared';
+import type { TrainingResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';

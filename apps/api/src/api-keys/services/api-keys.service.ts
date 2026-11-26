@@ -4,7 +4,7 @@ import {
   type ApiKeyListResponse,
   type ApiKeySummary,
   type CreatedApiKeyResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import type { Actor } from '../../core/common/actor';
 import { AppException } from '../../core/common/app.exception';

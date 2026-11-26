@@ -25,7 +25,7 @@ describe('renderMail', () => {
       inviter: 'Asha',
       role: 'auditor',
     });
-    expect(subject).toBe('You are invited to Acme Pvt Ltd on DPDP Kit');
+    expect(subject).toBe('You are invited to Acme Pvt Ltd on Neeti Bharat');
     for (const body of [text, html]) {
       expect(body).toContain('Asha');
       expect(body).toContain('Acme Pvt Ltd');
@@ -92,7 +92,7 @@ describe('the email layout', () => {
 
   it('shows the brand, the heading and the footer, and has no button when there is none', () => {
     const html = renderHtml(content);
-    expect(html).toContain('DPDP Kit');
+    expect(html).toContain('Neeti Bharat');
     expect(html).toContain('Hello');
     expect(html).toContain('Footer words');
     expect(html).not.toContain('Or paste this link');

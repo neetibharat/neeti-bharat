@@ -4,7 +4,7 @@ import type {
   RequestStatus,
   RequestTab,
   RequestType,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { toListItem, type RequestSummaryRow } from './request-view';
 
 export interface RequestListQuery {

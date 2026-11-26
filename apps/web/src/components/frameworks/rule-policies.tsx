@@ -1,6 +1,6 @@
 'use client';
 
-import { policyLabel, type PolicyResponse, type RuleResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyResponse, type RuleResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import {
   Table,

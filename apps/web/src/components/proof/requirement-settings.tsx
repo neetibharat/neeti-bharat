@@ -5,7 +5,7 @@ import {
   type ProofFrequency,
   type ProofRequirementResponse,
   type SaveProofRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useCan } from '@/components/providers/user-provider';

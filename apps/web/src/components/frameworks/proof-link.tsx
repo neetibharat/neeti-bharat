@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPaperclip } from '@tabler/icons-react';
-import type { ControlResponse } from '@dpdp-kit/shared';
+import type { ControlResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { cx } from '@/lib/utils/cx';

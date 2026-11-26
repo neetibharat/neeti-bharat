@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCalendar, IconCircleX, IconFile, IconSparkles, IconTag } from '@tabler/icons-react';
-import type { EvidenceResponse, ProofCheckResponse, ProofCheckVerdict } from '@dpdp-kit/shared';
+import type { EvidenceResponse, ProofCheckResponse, ProofCheckVerdict } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/base/button/button';

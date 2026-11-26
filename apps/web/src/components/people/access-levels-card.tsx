@@ -1,7 +1,7 @@
 'use client';
 
 import { IconEye, IconShieldLock, IconUserCheck, type Icon } from '@tabler/icons-react';
-import { APP_ROLES, type AppRole } from '@dpdp-kit/shared';
+import { APP_ROLES, type AppRole } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 

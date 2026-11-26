@@ -1,4 +1,4 @@
-import { CHECK_GROUPS, GITHUB_CHECK_IDS } from '@dpdp-kit/shared';
+import { CHECK_GROUPS, GITHUB_CHECK_IDS } from '@neeti-bharat/shared';
 import type {
   CheckAcceptanceResponse,
   ConnectionListResponse,
@@ -7,7 +7,7 @@ import type {
   CreatedApiKeyResponse,
   OrganizationSummary,
   ProofRequirementDetailResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { REFUSED_SECRET, azureConnector } from './support/fake-azure-connector';
 import { GOOD_KEY, REFUSED_KEY } from './support/fake-github-connector';

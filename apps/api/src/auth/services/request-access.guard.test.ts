@@ -67,8 +67,10 @@ describe('RequestAccessGuard', () => {
     it('signs the request in as the key creator, without the sign-in library', async () => {
       const { guard, calls, admit } = build(async () => true, vi.fn().mockResolvedValue(access));
       const request: Record<string, unknown> = {};
-      expect(await guard.canActivate(withHeaders({ 'x-api-key': 'dpdp_abc' }, request))).toBe(true);
-      expect(admit).toHaveBeenCalledWith('dpdp_abc');
+      expect(await guard.canActivate(withHeaders({ 'x-api-key': 'sk_live_abc' }, request))).toBe(
+        true,
+      );
+      expect(admit).toHaveBeenCalledWith('sk_live_abc');
       expect(calls).toEqual(['organization']);
       expect(request.session).toMatchObject({ user: access.user });
       expect(request.keyAccess).toEqual({ organizationId: 'org-1', role: 'member' });
@@ -79,7 +81,7 @@ describe('RequestAccessGuard', () => {
         async () => true,
         vi.fn().mockRejectedValue(new Error('UNAUTHENTICATED')),
       );
-      await expect(guard.canActivate(withHeaders({ 'x-api-key': 'dpdp_bad' }))).rejects.toThrow(
+      await expect(guard.canActivate(withHeaders({ 'x-api-key': 'sk_live_bad' }))).rejects.toThrow(
         'UNAUTHENTICATED',
       );
       expect(organization.canActivate).not.toHaveBeenCalled();

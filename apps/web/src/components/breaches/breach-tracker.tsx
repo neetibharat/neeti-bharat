@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCheck } from '@tabler/icons-react';
-import type { BreachStepResponse } from '@dpdp-kit/shared';
+import type { BreachStepResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { trackerSteps, type StepState, type TrackerStep } from '@/lib/breach-steps';

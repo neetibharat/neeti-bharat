@@ -10,7 +10,7 @@ import type {
   DiscoverGithubResponse,
   FindSubscriptionsResponse,
   GithubRepositoriesResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
 import { TransactionAfterBody } from '../../core/prisma/transaction.interceptor';

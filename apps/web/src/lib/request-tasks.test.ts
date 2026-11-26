@@ -1,4 +1,4 @@
-import type { RequestTaskResponse } from '@dpdp-kit/shared';
+import type { RequestTaskResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { closeBlocker, isTaskChanged, taskDraftOf, tasksToDo, toTaskUpdate } from './request-tasks';
 

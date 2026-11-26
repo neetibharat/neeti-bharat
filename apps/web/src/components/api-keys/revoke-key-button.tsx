@@ -1,7 +1,7 @@
 'use client';
 
 import { IconBan } from '@tabler/icons-react';
-import type { ApiKeySummary } from '@dpdp-kit/shared';
+import type { ApiKeySummary } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';

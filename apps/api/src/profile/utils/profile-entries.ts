@@ -6,7 +6,7 @@ import {
   type ProfileFieldDefinition,
   type ProfileGroup,
   type ProfileKind,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { ProfileEntry } from '../../generated/prisma/client';
 
 /** One answer as the rest of the service sees it, built-in or added by a person. */

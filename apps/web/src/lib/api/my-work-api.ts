@@ -1,4 +1,4 @@
-import type { MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
+import type { MyWorkResponse, MyWorkTeamResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 const WORK_TAGS = [

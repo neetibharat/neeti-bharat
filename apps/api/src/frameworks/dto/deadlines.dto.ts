@@ -1,4 +1,4 @@
-import { DEADLINE_TABS } from '@dpdp-kit/shared';
+import { DEADLINE_TABS } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const DEADLINES_PAGE_SIZE = 25;

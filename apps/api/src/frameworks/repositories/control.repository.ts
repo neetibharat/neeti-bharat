@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { orgKey, orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
-import type { JobRole, ProofFrequency } from '@dpdp-kit/shared';
+import type { JobRole, ProofFrequency } from '@neeti-bharat/shared';
 import type { Control, Prisma } from '../../generated/prisma/client';
 import { nextSortOrder } from '../utils/sort-order';
 

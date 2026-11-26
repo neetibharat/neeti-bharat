@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 import { countsByOwner, statusCounts } from '@/lib/policy-stats';
 import { AttentionCard } from './attention-card';
 import { OwnerBars } from './owner-bars';

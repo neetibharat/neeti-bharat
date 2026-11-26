@@ -1,6 +1,6 @@
 'use client';
 
-import type { FrameworkResponse, RuleResponse } from '@dpdp-kit/shared';
+import type { FrameworkResponse, RuleResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';

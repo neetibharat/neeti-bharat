@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { PolicyDetailResponse, PolicyListResponse } from '@dpdp-kit/shared';
+import type { PolicyDetailResponse, PolicyListResponse } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound, archivedOrNotFound } from '../../core/common/active';
 import { newCustomId } from '../../core/common/ids';

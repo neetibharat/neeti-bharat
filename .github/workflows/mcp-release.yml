@@ -28,20 +28,20 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @dpdp-kit/shared build
-      - run: pnpm --filter @dpdp-kit/mcp test
+      - run: pnpm --filter @neeti-bharat/shared build
+      - run: pnpm --filter @neeti-bharat/mcp test
       # The manifest holds major.minor; the run number makes each release's version unique.
       - name: Work out the version
         run: |
           base=$(node -p "require('./apps/mcp/manifest.json').version.split('.').slice(0, 2).join('.')")
           echo "MCP_VERSION=$base.${{ github.run_number }}" >> "$GITHUB_ENV"
-      - run: pnpm --filter @dpdp-kit/mcp mcpb
+      - run: pnpm --filter @neeti-bharat/mcp mcpb
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "mcp-v$MCP_VERSION" apps/mcp/dpdp-kit.mcpb \
+          gh release create "mcp-v$MCP_VERSION" apps/mcp/neeti-bharat.mcpb \
             --target "$GITHUB_SHA" \
-            --title "DPDP Kit for Claude $MCP_VERSION" \
+            --title "Neeti Bharat for Claude $MCP_VERSION" \
             --notes-file apps/mcp/release-notes.md \
             --latest

@@ -11,7 +11,7 @@ import {
   type ConnectionRunResponse,
   type ConnectionSummary,
   type GithubSelection,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import { currentOrganizationId } from '../../core/org/org-context';

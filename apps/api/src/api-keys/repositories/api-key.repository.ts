@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { ApiKeyRole } from '@dpdp-kit/shared';
+import type { ApiKeyRole } from '@neeti-bharat/shared';
 import type { ApiKey, AppRole } from '../../generated/prisma/client';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';

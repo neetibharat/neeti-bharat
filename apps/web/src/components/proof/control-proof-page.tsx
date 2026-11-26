@@ -1,6 +1,6 @@
 'use client';
 
-import type { EvidenceListResponse, ProofOverviewResponse } from '@dpdp-kit/shared';
+import type { EvidenceListResponse, ProofOverviewResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

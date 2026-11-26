@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import type { HealthResponse } from '@dpdp-kit/shared';
+import type { HealthResponse } from '@neeti-bharat/shared';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import { HealthService } from '../services/health.service';
 

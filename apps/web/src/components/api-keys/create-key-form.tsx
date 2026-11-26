@@ -4,8 +4,8 @@ import {
   API_KEY_NAME_MAX_LENGTH,
   API_KEY_ROLES,
   type CreatedApiKeyResponse,
-} from '@dpdp-kit/shared';
-import type { ApiKeyRole } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import type { ApiKeyRole } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

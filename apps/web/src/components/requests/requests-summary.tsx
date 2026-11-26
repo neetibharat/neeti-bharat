@@ -1,6 +1,6 @@
 'use client';
 
-import type { RequestCounts } from '@dpdp-kit/shared';
+import type { RequestCounts } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { StatTile } from '@/components/base/stat-tile/stat-tile';
 

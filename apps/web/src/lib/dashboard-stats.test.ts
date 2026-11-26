@@ -3,7 +3,7 @@ import type {
   PolicyResponse,
   ProofItemResponse,
   RequestListItem,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { dashboardAttention, overall } from './dashboard-stats';
 

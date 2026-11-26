@@ -1,4 +1,4 @@
-import { BREACH_STEPS, type BreachStep } from '@dpdp-kit/shared';
+import { BREACH_STEPS, type BreachStep } from '@neeti-bharat/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { ActivityService } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';

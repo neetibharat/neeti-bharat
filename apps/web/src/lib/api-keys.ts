@@ -1,4 +1,4 @@
-import { API_KEY_LIFETIMES, type ApiKeySummary } from '@dpdp-kit/shared';
+import { API_KEY_LIFETIMES, type ApiKeySummary } from '@neeti-bharat/shared';
 
 export type ApiKeyState = 'active' | 'revoked' | 'expired';
 

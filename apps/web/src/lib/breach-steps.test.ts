@@ -1,4 +1,4 @@
-import { BREACH_STEPS, type BreachStepResponse } from '@dpdp-kit/shared';
+import { BREACH_STEPS, type BreachStepResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { trackerSteps } from './breach-steps';
 

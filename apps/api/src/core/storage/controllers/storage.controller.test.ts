@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { afterEach, describe, expect, it } from 'vitest';
-import { EVIDENCE_FILE_MAX_BYTES } from '@dpdp-kit/shared';
+import { EVIDENCE_FILE_MAX_BYTES } from '@neeti-bharat/shared';
 import { DisabledFileStorage } from '../disabled-file-storage';
 import { FileStorage } from '../file-storage';
 import { MemoryFileStorage } from '../memory-file-storage';

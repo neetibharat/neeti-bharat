@@ -1,4 +1,4 @@
-import type { ActivityEventResponse, AppRole, BreachStep, RequestType } from '@dpdp-kit/shared';
+import type { ActivityEventResponse, AppRole, BreachStep, RequestType } from '@neeti-bharat/shared';
 import { isAppRole, isBreachStep, isRequestType } from './guards';
 
 export interface ParamWords {

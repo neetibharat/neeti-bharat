@@ -1,6 +1,6 @@
 import { Controller, Get, HttpStatus, Param, Query, Res, StreamableFile } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { EXPORT_DATASETS, type ExportDataset } from '@dpdp-kit/shared';
+import { EXPORT_DATASETS, type ExportDataset } from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import type { Response } from 'express';

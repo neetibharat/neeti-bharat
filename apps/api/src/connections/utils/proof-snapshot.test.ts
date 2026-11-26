@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { ConnectionCheckResult } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { acceptanceKey, snapshotFor } from './proof-snapshot';
 

@@ -13,7 +13,7 @@ import {
   CONNECTION_RESOURCES_KEPT,
   type ConnectionCheckResult,
   type ConnectionCheckStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { outcomeKey } from '@/lib/connections';

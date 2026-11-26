@@ -1,4 +1,4 @@
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { closedOnTime, dueAtOf, isOverdue, replyWindowOf } from './request-due';
 

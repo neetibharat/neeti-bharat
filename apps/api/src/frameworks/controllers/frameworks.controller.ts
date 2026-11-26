@@ -1,6 +1,10 @@
 import { Body, Controller, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { ChecklistResponse, FrameworkListResponse, RulePageResponse } from '@dpdp-kit/shared';
+import type {
+  ChecklistResponse,
+  FrameworkListResponse,
+  RulePageResponse,
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';

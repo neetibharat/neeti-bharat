@@ -4,7 +4,7 @@
     "breadcrumb": "Breadcrumb"
   },
   "meta": {
-    "title": "DPDP Kit",
+    "title": "Neeti Bharat",
     "description": "An open-source, self-hosted toolkit for complying with India's DPDP law."
   },
   "home": {
@@ -115,7 +115,7 @@
   },
   "auth": {
     "signIn": {
-      "title": "Sign in to DPDP Kit",
+      "title": "Sign in to Neeti Bharat",
       "description": "Enter your work email and we will send you a sign-in link.",
       "emailLabel": "Work email",
       "emailPlaceholder": "you@company.in",
@@ -205,16 +205,16 @@
     "API_KEY_LIMIT": "This organisation has reached the limit of {limit} active API keys. Revoke one you no longer use.",
     "CONNECTION_FAILED": "{reason, select, sign_in {{provider, select, github {GitHub did not accept the App ID and private key. Check that the key is the whole .pem file and that it belongs to this App.} other {Azure did not accept these details. Check the tenant ID, client ID and client secret, and that the secret has not expired.}}} subscription {{provider, select, github {Signing in worked, but the App cannot see anything. Check that it is installed on the organisation.} other {Signing in worked, but the app cannot see that subscription. Give the app the Reader role on it.}}} other {{provider, select, github {GitHub could not be reached. Try again in a moment.} other {Azure could not be reached. Try again in a moment.}}}}",
     "SECRETS_NOT_CONFIGURED": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY.",
-    "AI_NOT_CONFIGURED": "AI help is not set up yet. An admin can set it up under Settings, AI help.",
+    "AI_NOT_CONFIGURED": "AI help is not set up on this install. Ask whoever runs it to set AI_PROVIDER and AI_API_KEY.",
     "AI_FAILED": "{reason, select, key {The AI service did not accept the key. Check that it is right and has not been revoked.} busy {The AI service is busy, or the key has reached its limit. Try again in a moment.} timeout {The AI service did not answer in time. Try again, or try a shorter file.} empty {The AI service sent back nothing. Try again.} unusable {The AI service answered, but not in a form that can be used. Try again.} other {The AI service refused the request. {detail}}}",
-    "AI_FEATURE_OFF": "An admin has switched this AI feature off. It can be turned on again under Settings, AI help.",
+    "AI_FEATURE_OFF": "This AI feature is not switched on. An admin can turn it on under Settings, AI help.",
     "NOTHING_TO_CHECK": "There is nothing here the AI can check. A picture, a scan or a link on its own has no text to read, and a policy that covers no control has nothing to be read against.",
     "FILE_UNREADABLE": "No text could be read from this file. A scan is a picture, so it has no text to read. Try a copy saved from the original document.",
     "FILE_TOO_LONG": "This file has far more text than a policy does. Check that it is the right file."
   },
   "comingSoon": {
     "title": "On its way",
-    "body": "This part of DPDP Kit has not been built yet."
+    "body": "This part of Neeti Bharat has not been built yet."
   },
   "pages": {
     "frameworks": {
@@ -243,11 +243,11 @@
     },
     "secrets": {
       "title": "Secrets",
-      "description": "Passwords and keys DPDP Kit uses to reach your other systems."
+      "description": "Passwords and keys Neeti Bharat uses to reach your other systems."
     },
     "aiHelp": {
       "title": "AI help",
-      "description": "Connect an AI service so DPDP Kit can help draft and check policies and proof. Optional, and a person always decides."
+      "description": "Let Neeti Bharat help draft and check policies and proof. It is off until an admin turns a feature on, and a person always decides."
     },
     "myWork": {
       "title": "My work",
@@ -488,7 +488,7 @@
       "AI_CONFIGURED": "Set up AI help with {provider} ({model})",
       "AI_REMOVED": "Removed AI help ({provider})",
       "AI_USED": "Used AI help to {feature, select, policy_import {read a policy from a file} policy_tailor {tailor a policy to the company} policy_check {check a policy against the rules} proof_check {check a piece of proof} other {do something}} ({provider}, {model})",
-      "AI_FEATURES_CHANGED": "Changed which AI features are off: {off}",
+      "AI_FEATURES_CHANGED": "Changed which AI features are on",
       "CONNECTION_SCHEDULE_CHANGED": "Set the automatic checks of {name} to {schedule}",
       "CONNECTION_GROUPS_CHANGED": "Chose what is checked on {name}: {off, plural, =0 {every group} one {# group left out} other {# groups left out}}",
       "CONNECTION_SCHEDULED_CHECK_FAILED": "The automatic check of {name} could not sign in",
@@ -1227,7 +1227,7 @@
       "templates": {
         "label": "Templates",
         "title": "{policies} ready-made policies",
-        "text": "Ship with the Kit, in plain English"
+        "text": "Ship with Neeti Bharat, in plain English"
       },
       "copy": {
         "label": "Your copy",
@@ -1295,9 +1295,9 @@
       "hint": "It is read by your AI service. Nothing from the file is kept.",
       "choose": "Choose a file",
       "reading": "Reading the file… this can take up to a minute",
-      "notSetUp": "Already have this policy in a file? Set up AI help and it can be read for you.",
-      "setUp": "Set up AI help",
-      "askAdmin": "Already have this policy in a file? Ask an admin to set up AI help under Settings, and it can be read for you.",
+      "notSetUp": "Already have this policy in a file? Turn on AI help and it can be read for you.",
+      "setUp": "Open AI help",
+      "askAdmin": "Already have this policy in a file? Ask an admin to turn on AI help under Settings, and it can be read for you.",
       "done": "Read from {file}. Check everything before adding the policy.",
       "textReady": "The policy text is ready and is added with it. You can edit it on the next page.",
       "suggestedTitle": "The file had no title, so this one is a suggestion.",
@@ -1980,7 +1980,7 @@
   },
   "connections": {
     "title": "Connections",
-    "description": "Connect the systems that hold your data, such as an Azure subscription or a GitHub organisation, and check how they are set up against what the DPDP Act expects. DPDP Kit only reads: it never changes anything in them.",
+    "description": "Connect the systems that hold your data, such as an Azure subscription or a GitHub organisation, and check how they are set up against what the DPDP Act expects. Neeti Bharat only reads: it never changes anything in them.",
     "secretsOff": "Connections cannot keep credentials yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY, then reload this page.",
     "provider": {
       "azure": "Microsoft Azure and Entra ID",
@@ -2429,7 +2429,7 @@
     },
     "form": {
       "title": "Connect Azure",
-      "description": "DPDP Kit signs in with an app registration that can only read. The details are tried first, and kept encrypted.",
+      "description": "Neeti Bharat signs in with an app registration that can only read. The details are tried first, and kept encrypted.",
       "name": "Name",
       "namePlaceholder": "Production tenant",
       "fields": {
@@ -2453,7 +2453,7 @@
     },
     "setup": {
       "title": "How to set this up in Azure",
-      "intro": "DPDP Kit signs in as an app that can only read. Someone with admin rights in Azure makes that app once, in about five minutes. Names in bold are what to look for in the Azure portal.",
+      "intro": "Neeti Bharat signs in as an app that can only read. Someone with admin rights in Azure makes that app once, in about five minutes. Names in bold are what to look for in the Azure portal.",
       "forIt": "Not an Azure admin? Send these steps to whoever manages your Azure, and ask them to send back the tenant ID, the client ID and the client secret.",
       "needs": "Needs: {who}",
       "who": {
@@ -2463,7 +2463,7 @@
       "steps": {
         "register": {
           "title": "Create the app",
-          "body": "In the Azure portal, open <b>Microsoft Entra ID</b>, then <b>App registrations</b>, then <b>New registration</b>. Name it <b>DPDP Kit</b>, choose <b>Accounts in this organizational directory only</b>, and select <b>Register</b>."
+          "body": "In the Azure portal, open <b>Microsoft Entra ID</b>, then <b>App registrations</b>, then <b>New registration</b>. Name it <b>Neeti Bharat</b>, choose <b>Accounts in this organizational directory only</b>, and select <b>Register</b>."
         },
         "ids": {
           "title": "Copy two IDs",
@@ -2475,7 +2475,7 @@
         },
         "reader": {
           "title": "Let it read the subscription",
-          "body": "Open <b>Subscriptions</b>, choose the one to check, then <b>Access control (IAM)</b>, <b>Add</b>, <b>Add role assignment</b>. Pick the <b>Reader</b> role, then <b>Select members</b>, search for <b>DPDP Kit</b>, and choose <b>Review + assign</b>. It can take a few minutes to take effect."
+          "body": "Open <b>Subscriptions</b>, choose the one to check, then <b>Access control (IAM)</b>, <b>Add</b>, <b>Add role assignment</b>. Pick the <b>Reader</b> role, then <b>Select members</b>, search for <b>Neeti Bharat</b>, and choose <b>Review + assign</b>. It can take a few minutes to take effect."
         },
         "graph": {
           "title": "Let it read sign-in settings",
@@ -2491,7 +2491,7 @@
     },
     "accounts": {
       "title": "Connected accounts",
-      "description": "The accounts DPDP Kit reads. Open the results to see how each one was last checked.",
+      "description": "The accounts Neeti Bharat reads. Open the results to see how each one was last checked.",
       "results": "View results"
     },
     "edit": {
@@ -2513,7 +2513,7 @@
     },
     "catalog": {
       "title": "Available connections",
-      "description": "Choose a system to connect. DPDP Kit only reads from it, and never changes anything.",
+      "description": "Choose a system to connect. Neeti Bharat only reads from it, and never changes anything.",
       "setUp": "Set up",
       "addAnother": "Add another",
       "adminOnly": "An admin sets this up.",
@@ -2562,7 +2562,7 @@
     },
     "githubForm": {
       "title": "Connect GitHub",
-      "description": "DPDP Kit signs in as a GitHub App that can only read. The details are tried first, and the key is kept encrypted.",
+      "description": "Neeti Bharat signs in as a GitHub App that can only read. The details are tried first, and the key is kept encrypted.",
       "help": "How to set this up in GitHub",
       "fields": {
         "appId": "App ID",
@@ -2593,7 +2593,7 @@
     },
     "githubSetup": {
       "title": "How to set this up in GitHub",
-      "intro": "DPDP Kit signs in as a GitHub App that can only read. An owner of your GitHub organisation makes the App once, in about five minutes. Names in bold are what to look for on GitHub.",
+      "intro": "Neeti Bharat signs in as a GitHub App that can only read. An owner of your GitHub organisation makes the App once, in about five minutes. Names in bold are what to look for on GitHub.",
       "forIt": "Not an owner? Send these steps to someone who is, and ask them to send back the App ID and the private key file.",
       "needs": "Needs: {who}",
       "who": {
@@ -2602,7 +2602,7 @@
       "steps": {
         "create": {
           "title": "Create the App",
-          "body": "Open your organisation on GitHub, then <b>Settings</b>, then <b>Developer settings</b> (near the bottom of the left menu), then <b>GitHub Apps</b>, then <b>New GitHub App</b>. Name it <b>DPDP Kit</b> with your company name, give any <b>Homepage URL</b>, and untick <b>Active</b> under Webhook."
+          "body": "Open your organisation on GitHub, then <b>Settings</b>, then <b>Developer settings</b> (near the bottom of the left menu), then <b>GitHub Apps</b>, then <b>New GitHub App</b>. Name it <b>Neeti Bharat</b> with your company name, give any <b>Homepage URL</b>, and untick <b>Active</b> under Webhook."
         },
         "permissions": {
           "title": "Give it read-only permissions",
@@ -3481,7 +3481,7 @@
       "hideSame": "Hide unchanged text",
       "skipped": "{count, plural, one {# unchanged line} other {# unchanged lines}}"
     },
-    "sends": "This sends {what} to {provider} ({model}) with your company's key. Nothing is saved until you say so.",
+    "sends": "This sends {what} to {provider} ({model}). Nothing is saved until you say so.",
     "run": "Run",
     "running": "Reading…",
     "again": "Try again",
@@ -3549,7 +3549,7 @@
   "ai": {
     "features": {
       "title": "What AI help is used for",
-      "description": "Switch a feature off and it disappears from the app. The key and the model stay as they are, and changing either never changes these.",
+      "description": "Every feature starts off. Switch one on and it appears in the app. A feature that is off disappears again.",
       "items": {
         "policy_import": {
           "name": "Read a policy from a file",
@@ -3575,7 +3575,8 @@
     },
     "card": {
       "title": "AI service",
-      "description": "Your own AI service and key. Moving to a different service or model is a change here and nowhere else."
+      "description": "The AI service this install uses. It is set in the install's environment by whoever runs it, not here.",
+      "notSet": "No AI service is set up. Ask whoever runs this install to set AI_PROVIDER, AI_MODEL and AI_API_KEY in its environment, then restart it."
     },
     "status": {
       "on": "Connected",
@@ -3590,30 +3591,9 @@
       "provider": "Service",
       "model": "Model",
       "key": "Key",
-      "keyEnding": "Ending in {hint}",
-      "setBy": "Set up by {name}",
-      "change": "Change"
+      "keyEnding": "Ending in {hint}"
     },
-    "form": {
-      "provider": "AI service",
-      "model": "Model",
-      "modelHint": "Type the model's exact name, as the service writes it. A name that is wrong or has a typo will not work.",
-      "modelDocs": "Not sure of the name?",
-      "modelDocsLink": "See {service}'s list of models",
-      "apiKey": "API key",
-      "apiKeyHint": "Your own key from that service. It is tried first, then kept encrypted, and it is never shown again.",
-      "save": "Save",
-      "cancel": "Cancel",
-      "wait": "Trying the key…"
-    },
-    "remove": {
-      "button": "Remove",
-      "title": "Remove the AI service?",
-      "body": "The key is forgotten. Files cannot be read until it is set up again.",
-      "confirm": "Remove"
-    },
-    "privacy": "When you use an AI feature, the text it needs is sent to the service you chose, with your key, to be read. DPDP Kit does not keep it, every use is written to the activity log, and a person always checks and approves what it suggests.",
-    "noSecrets": "AI help cannot keep a key yet. Ask whoever runs this app to set SECRETS_ENCRYPTION_KEY."
+    "privacy": "When you use an AI feature, the text it needs is sent to the service this install uses, to be read. Neeti Bharat does not keep it, every use is written to the activity log, and a person always checks and approves what it suggests."
   },
   "training": {
     "title": "Training",

@@ -16,8 +16,8 @@ import type {
   UpdateConnectionGroupsRequest,
   UpdateConnectionRequest,
   UpdateConnectionScheduleRequest,
-} from '@dpdp-kit/shared';
-import { CONNECTION_PAGE_SIZE, CONNECTION_RUN_PAGE_SIZE } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import { CONNECTION_PAGE_SIZE, CONNECTION_RUN_PAGE_SIZE } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

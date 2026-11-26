@@ -1,4 +1,4 @@
-import type { SearchHit, SearchKind } from '@dpdp-kit/shared';
+import type { SearchHit, SearchKind } from '@neeti-bharat/shared';
 import {
   IconAlertTriangle,
   IconBuildingStore,
@@ -11,7 +11,7 @@ import {
   IconUsers,
   type Icon,
 } from '@tabler/icons-react';
-import { NAV_AREAS, type NavItemId } from './navigation';
+import { visibleAreas, type NavItemId } from './navigation';
 
 /** The page a found record opens on. A rule and a control open the rule they sit under. */
 const HREFS: Record<SearchKind, (hit: SearchHit) => string> = {
@@ -46,9 +46,9 @@ export interface PageTarget {
 }
 
 /** Every page that is live and open to this person, once each. */
-export function searchablePages(isAdmin: boolean): PageTarget[] {
+export function searchablePages(isAdmin: boolean, aiOn = false): PageTarget[] {
   const seen = new Set<string>();
-  return NAV_AREAS.filter((area) => !area.adminOnly || isAdmin)
+  return visibleAreas({ isAdmin, aiOn })
     .flatMap((area) => area.sections.flatMap((section) => section.items))
     .filter((item) => item.status === 'live' && !seen.has(item.id) && seen.add(item.id))
     .map(({ id, href, icon }) => ({ id, href, icon }));
@@ -86,7 +86,7 @@ export interface RecentSearch {
   detail?: string;
 }
 
-export const RECENT_KEY = 'dpdp_recent_search';
+export const RECENT_KEY = 'app_recent_search';
 export const RECENT_LIMIT = 5;
 
 type Store = Pick<Storage, 'getItem' | 'setItem'>;

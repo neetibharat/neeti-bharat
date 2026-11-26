@@ -6,7 +6,7 @@ import {
   customAnswerLabel,
   type PolicyDetailResponse,
   type PolicyTailorResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { Alert } from '@/components/base/alert/alert';
@@ -186,7 +186,7 @@ export function TailorPolicyButton({ policy }: { policy: PolicyDetailResponse })
   const { canEdit } = useCan();
   const { data } = useGetAiSettingsQuery();
   const [tailor] = useTailorPolicyMutation();
-  const [context, setContext] = useRememberedText('dpdp_ai_company_note');
+  const [context, setContext] = useRememberedText('app_ai_company_note');
   if (policy.status !== 'draft' || !featureAvailable(data, 'policy_tailor', canEdit)) return null;
 
   return (

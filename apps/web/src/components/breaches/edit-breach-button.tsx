@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPencil } from '@tabler/icons-react';
-import type { BreachResponse } from '@dpdp-kit/shared';
+import type { BreachResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';

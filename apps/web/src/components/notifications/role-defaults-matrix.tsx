@@ -6,7 +6,7 @@ import {
   NOTIFICATION_KINDS,
   type NotificationRoleDefault,
   type NotificationRoleDefaultsResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

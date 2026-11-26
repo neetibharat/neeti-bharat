@@ -1,7 +1,7 @@
 'use client';
 
 import { IconAlertTriangle, IconCircleCheck, IconCircleX, type Icon } from '@tabler/icons-react';
-import type { WebsiteCheckResult, WebsiteCheckStatus } from '@dpdp-kit/shared';
+import type { WebsiteCheckResult, WebsiteCheckStatus } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

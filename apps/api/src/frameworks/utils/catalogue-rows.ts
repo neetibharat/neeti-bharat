@@ -9,7 +9,7 @@ import {
   type JobRole,
   type ProofFrequency,
   type RuleCondition,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 export interface FrameworkSeed {
   id: string;

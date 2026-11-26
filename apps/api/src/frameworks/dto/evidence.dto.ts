@@ -4,7 +4,7 @@ import {
   EVIDENCE_TITLE_MAX_LENGTH,
   EVIDENCE_URL_MAX_LENGTH,
   type AddEvidenceRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const title = z.string().trim().min(1).max(EVIDENCE_TITLE_MAX_LENGTH);

@@ -7,7 +7,7 @@ import type {
   VendorResponse,
   VendorStatus,
   VendorTreatment,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** The parts of a vendor that are filled in one at a time, each in its own small form. */
 export const VENDOR_SECTIONS = ['details', 'data', 'review'] as const;

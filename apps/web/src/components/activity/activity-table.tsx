@@ -1,6 +1,6 @@
 'use client';
 
-import type { ActivityEventResponse } from '@dpdp-kit/shared';
+import type { ActivityEventResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   Table,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { RequestType } from '@dpdp-kit/shared';
+import type { RequestType } from '@neeti-bharat/shared';
 import { RequestRepository } from '../repositories/request.repository';
 import { isOverdue } from '../utils/request-due';
 

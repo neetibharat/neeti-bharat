@@ -1,4 +1,8 @@
-import type { AddTrainingRequest, TrainingResponse, UpdateTrainingRequest } from '@dpdp-kit/shared';
+import type {
+  AddTrainingRequest,
+  TrainingResponse,
+  UpdateTrainingRequest,
+} from '@neeti-bharat/shared';
 
 /** What a training form holds while it is being typed. */
 export interface TrainingValues {

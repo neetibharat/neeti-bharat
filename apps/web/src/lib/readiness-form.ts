@@ -4,7 +4,7 @@ import {
   type ReadinessAnswers,
   type ReadinessDomain,
   type ReadinessQuestion,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 const DOMAINS: readonly ReadinessDomain[] = READINESS_DOMAINS;
 

@@ -1,4 +1,4 @@
-# DPDP Kit
+# Neeti Bharat
 
 Open-source, self-hosted toolkit for complying with India's Digital Personal Data Protection Act.
 
@@ -35,7 +35,7 @@ The web app runs on http://localhost:3200 and the API on http://localhost:3201/v
 
 ## Licence
 
-DPDP Kit is open source under the [GNU Affero General Public License v3.0](LICENSE) (`AGPL-3.0-only`). You can self-host, study and modify it for free, including for commercial use. If you offer a modified version as an online service, the AGPL requires you to share your changes with its users.
+Neeti Bharat is open source under the [GNU Affero General Public License v3.0](LICENSE) (`AGPL-3.0-only`). You can self-host, study and modify it for free, including for commercial use. If you offer a modified version as an online service, the AGPL requires you to share your changes with its users.
 
 Copyright (C) 2026 Techdome Solutions Private Limited.
 

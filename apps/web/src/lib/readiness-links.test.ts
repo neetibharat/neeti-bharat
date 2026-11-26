@@ -1,4 +1,4 @@
-import { READINESS_DOMAINS, type ReadinessDomainScore } from '@dpdp-kit/shared';
+import { READINESS_DOMAINS, type ReadinessDomainScore } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { READINESS_LINKS, startHere } from './readiness-links';
 

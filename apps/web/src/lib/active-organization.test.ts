@@ -1,4 +1,4 @@
-import type { OrganizationSummary } from '@dpdp-kit/shared';
+import type { OrganizationSummary } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { resolveActiveOrganization } from './active-organization';
 

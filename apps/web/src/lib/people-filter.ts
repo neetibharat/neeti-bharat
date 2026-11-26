@@ -1,4 +1,4 @@
-import type { PersonResponse } from '@dpdp-kit/shared';
+import type { PersonResponse } from '@neeti-bharat/shared';
 import { matchesSearch } from './filters';
 
 /** The people whose name, email, job title or department contains the search, ignoring case. */

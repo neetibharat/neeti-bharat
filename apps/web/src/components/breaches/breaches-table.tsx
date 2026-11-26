@@ -1,6 +1,6 @@
 'use client';
 
-import type { BreachListItem } from '@dpdp-kit/shared';
+import type { BreachListItem } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   Table,

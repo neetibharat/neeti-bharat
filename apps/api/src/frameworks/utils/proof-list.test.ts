@@ -1,4 +1,4 @@
-import type { ProofItemResponse } from '@dpdp-kit/shared';
+import type { ProofItemResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { proofByControl, proofList, type ProofListQuery } from './proof-list';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconUserOff } from '@tabler/icons-react';
-import type { LeaveResponse, PersonResponse } from '@dpdp-kit/shared';
+import type { LeaveResponse, PersonResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';

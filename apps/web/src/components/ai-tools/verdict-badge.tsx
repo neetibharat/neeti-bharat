@@ -1,4 +1,4 @@
-import type { PolicyCheckVerdict, ProofCheckVerdict } from '@dpdp-kit/shared';
+import type { PolicyCheckVerdict, ProofCheckVerdict } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge, type BadgeProps } from '@/components/base/badge/badge';
 

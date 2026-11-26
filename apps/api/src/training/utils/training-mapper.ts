@@ -1,4 +1,4 @@
-import type { MyTrainingResponse, TeamTrainingRow, TrainingResponse } from '@dpdp-kit/shared';
+import type { MyTrainingResponse, TeamTrainingRow, TrainingResponse } from '@neeti-bharat/shared';
 import { day, iso } from '../../frameworks/utils/dates';
 import type { TrainingRow } from '../repositories/training.repository';
 import { trainingState } from './training-status';

@@ -3,7 +3,7 @@ import {
   REQUEST_PAGE_SIZE,
   type RequestTab,
   type RequestType,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useState } from 'react';
 import { ALL } from '@/lib/filters';
 import { useDebouncedValue } from '@/lib/hooks/use-debounced-value';

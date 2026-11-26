@@ -1,6 +1,6 @@
 'use client';
 
-import type { ConnectionSummary } from '@dpdp-kit/shared';
+import type { ConnectionSummary } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { selectionOf } from '@/lib/github-selection';
 

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { LOGO_LINK_SECONDS, type CompanyLogoResponse } from '@dpdp-kit/shared';
+import { LOGO_LINK_SECONDS, type CompanyLogoResponse } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import { currentOrganizationId } from '../../core/org/org-context';

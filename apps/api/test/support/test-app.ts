@@ -1,7 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Test } from '@nestjs/testing';
-import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@dpdp-kit/shared';
+import { API_KEY_HEADER, ORGANIZATION_HEADER } from '@neeti-bharat/shared';
 import type { AddressInfo } from 'node:net';
 import { AiClient } from '../../src/ai/providers/ai-client';
 import { AzureConnector } from '../../src/connections/providers/azure/azure-api';
@@ -20,7 +20,7 @@ import { createTestDatabase, type TestDatabase } from './test-database';
 const WEB_ORIGIN = 'http://localhost:3200';
 
 /** What the app reads from its environment. Anything that would reach a real service is switched off. */
-function useTestEnvironment(databaseUrl: string): void {
+function useTestEnvironment(databaseUrl: string, extra: Record<string, string>): void {
   Object.assign(process.env, {
     NODE_ENV: 'test',
     DATABASE_URL: databaseUrl,
@@ -45,6 +45,11 @@ function useTestEnvironment(databaseUrl: string): void {
     AZURE_STORAGE_KEY: '',
     AZURE_STORAGE_CONTAINER: '',
     AZURE_STORAGE_ENDPOINT: '',
+    // No AI service, unless a test names one.
+    AI_PROVIDER: '',
+    AI_MODEL: '',
+    AI_API_KEY: '',
+    ...extra,
   });
 }
 
@@ -209,9 +214,10 @@ function readRoutesOf(app: INestApplication): string[] {
 }
 
 /** Starts the real API on a database of its own, with the email replaced by one that keeps what it is asked to send. */
-export async function startTestApp(): Promise<TestApp> {
+/** `env` sets or overrides what the app reads, for a test that needs a service switched on. */
+export async function startTestApp(env: Record<string, string> = {}): Promise<TestApp> {
   const database: TestDatabase = await createTestDatabase();
-  useTestEnvironment(database.url);
+  useTestEnvironment(database.url, env);
   const inbox: MailMessage[] = [];
   let moduleRef: Awaited<ReturnType<typeof compileApp>>;
   try {

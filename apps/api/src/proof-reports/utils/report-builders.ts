@@ -4,7 +4,7 @@ import {
   type ConnectionProvider,
   type FlaggedResource,
   type TeamTrainingRow,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { dateOf, dateTimeOf, humanize, type ReportDoc } from './report-doc';
 
 /** A report, and when the newest thing it reports on happened, to tell whether it says anything new. */

@@ -1,4 +1,4 @@
-import type { AppRole, NotificationKind } from '@dpdp-kit/shared';
+import type { AppRole, NotificationKind } from '@neeti-bharat/shared';
 
 export interface Choice {
   inApp: boolean;

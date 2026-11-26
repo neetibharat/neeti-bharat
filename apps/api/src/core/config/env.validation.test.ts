@@ -90,4 +90,30 @@ describe('validateEnv', () => {
   it('rejects an endpoint that is not an address', () => {
     expect(() => validateEnv({ ...valid, STORAGE_ENDPOINT: 'minio' })).toThrow(/STORAGE_ENDPOINT/);
   });
+
+  it('runs without an AI service, and treats blank lines as not set', () => {
+    const env = validateEnv({ ...valid, AI_PROVIDER: '', AI_MODEL: '', AI_API_KEY: '' });
+    expect(env.AI_PROVIDER).toBeUndefined();
+    expect(env.AI_API_KEY).toBeUndefined();
+  });
+
+  it('needs an AI provider and key together, and a model where the service has no default', () => {
+    expect(() => validateEnv({ ...valid, AI_API_KEY: 'k' })).toThrow(/AI_PROVIDER/);
+    expect(() => validateEnv({ ...valid, AI_PROVIDER: 'anthropic' })).toThrow(/AI_PROVIDER/);
+    expect(() => validateEnv({ ...valid, AI_PROVIDER: 'openai', AI_API_KEY: 'k' })).toThrow(
+      /AI_MODEL/,
+    );
+    expect(() =>
+      validateEnv({ ...valid, AI_PROVIDER: 'anthropic', AI_API_KEY: 'k' }),
+    ).not.toThrow();
+    expect(() => validateEnv({ ...valid, AI_PROVIDER: 'nobody', AI_API_KEY: 'k' })).toThrow(
+      /AI_PROVIDER/,
+    );
+  });
+
+  it('rejects a model name that could change an address', () => {
+    expect(() =>
+      validateEnv({ ...valid, AI_PROVIDER: 'openai', AI_API_KEY: 'k', AI_MODEL: '../x' }),
+    ).toThrow(/AI_MODEL/);
+  });
 });

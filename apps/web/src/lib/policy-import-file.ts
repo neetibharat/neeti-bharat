@@ -1,4 +1,4 @@
-import { POLICY_IMPORT_EXTENSIONS, POLICY_IMPORT_MAX_BYTES } from '@dpdp-kit/shared';
+import { POLICY_IMPORT_EXTENSIONS, POLICY_IMPORT_MAX_BYTES } from '@neeti-bharat/shared';
 
 /** The file types the picker offers, with a dot. */
 export const IMPORT_PICKER_TYPES: string[] = POLICY_IMPORT_EXTENSIONS.map((type) => `.${type}`);

@@ -6,7 +6,7 @@ import {
   requiresConfirmation,
   type ProfileEntryResponse,
   type ProfileResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { OrganizationRepository } from '../../organizations/repositories/organization.repository';

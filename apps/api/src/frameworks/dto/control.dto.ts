@@ -3,7 +3,7 @@ import {
   CONTROL_DESCRIPTION_MAX_LENGTH,
   CONTROL_TITLE_MAX_LENGTH,
   JOB_ROLES,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { dayString } from './day-string';
 

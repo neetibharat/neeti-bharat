@@ -1,4 +1,4 @@
-import type { RequestBoardCard } from '@dpdp-kit/shared';
+import type { RequestBoardCard } from '@neeti-bharat/shared';
 import type { BadgeProps } from '@/components/base/badge/badge';
 import { timeLeft, type TimeLeft } from './breach-clock';
 import { dueState } from './request-due';

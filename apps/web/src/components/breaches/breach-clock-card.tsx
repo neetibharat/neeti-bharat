@@ -1,6 +1,6 @@
 'use client';
 
-import { isBoardPending, type BreachResponse } from '@dpdp-kit/shared';
+import { isBoardPending, type BreachResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

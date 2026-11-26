@@ -1,4 +1,4 @@
-import type { StorageStatusResponse } from '@dpdp-kit/shared';
+import type { StorageStatusResponse } from '@neeti-bharat/shared';
 
 export type FileProblem = 'empty' | 'tooLarge' | 'type';
 

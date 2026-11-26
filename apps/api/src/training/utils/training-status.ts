@@ -3,7 +3,7 @@ import {
   TRAINING_RENEWAL_DAYS,
   TRAINING_RENEWAL_WARNING_DAYS,
   type TrainingStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const after = (date: Date, days: number): Date => new Date(date.getTime() + days * DAY_MS);

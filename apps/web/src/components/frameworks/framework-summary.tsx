@@ -1,6 +1,10 @@
 'use client';
 
-import { ORGANISATION_RULE_ID, type FrameworkResponse, type RuleResponse } from '@dpdp-kit/shared';
+import {
+  ORGANISATION_RULE_ID,
+  type FrameworkResponse,
+  type RuleResponse,
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { ProgressBar } from '@/components/base/progress-bar/progress-bar';

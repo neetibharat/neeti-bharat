@@ -1,4 +1,4 @@
-import type { PersonResponse } from '@dpdp-kit/shared';
+import type { PersonResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { searchPeople } from './people-filter';
 

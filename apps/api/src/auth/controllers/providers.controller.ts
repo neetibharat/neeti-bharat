@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { AuthProvidersResponse } from '@dpdp-kit/shared';
+import type { AuthProvidersResponse } from '@neeti-bharat/shared';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 import type { Env } from '../../core/config/env.validation';
 

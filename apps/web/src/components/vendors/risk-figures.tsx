@@ -1,6 +1,6 @@
 'use client';
 
-import type { RiskReading } from '@dpdp-kit/shared';
+import type { RiskReading } from '@neeti-bharat/shared';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';

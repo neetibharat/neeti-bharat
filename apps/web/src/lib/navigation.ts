@@ -189,6 +189,24 @@ export const NAV_AREAS: NavArea[] = [
   },
 ];
 
+/** What this install has, so a page that needs something it lacks is left out. */
+export interface NavFeatures {
+  isAdmin: boolean;
+  /** The install has an AI service set up. */
+  aiOn: boolean;
+}
+
+/** The areas this person sees: admin areas only for admins, and no AI help page where there is no AI service. */
+export function visibleAreas({ isAdmin, aiOn }: NavFeatures): NavArea[] {
+  return NAV_AREAS.filter((area) => !area.adminOnly || isAdmin).map((area) => ({
+    ...area,
+    sections: area.sections.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => item.id !== 'aiHelp' || aiOn),
+    })),
+  }));
+}
+
 export function itemsOf(area: NavArea): NavItem[] {
   return area.sections.flatMap((section) => section.items);
 }

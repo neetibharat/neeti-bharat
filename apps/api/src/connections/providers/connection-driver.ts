@@ -1,4 +1,4 @@
-import type { CheckId, ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult, GithubSelection } from '@neeti-bharat/shared';
 
 /** What a connection signs in with, as the person entered it. Which fields there are depends on the system. */
 export type Credentials = Record<string, string>;

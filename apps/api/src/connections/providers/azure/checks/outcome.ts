@@ -1,4 +1,4 @@
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { ConnectionCheckResult } from '@neeti-bharat/shared';
 import type { AzureApi } from '../azure-api';
 import type { Outcome } from '../../outcome';
 

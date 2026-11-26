@@ -1,6 +1,6 @@
 'use client';
 
-import type { BreachCounts } from '@dpdp-kit/shared';
+import type { BreachCounts } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { StatTile } from '@/components/base/stat-tile/stat-tile';
 

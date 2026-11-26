@@ -1,6 +1,6 @@
 'use client';
 
-import type { ConnectionRunSummary } from '@dpdp-kit/shared';
+import type { ConnectionRunSummary } from '@neeti-bharat/shared';
 import { useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
