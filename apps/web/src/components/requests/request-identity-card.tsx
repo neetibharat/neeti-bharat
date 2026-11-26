@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCircleCheck } from '@tabler/icons-react';
-import { REQUEST_NOTE_MAX_LENGTH, type RequestResponse } from '@dpdp-kit/shared';
+import { REQUEST_NOTE_MAX_LENGTH, type RequestResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

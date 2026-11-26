@@ -1,6 +1,6 @@
 'use client';
 
-import type { EvidenceResponse } from '@dpdp-kit/shared';
+import type { EvidenceResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useCan } from '@/components/providers/user-provider';

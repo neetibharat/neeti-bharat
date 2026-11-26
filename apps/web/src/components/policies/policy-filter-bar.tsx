@@ -1,7 +1,7 @@
 'use client';
 
 import { IconSearch, IconX } from '@tabler/icons-react';
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Input } from '@/components/base/input/input';

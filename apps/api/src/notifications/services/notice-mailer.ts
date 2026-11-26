@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { NotificationKind, NotificationState } from '@dpdp-kit/shared';
+import type { NotificationKind, NotificationState } from '@neeti-bharat/shared';
 import type { Env } from '../../core/config/env.validation';
 import { MailService } from '../../core/mail/mail.service';
 import { renderMail } from '../../core/mail/templates';

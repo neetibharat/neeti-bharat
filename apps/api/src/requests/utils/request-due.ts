@@ -3,7 +3,7 @@ import {
   parseDuration,
   type ProfileEntryResponse,
   type RequestStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** The due date: when the request was received plus the reply time. It is stored, so a later profile change does not move it. */
 export const dueAtOf = (receivedAt: Date, windowMs: number): Date =>

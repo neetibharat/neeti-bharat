@@ -1,21 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Post,
-  Put,
-  UploadedFile,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   POLICY_IMPORT_MAX_BYTES,
   type AiSettingsResponse,
   type PolicyImportResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
@@ -25,11 +15,8 @@ import type { UploadedFile as Upload } from '../../frameworks/utils/evidence-fil
 import {
   ImportPolicyDto,
   SaveAiFeaturesDto,
-  SaveAiSettingsDto,
   saveAiFeaturesSchema,
-  saveAiSettingsSchema,
   type SaveAiFeaturesInput,
-  type SaveAiSettingsInput,
 } from '../dto/ai.dto';
 import { AiSettingsService } from '../services/ai-settings.service';
 import { PolicyImportService } from '../services/policy-import.service';
@@ -54,28 +41,10 @@ export class AiController {
   @Roles(['admin', 'member', 'auditor'])
   @ApiOperation({
     summary:
-      'Which AI service is set up for the company. The key is never sent, only its last four characters',
+      'Which AI service the install uses and which features are on. The key is never sent, only its last four characters',
   })
   get(): Promise<AiSettingsResponse> {
     return this.settings.get();
-  }
-
-  // The key is handled by a person only: an API key cannot set or remove it. Trying the key with the service
-  // takes a moment, so the route keeps out of the request-wide transaction and saves in one of its own.
-  @Put('ai')
-  @Roles(['admin'])
-  @NoApiKey()
-  @TransactionAfterBody()
-  @ApiOperation({
-    summary:
-      'Set the AI service, model and key. They are tried first, and the key is kept encrypted (admin only, never an API key)',
-  })
-  @ApiBody({ type: SaveAiSettingsDto })
-  save(
-    @Body(new ZodValidationPipe(saveAiSettingsSchema)) body: SaveAiSettingsInput,
-    @Session() { user }: UserSession,
-  ): Promise<AiSettingsResponse> {
-    return this.settings.save(body, actorOf(user));
   }
 
   @Put('ai/features')
@@ -83,23 +52,14 @@ export class AiController {
   @NoApiKey()
   @ApiOperation({
     summary:
-      'Switch AI features off or on, without touching the key or the model (admin only, never an API key)',
+      'Choose which AI features are on. The service, model and key come from the environment (admin only, never an API key)',
   })
   @ApiBody({ type: SaveAiFeaturesDto })
   setFeatures(
     @Body(new ZodValidationPipe(saveAiFeaturesSchema)) body: SaveAiFeaturesInput,
     @Session() { user }: UserSession,
   ): Promise<AiSettingsResponse> {
-    return this.settings.setFeatures(body.disabledFeatures, actorOf(user));
-  }
-
-  @Delete('ai')
-  @HttpCode(204)
-  @Roles(['admin'])
-  @NoApiKey()
-  @ApiOperation({ summary: 'Forget the AI service and its key (admin only, never an API key)' })
-  remove(@Session() { user }: UserSession): Promise<void> {
-    return this.settings.remove(actorOf(user));
+    return this.settings.setFeatures(body.enabledFeatures, actorOf(user));
   }
 
   // Nothing is saved here, so there is no transaction to hold open while the AI reads. Spending the company's AI

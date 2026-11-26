@@ -1,7 +1,11 @@
 'use client';
 
 import { IconChecklist } from '@tabler/icons-react';
-import type { PolicyCheckControl, PolicyCheckResponse, PolicyCheckRule } from '@dpdp-kit/shared';
+import type {
+  PolicyCheckControl,
+  PolicyCheckResponse,
+  PolicyCheckRule,
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { useCan } from '@/components/providers/user-provider';

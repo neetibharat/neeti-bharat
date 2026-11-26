@@ -2,7 +2,7 @@ import {
   DEFAULT_BREACH_REPORT_WINDOW_MS,
   parseDuration,
   type ProfileEntryResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** The time the Board must be told by: when the breach was found plus the report window. */
 export const reportDueAt = (foundAt: Date, windowMs: number): Date =>

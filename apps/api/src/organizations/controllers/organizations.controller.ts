@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Post, Get } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { OrganizationListResponse } from '@dpdp-kit/shared';
+import type { OrganizationListResponse } from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';

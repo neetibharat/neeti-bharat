@@ -1,4 +1,4 @@
-import { PROFILE_FIELDS } from '@dpdp-kit/shared';
+import { PROFILE_FIELDS } from '@neeti-bharat/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { ActivityService } from '../../activity/services/activity.service';
 import type { ProfileEntry } from '../../generated/prisma/client';

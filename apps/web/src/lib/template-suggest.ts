@@ -1,4 +1,4 @@
-import { TEMPLATES_PATH, type ProofTemplate } from '@dpdp-kit/shared';
+import { TEMPLATES_PATH, type ProofTemplate } from '@neeti-bharat/shared';
 
 /** A `/` being typed at the start of a word, and what follows it. */
 export interface TemplateTrigger {

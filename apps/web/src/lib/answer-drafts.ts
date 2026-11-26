@@ -1,4 +1,4 @@
-import { isValidProfileValue, type ProfileEntryResponse } from '@dpdp-kit/shared';
+import { isValidProfileValue, type ProfileEntryResponse } from '@neeti-bharat/shared';
 
 /** Answers being typed, by key, before they are saved. */
 export type Drafts = Record<string, string>;

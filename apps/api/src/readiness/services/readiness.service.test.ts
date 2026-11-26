@@ -1,4 +1,4 @@
-import { READINESS_QUESTIONS, scoreReadiness, type ReadinessAnswers } from '@dpdp-kit/shared';
+import { READINESS_QUESTIONS, scoreReadiness, type ReadinessAnswers } from '@neeti-bharat/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { ActivityService } from '../../activity/services/activity.service';
 import type { ReadinessCheck } from '../../generated/prisma/client';

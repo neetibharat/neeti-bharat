@@ -1,4 +1,4 @@
-import { AZURE_CHECK_GROUPS, AZURE_CHECK_IDS } from '@dpdp-kit/shared';
+import { AZURE_CHECK_GROUPS, AZURE_CHECK_IDS } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   webAppFtp,

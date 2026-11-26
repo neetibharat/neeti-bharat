@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ORGANIZATION_HEADER } from '@dpdp-kit/shared';
+import { ORGANIZATION_HEADER } from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 import { setOrganization } from '../../core/org/org-context';
 import { NO_API_KEY_KEY, NO_ORGANIZATION_KEY, ROLES_KEY } from '../../core/org/roles.decorator';

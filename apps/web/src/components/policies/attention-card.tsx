@@ -8,7 +8,7 @@ import {
   IconPencil,
   type Icon,
 } from '@tabler/icons-react';
-import { policyLabel, type PolicyResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { AttentionList } from '@/components/base/attention-list/attention-list';
 import type { RowTone } from '@/components/base/icon-link-row/icon-link-row';

@@ -7,7 +7,7 @@ import {
   type PolicyResponse,
   type ProofCounts,
   type RuleResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';

@@ -4,7 +4,7 @@ import {
   type AzureEditableField,
   type ConnectionCheckResult,
   type UpdateConnectionRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /**
  * Which sentence of a result to show. A pass has its own, anything else that was found is "problem" (a warning or a

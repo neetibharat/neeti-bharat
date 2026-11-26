@@ -1,4 +1,4 @@
-import type { MeResponse } from '@dpdp-kit/shared';
+import type { MeResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { toSessionUser } from './session-user';
 

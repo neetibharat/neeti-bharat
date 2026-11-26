@@ -36,7 +36,7 @@ describe('renderPdf', () => {
     expect(text).toContain('Cloud configuration check report');
     expect(text).toContain('Production (Azure)');
     expect(text).toContain('Detail of check 2');
-    expect(text).toContain('Made by DPDP Kit on 2026-03-10 09:00 UTC');
+    expect(text).toContain('Made by Neeti Bharat on 2026-03-10 09:00 UTC');
   });
 
   it('carries on to more pages when the rows do not fit on one', async () => {

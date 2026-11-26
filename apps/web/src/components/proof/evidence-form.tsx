@@ -4,7 +4,7 @@ import {
   EVIDENCE_NOTE_MAX_LENGTH,
   EVIDENCE_TITLE_MAX_LENGTH,
   type AddEvidenceRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

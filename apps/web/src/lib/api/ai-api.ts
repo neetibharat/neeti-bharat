@@ -2,28 +2,18 @@ import type {
   AiSettingsResponse,
   PolicyImportResponse,
   SaveAiFeaturesRequest,
-  SaveAiSettingsRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 
-// Setting up and removing the AI service are also written to the activity log.
+// Choosing which features are on is also written to the activity log. The service itself is set in the install's environment.
 export const aiApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getAiSettings: build.query<AiSettingsResponse, void>({
       query: () => '/ai',
       providesTags: ['Ai'],
     }),
-    // The key is tried with the service first, so this can take a few seconds. It is not sent back.
-    saveAiSettings: build.mutation<AiSettingsResponse, SaveAiSettingsRequest>({
-      query: (body) => ({ url: '/ai', method: 'PUT', body }),
-      invalidatesTags: [...CHANGES.ai],
-    }),
-    removeAiSettings: build.mutation<void, void>({
-      query: () => ({ url: '/ai', method: 'DELETE' }),
-      invalidatesTags: [...CHANGES.ai],
-    }),
-    // Switching features off or on leaves the key and the model alone.
+    // Which features are on.
     setAiFeatures: build.mutation<AiSettingsResponse, SaveAiFeaturesRequest>({
       query: (body) => ({ url: '/ai/features', method: 'PUT', body }),
       invalidatesTags: [...CHANGES.ai],
@@ -40,10 +30,4 @@ export const aiApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAiSettingsQuery,
-  useSaveAiSettingsMutation,
-  useRemoveAiSettingsMutation,
-  useImportPolicyMutation,
-  useSetAiFeaturesMutation,
-} = aiApi;
+export const { useGetAiSettingsQuery, useImportPolicyMutation, useSetAiFeaturesMutation } = aiApi;

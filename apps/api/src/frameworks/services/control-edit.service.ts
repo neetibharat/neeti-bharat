@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { type AssigneesResponse, type ControlResponse } from '@dpdp-kit/shared';
+import { type AssigneesResponse, type ControlResponse } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { archivedOrNotFound, activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';

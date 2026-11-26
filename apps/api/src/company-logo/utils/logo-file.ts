@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { HttpStatus } from '@nestjs/common';
-import { LOGO_EXTENSIONS, LOGO_MAX_BYTES, type LogoExtension } from '@dpdp-kit/shared';
+import { LOGO_EXTENSIONS, LOGO_MAX_BYTES, type LogoExtension } from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 import { extensionOf, sanitiseFileName } from '../../frameworks/utils/evidence-file';
 import type { UploadedFile } from '../../frameworks/utils/evidence-file';

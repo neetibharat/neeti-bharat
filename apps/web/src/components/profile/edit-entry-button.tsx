@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPencil } from '@tabler/icons-react';
-import { isValidProfileValue, type ProfileEntryResponse } from '@dpdp-kit/shared';
+import { isValidProfileValue, type ProfileEntryResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

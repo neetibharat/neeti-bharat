@@ -1,4 +1,8 @@
-import { READINESS_DOMAINS, READINESS_QUESTIONS, type ReadinessAnswers } from '@dpdp-kit/shared';
+import {
+  READINESS_DOMAINS,
+  READINESS_QUESTIONS,
+  type ReadinessAnswers,
+} from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   answerOptions,

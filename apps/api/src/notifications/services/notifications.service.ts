@@ -7,7 +7,7 @@ import {
   type NotificationPreferencesResponse,
   type NotificationRoleDefaultsResponse,
   type NotificationUnreadResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import type { Actor } from '../../core/common/actor';
 import type { UpdatePreferencesInput, UpdateRoleDefaultsInput } from '../dto/notification.dto';

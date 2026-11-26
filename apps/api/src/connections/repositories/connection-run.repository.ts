@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { ConnectionCheckResult } from '@neeti-bharat/shared';
 import type { ConnectionRun, Prisma } from '../../generated/prisma/client';
 import { orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';

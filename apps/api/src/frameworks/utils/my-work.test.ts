@@ -1,4 +1,4 @@
-import type { PolicyStatus } from '@dpdp-kit/shared';
+import type { PolicyStatus } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import type { ControlRow, PolicyBriefs } from './checklist-view';
 import {

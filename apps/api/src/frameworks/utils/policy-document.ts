@@ -1,4 +1,4 @@
-import { POLICY_DOCUMENT_MAX_BYTES, type DocNode, type PolicyDocument } from '@dpdp-kit/shared';
+import { POLICY_DOCUMENT_MAX_BYTES, type DocNode, type PolicyDocument } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 // Loose objects keep what the editor adds (a link's address, for one); only the outline is checked.

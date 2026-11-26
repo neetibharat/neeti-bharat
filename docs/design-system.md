@@ -55,7 +55,7 @@ No `font-bold` or `font-extrabold`: they look heavy and uneven.
 
 The dark theme is the same semantic tokens with other values, in one block at the end of `theme.css` (`:root[data-theme='dark']`). Components use only the semantic layer, so they need nothing of their own; a new token needs a dark value in that block.
 
-- **Choice:** Appearance in the account menu is System, Light or Dark, kept in this browser under `dpdp_theme` (`lib/theme.ts`, `lib/hooks/use-theme.ts`). System follows the device and changes with it.
+- **Choice:** Appearance in the account menu is System, Light or Dark, kept in this browser under `app_theme` (`lib/theme.ts`, `lib/hooks/use-theme.ts`). System follows the device and changes with it.
 - **No flash:** a small script in the page head (`THEME_BOOT_SCRIPT`) sets `data-theme` on `<html>` before anything paints, which is why `<html>` carries `suppressHydrationWarning`.
 - **On a brand fill** (buttons, tooltips) the text is `on-brand`, which is white in the light theme and the dark page colour in the dark one.
 

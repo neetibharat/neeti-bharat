@@ -121,7 +121,7 @@ function Typography() {
         </p>
       ))}
       <p className="font-mono text-body text-fg">
-        mono · dpdp_live_9f3a7c21 · 3a7f09c2e1b4 · breachReportWindow
+        mono · sk_live_9f3a7c21 · 3a7f09c2e1b4 · breachReportWindow
       </p>
     </Section>
   );

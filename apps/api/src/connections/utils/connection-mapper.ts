@@ -7,7 +7,7 @@ import type {
   ConnectionRunSummary,
   ConnectionSchedule,
   ConnectionSummary,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { Connection, ConnectionRun } from '../../generated/prisma/client';
 import type { ConnectionRunSummaryRow } from '../repositories/connection-run.repository';
 import {

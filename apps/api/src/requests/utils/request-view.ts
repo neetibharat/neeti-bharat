@@ -5,7 +5,7 @@ import type {
   RequestStatus,
   RequestType,
   TaskOutcome,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { iso } from '../../frameworks/utils/dates';
 import { closedOnTime, isOverdue } from './request-due';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { APP_ROLES, type AccessLevel, type AppRole } from '@dpdp-kit/shared';
+import { APP_ROLES, type AccessLevel, type AppRole } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Select } from '@/components/base/select/select';
 

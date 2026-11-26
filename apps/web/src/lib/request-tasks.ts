@@ -4,7 +4,7 @@ import {
   type RequestTaskResponse,
   type TaskOutcome,
   type UpdateRequestTaskRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** What stops a request from being closed: the identity check first, then tasks still to do. Null when nothing does. */
 export type CloseBlocker = 'identity' | 'tasks' | null;

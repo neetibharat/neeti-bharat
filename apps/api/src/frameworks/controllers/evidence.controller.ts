@@ -16,7 +16,7 @@ import {
   type EvidenceDownloadResponse,
   type EvidenceListResponse,
   type EvidenceResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';

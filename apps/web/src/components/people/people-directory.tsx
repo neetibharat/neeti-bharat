@@ -1,7 +1,7 @@
 'use client';
 
 import { IconSearch } from '@tabler/icons-react';
-import { PEOPLE_PAGE_SIZE, type PeopleCounts, type PeopleListResponse } from '@dpdp-kit/shared';
+import { PEOPLE_PAGE_SIZE, type PeopleCounts, type PeopleListResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

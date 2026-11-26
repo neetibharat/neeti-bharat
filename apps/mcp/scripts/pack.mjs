@@ -11,4 +11,4 @@ const manifest = JSON.parse(readFileSync('manifest.json', 'utf8'));
 if (process.env.MCP_VERSION) manifest.version = process.env.MCP_VERSION;
 writeFileSync('extension/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 
-execSync('pnpm exec mcpb pack extension dpdp-kit.mcpb', { stdio: 'inherit' });
+execSync('pnpm exec mcpb pack extension neeti-bharat.mcpb', { stdio: 'inherit' });

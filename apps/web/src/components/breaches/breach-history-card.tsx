@@ -1,6 +1,6 @@
 'use client';
 
-import type { BreachStepResponse } from '@dpdp-kit/shared';
+import type { BreachStepResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 

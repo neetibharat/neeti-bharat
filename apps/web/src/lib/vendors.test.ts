@@ -1,4 +1,4 @@
-import type { VendorResponse } from '@dpdp-kit/shared';
+import type { VendorResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   NEW_VENDOR,

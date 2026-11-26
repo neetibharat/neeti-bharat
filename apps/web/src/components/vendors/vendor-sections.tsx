@@ -1,6 +1,6 @@
 'use client';
 
-import type { VendorResponse } from '@dpdp-kit/shared';
+import type { VendorResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/base/badge/badge';

@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { MyPoliciesResponse, TeamPoliciesResponse } from '@dpdp-kit/shared';
+import type { MyPoliciesResponse, TeamPoliciesResponse } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import { PersonDirectory } from '../../people/services/person-directory';

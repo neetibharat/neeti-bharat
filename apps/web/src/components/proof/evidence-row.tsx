@@ -1,13 +1,12 @@
 'use client';
 
 import { IconDownload, IconFile, IconLink, IconNote, IconTrash } from '@tabler/icons-react';
-import type { EvidenceResponse } from '@dpdp-kit/shared';
+import type { EvidenceResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { useCan } from '@/components/providers/user-provider';
 import { Button } from '@/components/base/button/button';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';
-import { CheckProofButton } from '@/components/ai-tools/check-proof-button';
 import { useDownloadEvidenceMutation, useRemoveEvidenceMutation } from '@/lib/api/evidence-api';
 import { formatFileSize } from '@/lib/file-size';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
@@ -40,7 +39,6 @@ export function EvidenceRow(props: { controlId: string; item: EvidenceResponse }
       </div>
       <div className="flex shrink-0 items-center gap-1">
         {item.kind === 'file' && <DownloadButton download={download} />}
-        <CheckProofButton controlId={props.controlId} item={item} />
         {canEdit && <RemoveEvidence controlId={props.controlId} item={item} />}
       </div>
     </li>

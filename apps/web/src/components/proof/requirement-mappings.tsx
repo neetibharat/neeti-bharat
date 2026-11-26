@@ -1,6 +1,6 @@
 'use client';
 
-import { policyLabel, type RequirementControlResponse } from '@dpdp-kit/shared';
+import { policyLabel, type RequirementControlResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

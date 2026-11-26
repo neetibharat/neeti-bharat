@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { ProofCheckResponse } from '@dpdp-kit/shared';
+import type { ProofCheckResponse } from '@neeti-bharat/shared';
 import type { ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import { ProofReader, type ProofToRead } from '../../frameworks/services/proof-reader';

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { RulePageResponse } from '@dpdp-kit/shared';
+import type { RulePageResponse } from '@neeti-bharat/shared';
 import { strFromU8, unzipSync } from 'fflate';
 import { describe, expect, it, vi } from 'vitest';
 import type { ActivityService } from '../../activity/services/activity.service';

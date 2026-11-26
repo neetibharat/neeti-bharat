@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { MyWorkItem } from '@dpdp-kit/shared';
+import type { MyWorkItem } from '@neeti-bharat/shared';
 import { isNoticeTime, noticeCandidates } from './notice-candidates';
 
 const NOW = new Date('2026-11-10T04:00:00Z');

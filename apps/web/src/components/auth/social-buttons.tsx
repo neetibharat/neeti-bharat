@@ -1,7 +1,7 @@
 'use client';
 
 import { IconBrandGoogle, IconBrandWindows, type Icon } from '@tabler/icons-react';
-import type { AuthProvidersResponse } from '@dpdp-kit/shared';
+import type { AuthProvidersResponse } from '@neeti-bharat/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { authClient } from '@/lib/auth-client';

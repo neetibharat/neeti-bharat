@@ -1,7 +1,7 @@
 'use client';
 
-import { CONNECTION_NAME_MAX_LENGTH, CONNECTION_SECRET_MAX_LENGTH } from '@dpdp-kit/shared';
-import type { ConnectionSummary } from '@dpdp-kit/shared';
+import { CONNECTION_NAME_MAX_LENGTH, CONNECTION_SECRET_MAX_LENGTH } from '@neeti-bharat/shared';
+import type { ConnectionSummary } from '@neeti-bharat/shared';
 import { IconPencil } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';

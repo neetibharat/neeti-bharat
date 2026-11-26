@@ -1,6 +1,6 @@
 'use client';
 
-import { REQUEST_TEXT_MAX_LENGTH, type RequestResponse } from '@dpdp-kit/shared';
+import { REQUEST_TEXT_MAX_LENGTH, type RequestResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

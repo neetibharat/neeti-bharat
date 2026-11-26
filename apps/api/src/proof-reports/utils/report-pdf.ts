@@ -69,7 +69,7 @@ export function renderPdf(doc: ReportDoc, madeAt: Date): Promise<Buffer> {
     const pdf = new PDFDocument({
       size: 'A4',
       margin: MARGIN,
-      info: { Title: doc.title, Creator: 'DPDP Kit', Producer: 'DPDP Kit' },
+      info: { Title: doc.title, Creator: 'Neeti Bharat', Producer: 'Neeti Bharat' },
     });
     const chunks: Buffer[] = [];
     pdf.on('data', (chunk: Buffer) => chunks.push(chunk));
@@ -80,7 +80,7 @@ export function renderPdf(doc: ReportDoc, madeAt: Date): Promise<Buffer> {
     for (const section of doc.sections) drawSection(pdf, section);
     pdf.moveDown(2).fontSize(8).fillColor(MUTED);
     pdf.text(
-      `Made by DPDP Kit on ${dateTimeOf(madeAt)}. Read from the records the kit holds; nothing was changed.`,
+      `Made by Neeti Bharat on ${dateTimeOf(madeAt)}. Read from the records the kit holds; nothing was changed.`,
     );
     pdf.end();
   });

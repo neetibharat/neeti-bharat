@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
-import { PROOF_SNAPSHOT_ACTOR } from '@dpdp-kit/shared';
+import { PROOF_SNAPSHOT_ACTOR } from '@neeti-bharat/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { FileStorage } from '../../core/storage/file-storage';

@@ -1,4 +1,4 @@
-import type { WebsiteCheckId, WebsiteCheckResult } from '@dpdp-kit/shared';
+import type { WebsiteCheckId, WebsiteCheckResult } from '@neeti-bharat/shared';
 
 /**
  * The messages a result can use, under `websiteCheck.checks.<id>.` in en.json. A result is `<status>`, with a suffix

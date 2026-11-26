@@ -1,4 +1,4 @@
-import type { DeadlineTab, DeadlinesResponse } from '@dpdp-kit/shared';
+import type { DeadlineTab, DeadlinesResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 export interface DeadlinesQuery {

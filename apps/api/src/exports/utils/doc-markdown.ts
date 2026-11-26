@@ -1,4 +1,4 @@
-import type { DocNode, PolicyDocument } from '@dpdp-kit/shared';
+import type { DocNode, PolicyDocument } from '@neeti-bharat/shared';
 
 const MAX_DEPTH = 20;
 

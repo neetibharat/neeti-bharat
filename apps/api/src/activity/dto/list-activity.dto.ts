@@ -1,4 +1,4 @@
-import { ACTIVITY_ACTIONS, ACTIVITY_PAGE_SIZE } from '@dpdp-kit/shared';
+import { ACTIVITY_ACTIONS, ACTIVITY_PAGE_SIZE } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const listActivitySchema = z.object({

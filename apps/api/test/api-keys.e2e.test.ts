@@ -2,7 +2,7 @@ import type {
   ApiKeyListResponse,
   CreatedApiKeyResponse,
   OrganizationSummary,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 
@@ -54,7 +54,7 @@ afterAll(async () => {
 describe('making and listing keys', () => {
   it('shows the whole key once, and the list never again', async () => {
     const made = await makeKey('member', 'Listed key');
-    expect(made.key).toMatch(/^dpdp_[0-9a-f]{64}$/);
+    expect(made.key).toMatch(/^sk_live_[0-9a-f]{64}$/);
     const listed = await world.alice.get<ApiKeyListResponse>('/v1/api-keys', world.alpha);
     expect(listed.text).not.toContain(made.key);
     expect(listed.body.items.find((item) => item.id === made.id)).toMatchObject({
@@ -154,7 +154,7 @@ describe('calling with a key', () => {
   });
 
   it('is turned away when the key is wrong', async () => {
-    expect((await world.app.withKey('dpdp_nope').get('/v1/breaches')).status).toBe(401);
+    expect((await world.app.withKey('sk_live_nope').get('/v1/breaches')).status).toBe(401);
     expect((await world.app.withKey('').get('/v1/breaches')).status).toBe(401);
   });
 

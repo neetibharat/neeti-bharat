@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { documentToMarkdown, type PolicyCheckResponse } from '@dpdp-kit/shared';
+import { documentToMarkdown, type PolicyCheckResponse } from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 import { PoliciesService } from '../../frameworks/services/policies.service';
 import { PolicyScopeReader } from '../../frameworks/services/policy-scope-reader';

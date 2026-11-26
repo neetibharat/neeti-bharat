@@ -28,7 +28,7 @@ export class InvitationRepository {
       where: { id: currentOrganizationId() },
       select: { name: true },
     });
-    return row?.name ?? 'DPDP Kit';
+    return row?.name ?? 'Neeti Bharat';
   }
 
   /** Open invitations for these emails, newest first, so the latest one for an email wins. */

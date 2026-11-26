@@ -10,7 +10,7 @@ import {
   type RulePageResponse,
   type SaveFrameworkRequest,
   type SaveRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import type { Api } from '../client.js';
 import { defineTool } from '../tool.js';

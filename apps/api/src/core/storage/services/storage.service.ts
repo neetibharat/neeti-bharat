@@ -3,7 +3,7 @@ import {
   EVIDENCE_FILE_EXTENSIONS,
   EVIDENCE_FILE_MAX_BYTES,
   type StorageStatusResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { FileStorage } from '../file-storage';
 
 @Injectable()

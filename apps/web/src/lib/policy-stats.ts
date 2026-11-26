@@ -3,7 +3,7 @@ import {
   type JobRole,
   type PolicyResponse,
   type PolicyStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 export type StatusCounts = Record<PolicyStatus, number>;
 

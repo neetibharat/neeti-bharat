@@ -5,7 +5,7 @@ import {
   GITHUB_KEY_MAX_LENGTH,
   type GithubInstallation,
   type GithubSelection,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

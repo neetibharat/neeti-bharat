@@ -3,7 +3,7 @@ import type {
   ProofByControlResponse,
   ProofOverviewResponse,
   ProofRequirementDetailResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound, archivedOrNotFound } from '../../core/common/active';
 import { newCustomId } from '../../core/common/ids';

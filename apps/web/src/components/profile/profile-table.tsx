@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileEntryResponse, ProfileGroup } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse, ProfileGroup } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactElement } from 'react';
 import { Badge } from '@/components/base/badge/badge';

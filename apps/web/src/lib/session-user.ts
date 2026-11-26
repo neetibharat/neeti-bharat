@@ -1,4 +1,4 @@
-import type { AppRole, MeResponse, OrganizationSummary } from '@dpdp-kit/shared';
+import type { AppRole, MeResponse, OrganizationSummary } from '@neeti-bharat/shared';
 
 /** The signed-in person as the app uses them: who they are, and the organisation they are working in with their role there. */
 export interface SessionUser {

@@ -1,4 +1,4 @@
-import { REQUEST_DUE_SOON_DAYS, type RequestStatus } from '@dpdp-kit/shared';
+import { REQUEST_DUE_SOON_DAYS, type RequestStatus } from '@neeti-bharat/shared';
 import { timeLeft } from './breach-clock';
 
 export type DueState = 'done' | 'overdue' | 'soon' | 'later';

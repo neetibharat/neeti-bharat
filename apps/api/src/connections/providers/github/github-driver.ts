@@ -1,4 +1,4 @@
-import type { CheckId, ConnectionCheckResult, GithubSelection } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult, GithubSelection } from '@neeti-bharat/shared';
 import type { ConnectionDriver, Credentials, Identifiers } from '../connection-driver';
 import type { GithubConnector, GithubCredentials } from './github-api';
 import { runGithubChecks } from './run-github-checks';

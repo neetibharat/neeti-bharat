@@ -1,6 +1,6 @@
 'use client';
 
-import type { VendorResponse } from '@dpdp-kit/shared';
+import type { VendorResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import {
   Table,

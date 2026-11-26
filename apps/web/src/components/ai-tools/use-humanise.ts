@@ -1,6 +1,6 @@
 'use client';
 
-import { customAnswerLabel } from '@dpdp-kit/shared';
+import { customAnswerLabel } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { isProfileKey } from '@/lib/guards';
 

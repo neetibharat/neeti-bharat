@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EXPORT_DATASETS, type ExportDataset } from '@dpdp-kit/shared';
+import { EXPORT_DATASETS, type ExportDataset } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { FileStorage } from '../../core/storage/file-storage';
 import { ExportRepository } from '../repositories/export.repository';

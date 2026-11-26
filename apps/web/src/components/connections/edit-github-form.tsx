@@ -6,7 +6,7 @@ import {
   type ConnectionSummary,
   type GithubSelection,
   type UpdateConnectionRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

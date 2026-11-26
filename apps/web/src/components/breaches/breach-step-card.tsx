@@ -1,6 +1,6 @@
 'use client';
 
-import { BREACH_NOTE_MAX_LENGTH, type BreachResponse, type BreachStep } from '@dpdp-kit/shared';
+import { BREACH_NOTE_MAX_LENGTH, type BreachResponse, type BreachStep } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

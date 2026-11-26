@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { JobRole } from '@dpdp-kit/shared';
+import type { JobRole } from '@neeti-bharat/shared';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Person, RoleAssignment } from '../../generated/prisma/client';

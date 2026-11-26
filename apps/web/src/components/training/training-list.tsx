@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCheck, IconExternalLink } from '@tabler/icons-react';
-import type { MyTrainingItem } from '@dpdp-kit/shared';
+import type { MyTrainingItem } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Button } from '@/components/base/button/button';

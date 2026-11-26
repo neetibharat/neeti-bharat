@@ -1,6 +1,6 @@
 'use client';
 
-import { POLICY_IMPORT_MAX_BYTES, type PolicyImportResponse } from '@dpdp-kit/shared';
+import { POLICY_IMPORT_MAX_BYTES, type PolicyImportResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { Alert } from '@/components/base/alert/alert';
@@ -8,6 +8,7 @@ import { DropZone } from '@/components/base/drop-zone/drop-zone';
 import { useCan } from '@/components/providers/user-provider';
 import { Link } from '@/i18n/navigation';
 import { useGetAiSettingsQuery, useImportPolicyMutation } from '@/lib/api/ai-api';
+import { featureAvailable } from '@/lib/ai-features';
 import { formatFileSize } from '@/lib/file-size';
 import { useErrorMessage } from '@/lib/hooks/use-error-message';
 import { checkImportFile, IMPORT_PICKER_TYPES } from '@/lib/policy-import-file';
@@ -48,7 +49,7 @@ function ImportNotes({ imported, mode }: { imported: ImportedPolicy; mode: Impor
   );
 }
 
-/** Says why a file cannot be read yet: nothing is set up, and who can do something about it. */
+/** Says why a file cannot be read yet: AI help is not on, and who can do something about it. */
 function NotSetUp() {
   const t = useTranslations('policies.import');
   const { isAdmin } = useCan();
@@ -121,7 +122,7 @@ export function ImportFromFile(props: ImportFromFileProps) {
   const { data: settings } = useGetAiSettingsQuery();
   const { send, isLoading, problem } = useReadFile(props.imported, props.onRead);
   if (!settings) return null;
-  if (!settings.provider) {
+  if (!featureAvailable(settings, 'policy_import', true)) {
     return (
       <Panel mode={props.mode}>
         <NotSetUp />

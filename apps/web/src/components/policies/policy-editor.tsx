@@ -15,7 +15,7 @@ import {
 import Highlight from '@tiptap/extension-highlight';
 import { EditorContent, useEditor, useEditorState, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { PROFILE_FIELDS, type PolicyDocument } from '@dpdp-kit/shared';
+import { PROFILE_FIELDS, type PolicyDocument } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo } from 'react';
 import { Button } from '@/components/base/button/button';

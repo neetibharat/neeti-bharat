@@ -12,7 +12,7 @@ import {
   VENDOR_TREATMENTS,
   VENDOR_TREATMENT_NOTE_MAX_LENGTH,
   VENDOR_URL_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { dayString } from '../../frameworks/dto/day-string';
 

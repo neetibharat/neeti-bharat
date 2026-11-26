@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { VendorCounts, VendorTab } from '@dpdp-kit/shared';
+import type { VendorCounts, VendorTab } from '@neeti-bharat/shared';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type {

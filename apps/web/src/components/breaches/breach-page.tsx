@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft } from '@tabler/icons-react';
-import type { BreachResponse } from '@dpdp-kit/shared';
+import type { BreachResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { PageHeader } from '@/components/base/page-header/page-header';

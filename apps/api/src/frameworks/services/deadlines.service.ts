@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { DeadlinesResponse } from '@dpdp-kit/shared';
+import type { DeadlinesResponse } from '@neeti-bharat/shared';
 import { PersonDirectory } from '../../people/services/person-directory';
 import type { ListDeadlinesQuery } from '../dto/deadlines.dto';
 import { ControlRepository } from '../repositories/control.repository';

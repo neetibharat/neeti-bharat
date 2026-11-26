@@ -4,7 +4,7 @@ import {
   type RequestListItem,
   type RequestStatus,
   type RequestType,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useState } from 'react';
 import { useLazyGetRequestsQuery } from '@/lib/api/requests-api';
 import { appendUnique, hasMore, type BoardCardData } from '@/lib/request-board';

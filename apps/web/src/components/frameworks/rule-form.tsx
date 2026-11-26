@@ -5,7 +5,7 @@ import {
   REQUIREMENT_SUMMARY_MAX_LENGTH,
   REQUIREMENT_TITLE_MAX_LENGTH,
   type SaveRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { ConnectionCheckResult } from '@neeti-bharat/shared';
 import { countBySeverity, visibleResults } from './cloud-tests';
 
 const results: ConnectionCheckResult[] = [

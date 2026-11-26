@@ -1,6 +1,6 @@
 'use client';
 
-import { POLICY_STATUSES, policyLabel, type PolicyResponse } from '@dpdp-kit/shared';
+import { POLICY_STATUSES, policyLabel, type PolicyResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

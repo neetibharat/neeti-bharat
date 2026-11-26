@@ -1,6 +1,6 @@
-import type { WebsiteCheckResult } from '@dpdp-kit/shared';
+import type { WebsiteCheckResult } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
-import { WEBSITE_CHECK_IDS } from '@dpdp-kit/shared';
+import { WEBSITE_CHECK_IDS } from '@neeti-bharat/shared';
 import { CHECK_GROUPS, checkMessageKey, WEBSITE_MESSAGE_KEYS } from './website-check';
 
 const key = (result: WebsiteCheckResult) => checkMessageKey(result);

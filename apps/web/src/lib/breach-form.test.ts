@@ -1,4 +1,4 @@
-import type { BreachResponse } from '@dpdp-kit/shared';
+import type { BreachResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   breachRequestOf,

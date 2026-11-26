@@ -1,6 +1,11 @@
 'use client';
 
-import { RISK_LEVELS, riskReading, type VendorRating, type VendorResponse } from '@dpdp-kit/shared';
+import {
+  RISK_LEVELS,
+  riskReading,
+  type VendorRating,
+  type VendorResponse,
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { ContourMap, type MapBand, type MapPoint } from '@/components/graphs/contour-map';
 import { LEVEL_COLOR, levelRange } from '@/lib/vendor-risk';

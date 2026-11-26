@@ -3,7 +3,7 @@ import {
   requestRef,
   type BreachStep,
   type ChecklistResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { ExportRepository } from '../repositories/export.repository';
 import type { Cell } from './csv';
 

@@ -6,7 +6,7 @@ import {
   POLICY_DOCUMENT_MAX_BYTES,
   markdownToDocument,
   type PolicyImportResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import type { AiPrompt } from '../providers/ai-client';
 import { UnusableReply, jsonIn, within } from './ai-reply';

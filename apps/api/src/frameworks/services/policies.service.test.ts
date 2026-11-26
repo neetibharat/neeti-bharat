@@ -1,4 +1,4 @@
-import { markdownToDocument, POLICY_TEXTS, type PolicyDocument } from '@dpdp-kit/shared';
+import { markdownToDocument, POLICY_TEXTS, type PolicyDocument } from '@neeti-bharat/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { AppException } from '../../core/common/app.exception';
 import type { ActivityService } from '../../activity/services/activity.service';

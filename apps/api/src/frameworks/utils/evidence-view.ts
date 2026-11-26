@@ -3,7 +3,7 @@ import {
   proofStatus,
   type EvidenceResponse,
   type ProofRequirementResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { Evidence } from '../../generated/prisma/client';
 import type { RequirementWithEvidence } from '../repositories/proof-requirement.repository';
 import { day, iso, lastProvided } from './dates';

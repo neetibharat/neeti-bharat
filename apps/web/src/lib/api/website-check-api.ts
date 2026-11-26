@@ -2,8 +2,8 @@ import type {
   RunWebsiteCheckRequest,
   WebsiteCheckListResponse,
   WebsiteCheckResponse,
-} from '@dpdp-kit/shared';
-import { WEBSITE_CHECK_PAGE_SIZE } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import { WEBSITE_CHECK_PAGE_SIZE } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

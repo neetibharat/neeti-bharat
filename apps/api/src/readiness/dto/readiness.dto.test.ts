@@ -1,4 +1,4 @@
-import { READINESS_QUESTIONS } from '@dpdp-kit/shared';
+import { READINESS_QUESTIONS } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { takeReadinessSchema } from './readiness.dto';
 

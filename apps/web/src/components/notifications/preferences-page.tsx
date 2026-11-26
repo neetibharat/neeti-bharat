@@ -1,6 +1,6 @@
 'use client';
 
-import { NOTIFICATION_KINDS, type NotificationPreference } from '@dpdp-kit/shared';
+import { NOTIFICATION_KINDS, type NotificationPreference } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Checkbox } from '@/components/base/checkbox/checkbox';

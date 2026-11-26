@@ -3,7 +3,7 @@ import {
   type MyWorkItem,
   type NotificationKind,
   type NotificationState,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** A notice that should exist for someone, before it is checked against the ones already made. */
 export interface NoticeCandidate {

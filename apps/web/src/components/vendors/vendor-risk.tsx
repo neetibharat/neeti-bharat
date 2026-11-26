@@ -5,7 +5,7 @@ import {
   type RiskReading,
   type VendorRating,
   type VendorResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Card } from '@/components/base/card/card';

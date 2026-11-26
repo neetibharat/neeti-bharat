@@ -1,4 +1,4 @@
-import type { SearchHit } from '@dpdp-kit/shared';
+import type { SearchHit } from '@neeti-bharat/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { SearchRepository } from '../repositories/search.repository';
 import { SearchService } from './search.service';

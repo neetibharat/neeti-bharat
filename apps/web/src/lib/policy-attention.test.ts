@@ -1,4 +1,4 @@
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { attentionItems, nextDrafts } from './policy-attention';
 

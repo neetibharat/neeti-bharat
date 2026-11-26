@@ -4,7 +4,7 @@ import {
   POLICY_ACCEPTANCE_PAGE_SIZE,
   type MyPoliciesResponse,
   type TeamPoliciesResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { z } from 'zod';
 import { actorOf } from '../../core/common/actor';

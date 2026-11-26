@@ -1,6 +1,11 @@
 'use client';
 
-import { RISK_LEVELS, riskReading, type RiskReading, type VendorResponse } from '@dpdp-kit/shared';
+import {
+  RISK_LEVELS,
+  riskReading,
+  type RiskReading,
+  type VendorResponse,
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { TickRamp, type RampBand, type RampMark } from '@/components/graphs/tick-ramp';

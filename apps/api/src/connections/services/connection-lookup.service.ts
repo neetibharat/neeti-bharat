@@ -3,7 +3,7 @@ import type {
   DiscoverGithubResponse,
   FindSubscriptionsResponse,
   GithubRepositoriesResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { SecretBox } from '../../core/secrets/secret-box';

@@ -4,7 +4,7 @@ import {
   type FrameworkSummaryResponse,
   type PolicyCoverageItem,
   type RuleResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import {
   controlView,
   type ControlRow,

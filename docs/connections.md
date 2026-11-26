@@ -1,14 +1,14 @@
 # Connections
 
-A connection lets DPDP Kit read a system that holds your data and check how it is set up against what the DPDP Act expects, such as whether storage is encrypted, whether a database is open to the internet, and whether everyone has a second sign-in step. There are two providers: Microsoft Azure with Entra ID, and GitHub. Connections are under **Connections** in the sidebar, and their results are under **Compliance checks**.
+A connection lets Neeti Bharat read a system that holds your data and check how it is set up against what the DPDP Act expects, such as whether storage is encrypted, whether a database is open to the internet, and whether everyone has a second sign-in step. There are two providers: Microsoft Azure with Entra ID, and GitHub. Connections are under **Connections** in the sidebar, and their results are under **Compliance checks**.
 
-DPDP Kit only reads. An Azure connection signs in with an app registration that holds read-only roles, a GitHub connection with a GitHub App that holds read-only permissions, and no check changes anything in the system.
+Neeti Bharat only reads. An Azure connection signs in with an app registration that holds read-only roles, a GitHub connection with a GitHub App that holds read-only permissions, and no check changes anything in the system.
 
 ## Setting up Azure
 
-Someone with admin rights in Azure makes the app once, and any admin of DPDP Kit then connects it with the form on the Connections page. The form's **How to set this up in Azure** guide shows these steps, and says who can do each:
+Someone with admin rights in Azure makes the app once, and any admin of Neeti Bharat then connects it with the form on the Connections page. The form's **How to set this up in Azure** guide shows these steps, and says who can do each:
 
-1. In Microsoft Entra ID, open **App registrations** and choose **New registration**. Name it `DPDP Kit` and keep it single tenant.
+1. In Microsoft Entra ID, open **App registrations** and choose **New registration**. Name it `Neeti Bharat` and keep it single tenant.
 2. On its Overview page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
 3. Under **Certificates and secrets**, make a client secret, note when it expires, and copy its value. It is shown only once.
 4. On the subscription, open **Access control (IAM)** and add the **Reader** role for the app. This needs the Owner or User Access Administrator role on the subscription.
@@ -25,9 +25,9 @@ On a GitHub connection, **Edit** changes the name, which repositories are read (
 
 ## Setting up GitHub
 
-An owner of the GitHub organisation makes a GitHub App once, and any admin of DPDP Kit then connects it with the form on the Connections page. The form's **How to set this up in GitHub** guide shows these steps, and says who can do each:
+An owner of the GitHub organisation makes a GitHub App once, and any admin of Neeti Bharat then connects it with the form on the Connections page. The form's **How to set this up in GitHub** guide shows these steps, and says who can do each:
 
-1. In the organisation's **Settings**, open **Developer settings**, then **GitHub Apps**, then **New GitHub App**. Name it `DPDP Kit` with the company name, give any homepage URL, and untick **Active** under Webhook.
+1. In the organisation's **Settings**, open **Developer settings**, then **GitHub Apps**, then **New GitHub App**. Name it `Neeti Bharat` with the company name, give any homepage URL, and untick **Active** under Webhook.
 2. Under **Repository permissions** set **Administration**, **Code scanning alerts**, **Dependabot alerts** and **Secret scanning alerts** to **Read-only**. Under **Organization permissions** set **Administration** and **Members** to **Read-only**. Everything else stays at No access.
 3. Under **Where can this GitHub App be installed?** choose **Only on this account** and create the App.
 4. Copy the **App ID** from the App's page. It is not the Client ID.

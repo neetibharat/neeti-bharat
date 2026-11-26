@@ -1,7 +1,7 @@
 'use client';
 
-import { isValidProfileValue, type ProfileEntryResponse } from '@dpdp-kit/shared';
-import { LOGO_EXTENSIONS, LOGO_MAX_BYTES } from '@dpdp-kit/shared';
+import { isValidProfileValue, type ProfileEntryResponse } from '@neeti-bharat/shared';
+import { LOGO_EXTENSIONS, LOGO_MAX_BYTES } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/components/base/button/button';

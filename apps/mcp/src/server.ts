@@ -21,7 +21,7 @@ export const TOOLS: Registration[] = [
 
 export function createServer(api: Api): McpServer {
   const server = new McpServer(
-    { name: 'dpdp-kit', version: '0.1.0' },
+    { name: 'neeti-bharat', version: '0.1.0' },
     { instructions: INSTRUCTIONS },
   );
   for (const register of TOOLS) register(server, api);

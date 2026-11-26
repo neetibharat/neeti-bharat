@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { WEBSITE_CHECK_PAGE_SIZE, WEBSITE_URL_MAX_LENGTH } from '@dpdp-kit/shared';
+import { WEBSITE_CHECK_PAGE_SIZE, WEBSITE_URL_MAX_LENGTH } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const runWebsiteCheckSchema = z.object({

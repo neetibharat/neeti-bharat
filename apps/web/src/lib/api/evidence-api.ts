@@ -7,7 +7,7 @@ import type {
   ProofOverviewResponse,
   ProofRequirementDetailResponse,
   SaveProofRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { ProofQuery } from '../proof-query';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';

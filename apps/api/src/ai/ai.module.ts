@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ActivityModule } from '../activity/activity.module';
-import { SecretsModule } from '../core/secrets/secrets.module';
 import { FrameworksModule } from '../frameworks/frameworks.module';
 import { VendorsModule } from '../vendors/vendors.module';
 import { ProfileModule } from '../profile/profile.module';
@@ -16,7 +15,7 @@ import { PolicyTailorService } from './services/policy-tailor.service';
 import { ProofCheckService } from './services/proof-check.service';
 
 @Module({
-  imports: [ActivityModule, SecretsModule, ProfileModule, FrameworksModule, VendorsModule],
+  imports: [ActivityModule, ProfileModule, FrameworksModule, VendorsModule],
   controllers: [AiController, AiToolsController],
   providers: [
     AiSettingsService,

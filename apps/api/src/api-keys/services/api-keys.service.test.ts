@@ -11,7 +11,7 @@ const row = (over: Partial<ApiKey> = {}): ApiKey => ({
   organizationId: 'org-1',
   name: 'Claude Code',
   role: 'member',
-  prefix: 'dpdp_ab12cd',
+  prefix: 'sk_live_ab12cd',
   keyHash: 'hash',
   createdById: 'u1',
   createdByName: 'Alice',
@@ -42,7 +42,7 @@ describe('ApiKeysService.create', () => {
   it('returns the whole key once, and stores only its hash and start', async () => {
     const { service, keys } = build();
     const made = await service.create({ name: 'Claude Code', role: 'member' }, actor);
-    expect(made.key).toMatch(/^dpdp_[0-9a-f]{64}$/);
+    expect(made.key).toMatch(/^sk_live_[0-9a-f]{64}$/);
     const stored = keys.create.mock.calls[0]![0] as Record<string, unknown>;
     expect(JSON.stringify(stored)).not.toContain(made.key);
     expect(stored).toMatchObject({ createdById: 'u1', createdByName: 'Alice', expiresAt: null });

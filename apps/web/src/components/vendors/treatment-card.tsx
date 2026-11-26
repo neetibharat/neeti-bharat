@@ -5,7 +5,7 @@ import {
   VENDOR_TREATMENT_NOTE_MAX_LENGTH,
   type VendorResponse,
   type VendorTreatment,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

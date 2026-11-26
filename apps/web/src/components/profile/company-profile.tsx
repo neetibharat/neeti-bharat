@@ -1,7 +1,7 @@
 'use client';
 
 import { IconSearch } from '@tabler/icons-react';
-import { PROFILE_GROUPS } from '@dpdp-kit/shared';
+import { PROFILE_GROUPS } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

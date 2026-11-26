@@ -3,7 +3,7 @@ import {
   PROOF_CHECKS,
   type ConnectionCheckResult,
   type ConnectionProvider,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** What has been accepted on a connection, as `acceptanceKey` gives it. */
 export type Accepted = ReadonlySet<string>;

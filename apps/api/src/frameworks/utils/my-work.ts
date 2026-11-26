@@ -10,7 +10,7 @@ import {
   type MyWorkKind,
   type MyWorkload,
   type PolicyStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { iso, lastProvided } from './dates';
 import { defaultOwnerFor, type ControlRow, type PolicyBriefs } from './checklist-view';
 

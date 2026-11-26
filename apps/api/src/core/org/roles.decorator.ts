@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import type { AppRole } from '@dpdp-kit/shared';
+import type { AppRole } from '@neeti-bharat/shared';
 
 export const ROLES_KEY = 'organization:roles';
 export const NO_ORGANIZATION_KEY = 'organization:none';

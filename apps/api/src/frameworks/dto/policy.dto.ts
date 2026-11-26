@@ -6,7 +6,7 @@ import {
   POLICY_STATUSES,
   POLICY_SUMMARY_MAX_LENGTH,
   POLICY_TITLE_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { policyDocumentSchema } from '../utils/policy-document';
 

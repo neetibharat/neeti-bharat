@@ -9,7 +9,7 @@ import {
   IconSchool,
   type Icon,
 } from '@tabler/icons-react';
-import type { NotificationKind, NotificationSummary } from '@dpdp-kit/shared';
+import type { NotificationKind, NotificationSummary } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { IconLinkRow, type RowTone } from '@/components/base/icon-link-row/icon-link-row';
 import { workHref } from '@/lib/my-work-tabs';

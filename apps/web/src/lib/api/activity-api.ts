@@ -2,8 +2,8 @@ import type {
   ActivityAction,
   ActivityListResponse,
   ActivityVerifyResponse,
-} from '@dpdp-kit/shared';
-import { ACTIVITY_PAGE_SIZE } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import { ACTIVITY_PAGE_SIZE } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 export interface ActivityQuery {

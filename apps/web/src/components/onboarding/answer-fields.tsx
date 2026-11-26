@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileKey } from '@dpdp-kit/shared';
+import type { ProfileKey } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Input } from '@/components/base/input/input';

@@ -1,6 +1,6 @@
 'use client';
 
-import { PROOF_TABS, type ProofByControlResponse, type ProofTab } from '@dpdp-kit/shared';
+import { PROOF_TABS, type ProofByControlResponse, type ProofTab } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

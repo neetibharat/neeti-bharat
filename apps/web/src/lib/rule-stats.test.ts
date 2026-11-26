@@ -1,4 +1,4 @@
-import type { PolicyResponse, ProofCounts, RuleResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse, ProofCounts, RuleResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { policiesOfRule, ruleStats } from './rule-stats';
 

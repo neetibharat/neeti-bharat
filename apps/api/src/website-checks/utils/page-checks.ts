@@ -1,4 +1,8 @@
-import type { UnreachableReason, WebsiteCheckResult, WebsiteCheckStatus } from '@dpdp-kit/shared';
+import type {
+  UnreachableReason,
+  WebsiteCheckResult,
+  WebsiteCheckStatus,
+} from '@neeti-bharat/shared';
 import type { PageResponse } from './fetch-page';
 import { emailsOf } from './html';
 

@@ -5,7 +5,7 @@ import type {
   VendorListResponse,
   VendorResponse,
   VendorTab,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

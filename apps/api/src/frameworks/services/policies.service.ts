@@ -13,7 +13,7 @@ import {
   type PolicyListResponse,
   type PolicyStatus,
   type PolicyVersionResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';

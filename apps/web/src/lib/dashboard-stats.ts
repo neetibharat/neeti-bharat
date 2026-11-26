@@ -5,7 +5,7 @@ import {
   PolicyResponse,
   ProofItemResponse,
   RequestListItem,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { percentOf } from './percent';
 import { approverOf } from './policy-filter';
 import { attentionItems, type AttentionReason } from './policy-attention';

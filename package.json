@@ -1,5 +1,5 @@
 {
-  "name": "dpdp-kit",
+  "name": "neeti-bharat",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-only",
@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "test:e2e": "pnpm --filter @dpdp-kit/api test:e2e",
+    "test:e2e": "pnpm --filter @neeti-bharat/api test:e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:up": "docker compose up -d",

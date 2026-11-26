@@ -1,4 +1,4 @@
-import type { CheckId, ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult } from '@neeti-bharat/shared';
 import { AzureAccessError, cached, type AzureApi } from './azure-api';
 import { AZURE_CHECKS } from './checks';
 import type { AzureCheck, Outcome } from './checks/outcome';

@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
+import type { MyWorkResponse, MyWorkTeamResponse } from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import { MyWorkService } from '../services/my-work.service';

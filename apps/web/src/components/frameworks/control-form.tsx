@@ -7,7 +7,7 @@ import {
   policyLabel,
   type ControlDetailsRequest,
   type JobRole,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent, ReactNode } from 'react';
 import { Alert } from '@/components/base/alert/alert';

@@ -23,7 +23,7 @@ function build(complete: () => Promise<string> = () => Promise.resolve('{"ok":tr
   };
   const settings = {
     assertOn: vi.fn().mockResolvedValue(undefined),
-    target: vi.fn().mockImplementation(() => Promise.resolve(targets.current)),
+    target: vi.fn().mockImplementation(() => targets.current),
     recordUse: vi.fn().mockResolvedValue(undefined),
   };
   const client = {

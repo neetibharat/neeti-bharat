@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { AiProvider } from '@dpdp-kit/shared';
+import type { AiProvider } from '@neeti-bharat/shared';
 
 /** Which service, which model and whose key a call is made with. */
 export interface AiTarget {
@@ -28,8 +28,6 @@ export class AiProviderError extends Error {
 
 /** Asks an AI service a question and gets its JSON answer back. Faked in tests; `HttpAiClient` is the real one. */
 export abstract class AiClient {
-  /** Makes one small call, to see that the key and the model work. Throws `AiProviderError` if they do not. */
-  abstract verify(target: AiTarget): Promise<void>;
   /** Sends the prompt and returns the text of the answer, which the prompt asks to be a JSON object. */
   abstract completeJson(target: AiTarget, prompt: AiPrompt): Promise<string>;
 }
@@ -41,7 +39,6 @@ const BASE_URL: Record<AiProvider, string> = {
   anthropic: 'https://api.anthropic.com/v1',
 };
 
-const VERIFY_SECONDS = 30;
 const COMPLETE_SECONDS = 120;
 const MAX_ANSWER_TOKENS = 16_000;
 const DETAIL_MAX_LENGTH = 200;
@@ -49,14 +46,6 @@ const DETAIL_MAX_LENGTH = 200;
 @Injectable()
 export class HttpAiClient extends AiClient {
   private readonly logger = new Logger(HttpAiClient.name);
-
-  async verify(target: AiTarget): Promise<void> {
-    const prompt = {
-      system: 'Reply with the JSON object {"ok": true} and nothing else.',
-      user: 'ping',
-    };
-    await this.send(target, prompt, VERIFY_SECONDS);
-  }
 
   completeJson(target: AiTarget, prompt: AiPrompt): Promise<string> {
     return this.send(target, prompt, COMPLETE_SECONDS);

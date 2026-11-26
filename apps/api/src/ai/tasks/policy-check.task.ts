@@ -2,7 +2,7 @@ import {
   POLICY_CHECK_VERDICTS,
   type PolicyCheckResponse,
   type PolicyCheckVerdict,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import type { AiTask } from '../services/ai-runner.service';
 import { UnusableReply, parseReply, shorten } from '../utils/ai-reply';

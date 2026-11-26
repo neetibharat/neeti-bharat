@@ -6,7 +6,7 @@ import {
   type NotificationRoleDefaultsResponse,
   type NotificationUnreadResponse,
   type OrganizationSummary,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 

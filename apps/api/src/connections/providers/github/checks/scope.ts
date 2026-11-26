@@ -1,4 +1,4 @@
-import type { GithubCheckId } from '@dpdp-kit/shared';
+import type { GithubCheckId } from '@neeti-bharat/shared';
 import { judge, nothingToCheck, type Found, type Outcome, type Verdict } from '../../outcome';
 import { GithubAccessError, type GithubAccount, type GithubApi } from '../github-api';
 

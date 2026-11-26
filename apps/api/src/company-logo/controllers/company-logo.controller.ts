@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LOGO_MAX_BYTES, type CompanyLogoResponse } from '@dpdp-kit/shared';
+import { LOGO_MAX_BYTES, type CompanyLogoResponse } from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { Roles } from '../../core/org/roles.decorator';
 import { actorOf } from '../../core/common/actor';

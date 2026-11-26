@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CONNECTION_SCHEDULE_HOURS, type ConnectionSchedule } from '@dpdp-kit/shared';
+import { CONNECTION_SCHEDULE_HOURS, type ConnectionSchedule } from '@neeti-bharat/shared';
 import type { ActivityActor } from '../../activity/services/activity.service';
 import { runInOrganization } from '../../core/org/org-context';
 import type { Connection } from '../../generated/prisma/client';

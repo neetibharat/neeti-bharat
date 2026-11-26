@@ -1,6 +1,6 @@
 'use client';
 
-import { CHANGELOG_MAX_LENGTH } from '@dpdp-kit/shared';
+import { CHANGELOG_MAX_LENGTH } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

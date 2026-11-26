@@ -1,4 +1,4 @@
-import type { MyWorkItem } from '@dpdp-kit/shared';
+import type { MyWorkItem } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { groupMyWork } from './my-work-groups';
 

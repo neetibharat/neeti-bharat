@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { APP_ROLES, NOTIFICATION_KINDS, NOTIFICATION_PAGE_SIZE } from '@dpdp-kit/shared';
+import { APP_ROLES, NOTIFICATION_KINDS, NOTIFICATION_PAGE_SIZE } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const listNotificationsSchema = z.object({

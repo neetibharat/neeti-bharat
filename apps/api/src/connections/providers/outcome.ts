@@ -4,7 +4,7 @@ import {
   type ConnectionCheckResult,
   type FlaggedResource,
   type FoundValue,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** What a check found. The runner adds the check's id. */
 export type Outcome = Omit<ConnectionCheckResult, 'id'>;

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReadinessAnswers, ReadinessCheckResponse } from '@dpdp-kit/shared';
+import type { ReadinessAnswers, ReadinessCheckResponse } from '@neeti-bharat/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Alert } from '@/components/base/alert/alert';

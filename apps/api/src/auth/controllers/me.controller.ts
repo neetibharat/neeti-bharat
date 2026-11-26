@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { MeResponse } from '@dpdp-kit/shared';
+import type { MeResponse } from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { NoOrganization } from '../../core/org/roles.decorator';
 import { OrganizationsService } from '../../organizations/services/organizations.service';

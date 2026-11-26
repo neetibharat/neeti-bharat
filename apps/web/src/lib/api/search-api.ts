@@ -1,4 +1,4 @@
-import type { SearchResponse } from '@dpdp-kit/shared';
+import type { SearchResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 // A search only reads, so it keeps no tag; the cache simply expires.

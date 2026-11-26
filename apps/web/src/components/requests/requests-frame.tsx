@@ -1,7 +1,7 @@
 'use client';
 
 import { IconSearch } from '@tabler/icons-react';
-import { REQUEST_TYPES, type RequestCounts } from '@dpdp-kit/shared';
+import { REQUEST_TYPES, type RequestCounts } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Input } from '@/components/base/input/input';

@@ -1,4 +1,4 @@
-import { PROOF_PAGE_SIZE, type ProofTab } from '@dpdp-kit/shared';
+import { PROOF_PAGE_SIZE, type ProofTab } from '@neeti-bharat/shared';
 import { ALL } from './filters';
 
 /** What the person has typed or picked above the proof list. `ALL` means no limit; an empty search matches everything. */

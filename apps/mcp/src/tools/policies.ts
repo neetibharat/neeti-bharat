@@ -10,7 +10,7 @@ import {
   type PolicyListResponse,
   type PolicyVersionResponse,
   type SavePolicyRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { defineTool } from '../tool.js';
 import { defined, id, jobRole, personId } from './fields.js';

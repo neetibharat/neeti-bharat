@@ -3,8 +3,8 @@ import { APP_ROLES, type AppRole } from './roles.js';
 /** The header a key is sent in. */
 export const API_KEY_HEADER = 'x-api-key';
 
-/** Every key starts with this, so a leaked one can be recognised. */
-export const API_KEY_PREFIX = 'dpdp_';
+/** Every new key starts with this, so a leaked one can be recognised. Keys made earlier start with `dpdp_` and still work: a request finds its key by its hash, not its prefix. */
+export const API_KEY_PREFIX = 'sk_live_';
 
 /** A key works with any role. Only a key cannot make or revoke keys, whatever its role. */
 export const API_KEY_ROLES = APP_ROLES;

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconArchiveOff } from '@tabler/icons-react';
-import type { ArchivedRequirementResponse } from '@dpdp-kit/shared';
+import type { ArchivedRequirementResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';

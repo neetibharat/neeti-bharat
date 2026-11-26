@@ -7,7 +7,7 @@ import {
   EVIDENCE_NOTE_MAX_LENGTH,
   EVIDENCE_TITLE_MAX_LENGTH,
   EVIDENCE_URL_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { defineTool } from '../tool.js';
 import { id } from './fields.js';

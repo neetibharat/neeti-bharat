@@ -1,4 +1,4 @@
-import type { AppRole, NotificationKind, NotificationState } from '@dpdp-kit/shared';
+import type { AppRole, NotificationKind, NotificationState } from '@neeti-bharat/shared';
 import { renderHtml, renderText, type EmailContent } from './email-layout';
 
 export type MailLocale = 'en';
@@ -50,29 +50,29 @@ const NOTICE_SUBJECT: Record<NotificationKind, (title: string) => string> = {
 const TEMPLATES: Record<MailLocale, { [K in MailKey]: Template<K> }> = {
   en: {
     signIn: ({ url, minutes }) => ({
-      subject: 'Your DPDP Kit sign-in link',
+      subject: 'Your Neeti Bharat sign-in link',
       content: {
         preheader: `Your sign-in link works once and expires in ${minutes} minutes.`,
-        heading: 'Sign in to DPDP Kit',
+        heading: 'Sign in to Neeti Bharat',
         paragraphs: [
           `Use the button below to sign in. The link works once and expires in ${minutes} minutes.`,
         ],
         button: { label: 'Sign in', url },
         note: 'If you did not ask for this, you can ignore this email. Nobody can sign in without the link.',
-        footer: 'DPDP Kit. Sent because someone asked to sign in with this email address.',
+        footer: 'Neeti Bharat. Sent because someone asked to sign in with this email address.',
       },
     }),
     invitation: ({ url, days, organization, inviter, role }) => ({
-      subject: `You are invited to ${organization} on DPDP Kit`,
+      subject: `You are invited to ${organization} on Neeti Bharat`,
       content: {
         preheader: `${inviter} invited you to ${organization}.`,
         heading: `Join ${organization}`,
         paragraphs: [
-          `${inviter} has invited you to ${organization} on DPDP Kit, the toolkit for meeting the DPDP Act, ${ROLE_PHRASE[role]}.`,
-          `Open DPDP Kit and enter this email address to get your sign-in link. The invitation is valid for ${days} days.`,
+          `${inviter} has invited you to ${organization} on Neeti Bharat, the toolkit for meeting the DPDP Act, ${ROLE_PHRASE[role]}.`,
+          `Open Neeti Bharat and enter this email address to get your sign-in link. The invitation is valid for ${days} days.`,
         ],
-        button: { label: 'Open DPDP Kit', url },
-        footer: 'DPDP Kit. You are receiving this because someone added you to their team.',
+        button: { label: 'Open Neeti Bharat', url },
+        footer: 'Neeti Bharat. You are receiving this because someone added you to their team.',
       },
     }),
     notice: ({ url, organization, kind, state, title, dueOn }) => {
@@ -85,11 +85,11 @@ const TEMPLATES: Record<MailLocale, { [K in MailKey]: Template<K> }> = {
           heading: late ? 'Something is late' : 'Something is due soon',
           paragraphs: [
             `${what} in ${organization} ${late ? `was due on ${dueOn} and is late` : `is due on ${dueOn}`}.`,
-            'It is on your list in DPDP Kit.',
+            'It is on your list in Neeti Bharat.',
           ],
           button: { label: 'Open my work', url },
           footer:
-            'DPDP Kit. You choose which notices you get by email in your notification settings.',
+            'Neeti Bharat. You choose which notices you get by email in your notification settings.',
         },
       };
     },

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { HealthResponse } from '@dpdp-kit/shared';
+import type { HealthResponse } from '@neeti-bharat/shared';
 import { HealthRepository } from '../repositories/health.repository';
 
 @Injectable()

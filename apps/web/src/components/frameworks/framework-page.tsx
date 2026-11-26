@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
-import { DPDP_FRAMEWORK_ID, isLocked, type ChecklistResponse } from '@dpdp-kit/shared';
+import { DPDP_FRAMEWORK_ID, isLocked, type ChecklistResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Loading } from '@/components/base/loading/loading';

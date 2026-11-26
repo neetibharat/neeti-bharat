@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProofOverviewResponse } from '@dpdp-kit/shared';
+import type { ProofOverviewResponse } from '@neeti-bharat/shared';
 import { Pagination } from '@/components/base/pagination/pagination';
 import { ProofTable } from './proof-table';
 

@@ -1,4 +1,4 @@
-import type { CheckId, ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult } from '@neeti-bharat/shared';
 import { identifiersOf } from '../../utils/connection-mapper';
 import type { ConnectionDriver, Credentials, Identifiers } from '../connection-driver';
 import { type AzureConnector, type AzureCredentials } from './azure-api';

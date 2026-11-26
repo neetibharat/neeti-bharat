@@ -1,6 +1,6 @@
 'use client';
 
-import type { AppRole } from '@dpdp-kit/shared';
+import type { AppRole } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

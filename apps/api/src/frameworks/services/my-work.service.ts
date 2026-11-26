@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { MyWorkItem, MyWorkResponse, MyWorkTeamResponse } from '@dpdp-kit/shared';
+import type { MyWorkItem, MyWorkResponse, MyWorkTeamResponse } from '@neeti-bharat/shared';
 import { currentRole } from '../../core/org/org-context';
 import { PersonDirectory } from '../../people/services/person-directory';
 import { ControlRepository } from '../repositories/control.repository';
