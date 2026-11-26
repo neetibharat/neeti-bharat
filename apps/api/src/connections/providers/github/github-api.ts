@@ -233,7 +233,7 @@ export class HttpGithubApi implements GithubApi {
         headers: {
           accept: 'application/vnd.github+json',
           authorization: `Bearer ${bearer}`,
-          'user-agent': 'DPDP-Kit',
+          'user-agent': 'Neeti-Bharat',
           'x-github-api-version': '2022-11-28',
         },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),

@@ -1,4 +1,4 @@
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 
 export type StartStepId = 'profile' | 'people' | 'readiness' | 'policies';
 

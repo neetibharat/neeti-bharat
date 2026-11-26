@@ -39,7 +39,7 @@ export const escapeHtml = (value: string): string => value.replace(/[&<>"']/g, (
 function brandRow(): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0"><tr>
 <td width="28" height="28" align="right" valign="bottom" style="width:28px;height:28px;background:${COLOR.brand};border-radius:8px;"><div style="width:8px;height:8px;margin:0 4px 4px 0;border-radius:4px;background:${COLOR.accent};font-size:0;line-height:0;">&nbsp;</div></td>
-<td style="padding-left:10px;font:600 16px ${FONT};color:${COLOR.text};">DPDP Kit</td>
+<td style="padding-left:10px;font:600 16px ${FONT};color:${COLOR.text};">Neeti Bharat</td>
 </tr></table>`;
 }
 

@@ -6,7 +6,7 @@ import {
   type ProofOverviewResponse,
   type ProofRequirementDetailResponse,
   type SaveProofRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { defineTool } from '../tool.js';
 import { dateText, defined, id, personId } from './fields.js';

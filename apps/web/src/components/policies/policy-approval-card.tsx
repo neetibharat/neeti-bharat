@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyDetailResponse } from '@dpdp-kit/shared';
+import type { PolicyDetailResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { PolicyStatusBadge } from './policy-status-badge';

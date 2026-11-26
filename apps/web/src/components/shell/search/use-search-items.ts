@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
+import { useGetAiSettingsQuery } from '@/lib/api/ai-api';
 import { useSearchQuery } from '@/lib/api/search-api';
 import { useDebouncedValue } from '@/lib/hooks/use-debounced-value';
 import { loadRecent, rememberRecent, type RecentSearch } from '@/lib/search';
@@ -19,18 +20,20 @@ export function useSearchItems(query: string, who: SearchWho) {
   const [recent, setRecent] = useState<RecentSearch[]>(() =>
     typeof window === 'undefined' ? [] : loadRecent(window.localStorage),
   );
+  const { data: ai } = useGetAiSettingsQuery();
+  const aiOn = Boolean(ai?.provider);
   const hits = active ? data?.hits : undefined;
 
   const groups = useMemo(
     () =>
       buildGroups({
         needle: query.trim().toLowerCase(),
-        who: { isAdmin: who.isAdmin, canEdit: who.canEdit },
+        who: { isAdmin: who.isAdmin, canEdit: who.canEdit, aiOn },
         words: { t: (key) => t(key as never), tNav: (key) => tNav(key as never) },
         hits: hits ?? [],
         recent,
       }),
-    [query, who.isAdmin, who.canEdit, hits, recent, t, tNav],
+    [query, who.isAdmin, who.canEdit, aiOn, hits, recent, t, tNav],
   );
 
   const remember = (item: SearchItem) => {

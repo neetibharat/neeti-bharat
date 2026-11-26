@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { ProofFrequency } from '@dpdp-kit/shared';
+import type { ProofFrequency } from '@neeti-bharat/shared';
 import { orgKey, orgOwned } from '../../core/org/keys';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import type { Evidence, Prisma, ProofRequirement } from '../../generated/prisma/client';

@@ -1,6 +1,6 @@
 'use client';
 
-import type { FrameworkSummaryResponse } from '@dpdp-kit/shared';
+import type { FrameworkSummaryResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';

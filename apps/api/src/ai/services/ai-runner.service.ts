@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AiFeature } from '@dpdp-kit/shared';
+import type { AiFeature } from '@neeti-bharat/shared';
 import type { ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
 import { AiClient, AiProviderError, type AiPrompt, type AiTarget } from '../providers/ai-client';
@@ -9,7 +9,7 @@ import { AiSettingsService } from './ai-settings.service';
 /**
  * One thing the AI is asked to do: the feature it belongs to, the words to send, and how to turn the answer into
  * something the app can use. A task knows nothing about which service answers, so changing the service or the model
- * in the company's AI setting changes none of them.
+ * in the install's environment changes none of them.
  */
 export interface AiTask<T> {
   feature: AiFeature;
@@ -25,8 +25,8 @@ export interface AiUse {
 }
 
 /**
- * The only way the app asks the AI anything. It reads the company's AI setting at the moment of the call, so switching
- * service, model or key takes effect at once and nothing else needs to change. It keeps out of the request's database
+ * The only way the app asks the AI anything. It reads the install's AI setting at the moment of the call, so nothing else needs to change when the
+ * service, model or key does. It keeps out of the request's database
  * transaction while it waits, and writes the use to the activity log, with the service and model, once it has answered.
  */
 @Injectable()
@@ -38,7 +38,7 @@ export class AiRunner {
 
   async run<T>(task: AiTask<T>, use: AiUse): Promise<T> {
     await this.settings.assertOn(task.feature);
-    const target = await this.settings.target();
+    const target = this.settings.target();
     const result = this.parse(task, await this.ask(target, task.prompt));
     await this.settings.recordUse(use, task.feature, target);
     return result;

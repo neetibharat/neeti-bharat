@@ -1,7 +1,7 @@
-import type { OrganizationSummary } from '@dpdp-kit/shared';
+import type { OrganizationSummary } from '@neeti-bharat/shared';
 
 /** The cookie that remembers which organisation the person is working in, for the server and the browser alike. */
-export const ORGANIZATION_COOKIE = 'dpdp_org';
+export const ORGANIZATION_COOKIE = 'app_org';
 
 const YEAR_SECONDS = 365 * 24 * 60 * 60;
 

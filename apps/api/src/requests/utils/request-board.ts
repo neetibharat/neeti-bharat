@@ -3,7 +3,7 @@ import type {
   RequestBoardResponse,
   RequestCounts,
   RequestStatus,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { iso } from '../../frameworks/utils/dates';
 import { closedOnTime, isOverdue } from './request-due';
 import type { RequestSummaryRow } from './request-view';

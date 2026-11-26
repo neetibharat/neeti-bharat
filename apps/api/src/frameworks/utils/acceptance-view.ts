@@ -3,7 +3,7 @@ import type {
   PolicyAcceptanceItem,
   PolicyAcceptanceStatus,
   TeamPolicyRow,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { ApprovedPolicy } from '../repositories/policy-acceptance.repository';
 import { day } from './dates';
 

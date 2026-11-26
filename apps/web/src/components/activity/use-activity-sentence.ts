@@ -1,6 +1,10 @@
 'use client';
 
-import { CUSTOM_KEY_PREFIX, type ActivityEventResponse, type ProfileKey } from '@dpdp-kit/shared';
+import {
+  CUSTOM_KEY_PREFIX,
+  type ActivityEventResponse,
+  type ProfileKey,
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { sentenceParams } from '@/lib/activity-params';
 import { isControlStatus, isJobRole, isProfileKey } from '@/lib/guards';

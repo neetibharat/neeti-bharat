@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyCoverageItem } from '@dpdp-kit/shared';
+import type { PolicyCoverageItem } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';

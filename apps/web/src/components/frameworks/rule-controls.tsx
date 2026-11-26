@@ -1,6 +1,6 @@
 'use client';
 
-import type { RuleResponse } from '@dpdp-kit/shared';
+import type { RuleResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { AddControlButton } from './add-control-button';
 import { ControlRow } from './control-row';

@@ -1,6 +1,6 @@
 'use client';
 
-import { ORGANIZATION_HEADER, type ErrorCode } from '@dpdp-kit/shared';
+import { ORGANIZATION_HEADER, type ErrorCode } from '@neeti-bharat/shared';
 import { useState } from 'react';
 import { getActiveOrganizationId } from '@/lib/active-organization';
 import { fileNameFromDisposition } from '@/lib/download';

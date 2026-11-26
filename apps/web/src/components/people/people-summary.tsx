@@ -1,6 +1,6 @@
 'use client';
 
-import type { PeopleCounts } from '@dpdp-kit/shared';
+import type { PeopleCounts } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { StatTile } from '@/components/base/stat-tile/stat-tile';
 import { useGetMyWorkTeamQuery } from '@/lib/api/my-work-api';

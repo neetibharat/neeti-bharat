@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft } from '@tabler/icons-react';
-import { requestRef, type RequestResponse } from '@dpdp-kit/shared';
+import { requestRef, type RequestResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';

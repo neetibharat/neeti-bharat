@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { DeadlinesResponse } from '@dpdp-kit/shared';
+import type { DeadlinesResponse } from '@neeti-bharat/shared';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';
 import { Roles } from '../../core/org/roles.decorator';
 import { listDeadlinesSchema, type ListDeadlinesQuery } from '../dto/deadlines.dto';

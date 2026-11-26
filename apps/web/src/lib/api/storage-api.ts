@@ -1,4 +1,4 @@
-import type { StorageStatusResponse } from '@dpdp-kit/shared';
+import type { StorageStatusResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 export const storageApi = baseApi.injectEndpoints({

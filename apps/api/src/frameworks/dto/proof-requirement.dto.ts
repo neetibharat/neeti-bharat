@@ -5,7 +5,7 @@ import {
   PROOF_TABS,
   PROOF_FREQUENCIES,
   PROOF_TITLE_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { dayString } from './day-string';
 

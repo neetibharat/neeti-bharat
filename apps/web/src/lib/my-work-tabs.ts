@@ -1,4 +1,4 @@
-import type { MyWorkItem } from '@dpdp-kit/shared';
+import type { MyWorkItem } from '@neeti-bharat/shared';
 
 export const MY_WORK_TABS = [
   'all',

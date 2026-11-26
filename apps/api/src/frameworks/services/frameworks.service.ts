@@ -8,7 +8,7 @@ import {
   type ProofItemResponse,
   type RulePageResponse,
   type RuleResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';
 import { RuleReader } from './rule-reader';

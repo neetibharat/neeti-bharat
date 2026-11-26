@@ -1,7 +1,7 @@
 'use client';
 
 import { IconTrash } from '@tabler/icons-react';
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { ConfirmDialog } from '@/components/base/confirm-dialog/confirm-dialog';

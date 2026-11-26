@@ -4,7 +4,7 @@ import {
   API_KEY_NAME_MAX_LENGTH,
   API_KEY_PAGE_SIZE,
   API_KEY_ROLES,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const createApiKeySchema = z.object({

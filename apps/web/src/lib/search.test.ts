@@ -24,6 +24,11 @@ describe('searchablePages', () => {
     expect(ids).toContain('policies');
     expect(ids).toContain('deadlines');
   });
+
+  it('lists the AI help page only where the install has an AI service', () => {
+    expect(searchablePages(true).map((page) => page.id)).not.toContain('aiHelp');
+    expect(searchablePages(true, true).map((page) => page.id)).toContain('aiHelp');
+  });
 });
 
 describe('searchHref', () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronLeft, IconInfoCircle } from '@tabler/icons-react';
-import { policyLabel, type PolicyDetailResponse } from '@dpdp-kit/shared';
+import { policyLabel, type PolicyDetailResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Tabs } from '@/components/base/tabs/tabs';

@@ -4,7 +4,7 @@ import {
   TRAINING_NAME_MAX_LENGTH,
   TRAINING_PAGE_SIZE,
   TRAINING_URL_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 /** A web address, http or https only. An empty box means none. */

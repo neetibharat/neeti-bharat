@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyApprovalResponse } from '@dpdp-kit/shared';
+import type { PolicyApprovalResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Button } from '@/components/base/button/button';

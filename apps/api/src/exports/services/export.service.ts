@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EXPORT_LOG_NAMES, isDatedDataset, type ExportDataset } from '@dpdp-kit/shared';
+import { EXPORT_LOG_NAMES, isDatedDataset, type ExportDataset } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import type { ActivityEvent } from '../../generated/prisma/client';
 import { FrameworksService } from '../../frameworks/services/frameworks.service';

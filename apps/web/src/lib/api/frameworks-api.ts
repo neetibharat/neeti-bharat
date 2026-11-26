@@ -5,7 +5,7 @@ import type {
   PolicyDetailResponse,
   PolicyListResponse,
   RulePageResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 // A change is also written to the activity log.

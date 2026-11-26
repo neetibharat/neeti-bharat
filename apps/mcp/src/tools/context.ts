@@ -3,7 +3,7 @@ import {
   PROFILE_VALUE_MAX_LENGTH,
   type AssigneesResponse,
   type ProfileResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import { defineTool } from '../tool.js';
 import { id } from './fields.js';

@@ -4,7 +4,7 @@ import type {
   PolicyCheckResponse,
   PolicyTailorResponse,
   ProofCheckResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import { actorOf } from '../../core/common/actor';
 import { ZodValidationPipe } from '../../core/common/zod-validation.pipe';

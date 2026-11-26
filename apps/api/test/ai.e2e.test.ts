@@ -4,14 +4,15 @@ import type {
   OrganizationSummary,
   PolicyDetailResponse,
   PolicyImportResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { POLICY_REPLY, REFUSED_KEY, fakeAi } from './support/fake-ai-client';
+import { POLICY_REPLY, fakeAi } from './support/fake-ai-client';
 import { docx } from './support/office-files';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 
 const KEY = 'sk-a-key-that-must-never-come-back-9f3k';
-const SETTINGS = { provider: 'deepseek', model: 'deepseek-flash', apiKey: KEY };
+const AI_ENV = { AI_PROVIDER: 'deepseek', AI_MODEL: 'deepseek-flash', AI_API_KEY: KEY };
+const ALL_FEATURES = ['policy_import', 'policy_tailor', 'policy_check', 'proof_check'];
 const POLICY_TEXT =
   'Techdome may store or access personal data outside India only where no restriction applies.';
 
@@ -30,7 +31,7 @@ const policyFile = () =>
   );
 
 beforeAll(async () => {
-  world.app = await startTestApp();
+  world.app = await startTestApp(AI_ENV);
   world.alice = await world.app.signIn('alice@alpha.test');
   world.org = (
     await world.alice.post<OrganizationSummary>('/v1/organizations', { name: 'AI Pvt Ltd' })
@@ -53,73 +54,50 @@ afterAll(async () => {
   await world.app?.stop();
 });
 
-describe('before an AI service is set up', () => {
-  it('says none is set, and refuses to read a file', async () => {
+describe('the AI service of the install', () => {
+  it('shows the service from the environment, the end of its key and no feature on', async () => {
     const state = await world.alice.get<AiSettingsResponse>('/v1/ai', world.org);
     expect(state.body).toEqual({
-      enabled: true,
-      provider: null,
-      model: null,
-      keyHint: null,
-      configuredByName: null,
-      disabledFeatures: [],
-    });
-    const imported = await world.alice.upload('/v1/policies/import', policyFile(), world.org);
-    expect(imported.status).toBe(409);
-    expect(imported.body).toMatchObject({ code: 'AI_NOT_CONFIGURED' });
-  });
-});
-
-describe('setting up the AI service', () => {
-  it('refuses a key the service does not accept, and keeps nothing', async () => {
-    const refused = await world.alice.put(
-      '/v1/ai',
-      { ...SETTINGS, apiKey: REFUSED_KEY },
-      world.org,
-    );
-    expect(refused.status).toBe(400);
-    expect(refused.body).toMatchObject({
-      code: 'AI_FAILED',
-      params: { reason: 'key', detail: '' },
-    });
-    const state = await world.alice.get<AiSettingsResponse>('/v1/ai', world.org);
-    expect(state.body.provider).toBeNull();
-  });
-
-  it('rejects a provider or model that is not allowed', async () => {
-    for (const body of [
-      { ...SETTINGS, provider: 'nobody' },
-      { ...SETTINGS, model: '../../etc/passwd' },
-      { ...SETTINGS, apiKey: 'has a space' },
-    ]) {
-      expect((await world.alice.put('/v1/ai', body, world.org)).status).toBe(400);
-    }
-  });
-
-  it('is for admins, and never for an API key', async () => {
-    expect((await world.bob.put('/v1/ai', SETTINGS, world.org)).status).toBe(403);
-    expect((await world.agent.put('/v1/ai', SETTINGS)).status).toBe(403);
-    expect((await world.agent.delete('/v1/ai')).status).toBe(403);
-  });
-
-  it('keeps a working key, and shows only its last four characters', async () => {
-    const saved = await world.alice.put<AiSettingsResponse>('/v1/ai', SETTINGS, world.org);
-    expect(saved.status).toBe(200);
-    expect(saved.body).toMatchObject({
-      enabled: true,
       provider: 'deepseek',
       model: 'deepseek-flash',
       keyHint: '9f3k',
+      enabledFeatures: [],
     });
-    expect(saved.text).not.toContain(KEY);
+    expect(state.text).not.toContain(KEY);
+  });
+
+  it('refuses a feature that is not switched on', async () => {
+    const refused = await world.alice.upload('/v1/policies/import', policyFile(), world.org);
+    expect(refused.status).toBe(409);
+    expect(refused.body).toMatchObject({
+      code: 'AI_FEATURE_OFF',
+      params: { feature: 'policy_import' },
+    });
+  });
+
+  it('has no route to set or remove the key', async () => {
+    expect((await world.alice.put('/v1/ai', { provider: 'deepseek' }, world.org)).status).toBe(404);
+    expect((await world.alice.delete('/v1/ai', world.org)).status).toBe(404);
+  });
+
+  it('lets an admin switch features on, and nobody else', async () => {
+    const own = { enabledFeatures: ALL_FEATURES };
+    expect((await world.bob.put('/v1/ai/features', own, world.org)).status).toBe(403);
+    expect((await world.agent.put('/v1/ai/features', own)).status).toBe(403);
+    expect(
+      (await world.alice.put('/v1/ai/features', { enabledFeatures: ['nothing'] }, world.org))
+        .status,
+    ).toBe(400);
+    const saved = await world.alice.put<AiSettingsResponse>('/v1/ai/features', own, world.org);
+    expect(saved.status).toBe(200);
+    expect(saved.body.enabledFeatures).toEqual(ALL_FEATURES);
     const seen = await world.bob.get<AiSettingsResponse>('/v1/ai', world.org);
-    expect(seen.body.provider).toBe('deepseek');
-    expect(seen.text).not.toContain(KEY);
+    expect(seen.body.enabledFeatures).toEqual(ALL_FEATURES);
   });
 });
 
 describe('reading a policy from a file', () => {
-  it('suggests the details and the text, and asks the AI with the company key', async () => {
+  it('suggests the details and the text, and asks the AI with the key from the environment', async () => {
     fakeAi.asked.length = 0;
     fakeAi.reply = JSON.stringify(POLICY_REPLY);
     const read = await world.alice.upload<PolicyImportResponse>(
@@ -213,16 +191,14 @@ describe('adding the policy that was read', () => {
   });
 });
 
-describe('taking the AI service away', () => {
-  it('forgets the key, and the log says who did what', async () => {
-    expect((await world.alice.delete('/v1/ai', world.org)).status).toBe(204);
-    const state = await world.alice.get<AiSettingsResponse>('/v1/ai', world.org);
-    expect(state.body.provider).toBeNull();
+describe('switching a feature off again', () => {
+  it('refuses it, and the log says who changed what', async () => {
+    const off = ALL_FEATURES.filter((feature) => feature !== 'policy_import');
+    await world.alice.put('/v1/ai/features', { enabledFeatures: off }, world.org);
     const again = await world.alice.upload('/v1/policies/import', policyFile(), world.org);
-    expect(again.body).toMatchObject({ code: 'AI_NOT_CONFIGURED' });
+    expect(again.body).toMatchObject({ code: 'AI_FEATURE_OFF' });
     const log = await world.alice.get('/v1/activity?limit=100', world.org);
-    expect(log.text).toContain('AI_CONFIGURED');
-    expect(log.text).toContain('AI_REMOVED');
+    expect(log.text).toContain('AI_FEATURES_CHANGED');
     expect(log.text).not.toContain(KEY);
   });
 });

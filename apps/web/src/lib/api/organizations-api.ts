@@ -2,7 +2,7 @@ import type {
   CloseOrganizationRequest,
   CreateOrganizationRequest,
   OrganizationSummary,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 export const organizationsApi = baseApi.injectEndpoints({

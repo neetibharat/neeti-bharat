@@ -66,7 +66,7 @@ importers:
       '@azure/storage-blob':
         specifier: ^12.34.0
         version: 12.34.0
-      '@dpdp-kit/shared':
+      '@neeti-bharat/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@nestjs/common':
@@ -169,7 +169,7 @@ importers:
 
   apps/mcp:
     dependencies:
-      '@dpdp-kit/shared':
+      '@neeti-bharat/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@modelcontextprotocol/sdk':
@@ -194,7 +194,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@dpdp-kit/shared':
+      '@neeti-bharat/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@internationalized/date':

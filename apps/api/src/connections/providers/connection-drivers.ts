@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { ConnectionProvider } from '@dpdp-kit/shared';
+import type { ConnectionProvider } from '@neeti-bharat/shared';
 import { AzureConnector } from './azure/azure-api';
 import { AzureDriver } from './azure/azure-driver';
 import type { ConnectionDriver } from './connection-driver';

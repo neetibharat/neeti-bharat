@@ -1,7 +1,7 @@
 'use client';
 
 import { IconSearch } from '@tabler/icons-react';
-import type { GithubRepositoryOption, GithubSelection } from '@dpdp-kit/shared';
+import type { GithubRepositoryOption, GithubSelection } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Badge } from '@/components/base/badge/badge';

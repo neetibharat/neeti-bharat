@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCheck } from '@tabler/icons-react';
-import type { PolicyAcceptanceItem } from '@dpdp-kit/shared';
+import type { PolicyAcceptanceItem } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { Button } from '@/components/base/button/button';

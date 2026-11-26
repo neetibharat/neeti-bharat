@@ -3,7 +3,7 @@ import {
   CHECK_SEVERITIES,
   type CheckSeverity,
   type ConnectionCheckResult,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { inView, type ResultView } from './connections';
 
 export type SeverityFilter = CheckSeverity | 'all';

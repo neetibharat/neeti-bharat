@@ -96,7 +96,7 @@ describe('HttpAiClient', () => {
   it('says a refused key was not accepted, without repeating it', async () => {
     answer({ error: { message: `Incorrect API key provided: ${KEY}` } }, 401);
     const error = await new HttpAiClient()
-      .verify({ provider: 'openai', model: 'm', apiKey: KEY })
+      .completeJson({ provider: 'openai', model: 'm', apiKey: KEY }, prompt)
       .catch((caught: unknown) => caught);
     expect(error).toBeInstanceOf(AiProviderError);
     expect(error).toMatchObject({ reason: 'key', detail: '' });
@@ -105,7 +105,7 @@ describe('HttpAiClient', () => {
   it('keeps the message of the service for other failures, with the key taken out', async () => {
     answer({ error: { message: `The model ${KEY} does not exist` } }, 404);
     const error = await new HttpAiClient()
-      .verify({ provider: 'openai', model: 'nope', apiKey: KEY })
+      .completeJson({ provider: 'openai', model: 'nope', apiKey: KEY }, prompt)
       .catch((caught: unknown) => caught);
     expect(error).toMatchObject({ reason: 'other', detail: 'The model *** does not exist' });
   });

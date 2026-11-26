@@ -1,4 +1,4 @@
-import { documentToMarkdown, type PolicyDocument } from '@dpdp-kit/shared';
+import { documentToMarkdown, type PolicyDocument } from '@neeti-bharat/shared';
 
 /** The text of a policy as lines, one for each heading, paragraph and list item, with the company answers left as {{keys}}. */
 export function policyLines(document: PolicyDocument): string[] {

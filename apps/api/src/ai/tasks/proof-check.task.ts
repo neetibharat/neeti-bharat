@@ -1,4 +1,4 @@
-import { PROOF_CHECK_VERDICTS, type ProofCheckResponse } from '@dpdp-kit/shared';
+import { PROOF_CHECK_VERDICTS, type ProofCheckResponse } from '@neeti-bharat/shared';
 import { z } from 'zod';
 import type { AiTask } from '../services/ai-runner.service';
 import { parseReply, shorten, within } from '../utils/ai-reply';

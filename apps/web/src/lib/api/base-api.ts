@@ -1,4 +1,4 @@
-import { ORGANIZATION_HEADER, type ApiErrorBody, type ErrorCode } from '@dpdp-kit/shared';
+import { ORGANIZATION_HEADER, type ApiErrorBody, type ErrorCode } from '@neeti-bharat/shared';
 import {
   createApi,
   fetchBaseQuery,

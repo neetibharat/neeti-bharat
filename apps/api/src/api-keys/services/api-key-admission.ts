@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { AppRole } from '@dpdp-kit/shared';
+import type { AppRole } from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 import { ApiKeyRepository, type KeyForSignIn } from '../repositories/api-key.repository';
 import { hashKey } from '../utils/key-secret';

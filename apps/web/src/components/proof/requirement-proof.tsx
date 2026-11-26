@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPlus } from '@tabler/icons-react';
-import type { ProofRequirementResponse } from '@dpdp-kit/shared';
+import type { ProofRequirementResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useCan } from '@/components/providers/user-provider';

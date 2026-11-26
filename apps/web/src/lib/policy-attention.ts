@@ -1,4 +1,4 @@
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 
 export type AttentionReason = 'review_overdue' | 'awaiting_approval' | 'review_soon';
 

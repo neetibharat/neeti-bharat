@@ -1,6 +1,6 @@
 'use client';
 
-import { LOGO_EXTENSIONS, LOGO_MAX_BYTES } from '@dpdp-kit/shared';
+import { LOGO_EXTENSIONS, LOGO_MAX_BYTES } from '@neeti-bharat/shared';
 import { IconTrash, IconUpload } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';

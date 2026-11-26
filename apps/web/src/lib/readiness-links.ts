@@ -2,7 +2,7 @@ import {
   READINESS_WEAK_BELOW,
   type ReadinessDomainId,
   type ReadinessDomainScore,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** Where in the app each area of the readiness check is worked on. */
 export const READINESS_LINKS: Record<ReadinessDomainId, string> = {

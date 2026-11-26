@@ -747,22 +747,15 @@ model CompanyLogo {
   @@map("company_logo")
 }
 
-// The AI service a company has chosen to read documents with, and its key. There is at most one a company.
+// Which AI features an admin has switched on. The service, model and key come from the install's environment.
 model AiSetting {
-  organizationId   String       @id
-  organization     Organization @relation(fields: [organizationId], references: [id])
-  /// One of AI_PROVIDERS in packages/shared.
-  provider         String
-  model            String
-  /// The API key, sealed by the secret box. Never sent to the web.
-  apiKey           String
-  /// The last four characters of the key, so people can tell which one is set.
-  keyHint          String
-  /// Features of AI_FEATURES in packages/shared that an admin has switched off. Empty means all are on.
-  disabledFeatures String[]     @default([])
+  organizationId  String       @id
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  /// Features of AI_FEATURES in packages/shared that an admin has switched on. Empty means none are.
+  enabledFeatures String[]     @default([])
   /// The name is copied here, so the change stays attributed after the person leaves.
-  updatedByName    String
-  updatedAt        DateTime     @updatedAt @db.Timestamptz(3)
+  updatedByName   String
+  updatedAt       DateTime     @updatedAt @db.Timestamptz(3)
 
   @@map("ai_settings")
 }
@@ -883,7 +876,7 @@ model Vendor {
   @@map("vendors")
 }
 
-// A link to an outside system that DPDP Kit reads from to check it, such as an Azure subscription. The credentials are
+// A link to an outside system that Neeti Bharat reads from to check it, such as an Azure subscription. The credentials are
 // kept encrypted and are never sent back. A connection that is removed keeps its row and its runs, and loses the credentials.
 model Connection {
   organizationId   String

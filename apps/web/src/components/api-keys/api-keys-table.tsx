@@ -1,6 +1,6 @@
 'use client';
 
-import type { ApiKeySummary } from '@dpdp-kit/shared';
+import type { ApiKeySummary } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import {

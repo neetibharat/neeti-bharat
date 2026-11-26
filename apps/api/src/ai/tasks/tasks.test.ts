@@ -1,4 +1,4 @@
-import { documentToMarkdown, markdownToDocument } from '@dpdp-kit/shared';
+import { documentToMarkdown, markdownToDocument } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { UnusableReply, shorten } from '../utils/ai-reply';
 import { checkTask, toCheckResponse, type CheckRule } from './policy-check.task';

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconPencil } from '@tabler/icons-react';
-import type { PolicyDetailResponse } from '@dpdp-kit/shared';
+import type { PolicyDetailResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

@@ -3,7 +3,7 @@ import { request as httpRequest, type IncomingHttpHeaders, type IncomingMessage 
 import { request as httpsRequest } from 'node:https';
 import { isIP } from 'node:net';
 import type { TLSSocket } from 'node:tls';
-import type { UnreachableReason } from '@dpdp-kit/shared';
+import type { UnreachableReason } from '@neeti-bharat/shared';
 import { isPublicAddress } from './public-address';
 import { parseSiteUrl } from './site-url';
 
@@ -36,7 +36,7 @@ export interface FetchOptions {
   isAllowedUrl?: (url: URL) => boolean;
 }
 
-const USER_AGENT = 'DPDP-Kit-WebsiteCheck/1 (+compliance self-check)';
+const USER_AGENT = 'Neeti-Bharat-WebsiteCheck/1 (+compliance self-check)';
 
 const CERTIFICATE_ERRORS = new Set([
   'DEPTH_ZERO_SELF_SIGNED_CERT',

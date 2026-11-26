@@ -1,7 +1,7 @@
 'use client';
 
 import { IconRefresh } from '@tabler/icons-react';
-import type { CheckId } from '@dpdp-kit/shared';
+import type { CheckId } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Button } from '@/components/base/button/button';

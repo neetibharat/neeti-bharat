@@ -9,7 +9,7 @@ Everything is set with environment variables in one `.env` file at the repo root
 | Variable              | What it is                                                                                          |
 | --------------------- | --------------------------------------------------------------------------------------------------- |
 | `DATABASE_URL`        | PostgreSQL connection string                                                                        |
-| `WEB_ORIGIN`          | The address people open in the browser, for example `https://dpdp.yourcompany.in`                   |
+| `WEB_ORIGIN`          | The address people open in the browser, for example `https://neeti.yourcompany.in`                  |
 | `API_PORT`            | The port the API listens on (default `3201`)                                                        |
 | `API_URL`             | Where the web server reaches the API (default `http://localhost:3201`)                              |
 | `INITIAL_ADMIN_EMAIL` | The only email that may claim a new install and make its first organisation. Required in production |
@@ -26,7 +26,7 @@ SMTP_HOST=smtp.yourcompany.in
 SMTP_PORT=587
 SMTP_USER=...
 SMTP_PASSWORD=...
-SMTP_FROM="DPDP Kit <no-reply@yourcompany.in>"
+SMTP_FROM="Neeti Bharat <no-reply@yourcompany.in>"
 ```
 
 With `SMTP_HOST` empty, links are printed to the API log. That works for development only; the API refuses to start in production without SMTP.
@@ -63,17 +63,29 @@ Leaving `MICROSOFT_TENANT_ID` as `common` lets any Microsoft account try to sign
 3. Add the authorised redirect URI `<WEB_ORIGIN>/api/auth/callback/google`.
 4. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-## 6. Secrets for connections and AI help (optional)
+## 6. Secrets for connections (optional)
 
-Connections to outside systems, such as an Azure subscription, and the key for [AI help](ai-help.md) need secrets that DPDP Kit can read back. They are sealed with a key you hold. Set `SECRETS_ENCRYPTION_KEY` to 32 random bytes in base64:
+Connections to outside systems, such as an Azure subscription, need secrets that Neeti Bharat can read back. They are sealed with a key you hold. Set `SECRETS_ENCRYPTION_KEY` to 32 random bytes in base64:
 
 ```
 openssl rand -base64 32
 ```
 
-Without it, the Connections and AI help pages say they cannot keep a secret. Keep the key safe and do not change it once connections or an AI key exist: values sealed with the old key cannot be opened with a new one, and they would have to be added again. See [connections.md](connections.md).
+Without it, the Connections page says it cannot keep a secret. Keep the key safe and do not change it once connections exist: values sealed with the old key cannot be opened with a new one, and they would have to be added again. See [connections.md](connections.md).
 
-## 7. Storage for proof files (optional)
+## 7. AI help (optional)
+
+[AI help](ai-help.md) uses one AI service for the whole install. Set all three in `.env`, then restart the API, and an admin turns on the features under **Settings, AI help**. Leave them empty and AI help is off.
+
+| Variable      | What it is                                                                       |
+| ------------- | -------------------------------------------------------------------------------- |
+| `AI_PROVIDER` | `openai`, `anthropic` or `deepseek`                                              |
+| `AI_MODEL`    | The model's exact name. Optional for Anthropic and DeepSeek, required for OpenAI |
+| `AI_API_KEY`  | Your own key for that service. Set it together with `AI_PROVIDER`                |
+
+When someone uses a feature, the text it needs is sent to that service with this key.
+
+## 8. Storage for proof files (optional)
 
 Proof can be a file. Files are kept in any S3-compatible service (AWS S3, MinIO, Cloudflare R2, DigitalOcean Spaces or Backblaze B2) or in Azure Blob Storage. Set the S3 settings or the Azure ones, not both.
 
@@ -91,7 +103,7 @@ The bucket must be private. The API uploads files itself, and people download th
 **AWS S3.** Create a private bucket and a user that may put, get and delete objects in it.
 
 ```
-STORAGE_BUCKET=dpdp-proof
+STORAGE_BUCKET=neeti-proof
 STORAGE_REGION=ap-south-1
 STORAGE_ACCESS_KEY_ID=...
 STORAGE_SECRET_ACCESS_KEY=...
@@ -102,10 +114,10 @@ On AWS itself, leave the keys empty to use the role of the machine the API runs 
 **MinIO with Docker Compose.** `pnpm db:up` starts MinIO on `127.0.0.1:9000` (console on `9001`) and creates the bucket. Use:
 
 ```
-STORAGE_BUCKET=dpdp-proof
+STORAGE_BUCKET=neeti-proof
 STORAGE_ENDPOINT=http://localhost:9000
-STORAGE_ACCESS_KEY_ID=dpdpminio
-STORAGE_SECRET_ACCESS_KEY=dpdpminio-secret
+STORAGE_ACCESS_KEY_ID=neetiminio
+STORAGE_SECRET_ACCESS_KEY=neetiminio-secret
 STORAGE_FORCE_PATH_STYLE=true
 ```
 
@@ -124,7 +136,7 @@ The key stays on the server. People download through links signed with it that l
 **Cloudflare R2.** Create a bucket and an API token with object read and write, then:
 
 ```
-STORAGE_BUCKET=dpdp-proof
+STORAGE_BUCKET=neeti-proof
 STORAGE_REGION=auto
 STORAGE_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
 STORAGE_ACCESS_KEY_ID=...
@@ -135,7 +147,7 @@ Without `STORAGE_BUCKET`, the app runs as before: proof can be links and notes, 
 
 The same bucket holds the company logo, under `logo/`. An admin uploads it in Settings, General: a PNG, JPG or WebP up to 2 MB (an SVG is refused because it can carry scripts). A new logo replaces the old one, and the old picture is deleted from the bucket. `GET /v1/company-logo` returns a link that works for 5 minutes, or `null` when no logo is set or storage is off; `PUT` and `DELETE` are for admins only. Each change is written to the activity log.
 
-## 8. Check it works
+## 9. Check it works
 
 1. Restart the API after changing `.env`.
 2. Open `WEB_ORIGIN`. Google and Microsoft buttons show only when set up.

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
-import { CHECK_GROUPS, type ConnectionSummary } from '@dpdp-kit/shared';
+import { CHECK_GROUPS, type ConnectionSummary } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

@@ -1,4 +1,4 @@
-import type { JobRole } from '@dpdp-kit/shared';
+import type { JobRole } from '@neeti-bharat/shared';
 
 /** A change of owner. Nothing else on a control is picked by hand: its status is worked out. */
 export interface OwnerChange {

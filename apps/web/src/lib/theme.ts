@@ -1,7 +1,7 @@
 export const THEME_CHOICES = ['system', 'light', 'dark'] as const;
 export type ThemeChoice = (typeof THEME_CHOICES)[number];
 
-export const THEME_KEY = 'dpdp_theme';
+export const THEME_KEY = 'app_theme';
 
 export const isThemeChoice = (value: unknown): value is ThemeChoice =>
   THEME_CHOICES.includes(value as ThemeChoice);

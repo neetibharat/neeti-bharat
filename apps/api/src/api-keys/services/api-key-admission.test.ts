@@ -35,7 +35,7 @@ describe('ApiKeyAdmission', () => {
 
   it('acts as the creator in the key organisation, with the key role', async () => {
     const { admission } = build(found());
-    expect(await admission.admit('dpdp_x', NOW)).toEqual({
+    expect(await admission.admit('sk_live_x', NOW)).toEqual({
       user: { id: 'u1', name: 'Alice', email: 'alice@example.test' },
       organizationId: 'org-1',
       role: 'member',
@@ -44,7 +44,7 @@ describe('ApiKeyAdmission', () => {
 
   it('gives no more than the creator has now', async () => {
     const { admission } = build(found({ creatorRole: 'auditor' }));
-    expect((await admission.admit('dpdp_x', NOW)).role).toBe('auditor');
+    expect((await admission.admit('sk_live_x', NOW)).role).toBe('auditor');
   });
 
   it.each([
@@ -54,22 +54,22 @@ describe('ApiKeyAdmission', () => {
     ['made by someone who has left', found({ creatorRole: null })],
   ])('refuses a key that is %s', async (_name, row) => {
     const { admission } = build(row);
-    await expect(admission.admit('dpdp_x', NOW)).rejects.toMatchObject({
+    await expect(admission.admit('sk_live_x', NOW)).rejects.toMatchObject({
       code: 'UNAUTHENTICATED',
     });
   });
 
   it('notes the use of a key that has not been used lately, and only then', async () => {
     const fresh = build(found({ lastUsedAt: new Date(NOW.getTime() - 5_000) }));
-    await fresh.admission.admit('dpdp_x', NOW);
+    await fresh.admission.admit('sk_live_x', NOW);
     expect(fresh.keys.markUsed).not.toHaveBeenCalled();
 
     const stale = build(found({ lastUsedAt: new Date(NOW.getTime() - 3_600_000) }));
-    await stale.admission.admit('dpdp_x', NOW);
+    await stale.admission.admit('sk_live_x', NOW);
     expect(stale.keys.markUsed).toHaveBeenCalledWith('key-1', NOW);
 
     const never = build(found());
-    await never.admission.admit('dpdp_x', NOW);
+    await never.admission.admit('sk_live_x', NOW);
     expect(never.keys.markUsed).toHaveBeenCalled();
   });
 });

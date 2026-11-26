@@ -6,7 +6,7 @@ import {
   tokenKeys,
   type PolicyDetailResponse,
   type PolicyDocument,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useCan } from '@/components/providers/user-provider';

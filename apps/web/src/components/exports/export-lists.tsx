@@ -5,7 +5,7 @@ import {
   EXPORT_DATED_DATASETS,
   isDatedDataset,
   type ExportDataset,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Card } from '@/components/base/card/card';

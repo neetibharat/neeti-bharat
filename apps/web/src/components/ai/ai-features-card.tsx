@@ -1,6 +1,6 @@
 'use client';
 
-import { AI_FEATURES, type AiFeature, type AiSettingsResponse } from '@dpdp-kit/shared';
+import { AI_FEATURES, type AiFeature, type AiSettingsResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Card } from '@/components/base/card/card';
@@ -34,7 +34,7 @@ function FeatureRow(props: {
   );
 }
 
-/** Each AI feature can be switched off on its own. Switching one off leaves the key and the model as they are. */
+/** Each AI feature is switched on or off on its own. They all start off. */
 export function AiFeaturesCard({ settings }: { settings: AiSettingsResponse }) {
   const t = useTranslations('ai.features');
   const errorMessage = useErrorMessage();
@@ -48,16 +48,11 @@ export function AiFeaturesCard({ settings }: { settings: AiSettingsResponse }) {
             <FeatureRow
               key={feature}
               feature={feature}
-              on={!settings.disabledFeatures.includes(feature)}
+              on={settings.enabledFeatures.includes(feature)}
               isDisabled={isLoading}
               onChange={(on) =>
                 void save({
-                  disabledFeatures: withFeature(
-                    settings.disabledFeatures,
-                    AI_FEATURES,
-                    feature,
-                    on,
-                  ),
+                  enabledFeatures: withFeature(settings.enabledFeatures, AI_FEATURES, feature, on),
                 })
               }
             />

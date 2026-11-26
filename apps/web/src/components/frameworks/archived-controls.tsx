@@ -1,6 +1,6 @@
 'use client';
 
-import type { ArchivedControlResponse } from '@dpdp-kit/shared';
+import type { ArchivedControlResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Button } from '@/components/base/button/button';

@@ -4,7 +4,7 @@ import {
   TRAINING_ABOUT_MAX_LENGTH,
   TRAINING_NAME_MAX_LENGTH,
   TRAINING_URL_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

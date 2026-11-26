@@ -1,6 +1,6 @@
 'use client';
 
-import type { DeadlineItem } from '@dpdp-kit/shared';
+import type { DeadlineItem } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Badge } from '@/components/base/badge/badge';
 import { IconLinkRow } from '@/components/base/icon-link-row/icon-link-row';

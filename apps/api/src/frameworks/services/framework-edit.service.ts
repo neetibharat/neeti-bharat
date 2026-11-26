@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { isLocked } from '@dpdp-kit/shared';
+import { isLocked } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';

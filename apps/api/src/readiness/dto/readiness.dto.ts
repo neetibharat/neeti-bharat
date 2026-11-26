@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { READINESS_ANSWERS, isValidReadinessAnswers } from '@dpdp-kit/shared';
+import { READINESS_ANSWERS, isValidReadinessAnswers } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const takeReadinessSchema = z.object({

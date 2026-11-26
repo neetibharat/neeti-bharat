@@ -1,4 +1,4 @@
-import { ERROR_CODES, type ErrorCode } from '@dpdp-kit/shared';
+import { ERROR_CODES, type ErrorCode } from '@neeti-bharat/shared';
 
 /**
  * Better Auth sends people back to sign-in with ?error=. It sends our own code when a hook refused them

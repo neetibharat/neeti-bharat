@@ -4,7 +4,7 @@
 
 The search box in the middle of the top bar (an icon on mobile) opens the search. **Ctrl K**, or **Cmd K** on a Mac, opens it from anywhere. Typing shows:
 
-- **Recent:** the results opened lately, kept in this browser (`dpdp_recent_search`), newest first, at most five. Shown when nothing is typed.
+- **Recent:** the results opened lately, kept in this browser (`app_recent_search`), newest first, at most five. Shown when nothing is typed.
 - **Quick actions:** New policy, Log a breach, Log a request, Add a vendor and, for admins, Add a person. They open the list page with its add dialog already showing (`?new=1`; see `lib/hooks/use-open-from-link.ts`). Auditors have none.
 - **Pages:** every live page the person may open, matched by name. Shown when something is typed, or when there is nothing else to show.
 - **Records:** from 2 letters, up to 5 of each of policies, proof requirements, vendors, breaches, requests, rules and controls, and (for admins) people. A rule and a control both open the rule page.

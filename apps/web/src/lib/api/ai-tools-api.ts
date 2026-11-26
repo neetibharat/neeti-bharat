@@ -3,7 +3,7 @@ import type {
   PolicyTailorResponse,
   ProofCheckResponse,
   TailorPolicyRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 
 export const aiToolsApi = baseApi.injectEndpoints({

@@ -5,8 +5,8 @@ import type {
   NotificationUnreadResponse,
   UpdateNotificationPreferencesRequest,
   UpdateNotificationRoleDefaultsRequest,
-} from '@dpdp-kit/shared';
-import { NOTIFICATION_PAGE_SIZE } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import { NOTIFICATION_PAGE_SIZE } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

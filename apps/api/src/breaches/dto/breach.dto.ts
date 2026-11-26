@@ -6,7 +6,7 @@ import {
   BREACH_TABS,
   BREACH_TEXT_MAX_LENGTH,
   BREACH_TITLE_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const text = (max: number) => z.string().trim().min(1).max(max);

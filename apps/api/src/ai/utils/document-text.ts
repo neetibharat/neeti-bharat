@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { POLICY_IMPORT_MAX_CHARACTERS, type PolicyImportExtension } from '@dpdp-kit/shared';
+import { POLICY_IMPORT_MAX_CHARACTERS, type PolicyImportExtension } from '@neeti-bharat/shared';
 import { strFromU8, unzipSync } from 'fflate';
 import { extractText, getDocumentProxy } from 'unpdf';
 import { AppException } from '../../core/common/app.exception';

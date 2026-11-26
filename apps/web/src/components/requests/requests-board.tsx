@@ -1,6 +1,6 @@
 'use client';
 
-import { REQUEST_STATUSES, type RequestBoardResponse } from '@dpdp-kit/shared';
+import { REQUEST_STATUSES, type RequestBoardResponse } from '@neeti-bharat/shared';
 import { Alert } from '@/components/base/alert/alert';
 import { Loading } from '@/components/base/loading/loading';
 import { useGetRequestsBoardQuery } from '@/lib/api/requests-api';

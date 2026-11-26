@@ -1,4 +1,4 @@
-import type { MyWorkItem, MyWorkKind } from '@dpdp-kit/shared';
+import type { MyWorkItem, MyWorkKind } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { myWorkHref, onMyWorkTab } from './my-work-tabs';
 

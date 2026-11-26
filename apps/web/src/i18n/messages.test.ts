@@ -22,7 +22,7 @@ import {
   LOCALES,
   PROFILE_FIELDS,
   PROFILE_GROUPS,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { WEBSITE_MESSAGE_KEYS } from '../lib/website-check';
 import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';

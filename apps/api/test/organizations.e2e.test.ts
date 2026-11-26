@@ -1,5 +1,5 @@
-import { READINESS_QUESTIONS } from '@dpdp-kit/shared';
-import type { OrganizationSummary } from '@dpdp-kit/shared';
+import { READINESS_QUESTIONS } from '@neeti-bharat/shared';
+import type { OrganizationSummary } from '@neeti-bharat/shared';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, type Client, type TestApp } from './support/test-app';
 

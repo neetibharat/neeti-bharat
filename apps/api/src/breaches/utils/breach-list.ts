@@ -1,4 +1,9 @@
-import type { BreachCounts, BreachListItem, BreachListResponse, BreachTab } from '@dpdp-kit/shared';
+import type {
+  BreachCounts,
+  BreachListItem,
+  BreachListResponse,
+  BreachTab,
+} from '@neeti-bharat/shared';
 import { stateOf, toListItem, type BreachSummaryRow, type Clock } from './breach-view';
 
 export interface BreachListQuery {

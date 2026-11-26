@@ -1,6 +1,6 @@
 'use client';
 
-import type { PolicyStatus } from '@dpdp-kit/shared';
+import type { PolicyStatus } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useCan } from '@/components/providers/user-provider';
 import { Alert } from '@/components/base/alert/alert';

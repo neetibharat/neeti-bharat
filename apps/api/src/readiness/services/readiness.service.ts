@@ -6,7 +6,7 @@ import {
   type ReadinessCheckResponse,
   type ReadinessCheckSummary,
   type ReadinessResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import type { ReadinessCheck } from '../../generated/prisma/client';
 import { ReadinessRepository } from '../repositories/readiness.repository';

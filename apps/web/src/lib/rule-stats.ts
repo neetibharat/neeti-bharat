@@ -1,4 +1,4 @@
-import type { PolicyResponse, ProofCounts, RuleResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse, ProofCounts, RuleResponse } from '@neeti-bharat/shared';
 import { percentOf } from './percent';
 import { policyIdsOf, progressOf } from './rule-progress';
 

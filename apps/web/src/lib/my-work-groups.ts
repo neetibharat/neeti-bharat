@@ -1,4 +1,4 @@
-import type { MyWorkItem } from '@dpdp-kit/shared';
+import type { MyWorkItem } from '@neeti-bharat/shared';
 
 export const MY_WORK_GROUPS = ['overdue', 'week', 'later', 'undated'] as const;
 export type MyWorkGroupId = (typeof MY_WORK_GROUPS)[number];

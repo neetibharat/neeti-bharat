@@ -1,5 +1,5 @@
 {
-  "name": "@dpdp-kit/api",
+  "name": "@neeti-bharat/api",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-only",
@@ -19,7 +19,7 @@
     "@aws-sdk/client-s3": "^3.1166.0",
     "@aws-sdk/s3-request-presigner": "^3.1166.0",
     "@azure/storage-blob": "^12.34.0",
-    "@dpdp-kit/shared": "workspace:*",
+    "@neeti-bharat/shared": "workspace:*",
     "@nestjs/common": "^12.4.0",
     "@nestjs/config": "^12.1.1",
     "@nestjs/core": "^12.4.0",

@@ -1,4 +1,4 @@
-import type { ProfileEntryResponse, SetupAnswers } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse, SetupAnswers } from '@neeti-bharat/shared';
 
 /** The three set-up answers, read from the company profile. Anything but "yes" counts as no. */
 export function setupAnswersOf(entries: ProfileEntryResponse[]): SetupAnswers {

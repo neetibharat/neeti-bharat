@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PROFILE_LABEL_MAX_LENGTH, PROFILE_VALUE_MAX_LENGTH } from '@dpdp-kit/shared';
+import { PROFILE_LABEL_MAX_LENGTH, PROFILE_VALUE_MAX_LENGTH } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const updateProfileEntrySchema = z.object({

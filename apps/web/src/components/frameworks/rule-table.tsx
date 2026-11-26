@@ -1,7 +1,7 @@
 'use client';
 
 import { IconChevronRight } from '@tabler/icons-react';
-import type { RuleResponse } from '@dpdp-kit/shared';
+import type { RuleResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/base/badge/badge';

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCheck, IconCopy } from '@tabler/icons-react';
-import type { CreatedApiKeyResponse } from '@dpdp-kit/shared';
+import type { CreatedApiKeyResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

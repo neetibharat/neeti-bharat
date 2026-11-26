@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { JobRole, PolicyDocument } from '@dpdp-kit/shared';
+import type { JobRole, PolicyDocument } from '@neeti-bharat/shared';
 import { orgKey, orgOwned } from '../../core/org/keys';
 import { currentOrganizationId } from '../../core/org/org-context';
 import { PrismaService } from '../../core/prisma/prisma.service';

@@ -1,4 +1,4 @@
-import type { ControlResponse, RuleResponse } from '@dpdp-kit/shared';
+import type { ControlResponse, RuleResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { applyingControls, policyIdsOf, progressOf, ruleHeading } from './rule-progress';
 

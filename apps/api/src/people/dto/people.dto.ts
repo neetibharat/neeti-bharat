@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { APP_ROLES, JOB_ROLES, PEOPLE_PAGE_SIZE } from '@dpdp-kit/shared';
+import { APP_ROLES, JOB_ROLES, PEOPLE_PAGE_SIZE } from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const text = (max: number) => z.string().trim().min(1).max(max);

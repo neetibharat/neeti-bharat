@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { SearchResponse } from '@dpdp-kit/shared';
+import type { SearchResponse } from '@neeti-bharat/shared';
 import { SearchRepository } from '../repositories/search.repository';
 
 @Injectable()

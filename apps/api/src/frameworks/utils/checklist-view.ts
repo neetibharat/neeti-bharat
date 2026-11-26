@@ -13,7 +13,7 @@ import {
   type RuleCondition,
   type RuleResponse,
   type SetupAnswers,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { day, iso, lastProvided } from './dates';
 
 /** A control as stored, with the policies that cover it, primary first. */

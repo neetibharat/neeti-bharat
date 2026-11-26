@@ -1,6 +1,6 @@
 'use client';
 
-import { PROOF_TEMPLATES, type ProofTemplate } from '@dpdp-kit/shared';
+import { PROOF_TEMPLATES, type ProofTemplate } from '@neeti-bharat/shared';
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { Textarea, type TextareaProps } from '@/components/base/textarea/textarea';
 import {

@@ -1,4 +1,4 @@
-import { AZURE_CHECK_IDS } from '@dpdp-kit/shared';
+import { AZURE_CHECK_IDS } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { fakeAzure } from './checks/fake-azure';
 import { runAzureChecks, tally } from './run-azure-checks';

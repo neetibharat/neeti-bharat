@@ -1,4 +1,4 @@
-import type { MyPoliciesResponse, TeamPoliciesResponse } from '@dpdp-kit/shared';
+import type { MyPoliciesResponse, TeamPoliciesResponse } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

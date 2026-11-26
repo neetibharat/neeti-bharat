@@ -1,4 +1,4 @@
-import type { ActivityEventResponse } from '@dpdp-kit/shared';
+import type { ActivityEventResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { sentenceParams, type ParamWords } from './activity-params';
 

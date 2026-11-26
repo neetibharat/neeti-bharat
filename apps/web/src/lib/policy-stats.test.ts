@@ -1,4 +1,4 @@
-import type { PolicyResponse } from '@dpdp-kit/shared';
+import type { PolicyResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { countsByOwner, statusCounts } from './policy-stats';
 

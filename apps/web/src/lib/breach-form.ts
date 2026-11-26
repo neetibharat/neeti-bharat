@@ -1,4 +1,4 @@
-import type { BreachResponse, UpdateBreachRequest } from '@dpdp-kit/shared';
+import type { BreachResponse, UpdateBreachRequest } from '@neeti-bharat/shared';
 
 const pad = (value: number): string => String(value).padStart(2, '0');
 

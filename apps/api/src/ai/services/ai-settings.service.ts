@@ -1,59 +1,43 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
+  AI_DEFAULT_MODELS,
   AI_FEATURES,
-  AI_PROVIDERS,
   type AiFeature,
-  type AiProvider,
   type AiSettingsResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { AppException } from '../../core/common/app.exception';
-import { currentOrganizationId } from '../../core/org/org-context';
-import { SecretBox } from '../../core/secrets/secret-box';
-import type { AiSetting } from '../../generated/prisma/client';
-import type { SaveAiSettingsInput } from '../dto/ai.dto';
-import { AiClient, AiProviderError, type AiTarget } from '../providers/ai-client';
+import type { Env } from '../../core/config/env.validation';
+import type { AiTarget } from '../providers/ai-client';
 import { AiSettingRepository } from '../repositories/ai-setting.repository';
 
 const KEY_HINT_LENGTH = 4;
-
-type Summary = Omit<AiSettingsResponse, 'enabled'>;
-
-const NOTHING_SET: Summary = {
-  provider: null,
-  model: null,
-  keyHint: null,
-  configuredByName: null,
-  disabledFeatures: [],
-};
-
-/** What is shown of the saved setting. The key is never part of it. */
-function summaryOf(row: AiSetting | null): Summary {
-  if (!row) return NOTHING_SET;
-  return {
-    provider: row.provider as AiProvider,
-    model: row.model,
-    keyHint: row.keyHint,
-    configuredByName: row.updatedByName,
-    disabledFeatures: featuresOf(row.disabledFeatures),
-  };
-}
 
 /** The known features among these, once each, in the order they are listed. */
 const featuresOf = (names: readonly string[] | undefined): AiFeature[] =>
   AI_FEATURES.filter((feature) => names?.includes(feature));
 
+/**
+ * The AI service is the install's: its service, model and key are read from the environment at each call. What a
+ * company chooses is which features are on, and that is the only thing kept in the database.
+ */
 @Injectable()
 export class AiSettingsService {
   constructor(
     private readonly settings: AiSettingRepository,
-    private readonly secrets: SecretBox,
-    private readonly client: AiClient,
+    private readonly config: ConfigService<Env, true>,
     private readonly activity: ActivityService,
   ) {}
 
   async get(): Promise<AiSettingsResponse> {
-    return { enabled: this.secrets.isEnabled(), ...summaryOf(await this.settings.find()) };
+    const target = this.environmentTarget();
+    return {
+      provider: target?.provider ?? null,
+      model: target?.model ?? null,
+      keyHint: target ? target.apiKey.slice(-KEY_HINT_LENGTH) : null,
+      enabledFeatures: target ? featuresOf((await this.settings.find())?.enabledFeatures) : [],
+    };
   }
 
   /** Writes one use of the AI to the activity log, with the service and model that answered, in a transaction of its own. */
@@ -72,94 +56,41 @@ export class AiSettingsService {
     );
   }
 
-  /** Tries the key and model with the service first, then keeps the key sealed. Nothing is kept if they do not work. */
-  async save(input: SaveAiSettingsInput, actor: ActivityActor): Promise<AiSettingsResponse> {
-    if (!this.secrets.isEnabled()) {
-      throw new AppException('SECRETS_NOT_CONFIGURED', HttpStatus.SERVICE_UNAVAILABLE);
-    }
-    await this.confirmWorks(input);
-    await this.settings.saveWith(
-      {
-        provider: input.provider,
-        model: input.model,
-        apiKey: this.secrets.seal(input.apiKey, this.context()),
-        keyHint: input.apiKey.slice(-KEY_HINT_LENGTH),
-        updatedByName: actor.label,
-      },
-      () =>
-        this.activity.record({
-          actor,
-          action: 'AI_CONFIGURED',
-          subject: { type: 'ai' },
-          details: { provider: input.provider, model: input.model },
-        }),
-    );
-    return this.get();
-  }
-
-  async remove(actor: ActivityActor): Promise<void> {
-    const row = await this.settings.find();
-    if (!row) return;
-    await this.settings.remove();
-    await this.activity.record({
-      actor,
-      action: 'AI_REMOVED',
-      subject: { type: 'ai' },
-      details: { provider: row.provider },
-    });
-  }
-
-  /** Switches features off or on for the company. Only features that exist are kept. */
-  async setFeatures(disabled: AiFeature[], actor: ActivityActor): Promise<AiSettingsResponse> {
-    const row = await this.settings.find();
-    if (!row) throw new AppException('AI_NOT_CONFIGURED', HttpStatus.CONFLICT);
-    const next = featuresOf(disabled);
-    await this.settings.setDisabledFeatures(next);
+  /** Switches on the features given and off the rest. Only features that exist are kept. */
+  async setFeatures(enabled: AiFeature[], actor: ActivityActor): Promise<AiSettingsResponse> {
+    this.target();
+    const next = featuresOf(enabled);
+    await this.settings.setEnabledFeatures(next, actor.label);
     await this.activity.record({
       actor,
       action: 'AI_FEATURES_CHANGED',
       subject: { type: 'ai' },
-      details: { off: next.length ? next.join(', ') : 'none' },
+      details: { on: next.length ? next.join(', ') : 'none' },
     });
     return this.get();
   }
 
-  /** Refuses a feature an admin has switched off, or any feature while no AI service is set up. */
+  /** Refuses a feature that is not switched on, or any feature while the install has no AI service. */
   async assertOn(feature: AiFeature): Promise<void> {
+    this.target();
     const row = await this.settings.find();
-    if (!row) throw new AppException('AI_NOT_CONFIGURED', HttpStatus.CONFLICT);
-    if (featuresOf(row.disabledFeatures).includes(feature)) {
+    if (!featuresOf(row?.enabledFeatures).includes(feature)) {
       throw new AppException('AI_FEATURE_OFF', HttpStatus.CONFLICT, { feature });
     }
   }
 
-  /** What a call to the service needs, or AI_NOT_CONFIGURED when no one has set it up. */
-  async target(): Promise<AiTarget> {
-    const row = await this.settings.find();
-    if (!row || !AI_PROVIDERS.includes(row.provider as AiProvider)) {
-      throw new AppException('AI_NOT_CONFIGURED', HttpStatus.CONFLICT);
-    }
-    return {
-      provider: row.provider as AiProvider,
-      model: row.model,
-      apiKey: this.secrets.open(row.apiKey, this.context()),
-    };
+  /** What a call to the service needs, or AI_NOT_CONFIGURED when the install has no AI service. */
+  target(): AiTarget {
+    const target = this.environmentTarget();
+    if (!target) throw new AppException('AI_NOT_CONFIGURED', HttpStatus.CONFLICT);
+    return target;
   }
 
-  /** What a sealed key is tied to, so one organisation's key cannot be opened as another's. */
-  private context(): string {
-    return `${currentOrganizationId()}:ai`;
-  }
-
-  private async confirmWorks(target: AiTarget): Promise<void> {
-    try {
-      await this.client.verify(target);
-    } catch (error) {
-      if (!(error instanceof AiProviderError)) throw error;
-      throw new AppException('AI_FAILED', HttpStatus.BAD_REQUEST, {
-        reason: error.reason,
-        detail: error.detail,
-      });
-    }
+  private environmentTarget(): AiTarget | null {
+    const provider = this.config.get('AI_PROVIDER', { infer: true });
+    const apiKey = this.config.get('AI_API_KEY', { infer: true });
+    if (!provider || !apiKey) return null;
+    const model = this.config.get('AI_MODEL', { infer: true }) ?? AI_DEFAULT_MODELS[provider];
+    return { provider, model, apiKey };
   }
 }

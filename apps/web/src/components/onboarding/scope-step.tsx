@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 import { IconCircleCheck } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { OrganizationSummary } from '@dpdp-kit/shared';
+import type { OrganizationSummary } from '@neeti-bharat/shared';
 import { ActivityService } from '../../activity/services/activity.service';
 import { runInOrganization } from '../../core/org/org-context';
 import { FrameworkSeedService } from '../../frameworks/services/framework-seed.service';

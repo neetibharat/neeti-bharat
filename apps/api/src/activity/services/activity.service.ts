@@ -5,7 +5,7 @@ import type {
   ActivityListResponse,
   ActivityValue,
   ActivityVerifyResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import type { ActivityAnchor, ActivityEvent } from '../../generated/prisma/client';
 import { ActivityRepository, type ListQuery } from '../repositories/activity.repository';
 import { fingerprint } from '../utils/fingerprint';

@@ -1,6 +1,6 @@
 'use client';
 
-import type { OrganizationSummary } from '@dpdp-kit/shared';
+import type { OrganizationSummary } from '@neeti-bharat/shared';
 import { IconCheck, IconChevronDown, IconPlus } from '@tabler/icons-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button, Menu, MenuItem, MenuTrigger, Popover, Separator } from 'react-aria-components';

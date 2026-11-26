@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { RulePageResponse } from '@dpdp-kit/shared';
+import type { RulePageResponse } from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import type { ActivityEvent } from '../../generated/prisma/client';
 import { FileStorage } from '../../core/storage/file-storage';

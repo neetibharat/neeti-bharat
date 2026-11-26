@@ -1,7 +1,7 @@
 'use client';
 
 import { IconInfoCircle } from '@tabler/icons-react';
-import { DPDP_CONTROLS, DPDP_RULES } from '@dpdp-kit/shared';
+import { DPDP_CONTROLS, DPDP_RULES } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { Modal } from '@/components/base/modal/modal';

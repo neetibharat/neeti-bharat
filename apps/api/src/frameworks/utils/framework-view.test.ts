@@ -1,4 +1,4 @@
-import type { RuleResponse } from '@dpdp-kit/shared';
+import type { RuleResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import type { ControlRow, PolicyBriefs } from './checklist-view';
 import { coverageOf, summaryOf } from './framework-view';

@@ -29,13 +29,10 @@ function build(complete: () => Promise<string>, configured = true) {
   const settings = {
     assertOn: vi.fn().mockResolvedValue(undefined),
     recordUse: vi.fn().mockResolvedValue(undefined),
-    target: vi
-      .fn()
-      .mockImplementation(() =>
-        configured
-          ? Promise.resolve(target)
-          : Promise.reject(new AppException('AI_NOT_CONFIGURED', 409)),
-      ),
+    target: vi.fn().mockImplementation(() => {
+      if (!configured) throw new AppException('AI_NOT_CONFIGURED', 409);
+      return target;
+    }),
   };
   const client = { completeJson: vi.fn(complete) };
   const profile = {

@@ -5,7 +5,7 @@ import {
   EVIDENCE_FILE_MAX_BYTES,
   EVIDENCE_FILE_NAME_MAX_LENGTH,
   type EvidenceFileExtension,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { AppException } from '../../core/common/app.exception';
 
 /** What an upload looks like once multer has read it. */

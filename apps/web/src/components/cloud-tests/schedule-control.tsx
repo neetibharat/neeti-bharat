@@ -4,7 +4,7 @@ import {
   CONNECTION_SCHEDULES,
   type ConnectionSchedule,
   type ConnectionSummary,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Select } from '@/components/base/select/select';

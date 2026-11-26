@@ -1,7 +1,7 @@
 'use client';
 
 import { IconDownload, IconFile, IconLink, IconNote, IconTrash } from '@tabler/icons-react';
-import type { EvidenceResponse } from '@dpdp-kit/shared';
+import type { EvidenceResponse } from '@neeti-bharat/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { useCan } from '@/components/providers/user-provider';

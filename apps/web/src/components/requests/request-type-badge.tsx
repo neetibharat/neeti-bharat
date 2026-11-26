@@ -1,4 +1,4 @@
-import type { RequestType } from '@dpdp-kit/shared';
+import type { RequestType } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Badge, type BadgeProps } from '@/components/base/badge/badge';
 

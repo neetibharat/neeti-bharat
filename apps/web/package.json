@@ -1,5 +1,5 @@
 {
-  "name": "@dpdp-kit/web",
+  "name": "@neeti-bharat/web",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-only",
@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@dpdp-kit/shared": "workspace:*",
+    "@neeti-bharat/shared": "workspace:*",
     "@internationalized/date": "^3.12.4",
     "@reduxjs/toolkit": "^2.14.0",
     "@tabler/icons-react": "^3.51.0",

@@ -1,4 +1,4 @@
-import type { PolicyDocument } from '@dpdp-kit/shared';
+import type { PolicyDocument } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { documentToMarkdown } from './doc-markdown';
 

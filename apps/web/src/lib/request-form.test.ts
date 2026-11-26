@@ -1,4 +1,4 @@
-import type { RequestResponse } from '@dpdp-kit/shared';
+import type { RequestResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   newRequestValues,

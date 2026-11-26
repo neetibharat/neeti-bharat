@@ -35,7 +35,7 @@ export interface TestDatabase {
 /** Makes an empty database with every migration applied, and a way to remove it afterwards. */
 export async function createTestDatabase(): Promise<TestDatabase> {
   const server = serverUrl();
-  const name = `dpdp_e2e_${randomBytes(6).toString('hex')}`;
+  const name = `app_e2e_${randomBytes(6).toString('hex')}`;
   const admin = new PrismaClient({
     adapter: new PrismaPg({ connectionString: withDatabase(server, 'postgres') }),
   });

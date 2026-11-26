@@ -1,4 +1,4 @@
-import type { BreachStepResponse } from '@dpdp-kit/shared';
+import type { BreachStepResponse } from '@neeti-bharat/shared';
 
 export type StepState = 'done' | 'current' | 'upcoming';
 

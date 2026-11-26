@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProfileEntryResponse } from '@dpdp-kit/shared';
+import type { ProfileEntryResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { isProfileKey } from '@/lib/guards';
 

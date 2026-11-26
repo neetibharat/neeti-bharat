@@ -4,7 +4,7 @@ import {
   BREACH_TEXT_MAX_LENGTH,
   BREACH_TITLE_MAX_LENGTH,
   type UpdateBreachRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

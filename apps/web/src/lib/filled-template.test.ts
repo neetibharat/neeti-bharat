@@ -1,4 +1,4 @@
-import type { EvidenceResponse } from '@dpdp-kit/shared';
+import type { EvidenceResponse } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { splitProof, templateFileOf } from './filled-template';
 

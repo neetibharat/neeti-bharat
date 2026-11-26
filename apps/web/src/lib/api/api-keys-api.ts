@@ -2,8 +2,8 @@ import type {
   ApiKeyListResponse,
   CreateApiKeyRequest,
   CreatedApiKeyResponse,
-} from '@dpdp-kit/shared';
-import { API_KEY_PAGE_SIZE } from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
+import { API_KEY_PAGE_SIZE } from '@neeti-bharat/shared';
 import { baseApi } from './base-api';
 import { CHANGES } from './tags';
 

@@ -1,4 +1,4 @@
-import { POLICY_IMPORT_MAX_BYTES } from '@dpdp-kit/shared';
+import { POLICY_IMPORT_MAX_BYTES } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { checkImportFile, IMPORT_PICKER_TYPES } from './policy-import-file';
 

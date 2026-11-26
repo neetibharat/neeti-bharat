@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { BreachStep } from '@dpdp-kit/shared';
+import type { BreachStep } from '@neeti-bharat/shared';
 import { ProfileService } from '../../profile/services/profile.service';
 import { BreachRepository } from '../repositories/breach.repository';
 import { reportWindowOf } from '../utils/breach-clock';

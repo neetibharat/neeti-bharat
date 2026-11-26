@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { API_KEY_PREFIX } from '@dpdp-kit/shared';
+import { API_KEY_PREFIX } from '@neeti-bharat/shared';
 
 /** How much of a key is kept in the clear, after the fixed start, to tell keys apart. */
 const SHOWN_CHARACTERS = 6;

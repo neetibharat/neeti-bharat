@@ -1,6 +1,6 @@
 'use client';
 
-import type { ErrorCode } from '@dpdp-kit/shared';
+import type { ErrorCode } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { isApiError } from '@/lib/api/base-api';
 

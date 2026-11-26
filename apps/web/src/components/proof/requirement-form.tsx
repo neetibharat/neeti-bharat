@@ -5,7 +5,7 @@ import {
   PROOF_FREQUENCIES,
   PROOF_TITLE_MAX_LENGTH,
   type SaveProofRequirementRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

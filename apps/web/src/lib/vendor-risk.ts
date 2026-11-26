@@ -5,7 +5,7 @@ import {
   type RiskLevel,
   type RiskReading,
   type VendorResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 
 /** The colour of each level on the dark panel, from calm to alarming. */
 export const LEVEL_COLOR: Record<RiskLevel, string> = {

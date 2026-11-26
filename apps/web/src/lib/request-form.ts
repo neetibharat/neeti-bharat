@@ -4,7 +4,7 @@ import type {
   RequestSource,
   RequestType,
   UpdateRequestRequest,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { fromFormMoment, toFormMoment } from './breach-form';
 
 /** What the request form holds while it is being typed. The date is empty until one is picked. */

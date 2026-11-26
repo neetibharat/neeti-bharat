@@ -18,7 +18,7 @@ import {
   VENDOR_LOCATIONS,
   VENDOR_STATUSES,
   VENDOR_TREATMENTS,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import {
   AppRole,

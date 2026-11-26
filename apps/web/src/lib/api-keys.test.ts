@@ -1,4 +1,4 @@
-import type { ApiKeySummary } from '@dpdp-kit/shared';
+import type { ApiKeySummary } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { keyState, lifetimeOf } from './api-keys';
 
@@ -6,7 +6,7 @@ const key = (over: Partial<ApiKeySummary> = {}): ApiKeySummary => ({
   id: 'k1',
   name: 'Claude Code',
   role: 'member',
-  prefix: 'dpdp_ab12cd',
+  prefix: 'sk_live_ab12cd',
   createdByName: 'Alice',
   createdAt: '2026-11-01T00:00:00.000Z',
   expiresAt: null,

@@ -1,6 +1,6 @@
 'use client';
 
-import { POLICY_STATUSES } from '@dpdp-kit/shared';
+import { POLICY_STATUSES } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { StackedBars, type BarRow } from '@/components/graphs/stacked-bars';

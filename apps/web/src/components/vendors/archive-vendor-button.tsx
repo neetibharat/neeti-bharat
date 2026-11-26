@@ -1,7 +1,7 @@
 'use client';
 
 import { IconArchive, IconArchiveOff } from '@tabler/icons-react';
-import type { VendorResponse } from '@dpdp-kit/shared';
+import type { VendorResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/base/button/button';
 import { useArchiveVendorMutation, useRestoreVendorMutation } from '@/lib/api/vendors-api';

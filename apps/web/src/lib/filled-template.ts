@@ -1,4 +1,4 @@
-import { TEMPLATES_PATH, type EvidenceResponse } from '@dpdp-kit/shared';
+import { TEMPLATES_PATH, type EvidenceResponse } from '@neeti-bharat/shared';
 
 // Letters and digits only, so spaces, brackets and underscores added on upload do not matter.
 const stemOf = (file: string): string =>

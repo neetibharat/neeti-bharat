@@ -6,7 +6,7 @@ import {
   REQUIREMENT_REFERENCE_MAX_LENGTH,
   REQUIREMENT_SUMMARY_MAX_LENGTH,
   REQUIREMENT_TITLE_MAX_LENGTH,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 export const saveFrameworkSchema = z.object({

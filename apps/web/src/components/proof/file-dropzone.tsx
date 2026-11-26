@@ -1,6 +1,6 @@
 'use client';
 
-import type { StorageStatusResponse } from '@dpdp-kit/shared';
+import type { StorageStatusResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';

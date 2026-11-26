@@ -2,7 +2,14 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import en from '../../messages/en.json';
-import { NAV_AREAS, areaForPath, firstLiveHref, isActivePath, itemsOf } from './navigation';
+import {
+  NAV_AREAS,
+  areaForPath,
+  firstLiveHref,
+  isActivePath,
+  itemsOf,
+  visibleAreas,
+} from './navigation';
 
 const items = NAV_AREAS.flatMap(itemsOf);
 
@@ -66,5 +73,20 @@ describe('isActivePath', () => {
   it('lights an item for its own pages', () => {
     expect(isActivePath('/settings/people/new', '/settings/people')).toBe(true);
     expect(isActivePath('/settings/people-extra', '/settings/people')).toBe(false);
+  });
+});
+
+describe('visibleAreas', () => {
+  const ids = (features: { isAdmin: boolean; aiOn: boolean }) =>
+    visibleAreas(features).flatMap((area) => itemsOf(area).map((item) => item.id));
+
+  it('leaves out the AI help page where the install has no AI service', () => {
+    expect(ids({ isAdmin: true, aiOn: false })).not.toContain('aiHelp');
+    expect(ids({ isAdmin: true, aiOn: true })).toContain('aiHelp');
+  });
+
+  it('keeps the other settings pages, and shows no settings to someone who is not an admin', () => {
+    expect(ids({ isAdmin: true, aiOn: false })).toContain('apiKeys');
+    expect(ids({ isAdmin: false, aiOn: true })).not.toContain('aiHelp');
   });
 });

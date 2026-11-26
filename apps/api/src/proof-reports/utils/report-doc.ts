@@ -1,4 +1,4 @@
-import { EVIDENCE_NOTE_MAX_LENGTH } from '@dpdp-kit/shared';
+import { EVIDENCE_NOTE_MAX_LENGTH } from '@neeti-bharat/shared';
 
 export interface ReportTable {
   head: string[];

@@ -8,7 +8,7 @@ import {
   VENDOR_SERVICE_MAX_LENGTH,
   VENDOR_STATUSES,
   type VendorDataKind,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Checkbox } from '@/components/base/checkbox/checkbox';
 import { DatePicker } from '@/components/base/date-picker/date-picker';

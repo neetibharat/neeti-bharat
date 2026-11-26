@@ -1,7 +1,7 @@
 'use client';
 
 import { IconArchive, IconArchiveOff, IconSchool } from '@tabler/icons-react';
-import type { TrainingListResponse, TrainingResponse } from '@dpdp-kit/shared';
+import type { TrainingListResponse, TrainingResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { Badge } from '@/components/base/badge/badge';

@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { SetupAnswers } from '@dpdp-kit/shared';
+import type { SetupAnswers } from '@neeti-bharat/shared';
 import { activeOrNotFound } from '../../core/common/active';
 import { AppException } from '../../core/common/app.exception';
 import { ProfileService } from '../../profile/services/profile.service';

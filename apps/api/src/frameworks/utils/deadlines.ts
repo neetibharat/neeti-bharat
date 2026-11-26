@@ -7,7 +7,7 @@ import {
   type DeadlineCounts,
   type DeadlineItem,
   type DeadlineTab,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { type ControlRow } from './checklist-view';
 import { lastProvided } from './dates';
 import type { WorkBreach, WorkPolicy, WorkRequest, WorkTraining, WorkVendor } from './my-work';

@@ -5,7 +5,7 @@ import type {
   PersonOptionsResponse,
   PersonResponse,
   RoleHoldersResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { ActivityService, type ActivityActor } from '../../activity/services/activity.service';
 import { UserService } from '../../users/services/user.service';
 import { AppException } from '../../core/common/app.exception';

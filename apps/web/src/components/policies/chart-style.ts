@@ -1,4 +1,4 @@
-import type { PolicyStatus } from '@dpdp-kit/shared';
+import type { PolicyStatus } from '@neeti-bharat/shared';
 
 /** The fill for each status. They come from the theme, so the charts follow it. */
 export const STATUS_COLORS: Record<PolicyStatus, string> = {

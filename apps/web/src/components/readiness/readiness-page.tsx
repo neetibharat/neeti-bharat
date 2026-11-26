@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReadinessAnswers, ReadinessResponse } from '@dpdp-kit/shared';
+import type { ReadinessAnswers, ReadinessResponse } from '@neeti-bharat/shared';
 import { IconGauge } from '@tabler/icons-react';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useState } from 'react';

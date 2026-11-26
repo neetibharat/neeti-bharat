@@ -13,7 +13,7 @@ import {
   REQUEST_TEXT_MAX_LENGTH,
   REQUEST_TYPES,
   TASK_OUTCOMES,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 
 const text = (max: number) => z.string().trim().min(1).max(max);

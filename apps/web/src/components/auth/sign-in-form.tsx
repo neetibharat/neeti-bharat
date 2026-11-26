@@ -1,7 +1,7 @@
 'use client';
 
 import { IconMail } from '@tabler/icons-react';
-import type { AuthProvidersResponse, ErrorCode } from '@dpdp-kit/shared';
+import type { AuthProvidersResponse, ErrorCode } from '@neeti-bharat/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
 import { Alert } from '@/components/base/alert/alert';

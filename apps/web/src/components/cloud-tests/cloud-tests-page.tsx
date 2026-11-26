@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCloudCheck } from '@tabler/icons-react';
-import { CONNECTION_MAX_PAGE_SIZE, type ConnectionSummary } from '@dpdp-kit/shared';
+import { CONNECTION_MAX_PAGE_SIZE, type ConnectionSummary } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';

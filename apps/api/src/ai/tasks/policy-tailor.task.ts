@@ -3,7 +3,7 @@ import {
   markdownToDocument,
   type PolicyDocument,
   type PolicyTailorResponse,
-} from '@dpdp-kit/shared';
+} from '@neeti-bharat/shared';
 import { z } from 'zod';
 import type { VendorBrief } from '../../vendors/services/vendor-brief-reader';
 import type { AiTask } from '../services/ai-runner.service';

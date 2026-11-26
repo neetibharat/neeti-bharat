@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import type { AppRole } from '@dpdp-kit/shared';
+import type { AppRole } from '@neeti-bharat/shared';
 
 /** Which organisation the current request works in, and the role the signed-in person has there. */
 export interface OrgStore {

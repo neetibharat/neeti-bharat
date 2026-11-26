@@ -1,4 +1,4 @@
-import { DPDP_CONTROLS, DPDP_POLICIES } from '@dpdp-kit/shared';
+import { DPDP_CONTROLS, DPDP_POLICIES } from '@neeti-bharat/shared';
 import { describe, expect, it } from 'vitest';
 import { dpdpRows, planSeed } from './catalogue-rows';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import type { BreachResponse, UpdateBreachRequest } from '@dpdp-kit/shared';
+import type { BreachResponse, UpdateBreachRequest } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
 import { Alert } from '@/components/base/alert/alert';

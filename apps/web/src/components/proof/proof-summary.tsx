@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProofCounts } from '@dpdp-kit/shared';
+import type { ProofCounts } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/components/base/card/card';
 import { cx } from '@/lib/utils/cx';

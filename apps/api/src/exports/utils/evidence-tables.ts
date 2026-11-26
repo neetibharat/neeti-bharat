@@ -1,4 +1,4 @@
-import type { RuleResponse } from '@dpdp-kit/shared';
+import type { RuleResponse } from '@neeti-bharat/shared';
 import type { Table } from './tables';
 import { dayStamp } from './zip-names';
 

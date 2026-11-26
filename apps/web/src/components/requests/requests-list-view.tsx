@@ -1,7 +1,7 @@
 'use client';
 
 import { IconInbox } from '@tabler/icons-react';
-import { REQUEST_TABS, type RequestListResponse, type RequestTab } from '@dpdp-kit/shared';
+import { REQUEST_TABS, type RequestListResponse, type RequestTab } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { Alert } from '@/components/base/alert/alert';
 import { EmptyState } from '@/components/base/empty-state/empty-state';

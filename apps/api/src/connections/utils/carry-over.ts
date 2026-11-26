@@ -1,4 +1,4 @@
-import type { CheckId, ConnectionCheckResult } from '@dpdp-kit/shared';
+import type { CheckId, ConnectionCheckResult } from '@neeti-bharat/shared';
 
 /**
  * The results of a run that read only some checks: the new ones, and the rest as the run before found them, each marked

@@ -1,7 +1,7 @@
 'use client';
 
 import { IconCalendarCheck } from '@tabler/icons-react';
-import { DEADLINE_TABS, type DeadlineTab, type DeadlinesResponse } from '@dpdp-kit/shared';
+import { DEADLINE_TABS, type DeadlineTab, type DeadlinesResponse } from '@neeti-bharat/shared';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Alert } from '@/components/base/alert/alert';
