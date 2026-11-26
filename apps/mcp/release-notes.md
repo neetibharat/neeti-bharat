@@ -21,6 +21,8 @@ This lets Claude Desktop set up your DPDP compliance work in Neeti Bharat: polic
 
 ![The Extensions page, which says to drag .MCPB files here to install](https://raw.githubusercontent.com/neetibharat/neeti-bharat/main/docs/images/mcp/2-drag-file.png)
 
+![The install box for Neeti Bharat, with the Install button](https://raw.githubusercontent.com/neetibharat/neeti-bharat/main/docs/images/mcp/2-install.png)
+
 Claude Desktop warns that the extension is not verified by Anthropic. That is expected for an extension that is not in Anthropic's own directory. Only install a file you got from your own team.
 
 **4. Enter the address and your key.** A box opens with two fields:
