@@ -1,19 +1,38 @@
+<div align="center">
+
 # Neeti Bharat
 
-Open-source, self-hosted toolkit for complying with India's Digital Personal Data Protection Act.
+**Open-source, self-hosted compliance for India's Digital Personal Data Protection Act.**
 
-## Layout
+Turn the DPDP Act and Rules into a checklist your team can finish: who owns each duty, which policy covers it, and the proof that it is done.
 
-| Path              | What it is                                                   |
-| ----------------- | ------------------------------------------------------------ |
-| `apps/api`        | NestJS API with Prisma and Postgres                          |
-| `apps/web`        | Next.js app, translated with next-intl                       |
-| `apps/mcp`        | MCP server that lets Claude set up a company through the API |
-| `packages/shared` | Types, constants and the DPDP catalogue used by both apps    |
+[![CI](https://github.com/neetibharat/neeti-bharat/actions/workflows/ci.yml/badge.svg)](https://github.com/neetibharat/neeti-bharat/actions/workflows/ci.yml)
+[![Licence: AGPL-3.0](https://img.shields.io/badge/licence-AGPL--3.0-blue.svg)](LICENSE)
+
+<br />
+
+<img src="docs/images/hero.png" alt="The DPDP Act 2023 and Rules 2025 in Neeti Bharat: each rule with its controls, the policies that cover it, and its status" width="100%" />
+
+</div>
+
+<br />
+
+## What it does
+
+- **The Act, rule by rule.** 13 rules, 47 controls and 19 ready-made policies are built in. A control is done when its policies are approved and it has proof. Each control has an owner, which is a job someone holds.
+- **Proof, not promises.** 68 pieces of proof an auditor would ask for, with 67 Word templates to fill in. Upload files, add links or notes, and see what is missing, due or late.
+- **Policies with approval.** Draft in the editor, send for review, approve with a name and a date. Policies follow your company's own answers.
+- **Checks that run themselves.** Read-only connections to Azure and GitHub check how your systems are set up against what the Act expects, on a schedule, with the resource behind every finding.
+- **The day-to-day duties.** A breach register with the report clock, requests and complaints from people, a vendor list, training, a website check, and one page of everything that is due or late.
+- **An audit trail you can trust.** Every change goes into a tamper-evident activity log. Export an audit pack of CSV files for your auditor.
+- **Claude can set it up.** An [MCP server](docs/mcp.md) lets Claude draft frameworks, policies and proof through the API. It saves drafts, and a person approves.
+- **AI help, only if you want it.** Off until you set an AI service in the install's environment and an admin turns a feature on. Nothing it suggests is saved on its own. See [docs/ai-help.md](docs/ai-help.md).
+
+It is general guidance drafted with counsel, not legal advice.
 
 ## Quick start
 
-Requires Node 22.12 or newer, pnpm 10, and Docker.
+Needs Node 22.12 or newer, pnpm 10, and Docker.
 
 ```sh
 pnpm install
@@ -24,7 +43,20 @@ pnpm dev
 
 The web app runs on http://localhost:3200 and the API on http://localhost:3201/v1/health.
 
-## Everyday commands
+To run it for real, with email, sign-in and file storage for proof, follow [docs/self-hosting.md](docs/self-hosting.md).
+
+## How it is built
+
+| Path              | What it is                                                   |
+| ----------------- | ------------------------------------------------------------ |
+| `apps/api`        | NestJS API with Prisma and Postgres                          |
+| `apps/web`        | Next.js app, translated with next-intl                       |
+| `apps/mcp`        | MCP server that lets Claude set up a company through the API |
+| `packages/shared` | Types, constants and the DPDP catalogue used by both apps    |
+
+How the pieces fit is in [docs/architecture.md](docs/architecture.md).
+
+### Everyday commands
 
 | Command       | Does                                    |
 | ------------- | --------------------------------------- |
@@ -33,10 +65,24 @@ The web app runs on http://localhost:3200 and the API on http://localhost:3201/v
 | `pnpm format` | Formats the whole repo                  |
 | `pnpm db:up`  | Starts Postgres and MinIO in Docker     |
 
+## Documentation
+
+| Area                 | Read                                                                                                                                   |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Setting up           | [Self-hosting](docs/self-hosting.md), [Onboarding and the readiness check](docs/onboarding.md)                                         |
+| The Act and the work | [Frameworks, rules, controls and proof](docs/frameworks.md), [Deadlines](docs/deadlines.md)                                            |
+| Duties and records   | [Breaches](docs/breaches.md), [Requests](docs/requests.md), [Vendors](docs/vendors.md), [Training](docs/training.md)                   |
+| Checks               | [Connections to Azure and GitHub](docs/connections.md), [Website check](docs/website-check.md), [Proof reports](docs/proof-reports.md) |
+| Reports and records  | [Exports and the audit pack](docs/exports.md), [Activity log](docs/activity-log.md), [Notifications](docs/notifications.md)            |
+| Automation           | [API keys](docs/api-keys.md), [Claude through MCP](docs/mcp.md), [AI help](docs/ai-help.md)                                            |
+| Using the app        | [Search and shortcuts](docs/search.md), [Organisations](docs/organizations.md)                                                         |
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the standards. Run `pnpm check` before you open a pull request.
+
 ## Licence
 
 Neeti Bharat is open source under the [GNU Affero General Public License v3.0](LICENSE) (`AGPL-3.0-only`). You can self-host, study and modify it for free, including for commercial use. If you offer a modified version as an online service, the AGPL requires you to share your changes with its users.
 
 Copyright (C) 2026 Techdome Solutions Private Limited.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the standards and [docs/architecture.md](docs/architecture.md) for how the pieces fit. To configure email, sign-in and file storage for proof, see [docs/self-hosting.md](docs/self-hosting.md). For how a personal data breach is handled, see [docs/breaches.md](docs/breaches.md). For how requests and complaints from people are handled, see [docs/requests.md](docs/requests.md). For the audit pack and CSV downloads, see [docs/exports.md](docs/exports.md). For the website check, see [docs/website-check.md](docs/website-check.md). For how one install holds several organisations, see [docs/organizations.md](docs/organizations.md). For the set-up of a new organisation and the readiness check, see [docs/onboarding.md](docs/onboarding.md). For keys that let a script or an AI agent call the API, see [docs/api-keys.md](docs/api-keys.md). For checking Azure and Entra ID against the Act, see [docs/connections.md](docs/connections.md). For the reports the kit keeps on proofs by itself, see [docs/proof-reports.md](docs/proof-reports.md). For the notices about work that is due or late, see [docs/notifications.md](docs/notifications.md). For the vendors that handle personal data, see [docs/vendors.md](docs/vendors.md). For the trainings everyone is asked to take, see [docs/training.md](docs/training.md). For letting Claude set up a company through the API, see [docs/mcp.md](docs/mcp.md). For reading a policy from a file with an AI service, see [docs/ai-help.md](docs/ai-help.md). For the page of everything that is due or late, see [docs/deadlines.md](docs/deadlines.md). For the global search and keyboard shortcuts, see [docs/search.md](docs/search.md).
