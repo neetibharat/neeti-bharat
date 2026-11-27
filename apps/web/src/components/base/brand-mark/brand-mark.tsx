@@ -1,7 +1,7 @@
 import { cx } from '@/lib/utils/cx';
 
 type Size = 'sm' | 'md' | 'lg';
-/** `inverse` is for a dark background: a light tile with the saffron dot. */
+/** `inverse` is for a dark background: the mark without its tile, which would vanish there. */
 type Tone = 'brand' | 'inverse';
 
 export interface BrandMarkProps {
@@ -10,22 +10,32 @@ export interface BrandMarkProps {
   className?: string;
 }
 
-const sizes: Record<Size, { tile: string; dot: string }> = {
-  sm: { tile: 'size-5.5 rounded-md', dot: 'right-0.75 bottom-0.75 size-1.5' },
-  md: { tile: 'size-7 rounded-lg', dot: 'right-1 bottom-1 size-2' },
-  lg: { tile: 'size-10 rounded-xl', dot: 'right-1.5 bottom-1.5 size-3' },
-};
+const sizes: Record<Size, string> = { sm: 'size-5.5', md: 'size-7', lg: 'size-10' };
 
-const tones: Record<Tone, string> = { brand: 'bg-brand', inverse: 'bg-surface' };
-
-/** The logo mark: a navy tile with a saffron dot. */
+/** The logo mark: an orange N finished by a green stroke with a white point, on a navy tile. */
 export function BrandMark({ size = 'md', tone = 'brand', className }: BrandMarkProps) {
   return (
-    <span
+    <svg
+      viewBox="0 0 32 32"
       aria-hidden="true"
-      className={cx('relative inline-block', tones[tone], sizes[size].tile, className)}
+      className={cx('inline-block shrink-0', sizes[size], className)}
     >
-      <span className={cx('absolute rounded-full bg-accent', sizes[size].dot)} />
-    </span>
+      {tone === 'brand' && <rect width="32" height="32" rx="8" className="fill-logo-tile" />}
+      <path
+        d="M10 22.5V10l11.5 12.5"
+        fill="none"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="stroke-logo-letter"
+      />
+      <path
+        d="M22 22.5v-8"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        className="stroke-logo-finish"
+      />
+      <circle cx="22" cy="9.6" r="1.95" className="fill-logo-point" />
+    </svg>
   );
 }

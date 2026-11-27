@@ -35,6 +35,11 @@
   --color-accent-500: #d97706;
   --color-accent-600: #b45309;
 
+  /* ---------- Primitives: logo ---------- */
+  --color-mark-navy: #14213d;
+  --color-mark-orange: #f28a22;
+  --color-mark-green: #2aa952;
+
   /* ---------- Primitives: gray (slate) ---------- */
   --color-gray-50: #f8fafc;
   --color-gray-100: #f1f5f9;
@@ -73,6 +78,13 @@
   --color-brand-line: var(--color-brand-300);
   --color-accent: var(--color-accent-500);
   --color-accent-soft: var(--color-accent-100);
+
+  /* ---------- Semantic: logo ----------
+   * Fixed in both themes: the mark is the brand, so it looks the same everywhere. */
+  --color-logo-tile: var(--color-mark-navy);
+  --color-logo-letter: var(--color-mark-orange);
+  --color-logo-finish: var(--color-mark-green);
+  --color-logo-point: #ffffff;
 
   /* ---------- Semantic: overlays ---------- */
   --color-overlay: rgb(15 23 42 / 0.4);
