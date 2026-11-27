@@ -129,6 +129,7 @@
       "firstRunHint": "The first person to sign in becomes the admin. Everyone else joins by invitation.",
       "brand": {
         "subline": "Everything the DPDP Act asks of you in one place: a checklist, your policies, the proof, and a record of every change.",
+        "headline": "Privacy compliance your auditors can trust.",
         "features": {
           "checklist": {
             "title": "Built on the DPDP Act",
@@ -143,30 +144,7 @@
             "body": "It runs on your own servers, so your data stays with you."
           }
         },
-        "footer": "For the Digital Personal Data Protection Act, 2023",
-        "eyebrow": "For India’s DPDP Act · Free and self-hosted",
-        "headlineLead": "Privacy compliance",
-        "headlineAccent": "your auditors can trust.",
-        "chain": {
-          "law": {
-            "label": "The law",
-            "tag": "Rule 6",
-            "title": "Security safeguards",
-            "text": "What the Act asks of you, in plain words."
-          },
-          "control": {
-            "label": "The control",
-            "tag": "DPDP-R6-05",
-            "title": "Log integrity and review",
-            "text": "One job, with an owner and the policy that covers it."
-          },
-          "proof": {
-            "label": "The proof",
-            "tag": "Every month",
-            "title": "Monthly log review sign-off",
-            "text": "What an auditor asks to see, kept and ready."
-          }
-        }
+        "footer": "Open source. Free to host yourself."
       }
     },
     "signOut": "Sign out"
